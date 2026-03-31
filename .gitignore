@@ -1,0 +1,23 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Exports
+exports/
+
+# Responses 
+responses/
+
+# Original documents 
+original_documents/
+
+# Texts to be evaluated 
+texts_human/
+texts_llm/

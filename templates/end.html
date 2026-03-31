@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="center-wrap">
+  <div class="card complete-card">
+    <div class="complete-icon">&#10003;</div>
+    <h1>Vielen Dank!</h1>
+    <p>
+      Sie haben es geschafft, <strong>{{ username }}</strong>!<br>
+      Alle <strong>{{ done_cases }}</strong> von <strong>{{ total_cases }}</strong> Fällen wurden erfolgreich bewertet.
+    </p>
+    <p>
+      Ihre Rückmeldung ist ein wichtiger Beitrag zur Verbesserung der KI-gestützten
+      Tumorboardvorbereitung. Wir bedanken uns herzlich für Ihre Zeit und Teilnahme.
+    </p>
+
+    <div class="complete-actions">
+      <a href="{{ url_for('export') }}" class="btn btn-primary">
+        &#8615; Ergebnisse herunterladen (CSV)
+      </a>
+      <a href="{{ url_for('evaluate_resume') }}" class="btn btn-secondary">
+        Bewertungen ansehen / bearbeiten
+      </a>
+    </div>
+
+    <p class="complete-note">
+      Die CSV-Datei enthält alle Bewertungsdaten und kann in Excel oder R geöffnet werden.
+    </p>
+  </div>
+</div>
+{% endblock %}

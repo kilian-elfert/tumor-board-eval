@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="center-wrap">
+  <div class="card complete-card">
+    <div class="complete-icon">&#10003;</div>
+    <h1>Evaluation Complete</h1>
+    <p>
+      Thank you, <strong>{{ username }}</strong>.<br>
+      You have submitted all <strong>{{ total }}</strong> ratings.
+    </p>
+    <div class="complete-actions">
+      <a href="{{ url_for('export') }}" class="btn btn-primary">
+        &#8615; Download Results (CSV)
+      </a>
+      <a href="{{ url_for('evaluate_resume') }}" class="btn btn-secondary">
+        Review / Edit Responses
+      </a>
+    </div>
+    <p class="complete-note">
+      The CSV contains all evaluator responses and can be opened in Excel or R.
+    </p>
+  </div>
+</div>
+{% endblock %}

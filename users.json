@@ -1,0 +1,8 @@
+{
+  "t-pakull": {
+    "password": "scrypt:32768:8:1$SE5hlMMSgk6XmN7q$e146ef90f086e1b9dfc37d72e342daef442ecc95b3ed0e96ed204f6c22906be5bb9f1abdb26de33640ee1cc867b33676de6ae7d3238ec55ef9974b4e19391426"
+  },
+  "k-elfert": {
+    "password": "scrypt:32768:8:1$BwJZB36BoScOku9G$35561fff01c52dbb5f758ba47da3b47ac3a099b41e3984ce994cf1a8c9a131f1b0a7475aa0b1e330750c8c424b5bc56e21a61d9c008bdd08e37fadb7f7439eb3"
+  }
+}
