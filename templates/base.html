@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evaluationsstudie: LLM-basierte Unterstützung der Tumorboardanmeldung</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=20260320h">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/8/8b/Logo_UME_UKE.webp"
+           alt="Universitätsklinikum Essen" class="nav-logo nav-logo-uke">
+      <span class="nav-brand-divider">|</span>
+      <div class="nav-brand-text">
+        <span class="nav-brand-title">Evaluationsstudie</span>
+        <span class="nav-brand-sub">LLM-basierte Unterstützung der Tumorboardanmeldung</span>
+      </div>
+    </div>
+    {% if session.get('username') %}
+    <div class="nav-user">
+      <span class="nav-username">{{ session.username }}</span>
+      <a href="{{ url_for('logout') }}" class="btn-nav-link" id="logout-link">Abmelden</a>
+    </div>
+    {% endif %}
+  </nav>
+
+  {# ── logout toast overlay ──────────────────────────────────────────────── #}
+  <div id="logout-toast" style="
+    display:none; position:fixed; inset:0; z-index:9999;
+    background:rgba(0,0,0,.45);
+    align-items:center; justify-content:center;">
+    <div style="
+      background:#fff; border-radius:12px;
+      padding:2rem 2.5rem; box-shadow:0 8px 32px rgba(0,0,0,.25);
+      text-align:center; max-width:340px; width:90%;">
+      <div style="font-size:2rem; margin-bottom:.75rem;">&#10003;</div>
+      <p style="font-size:1.1rem; font-weight:600; color:#1a4f8a; margin:0;">
+        Ihre Daten wurden gespeichert.
+      </p>
+    </div>
+  </div>
+
+  <script>
+  (function() {
+    var link  = document.getElementById('logout-link');
+    var toast = document.getElementById('logout-toast');
+    if (!link || !toast) return;
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      var href = link.href;
+      toast.style.display = 'flex';
+      setTimeout(function() { window.location.href = href; }, 2500);
+    });
+  })();
+  </script>
+
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

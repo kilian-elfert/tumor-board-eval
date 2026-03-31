@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="center-wrap">
+  <div class="card demographics-card">
+
+    <div class="demographics-header">
+      <div class="demographics-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+             stroke-linejoin="round" class="demographics-icon-svg">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+      </div>
+      <h1>Fragen zu Ihrer Person</h1>
+      <p class="subtitle">Bitte beantworten Sie die folgenden Fragen zu Ihrem beruflichen Hintergrund.</p>
+    </div>
+
+    {% if error %}
+    <div class="alert alert-error">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" class="demographics-form" novalidate>
+
+      {# ── Age ── #}
+      <div class="demo-field">
+        <label for="age" class="demo-label">
+          Alter <span class="demo-required">*</span>
+        </label>
+        <div class="demo-input-wrap">
+          <input type="number" id="age" name="age" min="18" max="99"
+                 placeholder="z.&thinsp;B. 34"
+                 value="{{ existing.get('age', '') }}" required>
+          <span class="demo-unit">Jahre</span>
+        </div>
+      </div>
+
+      {# ── Job experience ── #}
+      <div class="demo-field">
+        <label for="experience_years" class="demo-label">
+          Berufserfahrung (gesamt; gerundet) <span class="demo-required">*</span>
+        </label>
+        <div class="demo-input-wrap">
+          <input type="number" id="experience_years" name="experience_years"
+                 min="0" max="60" placeholder="z.&thinsp;B. 10"
+                 value="{{ existing.get('experience_years', '') }}" required>
+          <span class="demo-unit">Jahre</span>
+        </div>
+      </div>
+
+      {# ── Years in dermatology ── #}
+      <div class="demo-field">
+        <label for="dermatology_years" class="demo-label">
+          Berufserfahrung in der Dermatologie (gerundet) <span class="demo-required">*</span>
+        </label>
+        <div class="demo-input-wrap">
+          <input type="number" id="dermatology_years" name="dermatology_years"
+                 min="0" max="60" placeholder="z.&thinsp;B. 5"
+                 value="{{ existing.get('dermatology_years', '') }}" required>
+          <span class="demo-unit">Jahre</span>
+        </div>
+      </div>
+
+      {# ── Role ── #}
+      <div class="demo-field">
+        <label class="demo-label">
+          Funktion in der Abteilung <span class="demo-required">*</span>
+        </label>
+        <div class="demo-role-options">
+          {% set roles = [
+            ('assistenzarzt', 'Assistenzarzt/‑ärztin'),
+            ('facharzt', 'Facharzt/‑ärztin'),
+            ('oberarzt', 'Oberarzt/‑ärztin'),
+            ('chefarzt', 'Chefarzt/‑ärztin'),
+            ('other', 'Sonstige')
+          ] %}
+          {% for value, label in roles %}
+          <label class="demo-role-label{% if existing.get('role') == value %} demo-role-selected{% endif %}">
+            <input type="radio" name="role" value="{{ value }}"
+                   {% if existing.get('role') == value %}checked{% endif %} required>
+            <span class="demo-role-text">{{ label }}</span>
+          </label>
+          {% endfor %}
+        </div>
+        <div class="demo-other-wrap" id="other-wrap"
+             style="{% if existing.get('role') != 'other' %}display:none{% endif %}">
+          <input type="text" id="role_other" name="role_other"
+                 placeholder="Bitte angeben…"
+                 value="{{ existing.get('role_other', '') }}">
+        </div>
+      </div>
+
+      <div class="demographics-actions">
+        <a href="{{ url_for('consent') }}" class="btn btn-secondary demo-btn">
+          <svg class="demo-btn-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 0 1 0 1.414L9.414 10l3.293 3.293a1 1 0 0 1-1.414 1.414l-4-4a1 1 0 0 1 0-1.414l4-4a1 1 0 0 1 1.414 0z" clip-rule="evenodd"/></svg>
+          Zurück
+        </a>
+        <button type="submit" class="btn btn-primary demo-btn">
+          Weiter
+          <svg class="demo-btn-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 0 1 0-1.414L10.586 10 7.293 6.707a1 1 0 0 1 1.414-1.414l4 4a1 1 0 0 1 0 1.414l-4 4a1 1 0 0 1-1.414 0z" clip-rule="evenodd"/></svg>
+        </button>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+<script>
+(function () {
+  var radios = document.querySelectorAll('input[name="role"]');
+  var wrap   = document.getElementById('other-wrap');
+  radios.forEach(function (r) {
+    r.addEventListener('change', function () {
+      wrap.style.display = r.value === 'other' ? '' : 'none';
+      // Update selected styling
+      document.querySelectorAll('.demo-role-label').forEach(function (l) {
+        l.classList.remove('demo-role-selected');
+      });
+      r.closest('.demo-role-label').classList.add('demo-role-selected');
+    });
+  });
+})();
+</script>
+{% endblock %}

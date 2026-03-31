@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="center-wrap">
+  <div class="card intro-card">
+
+    {# Institution logos #}
+    <div class="intro-logos">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/8/8b/Logo_UME_UKE.webp"
+           alt="Universitätsklinikum Essen" class="intro-logo">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/9/95/Universit%C3%A4t_Duisburg-Essen.svg"
+           alt="Universität Duisburg-Essen" class="intro-logo">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/DFG-logo-blau.svg/3840px-DFG-logo-blau.svg.png"
+           alt="DFG" class="intro-logo">
+      <img src="{{ url_for('static', filename='Wispermed_Logo_de.png') }}"
+           alt="WisperMed" class="intro-logo">
+    </div>
+
+    <div class="intro-header">
+      <h1 class="intro-title">Evaluationsstudie</h1>
+      <h2 class="intro-subtitle">LLM-basierte Unterstützung der Tumorboardanmeldung am Point of Care</h2>
+    </div>
+
+    <div class="intro-body">
+      <p style="font-size: 1.6em;"><em>Sehr geehrte Teilnehmerinnen und Teilnehmer</em>,</p>
+
+      <p>
+        wir begrüßen Sie herzlich zu unserer Evaluationsstudie. Ziel dieser Studie ist es, die Qualität und klinische Relevanz von KI-generierten Fallzusammenfassungen und medizinischen Fragestellungen im Kontext der dermatoonkologischen Tumorboardanmeldung systematisch zu bewerten. 
+        Mit Ihrer Teilnahme leisten Sie einen wichtigen Beitrag zur wissenschaftlichen Validierung innovativer Software am Point of Care.
+      </p>
+
+      <p>
+        Im Verlauf der Studie werden Ihnen mehrere Fälle mit jeweils zugehörigen  Fallzusammenfassungen und Fragestellungen für die dermatoonkologische Tumorkonferenz präsentiert. Für jeden Fall existieren zwei unterschiedliche Versionen (<em>Version A</em> und <em>Version B</em>). 
+        Bitte beurteilen Sie beide Varianten anhand der Bewertungskriterien, die Ihnen auf der Studienoberfläche erläutert werden.
+      </p>
+
+      <p></p>
+        Sie können die Bearbeitung jederzeit unterbrechen und zu einem späteren Zeitpunkt fortsetzen; Ihr Fortschritt wird automatisch gespeichert. Ihre Angaben werden streng vertraulich behandelt und ausschließlich für Forschungszwecke verwendet.
+      </p>
+
+      <p> 
+        Sollten Sie Fragen oder Anmerkungen zur Studie haben, wenden Sie sich bitte an die Studienleitung.
+      </p>
+
+      <p>Wir danken Ihnen für Ihr Engagement und Ihre Unterstützung.</p>
+
+      <p style="margin-bottom: 0.25rem;">Mit freundlichen Grüßen</p>
+      <img src="{{ url_for('static', filename='signature.png') }}" alt="Unterschrift" style="height:80px; width:auto; display:block; margin: 0 0 1rem;">
+
+      <div class="intro-contact">
+        <strong>Studienleitung</strong><br>
+        Kilian Elfert, M.Sc.<br>
+        Institut für Medizinische Informatik, Biometrie und Epidemiologie (IMIBE)<br>
+        Universitätsklinikum Essen<br>
+        Kontakt: <a href="mailto:kilian.elfert@uk-essen.de">kilian.elfert@uk-essen.de</a>
+      </div>
+
+      <p class="intro-funding-note">
+        Diese Studie wird im Rahmen des DFG-gef&ouml;rderten Graduiertenkollegs&nbsp;2535
+        &bdquo;Wissens- und datenbasierte Personalisierung von Medizin am Point of Care&ldquo;
+        (WisPerMed) durchgef&uuml;hrt. Weitere Informationen zum Graduiertenkolleg finden Sie unter
+        <a href="https://www.wispermed.org" target="_blank">www.wispermed.org</a>.
+      </p>
+    </div>
+
+    <div class="intro-actions">
+      <form method="post">
+        <button type="submit" class="btn btn-primary btn-start">
+          {% if has_responses %}
+            Studie fortsetzen &rarr;
+          {% else %}
+            Studie starten &rarr;
+          {% endif %}
+        </button>
+      </form>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

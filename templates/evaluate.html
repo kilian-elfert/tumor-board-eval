@@ -1,0 +1,3544 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{# ── overall progress bar ──────────────────────────────────────────────────── #}
+<div class="progress-header">
+  <div class="progress-meta">
+    <span class="progress-label">
+      Fall <strong>{{ case_index + 1 }}</strong> von <strong>{{ total_cases }}</strong>
+    </span>
+    <span class="progress-count" style="color:#1a4f8a; font-weight:600;">{{ ((done_cases / total_cases) * 100) | int if total_cases else 0 }}%</span>
+  </div>
+  <div class="progress-track">
+    <div class="progress-fill"
+         style="width: {{ ((done_cases / total_cases) * 100) | int if total_cases else 0 }}%"></div>
+  </div>
+</div>
+
+{# ── page body ─────────────────────────────────────────────────────────────── #}
+<div class="evaluate-layout">
+
+  {# ── steps sidebar ────────────────────────────────────────────────────────── #}
+  <aside class="steps-sidebar">
+    <p class="steps-heading">Fall {{ case_index + 1 }}</p>
+
+
+    <div class="steps">
+      {% set ns = namespace(prev_section='') %}
+      {% for s in rating_steps %}
+      {% set st = step_statuses[loop.index0] %}
+
+      {% if s.section != ns.prev_section %}
+        {% set ns.prev_section = s.section %}
+        <div class="step-group-header">{{ s.section }}</div>
+      {% endif %}
+
+      {% if st == 'finish' %}
+      <a class="step step--{{ st }}"
+         href="{{ url_for('evaluate_step', case_id=case_id, step_idx=loop.index0, tab_idx=0) }}">
+      {% else %}
+      <div class="step step--{{ st }}">
+      {% endif %}
+        <div class="step-rail">
+          <div class="step-circle">
+            {% if st == 'finish' %}
+            <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            {% else %}{{ loop.index }}{% endif %}
+          </div>
+          {% if not loop.last %}
+          <div class="step-line"></div>
+          {% endif %}
+        </div>
+        <div class="step-body">
+          <span class="step-title">{{ s.subtitle }}</span>
+        </div>
+      {% if st == 'finish' %}</a>{% else %}</div>{% endif %}
+      {% endfor %}
+    </div>
+
+  </aside>
+
+  {# ── main eval card ────────────────────────────────────────────────────────── #}
+  <div class="card eval-card">
+
+    {# Card header #}
+    <div class="eval-card-header">
+      {# Tab indicator (only for steps with tabs) #}
+      {% if step.key != 'case_relevance' %}
+      <button type="button" class="btn-protocol" onclick="openProtocol()">
+        <img src="{{ url_for('static', filename='pdf-icon.png') }}" width="20" height="23" style="flex-shrink:0;filter:hue-rotate(200deg) saturate(1.4)" aria-hidden="true">TK-Protokoll
+      </button>
+      {% endif %}
+      {% if step.has_tabs %}
+      <div class="tab-switcher">
+        <span class="tab-btn {% if tab_idx == 0 %}tab-active{% endif %}">Version A</span>
+        <span class="tab-btn {% if tab_idx == 1 %}tab-active{% endif %}">Version B</span>
+      </div>
+      {% endif %}
+    </div>
+
+    {# ── Instruction panel ── #}
+    <div class="instruction-panel" id="instr-panel">
+      <div class="instruction-header" onclick="toggleInstrPanel()">
+        <div class="instruction-header-left">
+          <span class="instr-icon">&#9432;</span>
+          <span><strong>{{ step.section }}</strong> &mdash; {{ step.subtitle }}</span>
+        </div>
+        <div class="instruction-header-right">
+          <button type="button" class="btn-demo" onclick="event.stopPropagation(); openDemoModal();" title="Interaktive Demo anzeigen">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Demo
+          </button>
+          <svg class="instruction-toggle-chevron" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/>
+          </svg>
+        </div>
+      </div>
+      <div class="instruction-body">
+
+        {# ─── per-step instructions ─── #}
+
+        {% if step.key == 'case_relevance' %}
+        <div class="instr-goal"><strong>Aufgabe:</strong> Beurteilen Sie für jede Information innerhalb einer Informationskategorie, ob diese Information für die Tumorboardanmeldung dieses Falls klinisch relevant ist.</div>
+        <div class="instr-steps">
+          <p>Bitte befolgen Sie dabei folgende Schritte:</p>
+          <ol>
+            <li>Lesen Sie das <strong>TK-Protokoll</strong> im linken Bereich aufmerksam durch.</li>
+            <li>Bewerten Sie im rechten Bereich jede Information, indem Sie auf die entsprechenden Schaltflächen klicken:
+              <ul>
+                <li><strong>✓ Ja</strong> — Diese Information ist für die Tumorboardanmeldung relevant.</li>
+                <li><strong>✗ Nein</strong> — Diese Information ist nicht relevant.</li>
+              </ul>
+            </li>
+            <li>Nutzen Sie die <strong>Gruppenaktionen</strong> (<em>alle ✓</em> / <em>alle ✗</em>), um alle Informationen in einer Kategorie gleichzeitig zu bewerten.</li>
+            <li>Nutzen Sie die <strong>▶ Demo</strong>-Schaltfläche oben rechts für eine interaktive Demonstration dieser Bewertungsaufgabe.</li>
+            <li>Hinterlassen Sie optional einen <strong>Kommentar</strong> unterhalb der Bewertung.</li>
+          </ol>
+        </div>
+        <div class="instr-hint"><strong>Hinweis:</strong> Diese Einschätzung gilt für den gesamten Fall und wird für die nachfolgenden Bewertungsschritte herangezogen.</div>
+
+        {% elif step.key == 'summary_integrity' %}
+        <div class="instr-goal"><strong>Aufgabe:</strong> Prüfen Sie, ob die als relevant eingestuften Informationen in dieser Version der Zusammenfassung enthalten sind.</div>
+        <div class="instr-steps">
+          <p>Bitte befolgen Sie dabei folgende Schritte:</p>
+          <ol>
+            <li>Lesen Sie die <strong>Zusammenfassung</strong> im linken Bereich.</li>
+            <li>Klicken Sie im Diagramm auf die einzelnen <strong>Informationsknoten</strong>:
+              <ul>
+                <li><strong>Blau</strong> = Information ist in der Zusammenfassung enthalten</li>
+                <li><strong>Grau</strong> = Information ist nicht in der Zusammenfassung enthalten</li>
+              </ul>
+            </li>
+            <li>Klicken Sie auf eine <strong>Kategorie</strong> (größerer Kreis), um alle zugehörigen Einträge gemeinsam umzuschalten.</li>
+            <li>Nutzen Sie die <strong>▶ Demo</strong>-Schaltfläche oben rechts für eine interaktive Demonstration dieser Bewertungsaufgabe.</li>
+            <li>Hinterlassen Sie optional einen <strong>Kommentar</strong> unterhalb der Bewertung.</li>
+          </ol>
+        </div>
+        <div class="instr-hint"><strong>Hinweis:</strong> Klick-Reihenfolge je Knoten: <em>enthalten → nicht enthalten → zurücksetzen</em>.</div>
+
+        {% elif step.key == 'summary_falseinfo' %}
+        <div class="instr-goal"><strong>Aufgabe:</strong> Identifizieren Sie inhaltlich falsche oder irreführende Informationen in der Zusammenfassung.</div>
+        <div class="instr-steps">
+          <p>Bitte befolgen Sie dabei folgende Schritte:</p>
+          <ol>
+            <li>Lesen Sie die <strong>Zusammenfassung</strong> im linken Bereich.</li>
+            <li>Markieren Sie per <strong>Checkbox</strong> alle als fehlerhaft erkannten Informationen im rechten Bereich.</li>
+            <li>Bewerten Sie für jede markierte Information die möglichen Folgen des Fehlers, indem Sie auf das entsprechende <strong>Ampelsymbol</strong> klicken:
+              <ul>
+                <li><strong>Schwere des Schadens</strong> — Kein Schaden / Leichter Schaden / Schwerer Schaden </li>
+                <li><strong>Eintrittswahrscheinlichkeit des Schadens</strong> — Gering / Moderat / Hoch</li>
+              </ul>
+            </li>
+            <li>Nutzen Sie die <strong>▶ Demo</strong>-Schaltfläche oben rechts für eine interaktive Demonstration dieser Bewertungsaufgabe.</li>
+            <li>Hinterlassen Sie optional einen <strong>Kommentar</strong> unterhalb der Bewertung.</li>
+          </ol>
+        </div>
+        <div class="instr-hint"><strong>Hinweis:</strong> Es werden nur Informationen angezeigt, die im vorherigen Schritt als „enthalten" markiert wurden.</div>
+
+        {% elif step.key == 'summary_correctness' %}
+        <div class="instr-goal"><strong>Aufgabe:</strong> Beurteilen Sie die Korrektheit der Zusammenfassung. Sind alle enthaltenen Informationen medizinisch korrekt und frei von Ungenauigkeiten?</div>
+        <div class="instr-steps">
+          <p>Bitte befolgen Sie dabei folgende Schritte:</p>
+          <ol>
+            <li>Lesen Sie die <strong>Zusammenfassung</strong> im linken Bereich.</li>
+            <li>Wählen Sie den gewünschten Wert (0–100), indem Sie im rechten Bereich auf die entsprechende Position innerhalb der Bewertungsskala klicken:
+              <ul>
+                <li><strong>0 = Sehr schlecht</strong> — Viele Fehler</li>
+                <li><strong>100 = Ausgezeichnet</strong> — Vollständig korrekt</li>
+              </ul>
+            </li>
+            <li>Nutzen Sie die <strong>▶ Demo</strong>-Schaltfläche oben rechts für eine interaktive Demonstration dieser Bewertungsaufgabe.</li>
+            <li>Hinterlassen Sie optional einen <strong>Kommentar</strong> unterhalb der Bewertung.</li>
+          </ol>
+        </div>
+
+        {% elif step.key == 'summary_completeness' %}
+        <div class="instr-goal"><strong>Aufgabe:</strong> Beurteilen Sie, wie vollständig die Zusammenfassung alle klinisch relevanten Informationen des Falles abbildet.</div>
+        <div class="instr-steps">
+          <p>Bitte befolgen Sie dabei folgende Schritte:</p>
+          <ol>
+            <li>Lesen Sie die <strong>Zusammenfassung</strong> im linken Bereich.</li>
+            <li>Wählen Sie den gewünschten Wert (0–100), indem Sie im rechten Bereich auf die entsprechende Position innerhalb der Bewertungsskala klicken:
+              <ul>
+                <li><strong>0 = Sehr schlecht</strong> — Wesentliche Informationen fehlen</li>
+                <li><strong>100 = Ausgezeichnet</strong> — Alle relevanten Informationen enthalten</li>
+              </ul>
+            </li>
+            <li>Nutzen Sie die <strong>▶ Demo</strong>-Schaltfläche oben rechts für eine interaktive Demonstration dieser Bewertungsaufgabe.</li>
+            <li>Hinterlassen Sie optional einen <strong>Kommentar</strong> unterhalb der Bewertung.</li>
+          </ol>
+        </div>
+
+        {% elif step.key == 'summary_conciseness' %}
+        <div class="instr-goal"><strong>Aufgabe:</strong> Beurteilen Sie, ob die Zusammenfassung angemessen prägnant ist — weder zu knapp noch zu ausführlich.</div>
+        <div class="instr-steps">
+          <p>Bitte befolgen Sie dabei folgende Schritte:</p>
+          <ol>
+            <li>Lesen Sie die <strong>Zusammenfassung</strong> im linken Bereich.</li>
+            <li>Wählen Sie den gewünschten Wert (0–100), indem Sie im rechten Bereich auf die entsprechende Position innerhalb der Bewertungsskala klicken:
+              <ul>
+                <li><strong>0 = Sehr schlecht</strong> — Zu knapp oder zu ausführlich</li>
+                <li><strong>100 = Ausgezeichnet</strong> — Optimal prägnant</li>
+              </ul>
+            </li>
+            <li>Nutzen Sie die <strong>▶ Demo</strong>-Schaltfläche oben rechts für eine interaktive Demonstration dieser Bewertungsaufgabe.</li>
+            <li>Hinterlassen Sie optional einen <strong>Kommentar</strong> unterhalb der Bewertung.</li>
+          </ol>
+        </div>
+
+        {% elif step.key == 'summary_postedit' %}
+        <div class="instr-goal"><strong>Aufgabe:</strong> Schätzen Sie den Aufwand ein, der nötig wäre, um diese Zusammenfassung für den klinischen Einsatz zu überarbeiten.</div>
+        <div class="instr-steps">
+          <p>Bitte befolgen Sie dabei folgende Schritte:</p>
+          <ol>
+            <li>Lesen Sie die <strong>Zusammenfassung</strong> im linken Bereich.</li>
+            <li>Entscheiden Sie im rechten Bereich:
+              <ul>
+                <li><strong>Direkt verwenden</strong> — Der Text kann ohne Änderungen übernommen werden.</li>
+                <li><strong>Überarbeitung nötig</strong> — Wählen Sie die Art der Überarbeitung und passen Sie den Text im linken Bereich an.</li>
+              </ul>
+            </li>
+            <li>Nutzen Sie die <strong>▶ Demo</strong>-Schaltfläche oben rechts für eine interaktive Demonstration dieser Bewertungsaufgabe.</li>
+            <li>Hinterlassen Sie optional einen <strong>Kommentar</strong> unterhalb der Bewertung.</li>
+          </ol>
+        </div>
+        <div class="instr-hint"><strong>Hinweis:</strong> Die Bearbeitungszeit wird automatisch erfasst, sobald Sie den Text bearbeiten.</div>
+
+        {% elif step.key == 'summary_origin_guess' %}
+        <div class="instr-goal"><strong>Aufgabe:</strong> Schätzen Sie ein, ob diese Version der Zusammenfassung von einem Menschen oder von einer KI verfasst wurde.</div>
+        <div class="instr-steps">
+          <p>Bitte befolgen Sie dabei folgende Schritte:</p>
+          <ol>
+            <li>Lesen Sie die <strong>Zusammenfassung</strong> im linken Bereich.</li>
+            <li>Wählen Sie eine der drei Optionen, indem Sie im rechten Bereich auf das entsprechende Symbol klicken:
+              <ul>
+                <li><strong>Mensch</strong> — Sie glauben, ein Mensch hat den Text verfasst.</li>
+                <li><strong>Unsicher</strong> — Sie können es nicht eindeutig zuordnen.</li>
+                <li><strong>KI</strong> — Sie glauben, eine KI hat den Text verfasst.</li>
+              </ul>
+            </li>
+            <li>Nutzen Sie die <strong>▶ Demo</strong>-Schaltfläche oben rechts für eine interaktive Demonstration dieser Bewertungsaufgabe.</li>
+            <li>Hinterlassen Sie optional einen <strong>Kommentar</strong> unterhalb der Bewertung.</li>
+          </ol>
+        </div>
+
+        {% elif step.key == 'summary_preference' %}
+        <div class="instr-goal"><strong>Aufgabe:</strong> Vergleichen Sie beide Versionen der Zusammenfassung und wählen Sie, welche Version Sie für den klinischen Einsatz bevorzugen würden.</div>
+        <div class="instr-steps">
+          <p>Bitte befolgen Sie dabei folgende Schritte:</p>
+          <ol>
+            <li>Lesen Sie <strong>beide Versionen</strong> nebeneinander.</li>
+            <li>Klicken Sie auf die Version, die Sie bevorzugen.</li>
+            <li>Alternativ wählen Sie <strong>„Keine Präferenz"</strong>, wenn beide Versionen gleichwertig sind.</li>
+            <li>Nutzen Sie die <strong>▶ Demo</strong>-Schaltfläche oben rechts für eine interaktive Demonstration dieser Bewertungsaufgabe.</li>
+            <li>Hinterlassen Sie optional einen <strong>Kommentar</strong> unterhalb der Bewertung.</li>
+          </ol>
+        </div>
+        <div class="instr-hint"><strong>Hinweis:</strong> Erneutes Klicken auf eine bereits gewählte Version hebt die Auswahl auf.</div>
+
+        {% elif step.key == 'problem_focus' %}
+        <div class="instr-goal"><strong>Aufgabe:</strong> Bestimmen Sie den aktuellen Krankheitsstatus und identifizieren Sie die in der Fragestellung vorgeschlagenen Diskussionsschwerpunkte.</div>
+        <div class="instr-steps">
+          <p>Bitte befolgen Sie dabei folgende Schritte:</p>
+          <ol>
+            <li>Lesen Sie die <strong>Fragestellung</strong> im linken Bereich.</li>
+            <li>Wählen Sie den <strong>Krankheitsstatus</strong>:
+              <ul>
+                <li><strong>Progredient</strong> — Fortschreitende Erkrankung</li>
+                <li><strong>Unverändert</strong> — Stabile Erkrankung</li>
+                <li><strong>Regredient</strong> — Rückläufige Erkrankung</li>
+              </ul>
+            </li>
+            <li>Wählen Sie die vorgeschlagenen <strong>Diskussionsschwerpunkte</strong> (Mehrfachauswahl möglich).</li>
+            <li>Nutzen Sie die <strong>▶ Demo</strong>-Schaltfläche oben rechts für eine interaktive Demonstration dieser Bewertungsaufgabe.</li>
+            <li>Hinterlassen Sie optional einen <strong>Kommentar</strong> unterhalb der Bewertung.</li>
+          </ol>
+        </div>
+        <div class="instr-hint"><strong>Hinweis:</strong> „Keine Spezifizierung" schließt alle anderen Optionen aus.</div>
+
+        {% elif step.key == 'problem_correctness' %}
+        <div class="instr-goal"><strong>Aufgabe:</strong> Beurteilen Sie, ob die Fragestellung sachlich korrekt, leitlinienkonform und klinisch treffend formuliert ist.</div>
+        <div class="instr-steps">
+          <p>Bitte befolgen Sie dabei folgende Schritte:</p>
+          <ol>
+            <li>Lesen Sie die <strong>Fragestellung</strong> im linken Bereich.</li>
+            <li>Wählen Sie eine der drei <strong>Bewertungsstufen</strong>:
+              <ul>
+                <li><strong>Trifft nicht zu</strong> — Nicht leitlinienkonform</li>
+                <li><strong>Trifft teilweise zu</strong> — Teilweise leitlinienkonform</li>
+                <li><strong>Trifft zu</strong> — Vollständig leitlinienkonform</li>
+              </ul>
+            </li>
+            <li>Nutzen Sie die <strong>▶ Demo</strong>-Schaltfläche oben rechts für eine interaktive Demonstration dieser Bewertungsaufgabe.</li>
+            <li>Hinterlassen Sie optional einen <strong>Kommentar</strong> unterhalb der Bewertung.</li>
+          </ol>
+        </div>
+
+        {% elif step.key == 'problem_specificity' %}
+        <div class="instr-goal"><strong>Aufgabe:</strong> Beurteilen Sie den Grad der Spezifität der Fragestellung für die Tumorkonferenz.</div>
+        <div class="instr-steps">
+          <p>Bitte befolgen Sie dabei folgende Schritte:</p>
+          <ol>
+            <li>Lesen Sie die <strong>Fragestellung</strong> im linken Bereich.</li>
+            <li>Wählen Sie die passende <strong>Einordnung</strong>:
+              <ul>
+                <li><strong>Zu generisch</strong> — Die Fragestellung ist zu breit gefasst.</li>
+                <li><strong>Optimal</strong> — Die Fragestellung ist passend eingegrenzt.</li>
+                <li><strong>Zu spezifisch</strong> — Die Fragestellung ist zu eng gefasst.</li>
+              </ul>
+            </li>
+            <li>Nutzen Sie die <strong>▶ Demo</strong>-Schaltfläche oben rechts für eine interaktive Demonstration dieser Bewertungsaufgabe.</li>
+            <li>Hinterlassen Sie optional einen <strong>Kommentar</strong> unterhalb der Bewertung.</li>
+          </ol>
+        </div>
+
+        {% elif step.key == 'problem_postedit' %}
+        <div class="instr-goal"><strong>Aufgabe:</strong> Schätzen Sie den Aufwand ein, der nötig wäre, um diese Fragestellung für den klinischen Einsatz zu überarbeiten.</div>
+        <div class="instr-steps">
+          <p>Bitte befolgen Sie dabei folgende Schritte:</p>
+          <ol>
+            <li>Lesen Sie die <strong>Fragestellung</strong> im linken Bereich.</li>
+            <li>Entscheiden Sie im rechten Bereich:
+              <ul>
+                <li><strong>Direkt verwenden</strong> — Der Text kann ohne Änderungen übernommen werden.</li>
+                <li><strong>Überarbeitung nötig</strong> — Wählen Sie die Art der Überarbeitung und passen Sie den Text im linken Bereich an.</li>
+              </ul>
+            </li>
+            <li>Nutzen Sie die <strong>▶ Demo</strong>-Schaltfläche oben rechts für eine interaktive Demonstration dieser Bewertungsaufgabe.</li>
+            <li>Hinterlassen Sie optional einen <strong>Kommentar</strong> unterhalb der Bewertung.</li>
+          </ol>
+        </div>
+        <div class="instr-hint"><strong>Hinweis:</strong> Die Bearbeitungszeit wird automatisch erfasst, sobald Sie den Text bearbeiten.</div>
+
+        {% elif step.key == 'problem_origin_guess' %}
+        <div class="instr-goal"><strong>Aufgabe:</strong> Schätzen Sie ein, ob diese Version der Fragestellung von einem Menschen oder von einer KI verfasst wurde.</div>
+        <div class="instr-steps">
+          <p>Bitte befolgen Sie dabei folgende Schritte:</p>
+          <ol>
+            <li>Lesen Sie die <strong>Fragestellung</strong> im linken Bereich.</li>
+            <li>Wählen Sie eine der drei Optionen:
+              <ul>
+                <li><strong>Mensch</strong> — Sie glauben, ein Mensch hat den Text verfasst.</li>
+                <li><strong>Unsicher</strong> — Sie können es nicht eindeutig zuordnen.</li>
+                <li><strong>KI</strong> — Sie glauben, eine KI hat den Text verfasst.</li>
+              </ul>
+            </li>
+            <li>Nutzen Sie die <strong>▶ Demo</strong>-Schaltfläche oben rechts für eine interaktive Demonstration dieser Bewertungsaufgabe.</li>
+            <li>Hinterlassen Sie optional einen <strong>Kommentar</strong> unterhalb der Bewertung.</li>
+          </ol>
+        </div>
+
+        {% elif step.key == 'problem_preference' %}
+        <div class="instr-goal"><strong>Aufgabe:</strong> Vergleichen Sie beide Versionen der Fragestellung und wählen Sie, welche Version Sie für den klinischen Einsatz bevorzugen würden.</div>
+        <div class="instr-steps">
+          <p>Bitte befolgen Sie dabei folgende Schritte:</p>
+          <ol>
+            <li>Lesen Sie <strong>beide Versionen</strong> nebeneinander.</li>
+            <li>Klicken Sie auf die Version, die Sie bevorzugen.</li>
+            <li>Alternativ wählen Sie <strong>„Keine Präferenz"</strong>, wenn beide Versionen gleichwertig sind.</li>
+            <li>Nutzen Sie die <strong>▶ Demo</strong>-Schaltfläche oben rechts für eine interaktive Demonstration dieser Bewertungsaufgabe.</li>
+            <li>Hinterlassen Sie optional einen <strong>Kommentar</strong> unterhalb der Bewertung.</li>
+          </ol>
+        </div>
+        <div class="instr-hint"><strong>Hinweis:</strong> Erneutes Klicken auf eine bereits gewählte Version hebt die Auswahl auf.</div>
+
+        {% elif step.key == 'final_overall' %}
+        <div class="instr-goal"><strong>Aufgabe:</strong> Bewerten Sie die klinische Komplexität dieses Falls und hinterlassen Sie gegebenenfalls einen Kommentar.</div>
+        <div class="instr-steps">
+          <p>Bitte befolgen Sie dabei folgende Schritte:</p>
+          <ol>
+            <li>Betrachten Sie das <strong>TK-Protokoll</strong> im linken Bereich.</li>
+            <li>Wählen Sie den gewünschten Wert (0–100), indem Sie auf die entsprechende Position innerhalb der Bewertungsskala klicken:
+              <ul>
+                <li><strong>0 = Sehr gering</strong> — Einfacher, unkomplizierter Fall</li>
+                <li><strong>100 = Sehr hoch</strong> — Hochkomplexer Fall</li>
+              </ul>
+            </li>
+            <li>Hinterlassen Sie optional einen <strong>Kommentar</strong> zur Gesamteinschätzung.</li>
+            <li>Nutzen Sie die <strong>▶ Demo</strong>-Schaltfläche oben rechts für eine interaktive Demonstration dieser Bewertungsaufgabe.</li>
+          </ol>
+        </div>
+
+        {% else %}
+        {# Fallback for any unknown step #}
+        <div class="instr-goal"><strong>Aufgabe:</strong> {{ step.alert }}</div>
+        {% endif %}
+
+        <div class="instr-hint"><strong>Tipp:</strong> Über die Schaltfläche <strong>TK-Protokoll</strong> können Sie jederzeit das originale Tumorkonferenz-Protokoll einsehen.</div>
+
+      </div>
+    </div>
+
+    {% if error %}
+    <div class="alert alert-error" style="margin: 0 1.5rem .5rem;">{{ error }}</div>
+    {% endif %}
+
+    {# ── macro: segmented 2-way control (✗/✓) ───────────────────────────── #}
+    {% macro seg_ctrl(field_name, val) %}
+    <div class="seg-ctrl">
+      <label class="seg-opt seg-opt--no {% if val == 'no' %}seg-active{% endif %}">
+        <input type="radio" name="{{ field_name }}" value="no"
+               {% if val == 'no' %}checked{% endif %}>
+        <span class="seg-icon">&#10007;</span>
+      </label>
+      <label class="seg-opt seg-opt--yes {% if val == 'yes' %}seg-active{% endif %}">
+        <input type="radio" name="{{ field_name }}" value="yes"
+               {% if val == 'yes' %}checked{% endif %}>
+        <span class="seg-icon">&#10003;</span>
+      </label>
+    </div>
+    {% endmacro %}
+
+    {# ── macro: comment block ─────────────────────────────────────────────── #}
+    {% macro comment_block(existing) %}
+    <div class="comment-section">
+      <button type="button" class="comment-toggle" onclick="toggleComment(this)">
+        &#128172; Kommentar (optional)
+      </button>
+      <div class="comment-body comment-open">
+        <textarea name="comment" class="comment-textarea" rows="3"
+                  placeholder="Optionaler Kommentar zu dieser Bewertung...">{{ existing.get('comment', '') }}</textarea>
+      </div>
+    </div>
+    {% endmacro %}
+
+    <form method="post" id="rating-form">
+
+      {# ════════════════════════════════════════════════════════════════════════
+         STEP: case_relevance  (PDF left, rating panel right)
+         ════════════════════════════════════════════════════════════════════════ #}
+      {% if step.key == 'case_relevance' %}
+      {# Pre-compute rated count for initial progress bar #}
+      {% set ns_prog = namespace(rated=0) %}
+      {% for item in info_items %}
+        {% if existing.get('relevant_' + slugify(item)) in ['yes', 'no'] %}
+          {% set ns_prog.rated = ns_prog.rated + 1 %}
+        {% endif %}
+      {% endfor %}
+      <div class="eval-body eval-body--pdf">
+        <iframe src="{{ url_for('protocol_pdf', case_id=case_id) }}#view=FitH&pagemode=none&navpanes=0" class="inline-pdf"></iframe>
+
+        <div class="rel-panel">
+
+          {# ── progress header ── #}
+          <div class="rel-panel-header">
+            <span class="rel-panel-title">Relevante Informationen für diesen Fall</span>
+            <span class="rel-prog-label" id="rel-prog-label">{{ ns_prog.rated }} / {{ info_items | length }} bewertet</span>
+          </div>
+          <div class="rel-prog-track">
+            <div class="rel-prog-fill" id="rel-prog-fill"
+                 style="width: {{ ((ns_prog.rated / (info_items | length)) * 100) | int if info_items | length else 0 }}%"></div>
+          </div>
+
+          {# ── items grouped by category ── #}
+          <div class="rel-items-scroll">
+            {% set ns = namespace(current_cat='') %}
+            {% for item in info_items %}
+              {% set parts = item.split(': ', 1) %}
+              {% set cat = parts[0] if parts | length > 1 else '' %}
+              {% set label = parts[1] if parts | length > 1 else item %}
+              {% set slug = slugify(item) %}
+              {% set cat_slug = slugify(cat) %}
+              {% set val = existing.get('relevant_' + slug, '') %}
+
+              {% if cat != ns.current_cat %}
+                {% if ns.current_cat %}
+                  </div>{# close .rel-group-body #}
+                </div>{# close .rel-group #}
+                {% endif %}
+                {% set ns.current_cat = cat %}
+                <div class="rel-group rel-group--collapsed" data-cat="{{ cat_slug }}">
+                  <div class="rel-group-hdr" onclick="toggleRelGroup(this)">
+                    <svg class="rel-group-chevron" viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+                      <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/>
+                    </svg>
+                    <span class="rel-cat-name">{{ cat }} <span class="rel-cat-status" data-cat-status="{{ cat_slug }}"></span></span>
+                    <span class="rel-group-badge" data-cat-count="{{ cat_slug }}">0/0</span>
+                    <div class="rel-cat-actions">
+                      <button type="button" class="rel-cat-btn rel-cat-btn--no"
+                              onclick="event.stopPropagation(); setAllInCat('{{ cat_slug }}', 'no')">alle&nbsp;&#10007;</button>
+                      <button type="button" class="rel-cat-btn rel-cat-btn--yes"
+                              onclick="event.stopPropagation(); setAllInCat('{{ cat_slug }}', 'yes')">alle&nbsp;&#10003;</button>
+                    </div>
+                  </div>
+                  <div class="rel-group-body">
+              {% endif %}
+
+              <div class="rel-item" data-cat="{{ cat_slug }}">
+                <span class="rel-item-name">{{ label }}</span>
+                <div class="rel-item-btns">
+                  <label class="rel-btn rel-btn--no {% if val == 'no' %}rel-btn--active{% endif %}">
+                    <input type="radio" name="relevant_{{ slug }}" value="no"
+                           {% if val == 'no' %}checked{% endif %}>
+                    &#10007;&nbsp;Nein
+                  </label>
+                  <label class="rel-btn rel-btn--yes {% if val == 'yes' %}rel-btn--active{% endif %}">
+                    <input type="radio" name="relevant_{{ slug }}" value="yes"
+                           {% if val == 'yes' %}checked{% endif %}>
+                    &#10003;&nbsp;Ja
+                  </label>
+                </div>
+              </div>
+            {% endfor %}
+            {% if ns.current_cat %}
+              </div>{# close last .rel-group-body #}
+            </div>{# close last .rel-group #}
+            {% endif %}
+          </div>
+
+        </div>
+      </div>
+
+      {# ════════════════════════════════════════════════════════════════════════
+         STEP: summary_integrity — Radial information tree
+         ════════════════════════════════════════════════════════════════════════ #}
+      {% elif step.key == 'summary_integrity' %}
+      <div class="eval-body eval-body--tree">
+
+        {# ── always-visible text panel (left column) ── #}
+        <div class="tree-textpanel tree-textpanel--open" id="tree-textpanel">
+          <h3 class="tree-textpanel-title">Zusammenfassung&nbsp;–&nbsp;Version&nbsp;{{ 'A' if tab_idx == 0 else 'B' }}</h3>
+          <div class="text-content">{{ text_content }}</div>
+        </div>
+
+        {# ── tree area (right column) ── #}
+        <div class="tree-area">
+
+          {# progress + legend header #}
+          <div class="tree-header">
+            <div class="tree-prog-wrap">
+              <span class="tree-prog-label" id="tree-prog-label">0 / {{ info_items|length }} bewertet</span>
+              <div class="tree-prog-track">
+                <div class="tree-prog-fill" id="tree-prog-fill" style="width:0%"></div>
+              </div>
+            </div>
+            <div class="tree-legend">
+              <span class="tl-leg"><svg width="10" height="10"><circle cx="5" cy="5" r="4" fill="#f3f4f6" stroke="#d1d5db" stroke-width="1.5"/></svg>nicht bewertet</span>
+              <span class="tl-leg"><svg width="10" height="10"><circle cx="5" cy="5" r="4" fill="#dbeafe" stroke="#1a4f8a" stroke-width="1.5"/><path d="M2.5 5 L4 7 L7.5 3" fill="none" stroke="#1a4f8a" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>enthalten</span>
+              <span class="tl-leg"><svg width="10" height="10"><circle cx="5" cy="5" r="4" fill="#f3f4f6" stroke="#d1d5db" stroke-width="1.5"/><path d="M3 3 L7 7 M3 7 L7 3" fill="none" stroke="#9ca3af" stroke-width="1.4" stroke-linecap="round"/></svg>nicht enthalten</span>
+              <span class="tl-leg tl-leg--hint">Klick = ja&nbsp;→&nbsp;nein&nbsp;→&nbsp;zurücksetzen &nbsp;|&nbsp; Kategorie = alle umschalten</span>
+            </div>
+          </div>
+
+          {# SVG radial tree #}
+          <svg id="rt-svg" class="rt-svg" xmlns="http://www.w3.org/2000/svg"
+            width="100%" preserveAspectRatio="xMinYMin meet">
+            <g id="rt-lines"></g>
+
+            {# ── patient center ── #}
+            <g id="rt-patient" class="rt-patient">
+              <circle r="30" class="rt-pat-bg"/>
+              <g fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"
+                 stroke-linejoin="round" transform="scale(0.54) translate(-16,-20)">
+                <circle cx="16" cy="13" r="9"/>
+                <path d="M2 44 C2 30 9 24 16 24 C23 24 30 30 30 44"/>
+                <path d="M10 24 L10 33 Q10 40 16 40 Q22 40 22 33 L22 24"/>
+              </g>
+              <text class="rt-pat-label" x="-38" y="4">Patient</text>
+            </g>
+
+            {# ── category nodes ── #}
+            {% set ns = namespace(prev_cat='') %}
+            {% for item in info_items %}
+              {% set parts = item.split(': ', 1) %}
+              {% set cat = parts[0] if parts|length > 1 else '' %}
+              {% set cat_slug = slugify(cat) %}
+              {% if cat != ns.prev_cat %}
+                {% set ns.prev_cat = cat %}
+                <g class="rt-cat" id="rt-cat-{{ cat_slug }}" data-cat="{{ cat_slug }}"
+                   data-complete="false" data-partial="false" data-allno="false"
+                   onclick="rtToggleCat('{{ cat_slug }}')">  
+                  <title>{{ cat }}</title>
+                  <circle r="18" class="rt-cat-circle"/>
+                  <g class="rt-cat-icon" fill="none" stroke="currentColor" stroke-width="1.8"
+                     stroke-linecap="round" stroke-linejoin="round"
+                     transform="scale(0.55) translate(-16,-16)">
+                    {%- if cat == 'Demographie' -%}
+                    <circle cx="16" cy="10" r="5"/>
+                    <path d="M6 28 C6 20 10 17 16 17 C22 17 26 20 26 28"/>
+                    {%- elif cat == 'Allgemeinzustand' -%}
+                    <path d="M16 27 C16 27 4 19 4 12 C4 8 7 5 11 5 C13.5 5 15.2 6.5 16 8 C16.8 6.5 18.5 5 21 5 C25 5 28 8 28 12 C28 19 16 27 16 27Z"/>
+                    <polyline points="7,16 11,12 15,18 19,10 23,14" stroke-width="1.5"/>
+                    {%- elif cat == 'Primärtumor' -%}
+                    <circle cx="16" cy="16" r="4"/>
+                    <circle cx="16" cy="7" r="2.2" fill="currentColor" stroke="none" opacity=".75"/>
+                    <circle cx="23.5" cy="11.5" r="2.2" fill="currentColor" stroke="none" opacity=".75"/>
+                    <circle cx="23.5" cy="20.5" r="2.2" fill="currentColor" stroke="none" opacity=".75"/>
+                    <circle cx="16" cy="25" r="2.2" fill="currentColor" stroke="none" opacity=".75"/>
+                    <circle cx="8.5" cy="20.5" r="2.2" fill="currentColor" stroke="none" opacity=".75"/>
+                    <circle cx="8.5" cy="11.5" r="2.2" fill="currentColor" stroke="none" opacity=".75"/>
+                    {%- elif cat == 'Primärtherapie' -%}
+                    <rect x="11" y="3" width="10" height="5" rx="1.5"/>
+                    <rect x="8" y="8" width="16" height="4" rx="1"/>
+                    <rect x="10" y="12" width="12" height="14" rx="2"/>
+                    <line x1="14" y1="18" x2="18" y2="18"/>
+                    <line x1="16" y1="16" x2="16" y2="20"/>
+                    {%- elif cat == 'Therapieverlauf' -%}
+                    <line x1="4" y1="27" x2="28" y2="27"/>
+                    <line x1="4" y1="5" x2="4" y2="27"/>
+                    <circle cx="8" cy="21" r="2" fill="currentColor" stroke="none"/>
+                    <circle cx="13" cy="14" r="2" fill="currentColor" stroke="none"/>
+                    <circle cx="19" cy="18" r="2" fill="currentColor" stroke="none"/>
+                    <circle cx="25" cy="9" r="2" fill="currentColor" stroke="none"/>
+                    <polyline points="8,21 13,14 19,18 25,9" stroke-width="1.8"/>
+                    {%- elif cat == 'Krankheitsverlauf' -%}
+                    <rect x="4" y="4" width="24" height="24" rx="3"/>
+                    <line x1="10" y1="4" x2="10" y2="7.5"/>
+                    <line x1="22" y1="4" x2="22" y2="7.5"/>
+                    <line x1="4" y1="12" x2="28" y2="12"/>
+                    <line x1="9" y1="17" x2="11" y2="17"/>
+                    <line x1="9" y1="22" x2="11" y2="22"/>
+                    <line x1="14" y1="17" x2="23" y2="17"/>
+                    <line x1="14" y1="22" x2="20" y2="22"/>
+                    {%- elif cat == 'Aktuelle Befunde' -%}
+                    <circle cx="14" cy="14" r="8"/>
+                    <line x1="20" y1="20" x2="28" y2="28"/>
+                    <line x1="10" y1="14" x2="18" y2="14" stroke-width="1.5"/>
+                    <line x1="14" y1="10" x2="14" y2="18" stroke-width="1.5"/>
+                    {%- elif cat == 'Aktueller Status' -%}
+                    <rect x="6" y="3" width="20" height="26" rx="2"/>
+                    <line x1="10" y1="10" x2="22" y2="10"/>
+                    <line x1="10" y1="15" x2="22" y2="15"/>
+                    <polyline points="10,21 12.5,23.5 17,19"/>
+                    <line x1="19" y1="21" x2="22" y2="21"/>
+                    {%- elif cat == 'Entscheidungsrelevante Faktoren' -%}
+                    <line x1="16" y1="5" x2="16" y2="27"/>
+                    <line x1="5" y1="10" x2="27" y2="10"/>
+                    <path d="M5 10 C5 10 5 20 10 23 C13 25 16 10 16 10 C16 10 19 25 22 23 C27 20 27 10 27 10"/>
+                    {%- endif -%}
+                  </g>
+                  {# category name label — positioned + rotated by JS #}
+                  <text class="rt-cat-name"></text>
+                </g>
+              {% endif %}
+            {% endfor %}
+
+            {# ── item leaf nodes ── #}
+            {% for item in info_items %}
+              {% set parts = item.split(': ', 1) %}
+              {% set label = parts[1] if parts|length > 1 else item %}
+              {% set slug = slugify(item) %}
+              {% set cat_slug = slugify(parts[0] if parts|length > 1 else '') %}
+              {% set val = existing.get('enthalten_' + slug, '') %}
+              <g class="rt-item" id="rt-item-{{ slug }}"
+                 data-slug="{{ slug }}" data-cat="{{ cat_slug }}" data-val="{{ val }}"
+                 onclick="rtToggleItem('{{ slug }}')">
+                <circle r="11" class="rt-item-circle"/>
+                <path class="rt-item-check" d="M-5 0.5 L-1.5 4.5 L5.5 -4"/>
+                <path class="rt-item-cross" d="M-4 -4 L4 4 M-4 4 L4 -4"/>
+                <text class="rt-item-label"></text>
+                <title>{{ label }}</title>
+              </g>
+            {% endfor %}
+
+          </svg>{# end rt-svg #}
+
+          {# Hidden inputs must be outside <svg> to be submitted by the form #}
+          {% for item in info_items %}
+            {% set slug = slugify(item) %}
+            {% set val = existing.get('enthalten_' + slug, '') %}
+            <input type="hidden" id="rt-inp-{{ slug }}"
+                   name="enthalten_{{ slug }}" value="{{ val }}">
+          {% endfor %}
+
+        </div>{# end .tree-area #}
+      </div>{# end .eval-body--tree #}
+
+      {# ════════════════════════════════════════════════════════════════════════
+         STEP: summary_falseinfo
+         ════════════════════════════════════════════════════════════════════════ #}
+      {% elif step.key == 'summary_falseinfo' %}
+      <div class="eval-body">
+        <div class="text-display">
+          <div class="text-label">Zusammenfassung – Version {{ 'A' if tab_idx == 0 else 'B' }}</div>
+          <div class="text-content">{{ text_content }}</div>
+        </div>
+        <div class="rating-section">
+          <h3 class="rating-title">Fehlerhafte Informationen</h3>
+          {% if enthalten_items %}
+          <p class="rating-hint">Markieren Sie alle Informationen, die <strong>falsch oder irreführend</strong> sind, und bewerten Sie deren mögliche Folgen:</p>
+          <div class="falseinfo-list">
+            {% for item in enthalten_items %}
+            {% set slug = slugify(item) %}
+            {% set is_checked = item in existing.get('false_items', []) %}
+            <div class="fi-card {% if is_checked %}fi-card--active{% endif %}" id="fi_{{ slug }}">
+
+              {# ── item row ── #}
+              <label class="fi-row">
+                <input type="checkbox" name="false_item" value="{{ item }}"
+                       {% if is_checked %}checked{% endif %}
+                       onchange="toggleFalseinfo('{{ slug }}', this.checked)">
+                <span class="fi-checkbox">
+                  <svg class="fi-check-icon" viewBox="0 0 10 8" fill="none">
+                    <path d="M1 4l3 3 5-5" stroke="currentColor" stroke-width="1.6"
+                          stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+                <span class="fi-item-label">{{ item }}</span>
+                <span class="fi-badge {% if is_checked %}fi-badge--on{% endif %}">
+                  {{ '⚠ Fehlerhaft' if is_checked else 'Korrekt' }}
+                </span>
+              </label>
+
+              {# ── sub-form ── #}
+              <div class="fi-sub {% if not is_checked %}hidden{% endif %}" id="fisub_{{ slug }}">
+                <div class="fi-tl-row">
+
+                  <div class="fi-tl-col">
+                    <div class="fi-sub-label">Schwere des Schadens</div>
+                    <div class="tl-housing">
+                      <label class="tl-light tl-red">
+                        <input type="radio" name="severity_{{ slug }}" value="Schwerer Schaden"
+                               {% if existing.get('severity_' + slug) == 'Schwerer Schaden' %}checked{% endif %}>
+                        <span class="tl-bulb"></span>
+                        <span class="tl-opt-label">Schwerer Schaden</span>
+                      </label>
+                      <label class="tl-light tl-amber">
+                        <input type="radio" name="severity_{{ slug }}" value="Leichter Schaden"
+                               {% if existing.get('severity_' + slug) == 'Leichter Schaden' %}checked{% endif %}>
+                        <span class="tl-bulb"></span>
+                        <span class="tl-opt-label">Leichter Schaden</span>
+                      </label>
+                      <label class="tl-light tl-green">
+                        <input type="radio" name="severity_{{ slug }}" value="Kein Schaden"
+                               {% if existing.get('severity_' + slug) == 'Kein Schaden' %}checked{% endif %}>
+                        <span class="tl-bulb"></span>
+                        <span class="tl-opt-label">Kein Schaden</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="fi-tl-col">
+                    <div class="fi-sub-label">Eintrittswahrscheinlichkeit</div>
+                    <div class="tl-housing">
+                      <label class="tl-light tl-red">
+                        <input type="radio" name="prob_{{ slug }}" value="Hoch"
+                               {% if existing.get('prob_' + slug) == 'Hoch' %}checked{% endif %}>
+                        <span class="tl-bulb"></span>
+                        <span class="tl-opt-label">Hoch</span>
+                      </label>
+                      <label class="tl-light tl-amber">
+                        <input type="radio" name="prob_{{ slug }}" value="Moderat"
+                               {% if existing.get('prob_' + slug) == 'Moderat' %}checked{% endif %}>
+                        <span class="tl-bulb"></span>
+                        <span class="tl-opt-label">Moderat</span>
+                      </label>
+                      <label class="tl-light tl-green">
+                        <input type="radio" name="prob_{{ slug }}" value="Gering"
+                               {% if existing.get('prob_' + slug) == 'Gering' %}checked{% endif %}>
+                        <span class="tl-bulb"></span>
+                        <span class="tl-opt-label">Gering</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="fi-tl-col fi-comment-col">
+                    <div class="fi-sub-label">Kommentar (optional)</div>
+                    <textarea name="comment_{{ slug }}" class="fi-comment-textarea"
+                              placeholder="Optionaler Kommentar zu diesem Fehler...">{{ existing.get('comment_' + slug, '') }}</textarea>
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="empty-state">
+            <p>Keine Informationen wurden für diese Version als "enthalten" markiert.<br>
+            Bitte schließen Sie zuerst Schritt 1 (Informationsmatrix) ab.</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      {# ════════════════════════════════════════════════════════════════════════
+         STEP: slider steps (correctness, completeness, conciseness)
+         ════════════════════════════════════════════════════════════════════════ #}
+      {% elif step.key in ['summary_correctness', 'summary_completeness',
+                            'summary_conciseness'] %}
+      <div class="eval-body">
+        <div class="text-display">
+          {% if step.section_type == 'summary' %}
+          <div class="text-label">Zusammenfassung – Version {{ 'A' if tab_idx == 0 else 'B' }}</div>
+          {% else %}
+          <div class="text-label">Fragestellung – Version {{ 'A' if tab_idx == 0 else 'B' }}</div>
+          {% endif %}
+          <div class="text-content">{{ text_content }}</div>
+        </div>
+        <div class="rating-section">
+          <h3 class="rating-title">{{ step.subtitle }}</h3>
+          <div class="vas-wrap">
+            <div class="vas8-bar" id="vas-bar">
+              <div class="vas8-track-line"></div>
+              <div class="vas8-fill" id="vas-fill"></div>
+              <div class="vas8-thumb" id="vas-thumb"></div>
+            </div>
+            <div class="vas-tick-labels">
+              <span>0 &mdash; Sehr schlecht</span>
+              <span>Ausgezeichnet &mdash; 100</span>
+            </div>
+            <input type="hidden" name="vas_score" id="vas-hidden"
+                   value="{{ existing.get('vas_score', '') }}">
+          </div>
+        </div>
+      </div>
+
+      {# ════════════════════════════════════════════════════════════════════════
+         STEP: postedit  (Bearbeitungsaufwand – edit-in-place widget)
+         ════════════════════════════════════════════════════════════════════════ #}
+      {% elif step.key in ['summary_postedit', 'problem_postedit'] %}
+      <div class="eval-body">
+        {# ── left panel: read-only → editable text ──────────────────────── #}
+        <div class="text-display pe-text-panel" id="pe-text-panel">
+          {% if step.section_type == 'summary' %}
+          <div class="text-label">
+            Zusammenfassung – Version {{ 'A' if tab_idx == 0 else 'B' }}
+            <span class="pe-edit-badge" id="pe-edit-badge" style="display:none"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg> Bearbeitungsmodus</span>
+          </div>
+          {% else %}
+          <div class="text-label">
+            Fragestellung – Version {{ 'A' if tab_idx == 0 else 'B' }}
+            <span class="pe-edit-badge" id="pe-edit-badge" style="display:none"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg> Bearbeitungsmodus</span>
+          </div>
+          {% endif %}
+
+          {# read-only view #}
+          <div class="text-content" id="pe-text-readonly">{{ text_content }}</div>
+
+          {# editable view (hidden initially) #}
+          <div class="pe-editor-wrap" id="pe-editor-wrap" style="display:none">
+            <div class="pe-editor-toolbar">
+              <span class="pe-editor-status">Passen Sie den Text nach Bedarf an</span>
+              <button type="button" class="pe-reset-btn" id="pe-reset-btn"
+                      title="Originaltext wiederherstellen"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg> Zurücksetzen</button>
+            </div>
+            <textarea name="pe_edited_text" id="pe-editor" class="pe-editor-textarea">{{ existing.get('pe_edited_text', text_content) }}</textarea>
+          </div>
+
+          {# hidden fields for original text + timing #}
+          <input type="hidden" name="pe_original_text" value="{{ text_content }}">
+          <input type="hidden" name="pe_edit_duration" id="pe-edit-duration"
+                 value="{{ existing.get('pe_edit_duration', '0') }}">
+        </div>
+
+        {# ── right panel: decision tree ─────────────────────────────────── #}
+        <div class="rating-section">
+          <h3 class="rating-title">{{ step.subtitle }}</h3>
+          <p class="pe-intro-text">Kann dieser Text direkt für die klinische Verwendung übernommen werden, oder sind Anpassungen erforderlich?</p>
+
+          {# Level 1: use as-is vs needs edit #}
+          <div class="pe-level1">
+            <label class="pe-card pe-card--green
+              {% if existing.get('pe_decision') == 'use_as_is' %}pe-card--active{% endif %}">
+              <input type="radio" name="pe_decision" value="use_as_is"
+                     {% if existing.get('pe_decision') == 'use_as_is' %}checked{% endif %} required>
+              <span class="pe-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+              <span class="pe-card-label">Direkt verwenden</span>
+              <span class="pe-card-sub">Text ist bereit für den<br>klinischen Einsatz</span>
+            </label>
+            <label class="pe-card pe-card--amber
+              {% if existing.get('pe_decision') == 'needs_edit' %}pe-card--active{% endif %}">
+              <input type="radio" name="pe_decision" value="needs_edit"
+                     {% if existing.get('pe_decision') == 'needs_edit' %}checked{% endif %}>
+              <span class="pe-card-icon"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><g transform="translate(12 12) scale(1.1) translate(-10.9 -10.9)"><path fill-rule="evenodd" d="M12.7 7.2L14.4 6.9L14.4 9.1L12.7 8.8L11.9 10.8L13.3 11.7L11.7 13.3L10.8 11.9L8.8 12.7L9.1 14.4L6.9 14.4L7.2 12.7L5.2 11.9L4.3 13.3L2.7 11.7L4.1 10.8L3.3 8.8L1.6 9.1L1.6 6.9L3.3 7.2L4.1 5.2L2.7 4.3L4.3 2.7L5.2 4.1L7.2 3.3L6.9 1.6L9.1 1.6L8.8 3.3L10.8 4.1L11.7 2.7L13.3 4.3L11.9 5.2ZM10.2 8A2.2 2.2 0 1 0 5.8 8A2.2 2.2 0 1 0 10.2 8Z"/><path fill-rule="evenodd" d="M19.1 15.5L20.2 15.3L20.2 16.7L19.1 16.5L18.6 17.8L19.5 18.4L18.4 19.5L17.8 18.6L16.5 19.1L16.7 20.2L15.3 20.2L15.5 19.1L14.2 18.6L13.6 19.5L12.5 18.4L13.5 17.8L12.9 16.5L11.8 16.7L11.8 15.3L12.9 15.5L13.5 14.2L12.5 13.6L13.6 12.5L14.2 13.5L15.5 12.9L15.3 11.8L16.7 11.8L16.5 12.9L17.8 13.5L18.4 12.5L19.5 13.6L18.6 14.2ZM17.4 16A1.4 1.4 0 1 0 14.6 16A1.4 1.4 0 1 0 17.4 16Z"/></g></svg></span>
+              <span class="pe-card-label">Überarbeitung nötig</span>
+              <span class="pe-card-sub">Text muss vor Verwendung<br>angepasst werden</span>
+            </label>
+          </div>
+
+          {# Level 2: effort category (shown when needs_edit) #}
+          <div class="pe-level2" id="pe-level2"
+               style="{% if existing.get('pe_decision') != 'needs_edit' %}display:none{% endif %}">
+            <div class="pe-level2-header">Art der Überarbeitung:</div>
+            <div class="pe-level2-options">
+              <label class="pe-sub-card
+                {% if existing.get('pe_effort') == 'minor' %}pe-sub-card--active{% endif %}">
+                <input type="radio" name="pe_effort" value="minor"
+                       {% if existing.get('pe_effort') == 'minor' %}checked{% endif %}>
+                <span class="pe-sub-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span>
+                <span class="pe-sub-label">Kleine Korrekturen</span>
+                <span class="pe-sub-desc">Formulierung, Stil, Tippfehler</span>
+              </label>
+              <label class="pe-sub-card
+                {% if existing.get('pe_effort') == 'major' %}pe-sub-card--active{% endif %}">
+                <input type="radio" name="pe_effort" value="major"
+                       {% if existing.get('pe_effort') == 'major' %}checked{% endif %}>
+                  <span class="pe-sub-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><g transform="rotate(35 12 12)"><rect x="6.75" y="4" width="10.5" height="5" rx="1.3" fill="currentColor"/><rect x="10.45" y="8.8" width="3" height="11.2" rx="1.3"/></g></svg></span>
+                <span class="pe-sub-label">Größere Überarbeitung</span>
+                <span class="pe-sub-desc">Fakten, Struktur, fehlende Inhalte</span>
+              </label>
+              <label class="pe-sub-card
+                {% if existing.get('pe_effort') == 'rewrite' %}pe-sub-card--active{% endif %}">
+                <input type="radio" name="pe_effort" value="rewrite"
+                       {% if existing.get('pe_effort') == 'rewrite' %}checked{% endif %}>
+                <span class="pe-sub-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg></span>
+                <span class="pe-sub-label">Vollständig neu verfassen</span>
+                <span class="pe-sub-desc">Text nicht verwendbar</span>
+              </label>
+            </div>
+          </div>
+
+          {# Editing prompt (shown when needs_edit) #}
+          <div class="pe-edit-prompt" id="pe-edit-prompt"
+               style="{% if existing.get('pe_decision') != 'needs_edit' %}display:none{% endif %}">
+            <span class="pe-edit-prompt-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+            <span>Bitte passen Sie den Text im linken Bereich an. Die Bearbeitungszeit wird automatisch erfasst.</span>
+          </div>
+
+          {# Confirmation message (shown when use_as_is) #}
+          <div class="pe-confirm-msg" id="pe-confirm-msg"
+               style="{% if existing.get('pe_decision') != 'use_as_is' %}display:none{% endif %}">
+            <span class="pe-confirm-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <span>Der Text wird unverändert übernommen.</span>
+          </div>
+
+        </div>{# end rating-section #}
+      </div>{# end eval-body #}
+
+      <script>
+      (function(){
+        /* ── DOM refs ── */
+        var cards     = document.querySelectorAll('.pe-card input[type="radio"]');
+        var level2    = document.getElementById('pe-level2');
+        var subCards  = document.querySelectorAll('.pe-sub-card');
+        var textPanel = document.getElementById('pe-text-panel');
+        var readonly  = document.getElementById('pe-text-readonly');
+        var editorW   = document.getElementById('pe-editor-wrap');
+        var editor    = document.getElementById('pe-editor');
+        var badge     = document.getElementById('pe-edit-badge');
+        var prompt    = document.getElementById('pe-edit-prompt');
+        var confirm   = document.getElementById('pe-confirm-msg');
+        var resetBtn  = document.getElementById('pe-reset-btn');
+        var durInput  = document.getElementById('pe-edit-duration');
+        var origText  = editor ? editor.defaultValue : '';
+
+        if (!level2 || !editor) return;
+
+        /* ── Timing state ── */
+        var editStartTs  = null;          /* Date.now() when editing began       */
+        var accumulated  = parseInt(durInput.value, 10) || 0; /* prior seconds  */
+        var timerRunning = false;
+
+        function startTimer() {
+          if (!timerRunning) { editStartTs = Date.now(); timerRunning = true; }
+        }
+        function pauseTimer() {
+          if (timerRunning) {
+            accumulated += Math.round((Date.now() - editStartTs) / 1000);
+            timerRunning = false;
+          }
+        }
+        function flushTimer() {
+          if (timerRunning) {
+            accumulated += Math.round((Date.now() - editStartTs) / 1000);
+            editStartTs = Date.now();
+          }
+          durInput.value = accumulated;
+        }
+
+        /* ── Editor mode toggle ── */
+        function setEditMode(on) {
+          readonly.style.display = on ? 'none' : '';
+          editorW.style.display  = on ? ''     : 'none';
+          badge.style.display    = on ? 'inline-flex' : 'none';
+          prompt.style.display   = on ? 'flex' : 'none';
+          confirm.style.display  = on ? 'none' : (document.querySelector('.pe-card input[value="use_as_is"]:checked') ? 'flex' : 'none');
+          textPanel.classList.toggle('pe-text-panel--editing', on);
+          if (on) { startTimer(); editor.focus(); }
+          else    { pauseTimer(); }
+        }
+
+        /* ── Decision card sync ── */
+        function syncCards() {
+          document.querySelectorAll('.pe-card').forEach(function(c) {
+            var inp = c.querySelector('input');
+            if (inp) c.classList.toggle('pe-card--active', inp.checked);
+          });
+          var needsEdit = document.querySelector('.pe-card input[value="needs_edit"]');
+          var isEdit    = needsEdit && needsEdit.checked;
+          level2.style.display = isEdit ? 'flex' : 'none';
+          if (!isEdit) {
+            document.querySelectorAll('input[name="pe_effort"]').forEach(function(r){ r.checked = false; });
+            subCards.forEach(function(s){ s.classList.remove('pe-sub-card--active'); });
+            setEditMode(false);
+          } else {
+            /* Only open editor if an effort sub-card is already chosen */
+            var effortChosen = document.querySelector('input[name="pe_effort"]:checked');
+            if (effortChosen) { setEditMode(true); }
+            else {
+              /* Show prompt to pick effort, but no editor yet */
+              setEditMode(false);
+              prompt.style.display = 'flex';
+              confirm.style.display = 'none';
+            }
+          }
+        }
+
+        subCards.forEach(function(card) {
+          card.addEventListener('change', function() {
+            subCards.forEach(function(s){ s.classList.remove('pe-sub-card--active'); });
+            this.closest('.pe-sub-card').classList.add('pe-sub-card--active');
+            setEditMode(true);
+          });
+        });
+        cards.forEach(function(r) { r.addEventListener('change', syncCards); });
+
+        /* ── Reset button ── */
+        resetBtn.addEventListener('click', function() {
+          editor.value = origText;
+          editor.focus();
+        });
+
+        /* ── Track active editing time (pause when textarea loses focus) ── */
+        editor.addEventListener('focus', startTimer);
+        editor.addEventListener('blur',  pauseTimer);
+
+        /* ── Flush timer on form submit ── */
+        var form = editor.closest('form');
+        if (form) {
+          form.addEventListener('submit', function() {
+            flushTimer();
+            /* If use_as_is is selected, clear edited text to signal "no change" */
+            var useAsIs = document.querySelector('.pe-card input[value="use_as_is"]:checked');
+            if (useAsIs) { editor.value = ''; durInput.value = '0'; }
+          });
+        }
+
+        /* ── Restore state on page load (e.g. returning to tab) ── */
+        var isEdit = document.querySelector('.pe-card input[value="needs_edit"]:checked');
+        var effortPicked = document.querySelector('input[name="pe_effort"]:checked');
+        if (isEdit && effortPicked) setEditMode(true);
+      })();
+      </script>
+
+      {# ════════════════════════════════════════════════════════════════════════
+         STEP: origin_guess (summary or problem)
+         ════════════════════════════════════════════════════════════════════════ #}
+      {% elif step.key in ['summary_origin_guess', 'problem_origin_guess'] %}
+      <div class="eval-body">
+        <div class="text-display">
+          {% if step.section_type == 'summary' %}
+          <div class="text-label">Zusammenfassung – Version {{ 'A' if tab_idx == 0 else 'B' }}</div>
+          {% else %}
+          <div class="text-label">Fragestellung – Version {{ 'A' if tab_idx == 0 else 'B' }}</div>
+          {% endif %}
+          <div class="text-content">{{ text_content }}</div>
+        </div>
+        <div class="rating-section">
+          <h3 class="rating-title">{{ step.subtitle }}</h3>
+          <div class="origin-widget">
+
+            {# ── Mensch ── #}
+            <label class="origin-opt origin-opt--mensch {% if existing.get('choice') == 'Mensch' %}origin-opt--active{% endif %}">
+              <input type="radio" name="choice" value="Mensch"
+                     {% if existing.get('choice') == 'Mensch' %}checked{% endif %} required>
+              <div class="origin-icon">
+                <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.4"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="22" cy="11" r="6"/>
+                  <path d="M8 42 C8 30 14 26 22 26 C30 26 36 30 36 42"/>
+                  <path d="M17 26 L17 33 Q17 38 22 38 Q27 38 27 33 L27 26"/>
+                  <circle cx="27" cy="39.5" r="2" fill="currentColor" stroke="none"/>
+                </svg>
+              </div>
+              <span class="origin-label">Mensch</span>
+            </label>
+
+            {# ── Unsicher ── #}
+            <label class="origin-opt origin-opt--unsicher {% if existing.get('choice') == 'Unsicher' %}origin-opt--active{% endif %}">
+              <input type="radio" name="choice" value="Unsicher"
+                     {% if existing.get('choice') == 'Unsicher' %}checked{% endif %} required>
+              <div class="origin-icon">
+                <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.4"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="22" cy="22" r="19"/>
+                  <path d="M15.5 17 C15.5 11.5 21 8.5 25.5 12 C30 15.5 27.5 21 22 23 L22 28"/>
+                  <circle cx="22" cy="34" r="2" fill="currentColor" stroke="none"/>
+                </svg>
+              </div>
+              <span class="origin-label">Unsicher</span>
+            </label>
+
+            {# ── KI ── #}
+            <label class="origin-opt origin-opt--ki {% if existing.get('choice') == 'KI' %}origin-opt--active{% endif %}">
+              <input type="radio" name="choice" value="KI"
+                     {% if existing.get('choice') == 'KI' %}checked{% endif %} required>
+              <div class="origin-icon">
+                <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.4"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="5" width="38" height="26" rx="3"/>
+                  <rect x="7" y="9" width="30" height="18" rx="1.5" stroke-width="1.8"/>
+                  <circle cx="14" cy="16" r="2" fill="currentColor" stroke="none"/>
+                  <circle cx="22" cy="13" r="2" fill="currentColor" stroke="none"/>
+                  <circle cx="30" cy="17" r="2" fill="currentColor" stroke="none"/>
+                  <circle cx="18" cy="22" r="2" fill="currentColor" stroke="none"/>
+                  <circle cx="26" cy="22" r="2" fill="currentColor" stroke="none"/>
+                  <path d="M14 16 L22 13 L30 17" stroke-width="1.5"/>
+                  <path d="M14 16 L18 22 L26 22 L30 17" stroke-width="1.5"/>
+                  <path d="M22 13 L18 22" stroke-width="1.5"/>
+                  <path d="M22 31 L22 37" stroke-width="2.4"/>
+                  <path d="M14 37 L30 37"/>
+                </svg>
+              </div>
+              <span class="origin-label">KI</span>
+            </label>
+
+          </div>
+        </div>
+      </div>
+
+      {# ════════════════════════════════════════════════════════════════════════
+         STEP: preference (side-by-side)
+         ════════════════════════════════════════════════════════════════════════ #}
+      {% elif step.key in ['summary_preference', 'problem_preference'] %}
+      <div class="eval-body eval-body--preference">
+        <div class="preference-cols" id="pref-cols">
+          <div class="preference-col pref-clickable {% if existing.get('choice') == 'Version A' %}pref-selected{% endif %}" data-pref="Version A">
+            <div class="text-label pref-label-a">Version A</div>
+            <div class="text-content preference-text">{{ text_a }}</div>
+            <div class="pref-badge">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none"
+                   stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <!-- beam -->
+                <line x1="12" y1="3" x2="12" y2="20"/>
+                <!-- bar tilted left-down -->
+                <line x1="5" y1="8" x2="19" y2="4"/>
+                <!-- left pan (heavier, lower) -->
+                <path d="M5 8 L3 13 Q5 15 7 13 Z"/>
+                <!-- right pan (lighter, higher) -->
+                <path d="M19 4 L17 8 Q19 10 21 8 Z"/>
+                <!-- base -->
+                <line x1="9" y1="20" x2="15" y2="20"/>
+              </svg>
+            </div>
+          </div>
+          <div class="preference-col pref-clickable {% if existing.get('choice') == 'Version B' %}pref-selected{% endif %}" data-pref="Version B">
+            <div class="text-label pref-label-b">Version B</div>
+            <div class="text-content preference-text">{{ text_b }}</div>
+            <div class="pref-badge">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none"
+                   stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <!-- beam -->
+                <line x1="12" y1="3" x2="12" y2="20"/>
+                <!-- bar tilted right-down -->
+                <line x1="5" y1="4" x2="19" y2="8"/>
+                <!-- left pan (lighter, higher) -->
+                <path d="M5 4 L3 8 Q5 10 7 8 Z"/>
+                <!-- right pan (heavier, lower) -->
+                <path d="M19 8 L17 13 Q19 15 21 13 Z"/>
+                <!-- base -->
+                <line x1="9" y1="20" x2="15" y2="20"/>
+              </svg>
+            </div>
+          </div>
+          <button type="button" id="pref-no-pref-btn"
+                  class="pref-no-pref-btn {% if existing.get('choice', 'Keine Präferenz') == 'Keine Präferenz' %}pref-no-pref-btn--active{% endif %}"
+                  title="Keine klare Präferenz">
+            <svg viewBox="0 0 24 24" width="34" height="34" fill="none"
+                 stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <!-- beam -->
+              <line x1="12" y1="4" x2="12" y2="20"/>
+              <!-- horizontal bar -->
+              <line x1="5" y1="6" x2="19" y2="6"/>
+              <!-- left pan (balanced = same height) -->
+              <path d="M5 6 L3 11 Q5 13 7 11 Z"/>
+              <!-- right pan (balanced = same height) -->
+              <path d="M19 6 L17 11 Q19 13 21 11 Z"/>
+              <!-- base -->
+              <line x1="9" y1="20" x2="15" y2="20"/>
+            </svg>
+            <span class="pref-no-pref-label">Keine Präferenz</span>
+          </button>
+        </div>
+        <input type="hidden" name="choice" id="pref-choice"
+               value="{{ existing.get('choice', 'Keine Präferenz') }}">
+        <div class="rating-section rating-section--preference">
+          <h3 class="rating-title">{{ step.subtitle }}</h3>
+          <p class="pref-hint">Klicken Sie auf eine Version, um sie zu bevorzugen. Erneutes Klicken hebt die Auswahl auf.</p>
+          <div class="pref-status-row">
+            <span class="pref-status-label">Aktuelle Auswahl:</span>
+            <span class="pref-status-value" id="pref-status-text">{{ existing.get('choice', 'Keine Präferenz') }}</span>
+          </div>
+        </div>
+      </div>
+
+      {# ════════════════════════════════════════════════════════════════════════
+         STEP: problem_focus
+         ════════════════════════════════════════════════════════════════════════ #}
+      {% elif step.key == 'problem_focus' %}
+      <div class="eval-body">
+        <div class="text-display">
+          <div class="text-label">Fragestellung – Version {{ 'A' if tab_idx == 0 else 'B' }}</div>
+          <div class="text-content">{{ text_content }}</div>
+        </div>
+        <div class="rating-section">
+          <h3 class="rating-title">{{ step.subtitle }}</h3>
+
+          <div class="sub-section">
+            <div class="sub-section-label">Krankheitsstatus:</div>
+            <div class="ks-widget">
+
+              <label class="ks-option ks-option--progress {% if existing.get('status') == 'Progredient' %}ks-selected{% endif %}">
+                <input type="radio" name="status" value="Progredient"
+                       {% if existing.get('status') == 'Progredient' %}checked{% endif %} required>
+                <div class="ks-icon">
+                  <svg viewBox="0 0 40 40" width="40" height="40" fill="none">
+                    <circle cx="20" cy="20" r="16" stroke="#ef4444" stroke-width="2.5"/>
+                    <polyline points="10,26 20,14 30,26" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div class="ks-label">Progredient</div>
+                <div class="ks-sublabel">Fortschreitende Erkrankung</div>
+              </label>
+
+              <label class="ks-option {% if existing.get('status') == 'Unverändert' %}ks-selected{% endif %}">
+                <input type="radio" name="status" value="Unverändert"
+                       {% if existing.get('status') == 'Unverändert' %}checked{% endif %} required>
+                <div class="ks-icon">
+                  <svg viewBox="0 0 40 40" width="40" height="40" fill="none">
+                    <circle cx="20" cy="20" r="16" stroke="#6b7280" stroke-width="2.5"/>
+                    <line x1="10" y1="20" x2="30" y2="20" stroke="#6b7280" stroke-width="2.5" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <div class="ks-label">Unverändert</div>
+                <div class="ks-sublabel">Stabile Erkrankung</div>
+              </label>
+
+              <label class="ks-option ks-option--remission {% if existing.get('status') == 'Regredient' %}ks-selected{% endif %}">
+                <input type="radio" name="status" value="Regredient"
+                       {% if existing.get('status') == 'Regredient' %}checked{% endif %} required>
+                <div class="ks-icon">
+                  <svg viewBox="0 0 40 40" width="40" height="40" fill="none">
+                    <circle cx="20" cy="20" r="16" stroke="#22c55e" stroke-width="2.5"/>
+                    <polyline points="10,14 20,26 30,14" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div class="ks-label">Regredient</div>
+                <div class="ks-sublabel">Rückläufige Erkrankung</div>
+              </label>
+
+            </div>
+          </div>
+
+          <div class="sub-section">
+            <div class="sub-section-label">Vorgeschlagene Diskussionsschwerpunkte (Mehrfachauswahl):</div>
+
+            {# hidden checkboxes – still submitted with the form #}
+            {% for opt in step.topic_options %}
+            <input type="checkbox" name="topics" value="{{ opt }}" id="fc_cb_{{ loop.index }}"
+                   class="fc-hidden-cb" {% if opt in existing.get('topics', []) %}checked{% endif %}>
+            {% endfor %}
+
+            <div class="fc-widget" id="fc_widget">
+
+              {# ── start node ── #}
+              <div class="fc-start-row">
+                <div class="fc-start-node">Fragestellung fokussiert auf …</div>
+              </div>
+
+              {# ── trunk + horizontal rail ── #}
+              <div class="fc-trunk-wrap">
+                <div class="fc-trunk"></div>
+                <div class="fc-rail"></div>
+              </div>
+
+              {# ── option nodes ── #}
+              <div class="fc-nodes-row">
+
+                <div class="fc-branch-wrap">
+                  <div class="fc-branch-line"></div>
+                  <div class="fc-node {% if 'Weitere Diagnostik' in existing.get('topics', []) %}fc-node--on{% endif %}"
+                       data-value="Weitere Diagnostik" data-cb="fc_cb_1">
+                    <span class="fc-node-icon">🔬</span>
+                    <span class="fc-node-text">Weitere<br>Diagnostik</span>
+                  </div>
+                </div>
+
+                <div class="fc-branch-wrap">
+                  <div class="fc-branch-line"></div>
+                  <div class="fc-node {% if 'Therapie (Beginn, Auswahl, Modifikation)' in existing.get('topics', []) %}fc-node--on{% endif %}"
+                       data-value="Therapie (Beginn, Auswahl, Modifikation)" data-cb="fc_cb_2">
+                    <span class="fc-node-icon">💊</span>
+                    <span class="fc-node-text">Therapie<br><small>(Beginn, Auswahl,<br>Modifikation)</small></span>
+                  </div>
+                </div>
+
+                <div class="fc-branch-wrap">
+                  <div class="fc-branch-line"></div>
+                  <div class="fc-node {% if 'Verlaufskontrolle' in existing.get('topics', []) %}fc-node--on{% endif %}"
+                       data-value="Verlaufskontrolle" data-cb="fc_cb_3">
+                    <span class="fc-node-icon">📈</span>
+                    <span class="fc-node-text">Verlaufs-<br>kontrolle</span>
+                  </div>
+                </div>
+
+                <div class="fc-branch-wrap">
+                  <div class="fc-branch-line"></div>
+                  <div class="fc-node {% if 'Organisatorische Fragen' in existing.get('topics', []) %}fc-node--on{% endif %}"
+                       data-value="Organisatorische Fragen" data-cb="fc_cb_4">
+                    <span class="fc-node-icon">⚙️</span>
+                    <span class="fc-node-text">Organisato-<br>rische Fragen</span>
+                  </div>
+                </div>
+
+                <div class="fc-branch-wrap">
+                  <div class="fc-branch-line"></div>
+                  <div class="fc-node fc-node--none {% if 'Keine Spezifizierung' in existing.get('topics', []) %}fc-node--on{% endif %}"
+                       data-value="Keine Spezifizierung" data-cb="fc_cb_5">
+                    <span class="fc-node-icon">—</span>
+                    <span class="fc-node-text">Keine<br>Spezifizierung</span>
+                  </div>
+                </div>
+
+              </div>{# /fc-nodes-row #}
+            </div>{# /fc-widget #}
+
+            <script>
+            (function(){
+              document.querySelectorAll('#fc_widget .fc-node').forEach(function(node){
+                node.addEventListener('click', function(){
+                  var cbId = node.dataset.cb;
+                  var cb   = document.getElementById(cbId);
+                  if(!cb) return;
+
+                  // "Keine Spezifizierung" is mutually exclusive
+                  var isNone = node.classList.contains('fc-node--none');
+                  if(isNone){
+                    // deselect all others
+                    document.querySelectorAll('#fc_widget .fc-node:not(.fc-node--none)').forEach(function(n){
+                      n.classList.remove('fc-node--on');
+                      var c = document.getElementById(n.dataset.cb);
+                      if(c) c.checked = false;
+                    });
+                  } else {
+                    // deselect "Keine Spezifizierung"
+                    var noneNode = document.querySelector('#fc_widget .fc-node--none');
+                    if(noneNode){
+                      noneNode.classList.remove('fc-node--on');
+                      var nc = document.getElementById(noneNode.dataset.cb);
+                      if(nc) nc.checked = false;
+                    }
+                  }
+
+                  var on = node.classList.toggle('fc-node--on');
+                  cb.checked = on;
+                });
+              });
+            })();
+            </script>
+
+          </div>
+
+        </div>
+      </div>
+
+      {# ════════════════════════════════════════════════════════════════════════
+         STEP: problem_correctness (Leitlinienkonformität) – traffic lights
+         ════════════════════════════════════════════════════════════════════════ #}
+      {% elif step.key == 'problem_correctness' %}
+      <div class="eval-body">
+        <div class="text-display">
+          <div class="text-label">Fragestellung – Version {{ 'A' if tab_idx == 0 else 'B' }}</div>
+          <div class="text-content">{{ text_content }}</div>
+        </div>
+        <div class="rating-section">
+          <h3 class="rating-title">{{ step.subtitle }}</h3>
+          <div class="tl-housing">
+            <label class="tl-light tl-red">
+              <input type="radio" name="choice" value="Trifft nicht zu"
+                     {% if existing.get('choice') == 'Trifft nicht zu' %}checked{% endif %} required>
+              <span class="tl-bulb"></span>
+              <span class="tl-opt-label">Trifft nicht zu</span>
+            </label>
+            <label class="tl-light tl-amber">
+              <input type="radio" name="choice" value="Trifft teilweise zu"
+                     {% if existing.get('choice') == 'Trifft teilweise zu' %}checked{% endif %} required>
+              <span class="tl-bulb"></span>
+              <span class="tl-opt-label">Trifft teilweise zu</span>
+            </label>
+            <label class="tl-light tl-green">
+              <input type="radio" name="choice" value="Trifft zu"
+                     {% if existing.get('choice') == 'Trifft zu' %}checked{% endif %} required>
+              <span class="tl-bulb"></span>
+              <span class="tl-opt-label">Trifft zu</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      {# ════════════════════════════════════════════════════════════════════════
+         STEP: problem_specificity
+         ════════════════════════════════════════════════════════════════════════ #}
+      {% elif step.key == 'problem_specificity' %}
+      <div class="eval-body">
+        <div class="text-display">
+          <div class="text-label">Fragestellung – Version {{ 'A' if tab_idx == 0 else 'B' }}</div>
+          <div class="text-content">{{ text_content }}</div>
+        </div>
+        <div class="rating-section">
+          <h3 class="rating-title">{{ step.subtitle }}</h3>
+
+          <div class="lens-widget">
+
+            {# ── Zu generisch ── #}
+            <label class="lens-option {% if existing.get('choice') == 'Zu generisch' %}lens-selected{% endif %}" data-val="Zu generisch">
+              <input type="radio" name="choice" value="Zu generisch"
+                     {% if existing.get('choice') == 'Zu generisch' %}checked{% endif %} required>
+              <div class="lens-visual lens-wide">
+                <div class="lens-circle lens-c1"></div>
+                <div class="lens-blur-overlay"></div>
+                <div class="lens-crosshair"></div>
+              </div>
+              <div class="lens-label">Zu generisch</div>
+              <div class="lens-sublabel">Zu breit gefasst</div>
+            </label>
+
+            {# ── Optimal ── #}
+            <label class="lens-option {% if existing.get('choice') == 'Optimal' %}lens-selected{% endif %}" data-val="Optimal">
+              <input type="radio" name="choice" value="Optimal"
+                     {% if existing.get('choice') == 'Optimal' %}checked{% endif %} required>
+              <div class="lens-visual lens-mid">
+                <div class="lens-circle lens-c2"></div>
+                <div class="lens-crosshair"></div>
+              </div>
+              <div class="lens-label">Optimal</div>
+              <div class="lens-sublabel">Passend eingegrenzt</div>
+            </label>
+
+            {# ── Zu spezifisch ── #}
+            <label class="lens-option {% if existing.get('choice') == 'Zu spezifisch' %}lens-selected{% endif %}" data-val="Zu spezifisch">
+              <input type="radio" name="choice" value="Zu spezifisch"
+                     {% if existing.get('choice') == 'Zu spezifisch' %}checked{% endif %} required>
+              <div class="lens-visual lens-narrow">
+                <div class="lens-circle lens-c3"></div>
+                <div class="lens-crosshair"></div>
+              </div>
+              <div class="lens-label">Zu spezifisch</div>
+              <div class="lens-sublabel">Zu eng gefasst</div>
+            </label>
+
+          </div>
+
+          {# ── Goldilocks scale ── #}
+          <div class="goldilocks-scale" id="goldi_{{ step.key }}_{{ tab_idx }}">
+            <div class="goldilocks-label-row">
+              <!-- labels removed -->
+            </div>
+            <div class="goldilocks-bar-wrap">
+              <div class="goldilocks-bar">
+                <button type="button" class="gl-zone gl-zone--left  {% if existing.get('choice') == 'Zu generisch'  %}gl-active{% endif %}"
+                        data-choice="Zu generisch">Zu generisch</button>
+                <button type="button" class="gl-zone gl-zone--mid   {% if existing.get('choice') == 'Optimal'        %}gl-active{% endif %}"
+                        data-choice="Optimal">Optimal</button>
+                <button type="button" class="gl-zone gl-zone--right {% if existing.get('choice') == 'Zu spezifisch'  %}gl-active{% endif %}"
+                        data-choice="Zu spezifisch">Zu spezifisch</button>
+              </div>
+              <div class="goldilocks-marker {% if existing.get('choice') == 'Zu generisch' %}gl-pos-left{% elif existing.get('choice') == 'Optimal' %}gl-pos-mid{% elif existing.get('choice') == 'Zu spezifisch' %}gl-pos-right{% endif %}" id="glmarker_{{ step.key }}_{{ tab_idx }}">▲</div>
+            </div>
+          </div>
+
+          <script>
+          (function(){
+            var scale = document.getElementById('goldi_{{ step.key }}_{{ tab_idx }}');
+            var marker = document.getElementById('glmarker_{{ step.key }}_{{ tab_idx }}');
+            var zones = scale.querySelectorAll('.gl-zone');
+            var posMap = {'Zu generisch':'gl-pos-left','Optimal':'gl-pos-mid','Zu spezifisch':'gl-pos-right'};
+            zones.forEach(function(btn){
+              btn.addEventListener('click', function(){
+                var val = btn.dataset.choice;
+                // sync radio
+                var radio = document.querySelector('input[name="choice"][value="'+val+'"]');
+                if(radio){ radio.checked = true; radio.dispatchEvent(new Event('change',{bubbles:true})); }
+                // update zones
+                zones.forEach(function(z){ z.classList.remove('gl-active'); });
+                btn.classList.add('gl-active');
+                // update marker
+                marker.className = 'goldilocks-marker ' + (posMap[val]||'');
+                // sync lens cards
+                document.querySelectorAll('.lens-option').forEach(function(l){
+                  l.classList.toggle('lens-selected', l.dataset.val === val);
+                });
+              });
+            });
+            // keep lens → goldilocks in sync too
+            document.querySelectorAll('.lens-option').forEach(function(lbl){
+              lbl.addEventListener('click', function(){
+                var val = lbl.dataset.val;
+                zones.forEach(function(z){ z.classList.toggle('gl-active', z.dataset.choice===val); });
+                marker.className = 'goldilocks-marker ' + (posMap[val]||'');
+              });
+            });
+          })();
+          </script>
+        </div>
+      </div>
+
+      {# ════════════════════════════════════════════════════════════════════════
+         STEP: final_overall
+         ════════════════════════════════════════════════════════════════════════ #}
+      {% elif step.key == 'final_overall' %}
+      <div class="eval-body">
+        <div class="text-display">
+          <div class="text-label">TK-Protokoll</div>
+          <iframe src="{{ url_for('protocol_pdf', case_id=case_id) }}#view=FitH&pagemode=none&navpanes=0" class="inline-pdf" style="width:100%;height:100%;min-height:500px;border:none;border-radius:8px;"></iframe>
+        </div>
+        <div class="rating-section">
+          <h3 class="rating-title">Komplexität des Falls</h3>
+          <div class="vas-wrap">
+            <div class="vas8-bar" id="vas-bar">
+              <div class="vas8-track-line"></div>
+              <div class="vas8-fill" id="vas-fill"></div>
+              <div class="vas8-thumb" id="vas-thumb"></div>
+            </div>
+            <div class="vas-tick-labels">
+              <span>0 &mdash; Sehr gering</span>
+              <span>Sehr hoch &mdash; 100</span>
+            </div>
+            <input type="hidden" name="vas_score" id="vas-hidden"
+                   value="{{ existing.get('vas_score', '') }}">
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      {# ── full-width comment ────────────────────────────────────────────── #}
+      {% if step.key not in ['case_relevance', 'summary_integrity'] %}
+      <div class="full-comment">{{ comment_block(existing) }}</div>
+      {% endif %}
+
+      {# ── navigation buttons ──────────────────────────────────────────────── #}
+      <div class="form-actions">
+        {% if prev_url %}
+        <a href="{{ prev_url }}" class="btn btn-secondary">&larr; Zurück</a>
+        {% else %}
+        <span></span>
+        {% endif %}
+
+        <button type="submit" class="btn btn-primary">
+          {% if step.key == 'final_overall' %}
+            Fall abschließen &#10003;
+          {% elif step.has_tabs and tab_idx == 0 %}
+            Weiter zu Version B &rarr;
+          {% elif step_idx == (rating_steps | length - 1) %}
+            Weiter &rarr;
+          {% else %}
+            Weiter &rarr;
+          {% endif %}
+        </button>
+      </div>
+
+    </form>
+  </div>{# end .eval-card #}
+
+</div>{# end .evaluate-layout #}
+
+{# ── "Fall abgeschlossen" toast ──────────────────────────────────────────── #}
+{% if step.key == 'final_overall' %}
+<div id="case-done-toast" style="
+  display:none; position:fixed; inset:0; z-index:9999;
+  background:rgba(0,0,0,.45);
+  align-items:center; justify-content:center;">
+  <div style="
+    background:#fff; border-radius:14px;
+    padding:2.25rem 3rem; box-shadow:0 8px 32px rgba(0,0,0,.25);
+    text-align:center; max-width:380px; width:90%;">
+    <div style="font-size:2.5rem; margin-bottom:.75rem; color:#15803d;">&#10003;</div>
+    <p style="font-size:1.15rem; font-weight:700; color:#1a4f8a; margin:0 0 .35rem;">
+      Fall abgeschlossen
+    </p>
+    <p style="font-size:.88rem; color:#6b7280; margin:0;">
+      Ihre Bewertungen wurden gespeichert.
+    </p>
+  </div>
+</div>
+{% endif %}
+
+
+{# ── PDF protocol modal ───────────────────────────────────────────────────── #}
+<div id="protocol-modal" class="modal-overlay" onclick="closeProtocol(event)">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title">TK-Protokoll</span>
+      <button type="button" class="modal-close" onclick="closeProtocol()">&times;</button>
+    </div>
+    <iframe id="protocol-iframe" class="modal-pdf" src="" allowfullscreen></iframe>
+  </div>
+</div>
+
+
+
+<script>
+/* ── Instruction panel toggle ───────────────────────────────────────────── */
+function toggleInstrPanel() {
+  var panel = document.getElementById('instr-panel');
+  if (panel) panel.classList.toggle('instr-collapsed');
+}
+
+/* ── PDF modal ──────────────────────────────────────────────────────────── */
+function openProtocol() {
+  var modal  = document.getElementById('protocol-modal');
+  var iframe = document.getElementById('protocol-iframe');
+  if (!iframe.src || iframe.src === window.location.href) {
+    iframe.src = "{{ url_for('protocol_pdf', case_id=case_id) }}#view=FitH&pagemode=none&navpanes=0";
+  }
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeProtocol(e) {
+  if (e && e.target !== document.getElementById('protocol-modal')) return;
+  document.getElementById('protocol-modal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeProtocol();
+});
+
+/* ── falseinfo: show/hide sub-form ─────────────────────────────────────── */
+function toggleFalseinfo(slug, checked) {
+  var card  = document.getElementById('fi_' + slug);
+  var sub   = document.getElementById('fisub_' + slug);
+  var badge = card ? card.querySelector('.fi-badge') : null;
+  if (card)  card.classList.toggle('fi-card--active', checked);
+  if (sub)   sub.classList.toggle('hidden', !checked);
+  if (badge) {
+    badge.classList.toggle('fi-badge--on', checked);
+    badge.textContent = checked ? '⚠ Fehlerhaft' : 'Korrekt';
+  }
+}
+
+/* ── comment toggle ─────────────────────────────────────────────────────── */
+function toggleComment(btn) {
+  var body = btn.nextElementSibling;
+  if (body) {
+    body.classList.toggle('comment-open');
+  }
+}
+
+/* ── chip single-select (radio) visual highlight ─────────────────────────── */
+document.querySelectorAll('.chip-group:not(.chip-group--multi) .chip-option input[type="radio"]')
+  .forEach(function(radio) {
+    radio.addEventListener('change', function() {
+      var group = this.closest('.chip-group');
+      if (group) {
+        group.querySelectorAll('.chip-option').forEach(function(opt) {
+          opt.classList.remove('selected');
+        });
+      }
+      this.closest('.chip-option').classList.add('selected');
+    });
+  });
+
+/* ── chip multi-select (checkbox) visual highlight ──────────────────────── */
+document.querySelectorAll('.chip-group--multi .chip-option input[type="checkbox"]')
+  .forEach(function(cb) {
+    cb.addEventListener('change', function() {
+      this.closest('.chip-option').classList.toggle('selected', this.checked);
+    });
+  });
+
+/* ── rating scale: visual highlight + description display ──────────────── */
+document.querySelectorAll('.rating-scale input[type="radio"]').forEach(function(radio) {
+  radio.addEventListener('change', function() {
+    var scale = this.closest('.rating-scale');
+    if (scale) {
+      scale.querySelectorAll('.rating-option').forEach(function(opt) {
+        opt.classList.remove('selected');
+      });
+    }
+    this.closest('.rating-option').classList.add('selected');
+    var desc = this.getAttribute('data-desc');
+    var section = this.closest('.rating-section');
+    if (section && desc) {
+      var display = section.querySelector('.rating-desc-display');
+      if (display) { display.textContent = desc; display.style.display = ''; }
+    }
+  });
+});
+
+/* ── VAS slider: live fill + value display ──────────────────────────────── */
+(function() {
+  var slider = document.getElementById('vas-slider');
+  var display = document.getElementById('vas-display');
+  if (!slider) return;
+
+  /* Interpolate red(#b91c1c) → yellow(#eab308) → green(#15803d) */
+  function vasColor(pct) {
+    var r, g, b;
+    if (pct <= 0.5) {
+      var t = pct / 0.5;
+      r = Math.round(185 + (234 - 185) * t);
+      g = Math.round(28  + (179 - 28)  * t);
+      b = Math.round(28  + (8   - 28)  * t);
+    } else {
+      var t = (pct - 0.5) / 0.5;
+      r = Math.round(234 + (21  - 234) * t);
+      g = Math.round(179 + (128 - 179) * t);
+      b = Math.round(8   + (61  - 8)   * t);
+    }
+    return 'rgb(' + r + ',' + g + ',' + b + ')';
+  }
+
+  function updateVas() {
+    var pct = (slider.value - slider.min) / (slider.max - slider.min);
+    var pctPx = (pct * 100).toFixed(1) + '%';
+    var color = vasColor(pct);
+    /* re-apply full gradient but clip unvisited portion to light gray */
+    slider.style.background =
+      'linear-gradient(to right, #b91c1c 0%, #eab308 50%, #15803d 100%)';
+    /* overlay: transparent up to thumb, gray after */
+    slider.style.backgroundImage =
+      'linear-gradient(to right, transparent 0%, transparent ' + pctPx + ', #e5e7eb ' + pctPx + ', #e5e7eb 100%),' +
+      'linear-gradient(to right, #b91c1c 0%, #eab308 50%, #15803d 100%)';
+    /* colour the thumb to match current position */
+    var styleEl = document.getElementById('vas-thumb-style');
+    if (!styleEl) {
+      styleEl = document.createElement('style');
+      styleEl.id = 'vas-thumb-style';
+      document.head.appendChild(styleEl);
+    }
+    styleEl.textContent =
+      '#vas-slider::-webkit-slider-thumb { background: ' + color + ' !important; box-shadow: 0 0 0 2px ' + color + ', 0 2px 6px rgba(0,0,0,.2) !important; }' +
+      '#vas-slider::-moz-range-thumb    { background: ' + color + ' !important; box-shadow: 0 0 0 2px ' + color + ' !important; }';
+    if (display) display.style.color = color;
+    if (display) display.textContent = slider.value;
+  }
+  slider.addEventListener('input', updateVas);
+  updateVas();
+})();
+
+/* ── VAS2: blue, uninitialized custom slider ─────────────────────────────── */
+(function() {
+  var bar    = document.getElementById('vas2-bar');
+  if (!bar) return;
+  var fill   = document.getElementById('vas2-fill');
+  var thumb  = document.getElementById('vas2-thumb');
+  var hidden = document.getElementById('vas2-hidden');
+
+  function setVal(clientX) {
+    var rect = bar.getBoundingClientRect();
+    var pct  = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+    fill.style.width     = (pct * 100).toFixed(1) + '%';
+    thumb.style.left     = (pct * 100).toFixed(1) + '%';
+    thumb.style.display  = 'block';
+    hidden.value         = Math.round(pct * 100);
+  }
+
+  /* Restore saved state */
+  if (hidden.value !== '') {
+    var initPct = parseInt(hidden.value, 10) / 100;
+    fill.style.width    = (initPct * 100).toFixed(1) + '%';
+    thumb.style.left    = (initPct * 100).toFixed(1) + '%';
+    thumb.style.display = 'block';
+  }
+
+  var dragging = false;
+  bar.addEventListener('mousedown', function(e) {
+    dragging = true;
+    setVal(e.clientX);
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove', function(e) {
+    if (dragging) setVal(e.clientX);
+  });
+  document.addEventListener('mouseup', function() { dragging = false; });
+  bar.addEventListener('touchstart', function(e) {
+    setVal(e.touches[0].clientX);
+  }, { passive: true });
+  bar.addEventListener('touchmove', function(e) {
+    setVal(e.touches[0].clientX);
+    e.preventDefault();
+  }, { passive: false });
+})();
+
+/* ── VAS3: crosshair, click-only ────────────────────────────────────────── */
+(function() {
+  [['vas-bar','vas-fill','vas-thumb','vas-hidden']].forEach(function(ids) {
+    var bar    = document.getElementById(ids[0]);
+    if (!bar) return;
+    var fill   = document.getElementById(ids[1]);
+    var thumb  = document.getElementById(ids[2]);
+    var hidden = document.getElementById(ids[3]);
+
+    function setVal(clientX) {
+      var rect = bar.getBoundingClientRect();
+      var pct  = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+      fill.style.width    = (pct * 100).toFixed(1) + '%';
+      thumb.style.left    = (pct * 100).toFixed(1) + '%';
+      thumb.style.display = 'block';
+      hidden.value        = Math.round(pct * 100);
+    }
+
+    if (hidden.value !== '') {
+      var initPct = parseInt(hidden.value, 10) / 100;
+      fill.style.width    = (initPct * 100).toFixed(1) + '%';
+      thumb.style.left    = (initPct * 100).toFixed(1) + '%';
+      thumb.style.display = 'block';
+    }
+
+    bar.addEventListener('click', function(e) { setVal(e.clientX); });
+    bar.addEventListener('touchstart', function(e) { setVal(e.touches[0].clientX); }, { passive: true });
+  });
+})();
+
+/* ── VAS4/5/6: shared drag factory ─────────────────────────────────────── */
+(function() {
+  var configs = [
+    { bar: 'vas4-bar', fill: 'vas4-fill', thumb: 'vas4-thumb', hidden: 'vas4-hidden', drag: true },
+    { bar: 'vas5-bar', fill: 'vas5-fill', thumb: 'vas5-thumb', hidden: 'vas5-hidden', drag: true },
+    { bar: 'vas6-bar', fill: 'vas6-fill', thumb: 'vas6-thumb', hidden: 'vas6-hidden', drag: true },
+  ];
+  configs.forEach(function(cfg) {
+    var bar    = document.getElementById(cfg.bar);
+    if (!bar) return;
+    var fill   = document.getElementById(cfg.fill);
+    var thumb  = document.getElementById(cfg.thumb);
+    var hidden = document.getElementById(cfg.hidden);
+
+    function setVal(clientX) {
+      var rect = bar.getBoundingClientRect();
+      var pct  = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+      fill.style.width    = (pct * 100).toFixed(1) + '%';
+      thumb.style.left    = (pct * 100).toFixed(1) + '%';
+      thumb.style.display = 'block';
+      hidden.value        = Math.round(pct * 100);
+    }
+
+    if (hidden.value !== '') {
+      var initPct = parseInt(hidden.value, 10) / 100;
+      fill.style.width    = (initPct * 100).toFixed(1) + '%';
+      thumb.style.left    = (initPct * 100).toFixed(1) + '%';
+      thumb.style.display = 'block';
+    }
+
+    var dragging = false;
+    bar.addEventListener('mousedown', function(e) { dragging = true; setVal(e.clientX); e.preventDefault(); });
+    document.addEventListener('mousemove', function(e) { if (dragging) setVal(e.clientX); });
+    document.addEventListener('mouseup',   function()  { dragging = false; });
+    bar.addEventListener('touchstart', function(e) { setVal(e.touches[0].clientX); }, { passive: true });
+    bar.addEventListener('touchmove',  function(e) { setVal(e.touches[0].clientX); e.preventDefault(); }, { passive: false });
+  });
+})();
+
+/* ── risk chips: sync visual class on change ────────────────────────────── */
+document.querySelectorAll('.fi-risk-group input[type="radio"]').forEach(function(radio) {
+  radio.addEventListener('change', function() {
+    var group = this.closest('.fi-risk-group');
+    if (group) {
+      group.querySelectorAll('.risk-chip').forEach(function(c) { c.classList.remove('risk-selected'); });
+    }
+    this.closest('.risk-chip').classList.add('risk-selected');
+  });
+});
+
+/* ── segmented controls: sync active class on change ───────────────────── */
+document.querySelectorAll('.seg-ctrl').forEach(function(ctrl) {
+  ctrl.querySelectorAll('input[type="radio"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+      ctrl.querySelectorAll('.seg-opt').forEach(function(o) { o.classList.remove('seg-active'); });
+      this.closest('.seg-opt').classList.add('seg-active');
+    });
+  });
+});
+
+/* ── relevance panel: progress + category counts + group states ──────────── */
+function toggleRelGroup(hdr) {
+  var group = hdr.closest('.rel-group');
+  if (!group) return;
+  var willExpand = group.classList.contains('rel-group--collapsed');
+  /* accordion: collapse all others when expanding one */
+  if (willExpand) {
+    document.querySelectorAll('.rel-group').forEach(function(g) {
+      if (g !== group) g.classList.add('rel-group--collapsed');
+    });
+  }
+  group.classList.toggle('rel-group--collapsed');
+}
+
+function updateRelProgress() {
+  var items = document.querySelectorAll('.rel-item');
+  if (!items.length) return;
+  var total = items.length, rated = 0, catCounts = {};
+  items.forEach(function(item) {
+    var cat = item.dataset.cat;
+    var checked = item.querySelector('input[type="radio"]:checked');
+    if (!catCounts[cat]) catCounts[cat] = { r: 0, t: 0 };
+    catCounts[cat].t++;
+    if (checked) { rated++; catCounts[cat].r++; }
+  });
+  var fill  = document.getElementById('rel-prog-fill');
+  var label = document.getElementById('rel-prog-label');
+  if (fill)  fill.style.width = Math.round(rated / total * 100) + '%';
+  if (label) label.textContent = rated + ' / ' + total + ' bewertet';
+  Object.keys(catCounts).forEach(function(cat) {
+    var el = document.querySelector('[data-cat-count="' + cat + '"]');
+    if (!el) return;
+    var c = catCounts[cat];
+    el.textContent = c.r + '/' + c.t;
+    /* update group card completion state */
+    var group = el.closest('.rel-group');
+    if (group) {
+      group.classList.remove('rel-group--complete', 'rel-group--partial');
+      if (c.r === c.t) {
+        group.classList.add('rel-group--complete');
+      } else if (c.r > 0) {
+        group.classList.add('rel-group--partial');
+      }
+    }
+    /* update status badge text */
+    var statusEl = document.querySelector('[data-cat-status="' + cat + '"]');
+    if (statusEl) {
+      statusEl.textContent = c.r === c.t ? 'Fertig' : '';
+    }
+  });
+}
+
+function setAllInCat(cat, value) {
+  document.querySelectorAll('.rel-item[data-cat="' + cat + '"]').forEach(function(item) {
+    var radio = item.querySelector('input[value="' + value + '"]');
+    if (!radio) return;
+    radio.checked = true;
+    item.querySelectorAll('.rel-btn').forEach(function(b) { b.classList.remove('rel-btn--active'); });
+    radio.closest('.rel-btn').classList.add('rel-btn--active');
+  });
+  updateRelProgress();
+  /* auto-collapse completed group and expand next incomplete */
+  var thisGroup = document.querySelector('.rel-group[data-cat="' + cat + '"]');
+  if (thisGroup && thisGroup.classList.contains('rel-group--complete')) {
+    thisGroup.classList.add('rel-group--collapsed');
+    var next = thisGroup.nextElementSibling;
+    while (next) {
+      if (next.classList.contains('rel-group') && !next.classList.contains('rel-group--complete')) {
+        next.classList.remove('rel-group--collapsed');
+        next.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        break;
+      }
+      next = next.nextElementSibling;
+    }
+  }
+}
+
+document.querySelectorAll('.rel-item-btns input[type="radio"]').forEach(function(radio) {
+  radio.addEventListener('change', function() {
+    var item = this.closest('.rel-item');
+    item.querySelectorAll('.rel-btn').forEach(function(b) { b.classList.remove('rel-btn--active'); });
+    this.closest('.rel-btn').classList.add('rel-btn--active');
+    updateRelProgress();
+    /* auto-collapse completed group, expand next */
+    var grp = this.closest('.rel-group');
+    if (grp && grp.classList.contains('rel-group--complete')) {
+      grp.classList.add('rel-group--collapsed');
+      var nx = grp.nextElementSibling;
+      while (nx) {
+        if (nx.classList.contains('rel-group') && !nx.classList.contains('rel-group--complete')) {
+          nx.classList.remove('rel-group--collapsed');
+          nx.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          break;
+        }
+        nx = nx.nextElementSibling;
+      }
+    }
+  });
+});
+
+updateRelProgress();
+
+/* auto-expand first incomplete group on load */
+(function() {
+  var groups = document.querySelectorAll('.rel-group');
+  var expanded = false;
+  groups.forEach(function(g) {
+    if (!expanded && !g.classList.contains('rel-group--complete')) {
+      g.classList.remove('rel-group--collapsed');
+      expanded = true;
+    }
+  });
+})();
+
+/* ── Radial information tree (summary_integrity) ────────────────────────── */
+(function () {
+  var svg = document.getElementById('rt-svg');
+  if (!svg) return;
+
+  /* Build data from Jinja template */
+  var RT_DATA = [];
+  {% set ns = namespace(prev_cat='') %}
+  {% for item in info_items %}
+    {% set parts = item.split(': ', 1) %}
+    {% set cat   = parts[0] if parts|length > 1 else '' %}
+    {% set label = parts[1] if parts|length > 1 else item %}
+    {% set slug  = slugify(item) %}
+    {% set cslug = slugify(cat) %}
+    {% set val   = existing.get('enthalten_' + slug, '') %}
+    {% if cat != ns.prev_cat %}{% set ns.prev_cat = cat %}
+  RT_DATA.push({slug:{{ cslug|tojson }},label:{{ cat|tojson }},items:[]});
+    {% endif %}
+  RT_DATA[RT_DATA.length-1].items.push({slug:{{ slug|tojson }},label:{{ label|tojson }},val:{{ val|tojson }}});
+  {% endfor %}
+
+  /* State: slug → '' | 'yes' | 'no' */
+  var state = {};
+  RT_DATA.forEach(function(c) { c.items.forEach(function(i) { state[i.slug] = i.val; }); });
+
+  var itemBySlug = {};
+  svg.querySelectorAll('.rt-item[data-slug]').forEach(function(g) {
+    itemBySlug[g.getAttribute('data-slug')] = g;
+  });
+
+  var catBySlug = {};
+  svg.querySelectorAll('.rt-cat[data-cat]').forEach(function(g) {
+    catBySlug[g.getAttribute('data-cat')] = g;
+  });
+
+  var inputBySlug = {};
+  document.querySelectorAll('input[id^="rt-inp-"]').forEach(function(inp) {
+    inputBySlug[inp.id.slice(7)] = inp;
+  });
+
+  function getS(slug) { return state[slug] || ''; }
+
+  function setS(slug, val) {
+    state[slug] = val;
+    var inp = inputBySlug[slug];
+    if (inp) inp.value = val;
+    var g = itemBySlug[slug];
+    if (g) {
+      g.setAttribute('data-val', val);
+      renderItemVisual(g, val);
+    }
+    refreshCat(catOfSlug(slug));
+    refreshProgress();
+    refreshLines();
+  }
+
+  function catOfSlug(slug) {
+    for (var i = 0; i < RT_DATA.length; i++)
+      for (var j = 0; j < RT_DATA[i].items.length; j++)
+        if (RT_DATA[i].items[j].slug === slug) return RT_DATA[i].slug;
+    return null;
+  }
+
+  window.rtToggleItem = function(slug) {
+    var cur = getS(slug);
+    setS(slug, cur === '' ? 'yes' : cur === 'yes' ? 'no' : '');
+  };
+
+  window.rtToggleCat = function(catSlug) {
+    var cat = null;
+    for (var i = 0; i < RT_DATA.length; i++) if (RT_DATA[i].slug === catSlug) { cat = RT_DATA[i]; break; }
+    if (!cat) return;
+    var allYes   = cat.items.every(function(i) { return getS(i.slug) === 'yes'; });
+    var allNo    = cat.items.every(function(i) { return getS(i.slug) === 'no'; });
+    var allEmpty = cat.items.every(function(i) { return getS(i.slug) === ''; });
+    /* cycle: unrated → all yes → all no → unrated */
+    var next = allEmpty ? 'yes' : allYes ? 'no' : '';
+    cat.items.forEach(function(i) { setS(i.slug, next); });
+  };
+
+  function refreshCat(catSlug) {
+    if (!catSlug) return;
+    var cat = null;
+    for (var i = 0; i < RT_DATA.length; i++) if (RT_DATA[i].slug === catSlug) { cat = RT_DATA[i]; break; }
+    if (!cat) return;
+    var vals  = cat.items.map(function(i) { return getS(i.slug); });
+    var rated = vals.filter(function(v) { return v !== ''; }).length;
+    var allY  = vals.every(function(v) { return v === 'yes'; });
+    var allN  = vals.every(function(v) { return v === 'no'; });
+    var g = catBySlug[catSlug];
+    if (g) {
+      g.setAttribute('data-complete', (allY && rated === vals.length) ? 'true' : 'false');
+      g.setAttribute('data-allno',    (allN && rated === vals.length) ? 'true' : 'false');
+      g.setAttribute('data-partial',  (rated > 0 && !allY && !allN) ? 'true' : 'false');
+    }
+  }
+
+  function refreshProgress() {
+    var total = 0, rated = 0;
+    RT_DATA.forEach(function(c) { c.items.forEach(function(i) { total++; if (getS(i.slug) !== '') rated++; }); });
+    var lbl  = document.getElementById('tree-prog-label');
+    var fill = document.getElementById('tree-prog-fill');
+    if (lbl)  lbl.textContent = rated + ' / ' + total + ' bewertet';
+    if (fill) fill.style.width = (total ? Math.round(rated / total * 100) : 0) + '%';
+  }
+
+  function refreshLines() {
+    svg.querySelectorAll('.rt-twig[data-slug]').forEach(function(l) {
+      var v = getS(l.getAttribute('data-slug'));
+      l.setAttribute('class', 'rt-twig' + (v === 'yes' ? ' rt-twig--yes' : v === 'no' ? ' rt-twig--no' : ''));
+    });
+    svg.querySelectorAll('.rt-branch[data-cat]').forEach(function(l) {
+      var cat = null;
+      for (var i = 0; i < RT_DATA.length; i++) if (RT_DATA[i].slug === l.getAttribute('data-cat')) { cat = RT_DATA[i]; break; }
+      if (!cat) return;
+      var vals = cat.items.map(function(i) { return getS(i.slug); });
+      var allY = vals.every(function(v) { return v === 'yes'; });
+      var allN = vals.every(function(v) { return v === 'no'; });
+      var anyY = vals.some(function(v)  { return v === 'yes'; });
+      l.setAttribute('class', 'rt-branch' + (allY ? ' rt-branch--done' : allN ? ' rt-branch--no' : anyY ? ' rt-branch--part' : ''));
+    });
+
+    svg.querySelectorAll('.rt-endpoint-g[data-slug]').forEach(function(g) {
+      var v = getS(g.getAttribute('data-slug'));
+      var c = g.querySelector('.rt-endpoint');
+      var ck = g.querySelector('.rt-endpoint-check');
+      var cr = g.querySelector('.rt-endpoint-cross');
+      var tx = g.querySelector('.rt-endpoint-label');
+      if (!c) return;
+
+      if (v === 'yes') {
+        c.setAttribute('fill', '#dbeafe');
+        c.setAttribute('stroke', '#1a4f8a');
+        c.setAttribute('stroke-width', '2');
+        if (tx) { tx.style.fill = '#1a4f8a'; tx.style.fontWeight = 'bold'; }
+        if (ck) ck.style.display = 'block';
+        if (cr) cr.style.display = 'none';
+      } else if (v === 'no') {
+        c.setAttribute('fill', '#f3f4f6');
+        c.setAttribute('stroke', '#d1d5db');
+        c.setAttribute('stroke-width', '1.8');
+        if (tx) { tx.style.fill = '#6b7280'; tx.style.fontWeight = ''; }
+        if (ck) ck.style.display = 'none';
+        if (cr) cr.style.display = 'block';
+      } else {
+        c.setAttribute('fill', '#f8fafc');
+        c.setAttribute('stroke', '#94a3b8');
+        c.setAttribute('stroke-width', '1.8');
+        if (tx) { tx.style.fill = '#334155'; tx.style.fontWeight = ''; }
+        if (ck) ck.style.display = 'none';
+        if (cr) cr.style.display = 'none';
+      }
+    });
+  }
+
+  function mk(tag) { return document.createElementNS('http://www.w3.org/2000/svg', tag); }
+
+  function ensureItemNode(item) {
+    var g = itemBySlug[item.slug];
+    if (g) return g;
+
+    g = mk('g');
+    g.setAttribute('class', 'rt-item');
+    g.setAttribute('id', 'rt-item-' + item.slug);
+    g.setAttribute('data-slug', item.slug);
+    g.setAttribute('data-cat', catOfSlug(item.slug) || '');
+    g.setAttribute('data-val', getS(item.slug));
+    g.addEventListener('click', function() { window.rtToggleItem(item.slug); });
+
+    var c = mk('circle');
+    c.setAttribute('r', '11');
+    c.setAttribute('class', 'rt-item-circle');
+    g.appendChild(c);
+
+    var chk = mk('path');
+    chk.setAttribute('class', 'rt-item-check');
+    chk.setAttribute('d', 'M-5 0.5 L-1.5 4.5 L5.5 -4');
+    g.appendChild(chk);
+
+    var crs = mk('path');
+    crs.setAttribute('class', 'rt-item-cross');
+    crs.setAttribute('d', 'M-4 -4 L4 4 M-4 4 L4 -4');
+    g.appendChild(crs);
+
+    var lbl = mk('text');
+    lbl.setAttribute('class', 'rt-item-label');
+    g.appendChild(lbl);
+
+    var ttl = mk('title');
+    ttl.textContent = item.label;
+    g.appendChild(ttl);
+
+    svg.appendChild(g);
+    itemBySlug[item.slug] = g;
+    return g;
+  }
+
+  function renderItemVisual(g, val) {
+    if (!g) return;
+
+    var circle = g.querySelector('.rt-item-circle');
+    if (!circle) {
+      circle = mk('circle');
+      circle.setAttribute('r', '11');
+      circle.setAttribute('class', 'rt-item-circle');
+      g.insertBefore(circle, g.firstChild);
+    }
+
+    var check = g.querySelector('.rt-item-check');
+    var cross = g.querySelector('.rt-item-cross');
+
+    circle.style.display = 'block';
+    if (val === 'yes') {
+      circle.style.fill = '#dbeafe';
+      circle.style.stroke = '#1a4f8a';
+      circle.style.strokeWidth = '2';
+    } else if (val === 'no') {
+      circle.style.fill = '#f3f4f6';
+      circle.style.stroke = '#d1d5db';
+      circle.style.strokeWidth = '1.8';
+    } else {
+      circle.style.fill = '#f8fafc';
+      circle.style.stroke = '#94a3b8';
+      circle.style.strokeWidth = '1.8';
+    }
+
+    if (check) check.style.display = (val === 'yes') ? 'block' : 'none';
+    if (cross) cross.style.display = (val === 'no') ? 'block' : 'none';
+  }
+
+  function layout() {
+    /* ── Horizontal tree: Patient left → categories middle → items right ── */
+    var totalN   = RT_DATA.reduce(function(s, c) { return s + c.items.length; }, 0);
+    var nCats    = RT_DATA.length;
+
+    /* Use the actual rendered container size to set the viewBox so
+       the tree fills the entire right column with no dead space.     */
+    var parentRect = svg.parentElement.getBoundingClientRect();
+    var headerEl = svg.parentElement.querySelector('.tree-header');
+    var headerH = headerEl ? headerEl.getBoundingClientRect().height : 0;
+    var W = Math.round(parentRect.width)  || 900;
+    var H = Math.round(parentRect.height - headerH) || 700;
+    if (W < 100) W = 900;
+    if (H < 100) H = 700;
+
+    var padTop = 10;
+    var padBot = 10;
+    var rowH = (H - padTop - padBot) / Math.max(totalN, 1);
+
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    svg.setAttribute('width', W);
+    svg.setAttribute('height', H);
+    svg.style.width  = '100%';
+    svg.style.height = '100%';
+    svg.setAttribute('preserveAspectRatio', 'none');
+
+    var patX        = Math.round(W * 0.04);    /* patient on the left       */
+    var patY        = H / 2;
+    var catX        = Math.round(W * 0.16);    /* category column x         */
+    var itemCircleX = Math.round(W * 0.34);    /* item circle x             */
+
+    /* ── Place nodes first, then measure and re-center ── */
+
+    /* center patient */
+    var pat = document.getElementById('rt-patient');
+    if (pat) pat.setAttribute('transform', 'translate(' + patX + ',' + patY + ')');
+
+    /* rebuild lines layer */
+    var linesG = document.getElementById('rt-lines');
+    linesG.innerHTML = '';
+
+    var runningY = padTop;
+
+    RT_DATA.forEach(function(cat, ci) {
+      var n = cat.items.length;
+      /* category Y = vertical center of its item block */
+      var blockTop = runningY;
+      var catY     = runningY + (n * rowH) / 2;
+
+      /* position category node */
+      var catG = catBySlug[cat.slug];
+      if (catG) {
+        catG.setAttribute('transform', 'translate(' + catX + ',' + catY + ')');
+        var nameEl = catG.querySelector('.rt-cat-name');
+        if (nameEl) {
+          nameEl.textContent = cat.label;
+          nameEl.setAttribute('dominant-baseline', 'middle');
+          nameEl.setAttribute('transform', '');
+          nameEl.setAttribute('x', '-25');
+          nameEl.setAttribute('text-anchor', 'end');
+        }
+      }
+
+      /* branch: patient → category */
+      var br = mk('line');
+      br.setAttribute('x1', patX); br.setAttribute('y1', patY);
+      br.setAttribute('x2', catX); br.setAttribute('y2', catY);
+      br.setAttribute('class', 'rt-branch'); br.setAttribute('data-cat', cat.slug);
+      linesG.appendChild(br);
+
+      cat.items.forEach(function(item, i) {
+        var itemY = runningY + (i + 0.5) * rowH;
+
+        /* twig: category → item */
+        var tw = mk('line');
+        tw.setAttribute('x1', catX); tw.setAttribute('y1', catY);
+        tw.setAttribute('x2', itemCircleX); tw.setAttribute('y2', itemY);
+        tw.setAttribute('class', 'rt-twig'); tw.setAttribute('data-slug', item.slug);
+        linesG.appendChild(tw);
+
+        /* endpoint node: circle + check/cross + label */
+        var epg = mk('g');
+        epg.setAttribute('class', 'rt-endpoint-g');
+        epg.setAttribute('data-slug', item.slug);
+        epg.setAttribute('transform', 'translate(' + itemCircleX + ',' + itemY + ')');
+        epg.style.cursor = 'pointer';
+        epg.addEventListener('click', (function(slug) {
+          return function() { window.rtToggleItem(slug); };
+        })(item.slug));
+
+        var ep = mk('circle');
+        ep.setAttribute('r', '9');
+        ep.setAttribute('class', 'rt-endpoint');
+        epg.appendChild(ep);
+
+        var ck = mk('path');
+        ck.setAttribute('class', 'rt-endpoint-check');
+        ck.setAttribute('d', 'M-4 0.5 L-1.5 3.5 L4.5 -3');
+        epg.appendChild(ck);
+
+        var cr = mk('path');
+        cr.setAttribute('class', 'rt-endpoint-cross');
+        cr.setAttribute('d', 'M-3.5 -3.5 L3.5 3.5 M-3.5 3.5 L3.5 -3.5');
+        epg.appendChild(cr);
+
+        var tx = mk('text');
+        tx.setAttribute('class', 'rt-endpoint-label');
+        tx.textContent = item.label;
+        tx.setAttribute('dominant-baseline', 'middle');
+        tx.setAttribute('x', '14');
+        tx.setAttribute('text-anchor', 'start');
+        epg.appendChild(tx);
+
+        linesG.appendChild(epg);
+      });
+
+      runningY += n * rowH;
+    });
+
+    /* ── Measure actual content bounds and re-center horizontally ── */
+    try {
+      var bbox = svg.getBBox();
+      var contentLeft = bbox.x;
+      var contentRight = bbox.x + bbox.width;
+      var padEdge = 10;
+      var contentW = contentRight - contentLeft;
+      var dx = ((W - contentW) / 2) - contentLeft;
+      /* clamp so nothing goes off-screen */
+      if (contentLeft + dx < padEdge) dx = padEdge - contentLeft;
+      if (contentRight + dx > W - padEdge) dx = (W - padEdge) - contentRight;
+
+      /* shift every positioned element */
+      patX += dx; catX += dx; itemCircleX += dx;
+      if (pat) pat.setAttribute('transform', 'translate(' + patX + ',' + patY + ')');
+      RT_DATA.forEach(function(cat) {
+        var catG = catBySlug[cat.slug];
+        if (catG) {
+          var oldT = catG.getAttribute('transform');
+          var m = oldT.match(/translate\(\s*([\d.e+-]+)\s*,\s*([\d.e+-]+)\s*\)/);
+          if (m) catG.setAttribute('transform', 'translate(' + (parseFloat(m[1]) + dx) + ',' + m[2] + ')');
+        }
+      });
+      var epgs = linesG.querySelectorAll('.rt-endpoint-g');
+      for (var i = 0; i < epgs.length; i++) {
+        var oldT = epgs[i].getAttribute('transform');
+        var m = oldT.match(/translate\(\s*([\d.e+-]+)\s*,\s*([\d.e+-]+)\s*\)/);
+        if (m) epgs[i].setAttribute('transform', 'translate(' + (parseFloat(m[1]) + dx) + ',' + m[2] + ')');
+      }
+      var lines = linesG.querySelectorAll('line');
+      for (var i = 0; i < lines.length; i++) {
+        lines[i].setAttribute('x1', parseFloat(lines[i].getAttribute('x1')) + dx);
+        lines[i].setAttribute('x2', parseFloat(lines[i].getAttribute('x2')) + dx);
+      }
+    } catch(e) { /* getBBox may fail if not rendered yet */ }
+
+    refreshLines();
+  }
+
+  /* initialise visual state from pre-existing data */
+  RT_DATA.forEach(function(cat) {
+    cat.items.forEach(function(item) { state[item.slug] = item.val; });
+    refreshCat(cat.slug);
+  });
+  refreshProgress();
+
+  layout();
+  requestAnimationFrame(layout);
+  window.addEventListener('resize', layout);
+
+  /* toggleTreeText removed — text panel is always visible */
+})();
+
+/* ── Origin widget: toggle active class on click ─────────────────────────── */
+document.querySelectorAll('.origin-opt input[type="radio"]').forEach(function(radio) {
+  radio.addEventListener('change', function() {
+    var widget = this.closest('.origin-widget');
+    widget.querySelectorAll('.origin-opt').forEach(function(opt) { opt.classList.remove('origin-opt--active'); });
+    this.closest('.origin-opt').classList.add('origin-opt--active');
+  });
+});
+
+/* ── Preference: click column to select / deselect ──────────────────────── */
+document.querySelectorAll('.pref-clickable').forEach(function(col) {
+  col.addEventListener('click', function() {
+    var val = this.dataset.pref;
+    var input = document.getElementById('pref-choice');
+    var statusText = document.getElementById('pref-status-text');
+    var noBtn = document.getElementById('pref-no-pref-btn');
+    if (input.value === val) {
+      // deselect → Keine Präferenz
+      input.value = 'Keine Präferenz';
+      document.querySelectorAll('.pref-clickable').forEach(function(c) { c.classList.remove('pref-selected'); });
+      if (noBtn) noBtn.classList.add('pref-no-pref-btn--active');
+    } else {
+      input.value = val;
+      document.querySelectorAll('.pref-clickable').forEach(function(c) { c.classList.remove('pref-selected'); });
+      this.classList.add('pref-selected');
+      if (noBtn) noBtn.classList.remove('pref-no-pref-btn--active');
+    }
+    if (statusText) statusText.textContent = input.value;
+  });
+});
+
+var noPrefBtn = document.getElementById('pref-no-pref-btn');
+if (noPrefBtn) {
+  noPrefBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    var input = document.getElementById('pref-choice');
+    var statusText = document.getElementById('pref-status-text');
+    document.querySelectorAll('.pref-clickable').forEach(function(c) { c.classList.remove('pref-selected'); });
+    input.value = 'Keine Präferenz';
+    noPrefBtn.classList.add('pref-no-pref-btn--active');
+    if (statusText) statusText.textContent = 'Keine Präferenz';
+  });
+}
+
+</script>
+
+{# ═══════════════════════════════════════════════════════════════════════════
+   DEMO MODAL — per-step animated demo overlay (uses real widget classes)
+   ═══════════════════════════════════════════════════════════════════════════ #}
+<div class="demo-modal-overlay" id="demo-modal" style="display:none" onclick="if(event.target===this)closeDemoModal()">
+  <div class="demo-modal">
+    <div class="demo-modal-header">
+      <h3 class="demo-modal-title">Demo — {{ step.subtitle }}</h3>
+      <button type="button" class="demo-modal-close" onclick="closeDemoModal()" title="Schließen">&times;</button>
+    </div>
+    <div class="demo-modal-body">
+
+      {# ── 1. Full-page replica: case_relevance ── #}
+      {% if step.key == 'case_relevance' %}
+      <p class="demo-modal-desc">Klicken Sie auf <strong>✓ Ja</strong> oder <strong>✗ Nein</strong>, um jede Information als relevant oder nicht relevant einzustufen. Nutzen Sie die <strong>Gruppenaktionen</strong> (<em>alle ✓</em> / <em>alle ✗</em>), um alle Einträge einer Kategorie gleichzeitig zu bewerten.</p>
+      <div class="demo-stage demo-stage--relpage">
+
+        {# ── left: PDF placeholder ── #}
+        <div class="demo-pdf-pane">
+          <div class="demo-pdf-bar">
+            <span class="demo-pdf-dot"></span><span class="demo-pdf-dot"></span><span class="demo-pdf-dot"></span>
+            <span class="demo-pdf-title">Fallprotokoll.pdf</span>
+          </div>
+          <div class="demo-pdf-body">
+            <div class="demo-pdf-line demo-pdf-line--h"></div>
+            <div class="demo-pdf-line" style="width:90%"></div>
+            <div class="demo-pdf-line" style="width:85%"></div>
+            <div class="demo-pdf-line" style="width:92%"></div>
+            <div class="demo-pdf-line" style="width:60%"></div>
+            <div class="demo-pdf-line demo-pdf-line--h" style="margin-top:.7rem"></div>
+            <div class="demo-pdf-line" style="width:88%"></div>
+            <div class="demo-pdf-line" style="width:78%"></div>
+            <div class="demo-pdf-line" style="width:95%"></div>
+            <div class="demo-pdf-line" style="width:65%"></div>
+            <div class="demo-pdf-line" style="width:82%"></div>
+          </div>
+        </div>
+
+        {# ── right: rel-panel replica ── #}
+        <div class="demo-rel-panel" style="pointer-events:none">
+          <div class="demo-rel-hdr">
+            <span class="demo-rel-title">Relevante Informationen</span>
+            <span class="demo-rel-prog-label demo-anim-prog-label">0 / 35 bewertet</span>
+          </div>
+          <div class="demo-rel-prog-track">
+            <div class="demo-rel-prog-fill demo-anim-prog-fill"></div>
+          </div>
+
+          <div class="demo-rel-scroll">
+
+            {# ── Group 1: Demographie (2 items) ── #}
+            <div class="rel-group">
+              <div class="rel-group-hdr">
+                <svg class="rel-group-chevron" viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+                <span class="rel-cat-name">Demographie</span>
+                <span class="rel-group-badge demo-anim-badge1">0/2</span>
+                <div class="rel-cat-actions">
+                  <button type="button" class="rel-cat-btn rel-cat-btn--no">alle&nbsp;&#10007;</button>
+                  <button type="button" class="rel-cat-btn rel-cat-btn--yes demo-anim-cat-yes">alle&nbsp;&#10003;</button>
+                </div>
+              </div>
+              <div class="rel-group-body">
+                <div class="rel-item"><span class="rel-item-name">Alter</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes demo-anim-yes1">&#10003;&nbsp;Ja</span></div></div>
+                <div class="rel-item"><span class="rel-item-name">Geschlecht</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes demo-anim-yes2">&#10003;&nbsp;Ja</span></div></div>
+              </div>
+            </div>
+
+            {# ── Group 2: Allgemeinzustand (2 items) — animated ── #}
+            <div class="rel-group" id="demo-grp2">
+              <div class="rel-group-hdr">
+                <svg class="rel-group-chevron" viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+                <span class="rel-cat-name">Allgemeinzustand</span>
+                <span class="rel-group-badge demo-anim-badge2">0/2</span>
+                <div class="rel-cat-actions">
+                  <button type="button" class="rel-cat-btn rel-cat-btn--no demo-anim-cat-no">alle&nbsp;&#10007;</button>
+                  <button type="button" class="rel-cat-btn rel-cat-btn--yes">alle&nbsp;&#10003;</button>
+                </div>
+              </div>
+              <div class="rel-group-body">
+                <div class="rel-item"><span class="rel-item-name">Komorbiditäten</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no demo-anim-no4">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+                <div class="rel-item"><span class="rel-item-name">Funktioneller Zustand (e.g. ECOG, Karnofsky)</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no demo-anim-no5">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+              </div>
+            </div>
+
+            {# ── Group 3: Primärtumor (8 items) — collapsed ── #}
+            <div class="rel-group rel-group--collapsed">
+              <div class="rel-group-hdr">
+                <svg class="rel-group-chevron" viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+                <span class="rel-cat-name">Primärtumor</span>
+                <span class="rel-group-badge">0/8</span>
+                <div class="rel-cat-actions">
+                  <button type="button" class="rel-cat-btn rel-cat-btn--no">alle&nbsp;&#10007;</button>
+                  <button type="button" class="rel-cat-btn rel-cat-btn--yes">alle&nbsp;&#10003;</button>
+                </div>
+              </div>
+              <div class="rel-group-body">
+                <div class="rel-item"><span class="rel-item-name">Datum der Erstdiagnose</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+                <div class="rel-item"><span class="rel-item-name">Art des Tumors</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+                <div class="rel-item"><span class="rel-item-name">Lokalisation</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+                <div class="rel-item"><span class="rel-item-name">Tumordicke</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+                <div class="rel-item"><span class="rel-item-name">Ulzeration</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+                <div class="rel-item"><span class="rel-item-name">Stadium der Erkrankung bei Erstdiagnose</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+                <div class="rel-item"><span class="rel-item-name">Mutationsstatus (e.g. BRAF)</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+                <div class="rel-item"><span class="rel-item-name">PD-L1 Status</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+              </div>
+            </div>
+
+            {# ── Group 4: Primärtherapie (5 items) — collapsed ── #}
+            <div class="rel-group rel-group--collapsed">
+              <div class="rel-group-hdr">
+                <svg class="rel-group-chevron" viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+                <span class="rel-cat-name">Primärtherapie</span>
+                <span class="rel-group-badge">0/5</span>
+                <div class="rel-cat-actions">
+                  <button type="button" class="rel-cat-btn rel-cat-btn--no">alle&nbsp;&#10007;</button>
+                  <button type="button" class="rel-cat-btn rel-cat-btn--yes">alle&nbsp;&#10003;</button>
+                </div>
+              </div>
+              <div class="rel-group-body">
+                <div class="rel-item"><span class="rel-item-name">Resektionsstatus</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+                <div class="rel-item"><span class="rel-item-name">Sicherheitsabstand</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+                <div class="rel-item"><span class="rel-item-name">SLNE</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+                <div class="rel-item"><span class="rel-item-name">Anzahl LK entfernt</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+                <div class="rel-item"><span class="rel-item-name">Anzahl LK befallen</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+              </div>
+            </div>
+
+            {# ── Group 5: Therapieverlauf (6 items) — collapsed ── #}
+            <div class="rel-group rel-group--collapsed">
+              <div class="rel-group-hdr">
+                <svg class="rel-group-chevron" viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+                <span class="rel-cat-name">Therapieverlauf</span>
+                <span class="rel-group-badge">0/6</span>
+                <div class="rel-cat-actions">
+                  <button type="button" class="rel-cat-btn rel-cat-btn--no">alle&nbsp;&#10007;</button>
+                  <button type="button" class="rel-cat-btn rel-cat-btn--yes">alle&nbsp;&#10003;</button>
+                </div>
+              </div>
+              <div class="rel-group-body">
+                <div class="rel-item"><span class="rel-item-name">Strahlentherapie</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+                <div class="rel-item"><span class="rel-item-name">Andere lokoregionäre Therapien (e.g. IL-2, T-VEC)</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+                <div class="rel-item"><span class="rel-item-name">Systemtherapie</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+                <div class="rel-item"><span class="rel-item-name">Therapiewechsel (Start, Stopp) und Begründung</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+                <div class="rel-item"><span class="rel-item-name">Nebenwirkungen und Komplikationen</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+                <div class="rel-item"><span class="rel-item-name">Aktuelle Therapie</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+              </div>
+            </div>
+
+            {# ── Group 6: Krankheitsverlauf (2 items) — collapsed ── #}
+            <div class="rel-group rel-group--collapsed">
+              <div class="rel-group-hdr">
+                <svg class="rel-group-chevron" viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+                <span class="rel-cat-name">Krankheitsverlauf</span>
+                <span class="rel-group-badge">0/2</span>
+                <div class="rel-cat-actions">
+                  <button type="button" class="rel-cat-btn rel-cat-btn--no">alle&nbsp;&#10007;</button>
+                  <button type="button" class="rel-cat-btn rel-cat-btn--yes">alle&nbsp;&#10003;</button>
+                </div>
+              </div>
+              <div class="rel-group-body">
+                <div class="rel-item"><span class="rel-item-name">Datum Erstdiagnose Lymphknotenmetastasierung (Stadium III)</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+                <div class="rel-item"><span class="rel-item-name">Datum Erstdiagnose Fernmetastasen (Stadium IV)</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+              </div>
+            </div>
+
+            {# ── Group 7: Aktuelle Befunde (2 items) — collapsed ── #}
+            <div class="rel-group rel-group--collapsed">
+              <div class="rel-group-hdr">
+                <svg class="rel-group-chevron" viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+                <span class="rel-cat-name">Aktuelle Befunde</span>
+                <span class="rel-group-badge">0/2</span>
+                <div class="rel-cat-actions">
+                  <button type="button" class="rel-cat-btn rel-cat-btn--no">alle&nbsp;&#10007;</button>
+                  <button type="button" class="rel-cat-btn rel-cat-btn--yes">alle&nbsp;&#10003;</button>
+                </div>
+              </div>
+              <div class="rel-group-body">
+                <div class="rel-item"><span class="rel-item-name">Bildgebende Verfahren (e.g. CT, MRT, PET-CT, LK-Sono)</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+                <div class="rel-item"><span class="rel-item-name">Laborwerte (e.g. S100, LDH, HLA-A2)</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+              </div>
+            </div>
+
+            {# ── Group 8: Aktueller Status (5 items) — collapsed ── #}
+            <div class="rel-group rel-group--collapsed">
+              <div class="rel-group-hdr">
+                <svg class="rel-group-chevron" viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+                <span class="rel-cat-name">Aktueller Status</span>
+                <span class="rel-group-badge">0/5</span>
+                <div class="rel-cat-actions">
+                  <button type="button" class="rel-cat-btn rel-cat-btn--no">alle&nbsp;&#10007;</button>
+                  <button type="button" class="rel-cat-btn rel-cat-btn--yes">alle&nbsp;&#10003;</button>
+                </div>
+              </div>
+              <div class="rel-group-body">
+                <div class="rel-item"><span class="rel-item-name">Krankheitsstatus (unverändert, progredient, regredient)</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+                <div class="rel-item"><span class="rel-item-name">Stadium der Erkrankung</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+                <div class="rel-item"><span class="rel-item-name">Metastasierung</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+                <div class="rel-item"><span class="rel-item-name">Lokalisation der Metastasierung</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+                <div class="rel-item"><span class="rel-item-name">Symptome und Beschwerden</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+              </div>
+            </div>
+
+            {# ── Group 9: Entscheidungsrelevante Faktoren (3 items) — collapsed ── #}
+            <div class="rel-group rel-group--collapsed">
+              <div class="rel-group-hdr">
+                <svg class="rel-group-chevron" viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+                <span class="rel-cat-name">Entscheidungsrelevante Faktoren</span>
+                <span class="rel-group-badge">0/3</span>
+                <div class="rel-cat-actions">
+                  <button type="button" class="rel-cat-btn rel-cat-btn--no">alle&nbsp;&#10007;</button>
+                  <button type="button" class="rel-cat-btn rel-cat-btn--yes">alle&nbsp;&#10003;</button>
+                </div>
+              </div>
+              <div class="rel-group-body">
+                <div class="rel-item"><span class="rel-item-name">Patientenpräferenzen</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+                <div class="rel-item"><span class="rel-item-name">Behandlungsziel</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+                <div class="rel-item"><span class="rel-item-name">Beschluss der letzten Tumorkonferenz</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="demo-cursor demo-cursor--binary"></div>
+      </div>
+
+      {# ── 2. Radial tree (summary_integrity) ── #}
+      {% elif step.key == 'summary_integrity' %}
+      <p class="demo-modal-desc">Klicken Sie auf die Informationsknoten im Diagramm. Jeder Klick wechselt den Status: <strong>enthalten</strong> (blau) → <strong>nicht enthalten</strong> (grau) → <strong>zurücksetzen</strong>.</p>
+      <div class="demo-stage demo-stage--textwidget">
+        <div class="demo-text-pane">
+          <div class="demo-text-bar">
+            <span class="demo-text-bar-label">Zusammenfassung</span>
+            <span class="demo-tab demo-tab--active">Version A</span>
+            <span class="demo-tab">Version B</span>
+          </div>
+          <div class="demo-text-body">
+            <div class="demo-pdf-line demo-pdf-line--h" style="width:50%"></div>
+            <div class="demo-pdf-line" style="width:92%"></div>
+            <div class="demo-pdf-line" style="width:85%"></div>
+            <div class="demo-pdf-line" style="width:90%"></div>
+            <div class="demo-pdf-line" style="width:60%"></div>
+            <div class="demo-pdf-line demo-pdf-line--h" style="margin-top:.6rem;width:45%"></div>
+            <div class="demo-pdf-line" style="width:88%"></div>
+            <div class="demo-pdf-line" style="width:78%"></div>
+            <div class="demo-pdf-line" style="width:93%"></div>
+            <div class="demo-pdf-line" style="width:65%"></div>
+          </div>
+        </div>
+        <div class="demo-widget-pane" style="pointer-events:none;align-items:center;text-align:center">
+          <div style="width:100%;display:flex;flex-direction:column;align-items:center">
+          <svg class="demo-tree-svg" viewBox="-34 0 440 140" xmlns="http://www.w3.org/2000/svg">
+            <!-- branch lines (patient → category) -->
+            <line x1="88" y1="70" x2="124" y2="40" stroke="#d1d5db" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="88" y1="70" x2="124" y2="100" stroke="#d1d5db" stroke-width="2.5" stroke-linecap="round"/>
+            <!-- twig lines (category → items) -->
+            <line x1="156" y1="40" x2="199" y2="25" stroke="#e2e8f0" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="156" y1="40" x2="199" y2="55" stroke="#e2e8f0" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="156" y1="100" x2="199" y2="85" stroke="#e2e8f0" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="156" y1="100" x2="199" y2="115" stroke="#e2e8f0" stroke-width="1.5" stroke-linecap="round"/>
+
+            <!-- patient center -->
+            <g transform="translate(60,70)">
+              <circle r="28" fill="#1a4f8a"/>
+              <g fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"
+                 stroke-linejoin="round" transform="scale(0.50) translate(-16,-20)">
+                <circle cx="16" cy="13" r="9"/>
+                <path d="M2 44 C2 30 9 24 16 24 C23 24 30 30 30 44"/>
+                <path d="M10 24 L10 33 Q10 40 16 40 Q22 40 22 33 L22 24"/>
+              </g>
+              <text x="-36" y="5" text-anchor="end" fill="#1a4f8a"
+                    font-size="7" font-weight="700" letter-spacing=".08em"
+                    style="text-transform:uppercase">Patient</text>
+            </g>
+
+            <!-- Demographie group -->
+            <g class="demo-anim-rt-grp-demo" transform="translate(140,40)">
+              <circle r="16" class="demo-rt-grp-circ" fill="#fff" stroke="#cbd5e1" stroke-width="2"/>
+              <g class="demo-rt-grp-icon" fill="none" stroke="currentColor" stroke-width="1.8"
+                 stroke-linecap="round" stroke-linejoin="round"
+                 transform="scale(0.48) translate(-16,-16)" style="color:#64748b">
+                <circle cx="16" cy="10" r="5"/>
+                <path d="M6 28 C6 20 10 17 16 17 C22 17 26 20 26 28"/>
+              </g>
+              <text x="0" y="-21" text-anchor="middle" fill="#1e293b" font-size="7.5" font-weight="600">Demographie</text>
+            </g>
+
+            <!-- Primärtumor group -->
+            <g class="demo-anim-rt-grp-tumor" transform="translate(140,100)">
+              <circle r="16" class="demo-rt-grp-circ" fill="#fff" stroke="#cbd5e1" stroke-width="2"/>
+              <g class="demo-rt-grp-icon" fill="none" stroke="currentColor" stroke-width="1.8"
+                 stroke-linecap="round" stroke-linejoin="round"
+                 transform="scale(0.48) translate(-16,-16)" style="color:#64748b">
+                <circle cx="16" cy="16" r="4"/>
+                <circle cx="16" cy="7" r="2.2" fill="currentColor" stroke="none" opacity=".75"/>
+                <circle cx="23.5" cy="11.5" r="2.2" fill="currentColor" stroke="none" opacity=".75"/>
+                <circle cx="23.5" cy="20.5" r="2.2" fill="currentColor" stroke="none" opacity=".75"/>
+                <circle cx="16" cy="25" r="2.2" fill="currentColor" stroke="none" opacity=".75"/>
+                <circle cx="8.5" cy="20.5" r="2.2" fill="currentColor" stroke="none" opacity=".75"/>
+                <circle cx="8.5" cy="11.5" r="2.2" fill="currentColor" stroke="none" opacity=".75"/>
+              </g>
+              <text x="0" y="26" text-anchor="middle" fill="#1e293b" font-size="7.5" font-weight="600">Primärtumor</text>
+            </g>
+
+            <!-- Alter -->
+            <g class="demo-anim-rt-alter" transform="translate(210,25)">
+              <circle r="11" class="demo-rt-circ" fill="#f3f4f6" stroke="#d1d5db" stroke-width="2"/>
+              <path class="demo-rt-check" d="M-5 0.5 L-1.5 4.5 L5.5 -4" fill="none" stroke="#1a4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0"/>
+              <text x="16" y="4" fill="#6b7280" font-size="9">Alter</text>
+            </g>
+
+            <!-- Geschlecht -->
+            <g class="demo-anim-rt-geschl" transform="translate(210,55)">
+              <circle r="11" class="demo-rt-circ" fill="#f3f4f6" stroke="#d1d5db" stroke-width="2"/>
+              <path class="demo-rt-check" d="M-5 0.5 L-1.5 4.5 L5.5 -4" fill="none" stroke="#1a4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0"/>
+              <path class="demo-rt-cross" d="M-4 -4 L4 4 M-4 4 L4 -4" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" opacity="0"/>
+              <text x="16" y="4" fill="#6b7280" font-size="9">Geschlecht</text>
+            </g>
+
+            <!-- Lok. -->
+            <g class="demo-anim-rt-lok" transform="translate(210,85)">
+              <circle r="11" class="demo-rt-circ" fill="#f3f4f6" stroke="#d1d5db" stroke-width="2"/>
+              <path class="demo-rt-check" d="M-5 0.5 L-1.5 4.5 L5.5 -4" fill="none" stroke="#1a4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0"/>
+              <path class="demo-rt-cross" d="M-4 -4 L4 4 M-4 4 L4 -4" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" opacity="0"/>
+              <text x="16" y="4" fill="#6b7280" font-size="9">Lok.</text>
+            </g>
+
+            <!-- Dicke -->
+            <g class="demo-anim-rt-dicke" transform="translate(210,115)">
+              <circle r="11" class="demo-rt-circ" fill="#f3f4f6" stroke="#d1d5db" stroke-width="2"/>
+              <path class="demo-rt-check" d="M-5 0.5 L-1.5 4.5 L5.5 -4" fill="none" stroke="#1a4f8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0"/>
+              <path class="demo-rt-cross" d="M-4 -4 L4 4 M-4 4 L4 -4" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" opacity="0"/>
+              <text x="16" y="4" fill="#6b7280" font-size="9">Dicke</text>
+            </g>
+          </svg>
+          <div class="tree-legend" style="justify-content:center;gap:1.2rem;margin-top:.5rem">
+            <span class="tl-leg"><svg width="18" height="18"><circle cx="9" cy="9" r="7" fill="#f3f4f6" stroke="#d1d5db" stroke-width="1.5"/></svg> nicht bewertet</span>
+            <span class="tl-leg" style="font-weight:600;color:#1e293b"><svg width="18" height="18"><circle cx="9" cy="9" r="7" fill="#dbeafe" stroke="#1a4f8a" stroke-width="2"/><path d="M5.5 9.5 L7.5 11.8 L12.8 6.5" fill="none" stroke="#1a4f8a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> enthalten</span>
+            <span class="tl-leg"><svg width="18" height="18"><circle cx="9" cy="9" r="7" fill="#f3f4f6" stroke="#d1d5db" stroke-width="1.5"/><path d="M6.5 6.5 L11.5 11.5 M6.5 11.5 L11.5 6.5" fill="none" stroke="#9ca3af" stroke-width="1.6" stroke-linecap="round"/></svg> nicht enthalten</span>
+          </div>
+          </div>
+        </div>
+        <div class="demo-cursor demo-cursor--tree"></div>
+      </div>
+
+      {# ── 3. Falseinfo (checkbox + traffic lights) ── #}
+      {% elif step.key == 'summary_falseinfo' %}
+      <p class="demo-modal-desc">Markieren Sie fehlerhafte Informationen per <strong>Checkbox</strong>. Bewerten Sie dann <strong>Schwere</strong> und <strong>Wahrscheinlichkeit</strong> über die Ampelsymbole.</p>
+      <div class="demo-stage demo-stage--textwidget">
+        <div class="demo-text-pane">
+          <div class="demo-text-bar">
+            <span class="demo-text-bar-label">Zusammenfassung</span>
+            <span class="demo-tab demo-tab--active">Version A</span>
+            <span class="demo-tab">Version B</span>
+          </div>
+          <div class="demo-text-body">
+            <div class="demo-pdf-line demo-pdf-line--h" style="width:50%"></div>
+            <div class="demo-pdf-line" style="width:92%"></div>
+            <div class="demo-pdf-line" style="width:85%"></div>
+            <div class="demo-pdf-line" style="width:90%"></div>
+            <div class="demo-pdf-line" style="width:60%"></div>
+            <div class="demo-pdf-line demo-pdf-line--h" style="margin-top:.6rem;width:45%"></div>
+            <div class="demo-pdf-line" style="width:88%"></div>
+            <div class="demo-pdf-line" style="width:78%"></div>
+          </div>
+        </div>
+        <div class="demo-widget-pane" style="pointer-events:none">
+          <div class="fi-card demo-anim-fi-card">
+            <label class="fi-row" style="pointer-events:none">
+              <span class="fi-checkbox demo-anim-fi-cb">
+                <svg class="fi-check-icon" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <span class="fi-item-label demo-anim-fi-label">Tumordicke: 2.3 mm</span>
+              <span class="fi-badge demo-anim-fi-badge"><span class="demo-fi-badge-ok">✓ Korrekt</span><span class="demo-fi-badge-err">⚠ Fehlerhaft</span></span>
+            </label>
+            <div class="fi-sub demo-anim-fi-sub" style="display:block">
+              <div class="fi-tl-row">
+                <div class="fi-tl-col">
+                  <div class="fi-sub-label">Schwere</div>
+                  <div class="tl-housing">
+                    <label class="tl-light tl-red demo-anim-fi-sev-red" style="pointer-events:none"><span class="tl-bulb"></span><span class="tl-opt-label">Schwerer Schaden</span></label>
+                    <label class="tl-light tl-amber" style="pointer-events:none"><span class="tl-bulb"></span><span class="tl-opt-label">Leichter Schaden</span></label>
+                    <label class="tl-light tl-green" style="pointer-events:none"><span class="tl-bulb"></span><span class="tl-opt-label">Kein Schaden</span></label>
+                  </div>
+                </div>
+                <div class="fi-tl-col">
+                  <div class="fi-sub-label">Wahrscheinlichkeit</div>
+                  <div class="tl-housing">
+                    <label class="tl-light tl-red" style="pointer-events:none"><span class="tl-bulb"></span><span class="tl-opt-label">Hoch</span></label>
+                    <label class="tl-light tl-amber demo-anim-fi-prob-amber" style="pointer-events:none"><span class="tl-bulb"></span><span class="tl-opt-label">Mittel</span></label>
+                    <label class="tl-light tl-green" style="pointer-events:none"><span class="tl-bulb"></span><span class="tl-opt-label">Niedrig</span></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="demo-cursor demo-cursor--falseinfo"></div>
+      </div>
+
+      {# ── 4. VAS 0-100 ── #}
+      {% elif step.key in ['summary_correctness','summary_completeness','summary_conciseness','final_overall'] %}
+      <p class="demo-modal-desc">Klicken Sie auf die gewünschte Position auf der Skala (0–100). <strong>0 = Sehr schlecht</strong>, <strong>100 = Ausgezeichnet</strong>.</p>
+      <div class="demo-stage demo-stage--textwidget">
+        <div class="demo-text-pane">
+          <div class="demo-text-bar">
+            <span class="demo-text-bar-label">Zusammenfassung</span>
+            <span class="demo-tab demo-tab--active">Version A</span>
+            <span class="demo-tab">Version B</span>
+          </div>
+          <div class="demo-text-body">
+            <div class="demo-pdf-line demo-pdf-line--h" style="width:50%"></div>
+            <div class="demo-pdf-line" style="width:92%"></div>
+            <div class="demo-pdf-line" style="width:85%"></div>
+            <div class="demo-pdf-line" style="width:90%"></div>
+            <div class="demo-pdf-line" style="width:60%"></div>
+            <div class="demo-pdf-line demo-pdf-line--h" style="margin-top:.6rem;width:45%"></div>
+            <div class="demo-pdf-line" style="width:88%"></div>
+            <div class="demo-pdf-line" style="width:78%"></div>
+          </div>
+        </div>
+        <div class="demo-widget-pane" style="pointer-events:none">
+          <div class="vas8-bar" style="height:56px">
+            <div class="vas8-track-line"></div>
+            <div class="vas8-fill demo-anim-vas-fill"></div>
+            <div class="vas8-thumb demo-anim-vas-thumb"></div>
+          </div>
+          <div class="vas-tick-labels">
+            <span>0 &mdash; Sehr gering</span>
+            <span>Sehr hoch &mdash; 100</span>
+          </div>
+        </div>
+        <div class="demo-cursor demo-cursor--vas"></div>
+      </div>
+
+      {# ── 5. Post-edit effort ── #}
+      {% elif step.key in ['summary_postedit','problem_postedit'] %}
+      <p class="demo-modal-desc">Entscheiden Sie: <strong>Direkt verwenden</strong> oder <strong>Überarbeitung nötig</strong>. Bei Überarbeitung wählen Sie die Art und bearbeiten den Text im Editor.</p>
+      <div class="demo-stage demo-stage--textwidget">
+        <div class="demo-text-pane demo-anim-pe-textpane">
+          <div class="demo-text-bar">
+            <span class="demo-text-bar-label">Zusammenfassung</span>
+            <span class="demo-pe-edit-badge">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+              Bearbeitungsmodus
+            </span>
+            <span class="demo-tab demo-tab--active">Version A</span>
+            <span class="demo-tab">Version B</span>
+          </div>
+          <div class="demo-text-body">
+            <div class="demo-pdf-line demo-pdf-line--h" style="width:50%"></div>
+            <div class="demo-pdf-line" style="width:92%"></div>
+            <div class="demo-pdf-line" style="width:85%"></div>
+            <div class="demo-pdf-line" style="width:90%"></div>
+            <div class="demo-pdf-line" style="width:60%"></div>
+            <div class="demo-pdf-line demo-pdf-line--h" style="margin-top:.6rem;width:45%"></div>
+            <div class="demo-pdf-line" style="width:88%"></div>
+            <div class="demo-pdf-line" style="width:78%"></div>
+          </div>
+        </div>
+        <div class="demo-widget-pane" style="pointer-events:none">
+          <div class="pe-level1">
+            <div class="pe-card pe-card--green demo-anim-pe-green">
+              <span class="pe-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+              <span class="pe-card-label">Direkt verwenden</span>
+              <span class="pe-card-sub">Text ist bereit für den<br>klinischen Einsatz</span>
+            </div>
+            <div class="pe-card pe-card--amber demo-anim-pe-amber">
+              <span class="pe-card-icon"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><g transform="translate(12 12) scale(1.1) translate(-10.9 -10.9)"><path fill-rule="evenodd" d="M12.7 7.2L14.4 6.9L14.4 9.1L12.7 8.8L11.9 10.8L13.3 11.7L11.7 13.3L10.8 11.9L8.8 12.7L9.1 14.4L6.9 14.4L7.2 12.7L5.2 11.9L4.3 13.3L2.7 11.7L4.1 10.8L3.3 8.8L1.6 9.1L1.6 6.9L3.3 7.2L4.1 5.2L2.7 4.3L4.3 2.7L5.2 4.1L7.2 3.3L6.9 1.6L9.1 1.6L8.8 3.3L10.8 4.1L11.7 2.7L13.3 4.3L11.9 5.2ZM10.2 8A2.2 2.2 0 1 0 5.8 8A2.2 2.2 0 1 0 10.2 8Z"/><path fill-rule="evenodd" d="M19.1 15.5L20.2 15.3L20.2 16.7L19.1 16.5L18.6 17.8L19.5 18.4L18.4 19.5L17.8 18.6L16.5 19.1L16.7 20.2L15.3 20.2L15.5 19.1L14.2 18.6L13.6 19.5L12.5 18.4L13.5 17.8L12.9 16.5L11.8 16.7L11.8 15.3L12.9 15.5L13.5 14.2L12.5 13.6L13.6 12.5L14.2 13.5L15.5 12.9L15.3 11.8L16.7 11.8L16.5 12.9L17.8 13.5L18.4 12.5L19.5 13.6L18.6 14.2ZM17.4 16A1.4 1.4 0 1 0 14.6 16A1.4 1.4 0 1 0 17.4 16Z"/></g></svg></span>
+              <span class="pe-card-label">Überarbeitung nötig</span>
+              <span class="pe-card-sub">Text muss vor Verwendung<br>angepasst werden</span>
+            </div>
+          </div>
+          <div class="pe-level2 demo-anim-pe-level2">
+            <div class="pe-level2-header">Art der Überarbeitung:</div>
+            <div class="pe-level2-options">
+              <div class="pe-sub-card demo-anim-pe-minor">
+                <span class="pe-sub-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span>
+                <span class="pe-sub-label">Kleine Korrektionen</span>
+                <span class="pe-sub-desc">Formulierung, Stil, Tippfehler</span>
+              </div>
+              <div class="pe-sub-card">
+                <span class="pe-sub-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><g transform="rotate(35 12 12)"><rect x="6.75" y="4" width="10.5" height="5" rx="1.3" fill="currentColor"/><rect x="10.45" y="8.8" width="3" height="11.2" rx="1.3"/></g></svg></span>
+                <span class="pe-sub-label">Größere Überarbeitung</span>
+                <span class="pe-sub-desc">Fakten, Struktur, fehlende Inhalte</span>
+              </div>
+              <div class="pe-sub-card">
+                <span class="pe-sub-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg></span>
+                <span class="pe-sub-label">Vollständig neu</span>
+                <span class="pe-sub-desc">Text nicht verwendbar</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="demo-cursor demo-cursor--postedit"></div>
+      </div>
+
+      {# ── 6. Origin guess ── #}
+      {% elif step.key in ['summary_origin_guess','problem_origin_guess'] %}
+      <p class="demo-modal-desc">Schätzen Sie ein, ob der Text von einem <strong>Menschen</strong> oder einer <strong>KI</strong> verfasst wurde. <strong>Unsicher</strong> wenn nicht zuordenbar.</p>
+      <div class="demo-stage demo-stage--textwidget">
+        <div class="demo-text-pane">
+          <div class="demo-text-bar">
+            <span class="demo-text-bar-label">Zusammenfassung</span>
+            <span class="demo-tab demo-tab--active">Version A</span>
+            <span class="demo-tab">Version B</span>
+          </div>
+          <div class="demo-text-body">
+            <div class="demo-pdf-line demo-pdf-line--h" style="width:50%"></div>
+            <div class="demo-pdf-line" style="width:92%"></div>
+            <div class="demo-pdf-line" style="width:85%"></div>
+            <div class="demo-pdf-line" style="width:90%"></div>
+            <div class="demo-pdf-line" style="width:60%"></div>
+            <div class="demo-pdf-line demo-pdf-line--h" style="margin-top:.6rem;width:45%"></div>
+            <div class="demo-pdf-line" style="width:88%"></div>
+            <div class="demo-pdf-line" style="width:78%"></div>
+          </div>
+        </div>
+        <div class="demo-widget-pane" style="pointer-events:none">
+          <div class="origin-widget">
+            <div class="origin-opt origin-opt--mensch demo-anim-origin-mensch">
+              <div class="origin-icon"><svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="22" cy="11" r="6"/><path d="M8 42 C8 30 14 26 22 26 C30 26 36 30 36 42"/><path d="M17 26 L17 33 Q17 38 22 38 Q27 38 27 33 L27 26"/><circle cx="27" cy="39.5" r="2" fill="currentColor" stroke="none"/></svg></div>
+              <span class="origin-label">Mensch</span>
+            </div>
+            <div class="origin-opt origin-opt--unsicher demo-anim-origin-unsicher">
+              <div class="origin-icon"><svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="22" cy="22" r="19"/><path d="M15.5 17 C15.5 11.5 21 8.5 25.5 12 C30 15.5 27.5 21 22 23 L22 28"/><circle cx="22" cy="34" r="2" fill="currentColor" stroke="none"/></svg></div>
+              <span class="origin-label">Unsicher</span>
+            </div>
+            <div class="origin-opt origin-opt--ki demo-anim-origin-ki">
+              <div class="origin-icon"><svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="38" height="26" rx="3"/><rect x="7" y="9" width="30" height="18" rx="1.5" stroke-width="1.8"/><circle cx="14" cy="16" r="2" fill="currentColor" stroke="none"/><circle cx="22" cy="13" r="2" fill="currentColor" stroke="none"/><circle cx="30" cy="17" r="2" fill="currentColor" stroke="none"/><circle cx="18" cy="22" r="2" fill="currentColor" stroke="none"/><circle cx="26" cy="22" r="2" fill="currentColor" stroke="none"/><path d="M14 16 L22 13 L30 17" stroke-width="1.5"/><path d="M14 16 L18 22 L26 22 L30 17" stroke-width="1.5"/><path d="M22 13 L18 22" stroke-width="1.5"/><path d="M22 31 L22 37" stroke-width="2.4"/><path d="M14 37 L30 37"/></svg></div>
+              <span class="origin-label">KI</span>
+            </div>
+          </div>
+        </div>
+        <div class="demo-cursor demo-cursor--origin"></div>
+      </div>
+
+      {# ── 7. Preference (side-by-side) ── #}
+      {% elif step.key in ['summary_preference','problem_preference'] %}
+      <p class="demo-modal-desc">Beide Versionen werden nebeneinander angezeigt. Klicken Sie auf die bevorzugte Version oder wählen Sie <strong>Keine Präferenz</strong>.</p>
+      <div class="demo-stage demo-stage--prefpage">
+        <div class="demo-pref-cols" style="pointer-events:none">
+          <div class="demo-pref-col demo-anim-pref-a">
+            <div class="demo-text-bar demo-text-bar--a">
+              <span class="demo-text-bar-label">Version A</span>
+            </div>
+            <div class="demo-text-body" style="min-height:80px">
+              <div class="demo-pdf-line" style="width:90%"></div>
+              <div class="demo-pdf-line" style="width:82%"></div>
+              <div class="demo-pdf-line" style="width:88%"></div>
+              <div class="demo-pdf-line" style="width:60%"></div>
+            </div>
+            <div class="pref-badge" style="text-align:center;padding:.4rem"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="3" x2="12" y2="20"/><line x1="5" y1="8" x2="19" y2="4"/><path d="M5 8 L3 13 Q5 15 7 13 Z"/><path d="M19 4 L17 8 Q19 10 21 8 Z"/><line x1="9" y1="20" x2="15" y2="20"/></svg></div>
+          </div>
+          <div class="demo-pref-col demo-anim-pref-b">
+            <div class="demo-text-bar demo-text-bar--b">
+              <span class="demo-text-bar-label">Version B</span>
+            </div>
+            <div class="demo-text-body" style="min-height:80px">
+              <div class="demo-pdf-line" style="width:85%"></div>
+              <div class="demo-pdf-line" style="width:92%"></div>
+              <div class="demo-pdf-line" style="width:78%"></div>
+              <div class="demo-pdf-line" style="width:65%"></div>
+            </div>
+            <div class="pref-badge" style="text-align:center;padding:.4rem"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="3" x2="12" y2="20"/><line x1="5" y1="4" x2="19" y2="8"/><path d="M5 4 L3 8 Q5 10 7 8 Z"/><path d="M19 8 L17 13 Q19 15 21 13 Z"/><line x1="9" y1="20" x2="15" y2="20"/></svg></div>
+          </div>
+          <button type="button" class="pref-no-pref-btn demo-anim-pref-none demo-pref-no-pref">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="4" x2="12" y2="20"/><line x1="5" y1="6" x2="19" y2="6"/><path d="M5 6 L3 11 Q5 13 7 11 Z"/><path d="M19 6 L17 11 Q19 13 21 11 Z"/><line x1="9" y1="20" x2="15" y2="20"/></svg>
+            <span class="pref-no-pref-label">Keine Präferenz</span>
+          </button>
+        </div>
+        <div class="demo-cursor demo-cursor--pref"></div>
+      </div>
+
+      {# ── 8. Problem focus (status + topics) ── #}
+      {% elif step.key == 'problem_focus' %}
+      <p class="demo-modal-desc">Wählen Sie den <strong>Krankheitsstatus</strong> und die <strong>Diskussionsschwerpunkte</strong> (Mehrfachauswahl möglich).</p>
+      <div class="demo-stage demo-stage--textwidget">
+        <div class="demo-text-pane">
+          <div class="demo-text-bar">
+            <span class="demo-text-bar-label">Fragestellung</span>
+            <span class="demo-tab demo-tab--active">Version A</span>
+            <span class="demo-tab">Version B</span>
+          </div>
+          <div class="demo-text-body">
+            <div class="demo-pdf-line demo-pdf-line--h" style="width:50%"></div>
+            <div class="demo-pdf-line" style="width:90%"></div>
+            <div class="demo-pdf-line" style="width:85%"></div>
+            <div class="demo-pdf-line" style="width:92%"></div>
+            <div class="demo-pdf-line" style="width:60%"></div>
+          </div>
+        </div>
+        <div class="demo-widget-pane" style="pointer-events:none">
+          <div class="ks-widget" style="margin-bottom:.75rem">
+            <div class="ks-option ks-option--progress demo-anim-ks-prog">
+              <div class="ks-icon"><svg viewBox="0 0 40 40" width="40" height="40" fill="none"><circle cx="20" cy="20" r="16" stroke="#ef4444" stroke-width="2.5"/><polyline points="10,26 20,14 30,26" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div class="ks-label">Progredient</div>
+              <div class="ks-sublabel">Fortschreitende Erkrankung</div>
+            </div>
+            <div class="ks-option">
+              <div class="ks-icon"><svg viewBox="0 0 40 40" width="40" height="40" fill="none"><circle cx="20" cy="20" r="16" stroke="#6b7280" stroke-width="2.5"/><line x1="10" y1="20" x2="30" y2="20" stroke="#6b7280" stroke-width="2.5" stroke-linecap="round"/></svg></div>
+              <div class="ks-label">Unverändert</div>
+              <div class="ks-sublabel">Stabile Erkrankung</div>
+            </div>
+            <div class="ks-option ks-option--remission">
+              <div class="ks-icon"><svg viewBox="0 0 40 40" width="40" height="40" fill="none"><circle cx="20" cy="20" r="16" stroke="#22c55e" stroke-width="2.5"/><polyline points="10,14 20,26 30,14" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div class="ks-label">Regredient</div>
+              <div class="ks-sublabel">Rückläufige Erkrankung</div>
+            </div>
+          </div>
+          <div class="fc-widget">
+            <div class="fc-start-row"><div class="fc-start-node">Fragestellung fokussiert auf …</div></div>
+            <div class="fc-trunk-wrap"><div class="fc-trunk"></div><div class="fc-rail"></div></div>
+            <div class="fc-nodes-row">
+              <div class="fc-branch-wrap"><div class="fc-branch-line"></div>
+                <div class="fc-node demo-anim-fc-1"><span class="fc-node-icon">🔬</span><span class="fc-node-text">Weitere<br>Diagnostik</span></div>
+              </div>
+              <div class="fc-branch-wrap"><div class="fc-branch-line"></div>
+                <div class="fc-node demo-anim-fc-2"><span class="fc-node-icon">💊</span><span class="fc-node-text">Therapie</span></div>
+              </div>
+              <div class="fc-branch-wrap"><div class="fc-branch-line"></div>
+                <div class="fc-node demo-anim-fc-3"><span class="fc-node-icon">📈</span><span class="fc-node-text">Verlaufs-<br>kontrolle</span></div>
+              </div>
+              <div class="fc-branch-wrap"><div class="fc-branch-line"></div>
+                <div class="fc-node fc-node--none"><span class="fc-node-icon">—</span><span class="fc-node-text">Keine<br>Spezifizierung</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="demo-cursor demo-cursor--focus"></div>
+      </div>
+
+      {# ── 9. Traffic light (problem_correctness) ── #}
+      {% elif step.key == 'problem_correctness' %}
+      <p class="demo-modal-desc">Wählen Sie eine der drei Bewertungsstufen, indem Sie auf das Ampelsymbol klicken.</p>
+      <div class="demo-stage demo-stage--textwidget">
+        <div class="demo-text-pane">
+          <div class="demo-text-bar">
+            <span class="demo-text-bar-label">Fragestellung</span>
+            <span class="demo-tab demo-tab--active">Version A</span>
+            <span class="demo-tab">Version B</span>
+          </div>
+          <div class="demo-text-body">
+            <div class="demo-pdf-line demo-pdf-line--h" style="width:50%"></div>
+            <div class="demo-pdf-line" style="width:90%"></div>
+            <div class="demo-pdf-line" style="width:85%"></div>
+            <div class="demo-pdf-line" style="width:92%"></div>
+            <div class="demo-pdf-line" style="width:60%"></div>
+          </div>
+        </div>
+        <div class="demo-widget-pane rating-section" style="pointer-events:none">
+          <div class="tl-housing">
+            <label class="tl-light tl-red demo-anim-tl-red"><span class="tl-bulb"></span><span class="tl-opt-label">Trifft nicht zu</span></label>
+            <label class="tl-light tl-amber demo-anim-tl-amber"><span class="tl-bulb"></span><span class="tl-opt-label">Trifft teilweise zu</span></label>
+            <label class="tl-light tl-green demo-anim-tl-green"><span class="tl-bulb"></span><span class="tl-opt-label">Trifft zu</span></label>
+          </div>
+        </div>
+        <div class="demo-cursor demo-cursor--traffic"></div>
+      </div>
+
+      {# ── 10. Specificity / Lens (problem_specificity) ── #}
+      {% elif step.key == 'problem_specificity' %}
+      <p class="demo-modal-desc">Beurteilen Sie die Spezifität: <strong>Zu generisch</strong>, <strong>Optimal</strong> oder <strong>Zu spezifisch</strong>.</p>
+      <div class="demo-stage demo-stage--textwidget">
+        <div class="demo-text-pane">
+          <div class="demo-text-bar">
+            <span class="demo-text-bar-label">Fragestellung</span>
+            <span class="demo-tab demo-tab--active">Version A</span>
+            <span class="demo-tab">Version B</span>
+          </div>
+          <div class="demo-text-body">
+            <div class="demo-pdf-line demo-pdf-line--h" style="width:50%"></div>
+            <div class="demo-pdf-line" style="width:90%"></div>
+            <div class="demo-pdf-line" style="width:85%"></div>
+            <div class="demo-pdf-line" style="width:92%"></div>
+            <div class="demo-pdf-line" style="width:60%"></div>
+          </div>
+        </div>
+        <div class="demo-widget-pane" style="pointer-events:none">
+          <div class="lens-widget">
+            <label class="lens-option demo-anim-lens-wide">
+              <div class="lens-visual lens-wide"><div class="lens-circle lens-c1"></div><div class="lens-blur-overlay"></div><div class="lens-crosshair"></div></div>
+              <div class="lens-label">Zu generisch</div>
+              <div class="lens-sublabel">Zu breit gefasst</div>
+            </label>
+            <label class="lens-option demo-anim-lens-mid">
+              <div class="lens-visual lens-mid"><div class="lens-circle lens-c2"></div><div class="lens-crosshair"></div></div>
+              <div class="lens-label">Optimal</div>
+              <div class="lens-sublabel">Passend eingegrenzt</div>
+            </label>
+            <label class="lens-option demo-anim-lens-narrow">
+              <div class="lens-visual lens-narrow"><div class="lens-circle lens-c3"></div><div class="lens-crosshair"></div></div>
+              <div class="lens-label">Zu spezifisch</div>
+              <div class="lens-sublabel">Zu eng gefasst</div>
+            </label>
+          </div>
+          <div class="goldilocks-scale demo-goldilocks">
+            <div class="goldilocks-label-row">
+              <!-- labels removed -->
+            </div>
+            <div class="goldilocks-bar-wrap">
+              <div class="goldilocks-bar">
+                <div class="gl-zone gl-zone--left demo-anim-gl-left">Zu generisch</div>
+                <div class="gl-zone gl-zone--mid demo-anim-gl-mid">Optimal</div>
+                <div class="gl-zone gl-zone--right demo-anim-gl-right">Zu spezifisch</div>
+              </div>
+              <div class="goldilocks-marker demo-anim-gl-marker">▲</div>
+            </div>
+          </div>
+        </div>
+        <div class="demo-cursor demo-cursor--lens"></div>
+      </div>
+
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script>
+var _demoCursorAnim = null;
+
+function openDemoModal() {
+  var m = document.getElementById('demo-modal');
+  if (m) { m.style.display = 'flex'; }
+  /* Wait for the modal entry animation (scale .95→1, 250ms) to finish
+     before measuring element positions for the cursor. */
+  setTimeout(initDemoCursor, 300);
+}
+function closeDemoModal() {
+  var m = document.getElementById('demo-modal');
+  if (m) { m.style.display = 'none'; }
+  if (_demoCursorAnim) { _demoCursorAnim.cancel(); _demoCursorAnim = null; }
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeDemoModal();
+});
+
+/* Helper: compute center of an element relative to a stage container.
+   Uses offsetLeft/offsetTop chain for HTML elements (matches position:absolute).
+   Falls back to getBoundingClientRect for SVG elements (no offset* props). */
+function _demoPos(stage, sel) {
+  var el = stage.querySelector(sel);
+  if (!el) return { x: stage.clientWidth * 0.5, y: stage.clientHeight * 0.5 };
+  /* SVG elements lack offsetParent — use getBoundingClientRect fallback */
+  if (typeof el.offsetParent === 'undefined' || el.offsetParent === null && !(el instanceof HTMLElement)) {
+    var sr = stage.getBoundingClientRect();
+    var r = el.getBoundingClientRect();
+    return { x: r.left + r.width / 2 - sr.left, y: r.top + r.height / 2 - sr.top };
+  }
+  var x = el.offsetWidth / 2;
+  var y = el.offsetHeight / 2;
+  var node = el;
+  while (node && node !== stage) {
+    x += node.offsetLeft;
+    y += node.offsetTop;
+    node = node.offsetParent;
+    if (!node) break;
+  }
+  return { x: x, y: y };
+}
+function _demoKf(x, y, op, off, ease) {
+  var o = { left: x + 'px', top: y + 'px', opacity: op, offset: off };
+  if (ease) o.easing = ease;
+  return o;
+}
+function _demoRestartRipple(cursor, cls) {
+  cursor.classList.remove(cls);
+  void cursor.offsetWidth;
+  cursor.classList.add(cls);
+}
+
+/* Route to the right cursor init based on which demo-stage is visible */
+function initDemoCursor() {
+  if (_demoCursorAnim) { _demoCursorAnim.cancel(); _demoCursorAnim = null; }
+  var stage;
+  if ((stage = document.querySelector('.demo-stage--relpage')))      return initRelCursorAnim(stage);
+  if ((stage = document.querySelector('.demo-stage--textwidget')))   return initTextWidgetCursor(stage);
+  if ((stage = document.querySelector('.demo-stage--prefpage')))     return initPrefCursor(stage);
+}
+
+/* ── 1. Relevance (existing) ── */
+function initRelCursorAnim(stage) {
+  var cursor = stage.querySelector('.demo-cursor');
+  if (!cursor) return;
+  var pos = _demoPos.bind(null, stage);
+  var kf = _demoKf;
+
+  var p1 = pos('.rel-group:first-child .rel-cat-btn--yes');
+  var p2 = pos('#demo-grp2 .rel-item:nth-child(1) .rel-btn--no');
+  var p3 = pos('#demo-grp2 .rel-item:nth-child(2) .rel-btn--no');
+  var p4 = pos('#demo-grp2 .rel-cat-btn--no');
+
+  _demoCursorAnim = cursor.animate([
+    kf(p1.x, p1.y, 1,   0.00, 'linear'),
+    kf(p1.x, p1.y, 1,   0.08, 'linear'),
+    kf(p1.x, p1.y, 0.3, 0.13, 'ease-out'),
+    kf(p1.x, p1.y, 1,   0.19, 'ease-in-out'),
+    kf(p2.x, p2.y, 1,   0.28, 'linear'),
+    kf(p2.x, p2.y, 0.3, 0.32, 'ease-out'),
+    kf(p2.x, p2.y, 1,   0.38, 'ease-in-out'),
+    kf(p3.x, p3.y, 1,   0.42, 'linear'),
+    kf(p3.x, p3.y, 0.3, 0.46, 'ease-out'),
+    kf(p3.x, p3.y, 1,   0.50, 'ease-in-out'),
+    kf(p4.x, p4.y, 1,   0.56, 'linear'),
+    kf(p4.x, p4.y, 0.3, 0.60, 'ease-out'),
+    kf(p4.x, p4.y, 1,   0.66, 'ease-in-out'),
+    kf(p1.x, p1.y, 0,   0.82, 'linear'),
+    kf(p1.x, p1.y, 0,   1.00)
+  ], { duration: 10000, iterations: Infinity, easing: 'linear' });
+
+  _demoRestartRipple(cursor, 'demo-cursor--binary');
+}
+
+/* ── 2-6, 8-10. Text+Widget demos ── */
+function initTextWidgetCursor(stage) {
+  var cursor = stage.querySelector('.demo-cursor');
+  if (!cursor) return;
+  var pos = _demoPos.bind(null, stage);
+  var kf = _demoKf;
+  var cls = cursor.className;
+
+  if (cls.indexOf('demo-cursor--tree') !== -1)         return initTreeCursor(stage, cursor, pos, kf);
+  if (cls.indexOf('demo-cursor--falseinfo') !== -1)    return initFalseCursor(stage, cursor, pos, kf);
+  if (cls.indexOf('demo-cursor--vas') !== -1)          return initVasCursor(stage, cursor, pos, kf);
+  if (cls.indexOf('demo-cursor--postedit') !== -1)     return initPeCursor(stage, cursor, pos, kf);
+  if (cls.indexOf('demo-cursor--origin') !== -1)       return initOriginCursor(stage, cursor, pos, kf);
+  if (cls.indexOf('demo-cursor--focus') !== -1)        return initFocusCursor(stage, cursor, pos, kf);
+  if (cls.indexOf('demo-cursor--traffic') !== -1)      return initTrafficCursor(stage, cursor, pos, kf);
+  if (cls.indexOf('demo-cursor--lens') !== -1)         return initLensCursor(stage, cursor, pos, kf);
+}
+
+/* ── 2. Tree ── */
+function initTreeCursor(stage, cursor, pos, kf) {
+  var grpDemo  = pos('.demo-anim-rt-grp-demo .demo-rt-grp-circ');
+  var geschl   = pos('.demo-anim-rt-geschl .demo-rt-circ');
+  var grpTumor = pos('.demo-anim-rt-grp-tumor .demo-rt-grp-circ');
+
+  _demoCursorAnim = cursor.animate([
+    /* Phase 1: click Demo group → select Alter+Geschlecht */
+    kf(grpDemo.x,  grpDemo.y,  1,   0.00, 'linear'),
+    kf(grpDemo.x,  grpDemo.y,  1,   0.05, 'linear'),
+    kf(grpDemo.x,  grpDemo.y,  0.3, 0.08, 'ease-out'),
+    kf(grpDemo.x,  grpDemo.y,  1,   0.12, 'ease-in-out'),
+    /* Phase 2: click Geschlecht → nicht enthalten */
+    kf(geschl.x,   geschl.y,   1,   0.21, 'linear'),
+    kf(geschl.x,   geschl.y,   0.3, 0.24, 'ease-out'),
+    kf(geschl.x,   geschl.y,   1,   0.28, 'ease-in-out'),
+    /* Phase 3: click Geschlecht → reset */
+    kf(geschl.x,   geschl.y,   1,   0.37, 'linear'),
+    kf(geschl.x,   geschl.y,   0.3, 0.40, 'ease-out'),
+    kf(geschl.x,   geschl.y,   1,   0.44, 'ease-in-out'),
+    /* Phase 4: click Tumor group → select Lok.+Dicke */
+    kf(grpTumor.x, grpTumor.y, 1,   0.51, 'linear'),
+    kf(grpTumor.x, grpTumor.y, 0.3, 0.54, 'ease-out'),
+    kf(grpTumor.x, grpTumor.y, 1,   0.58, 'ease-in-out'),
+    /* Phase 5: click Tumor group → deselect Lok.+Dicke */
+    kf(grpTumor.x, grpTumor.y, 1,   0.67, 'linear'),
+    kf(grpTumor.x, grpTumor.y, 0.3, 0.70, 'ease-out'),
+    kf(grpTumor.x, grpTumor.y, 1,   0.74, 'ease-in-out'),
+    /* fade out */
+    kf(grpDemo.x,  grpDemo.y,  0,   0.88, 'linear'),
+    kf(grpDemo.x,  grpDemo.y,  0,   1.00)
+  ], { duration: 14000, iterations: Infinity, easing: 'linear' });
+
+  _demoRestartRipple(cursor, 'demo-cursor--tree');
+}
+
+/* ── 3. Falseinfo ── */
+function initFalseCursor(stage, cursor, pos, kf) {
+  var p1 = pos('.fi-checkbox');
+  var p2 = pos('.demo-anim-fi-sev-red .tl-bulb');
+  var p3 = pos('.demo-anim-fi-prob-amber .tl-bulb');
+
+  _demoCursorAnim = cursor.animate([
+    kf(p1.x, p1.y, 1,   0.00, 'linear'),
+    kf(p1.x, p1.y, 1,   0.08, 'linear'),
+    kf(p1.x, p1.y, 0.3, 0.12, 'ease-out'),
+    kf(p1.x, p1.y, 1,   0.18, 'ease-in-out'),
+    kf(p2.x, p2.y, 1,   0.34, 'linear'),
+    kf(p2.x, p2.y, 0.3, 0.38, 'ease-out'),
+    kf(p2.x, p2.y, 1,   0.44, 'ease-in-out'),
+    kf(p3.x, p3.y, 1,   0.56, 'linear'),
+    kf(p3.x, p3.y, 0.3, 0.60, 'ease-out'),
+    kf(p3.x, p3.y, 1,   0.66, 'ease-in-out'),
+    kf(p1.x, p1.y, 0,   0.82, 'linear'),
+    kf(p1.x, p1.y, 0,   1.00)
+  ], { duration: 9000, iterations: Infinity, easing: 'linear' });
+
+  _demoRestartRipple(cursor, 'demo-cursor--falseinfo');
+}
+
+/* ── 4. VAS ── */
+function initVasCursor(stage, cursor, pos, kf) {
+  var trackEl = stage.querySelector('.vas8-track-line');
+  if (!trackEl) return;
+  /* Compute track geometry using offset* chain */
+  var tPos = _demoPos(stage, '.vas8-track-line');
+  var yMid = tPos.y;
+  /* Get track left edge and width to match % positions */
+  var trkLeft = 0, trkNode = trackEl;
+  while (trkNode && trkNode !== stage) {
+    trkLeft += trkNode.offsetLeft;
+    trkNode = trkNode.offsetParent;
+    if (!trkNode) break;
+  }
+  var trkW = trackEl.offsetWidth;
+  var x72  = trkLeft + trkW * 0.72;
+  var x45  = trkLeft + trkW * 0.45;
+
+  _demoCursorAnim = cursor.animate([
+    /* arrive at 72% position */
+    kf(x72,  yMid, 1,   0.00, 'linear'),
+    kf(x72,  yMid, 1,   0.12, 'linear'),
+    /* Phase 1 click: snap fill+thumb to 72% */
+    kf(x72,  yMid, 0.3, 0.16, 'ease-out'),
+    kf(x72,  yMid, 1,   0.22, 'ease-in-out'),
+    /* travel to 45% position */
+    kf(x45,  yMid, 1,   0.44, 'linear'),
+    /* Phase 2 click: snap fill+thumb to 45% */
+    kf(x45,  yMid, 0.3, 0.50, 'ease-out'),
+    kf(x45,  yMid, 1,   0.56, 'ease-in-out'),
+    /* fade out */
+    kf(x45,  yMid, 0,   0.78, 'linear'),
+    kf(x45,  yMid, 0,   1.00)
+  ], { duration: 6000, iterations: Infinity, easing: 'linear' });
+
+  _demoRestartRipple(cursor, 'demo-cursor--vas');
+}
+
+/* ── 5. Post-edit ── */
+function initPeCursor(stage, cursor, pos, kf) {
+  var p1 = pos('.demo-anim-pe-green');
+  var p2 = pos('.demo-anim-pe-amber');
+  var p3 = pos('.demo-anim-pe-minor');
+
+  _demoCursorAnim = cursor.animate([
+    kf(p1.x, p1.y, 1,   0.00, 'linear'),
+    kf(p1.x, p1.y, 1,   0.10, 'linear'),
+    kf(p1.x, p1.y, 0.3, 0.14, 'ease-out'),
+    kf(p1.x, p1.y, 1,   0.20, 'ease-in-out'),
+    kf(p2.x, p2.y, 1,   0.30, 'linear'),
+    kf(p2.x, p2.y, 0.3, 0.34, 'ease-out'),
+    kf(p2.x, p2.y, 1,   0.40, 'ease-in-out'),
+    kf(p3.x, p3.y, 1,   0.56, 'linear'),
+    kf(p3.x, p3.y, 0.3, 0.60, 'ease-out'),
+    kf(p3.x, p3.y, 1,   0.66, 'ease-in-out'),
+    kf(p1.x, p1.y, 0,   0.82, 'linear'),
+    kf(p1.x, p1.y, 0,   1.00)
+  ], { duration: 8000, iterations: Infinity, easing: 'linear' });
+
+  _demoRestartRipple(cursor, 'demo-cursor--postedit');
+}
+
+/* ── 6. Origin ── */
+function initOriginCursor(stage, cursor, pos, kf) {
+  var p1 = pos('.origin-opt--mensch');
+  var p2 = pos('.origin-opt--unsicher');
+  var p3 = pos('.origin-opt--ki');
+
+  _demoCursorAnim = cursor.animate([
+    kf(p1.x, p1.y, 1,   0.00, 'linear'),
+    kf(p1.x, p1.y, 1,   0.08, 'linear'),
+    kf(p1.x, p1.y, 0.3, 0.12, 'ease-out'),
+    kf(p1.x, p1.y, 1,   0.18, 'ease-in-out'),
+    kf(p2.x, p2.y, 1,   0.34, 'linear'),
+    kf(p2.x, p2.y, 0.3, 0.38, 'ease-out'),
+    kf(p2.x, p2.y, 1,   0.44, 'ease-in-out'),
+    kf(p3.x, p3.y, 1,   0.54, 'linear'),
+    kf(p3.x, p3.y, 0.3, 0.58, 'ease-out'),
+    kf(p3.x, p3.y, 1,   0.64, 'ease-in-out'),
+    kf(p1.x, p1.y, 0,   0.82, 'linear'),
+    kf(p1.x, p1.y, 0,   1.00)
+  ], { duration: 7000, iterations: Infinity, easing: 'linear' });
+
+  _demoRestartRipple(cursor, 'demo-cursor--origin');
+}
+
+/* ── 7. Preference ── */
+function initPrefCursor(stage) {
+  var cursor = stage.querySelector('.demo-cursor');
+  if (!cursor) return;
+  var kf = _demoKf;
+
+  /* Use getBoundingClientRect for both targets since the button has CSS transforms */
+  var sr = stage.getBoundingClientRect();
+  var colA = stage.querySelector('.demo-anim-pref-a .demo-text-body');
+  var btn  = stage.querySelector('.demo-pref-no-pref');
+  if (!colA || !btn) return;
+  var rA = colA.getBoundingClientRect();
+  var rB = btn.getBoundingClientRect();
+  var p1 = { x: rA.left + rA.width / 2 - sr.left, y: rA.top + rA.height / 2 - sr.top };
+  var p2 = { x: rB.left + rB.width / 2 - sr.left, y: rB.top + rB.height / 2 - sr.top };
+
+  _demoCursorAnim = cursor.animate([
+    kf(p1.x, p1.y, 1,   0.00, 'linear'),
+    kf(p1.x, p1.y, 1,   0.10, 'linear'),
+    kf(p1.x, p1.y, 0.3, 0.14, 'ease-out'),
+    kf(p1.x, p1.y, 1,   0.20, 'ease-in-out'),
+    kf(p2.x, p2.y, 1,   0.44, 'linear'),
+    kf(p2.x, p2.y, 0.3, 0.48, 'ease-out'),
+    kf(p2.x, p2.y, 1,   0.54, 'ease-in-out'),
+    kf(p1.x, p1.y, 0,   0.82, 'linear'),
+    kf(p1.x, p1.y, 0,   1.00)
+  ], { duration: 8000, iterations: Infinity, easing: 'linear' });
+
+  _demoRestartRipple(cursor, 'demo-cursor--pref');
+}
+
+/* ── 8. Focus ── */
+function initFocusCursor(stage, cursor, pos, kf) {
+  var p1 = pos('.demo-anim-ks-prog');
+  var p2 = pos('.demo-anim-fc-1');
+  var p3 = pos('.demo-anim-fc-2');
+  var p4 = pos('.demo-anim-fc-3');
+
+  _demoCursorAnim = cursor.animate([
+    kf(p1.x, p1.y, 1,   0.00, 'linear'),
+    kf(p1.x, p1.y, 1,   0.08, 'linear'),
+    kf(p1.x, p1.y, 0.3, 0.12, 'ease-out'),
+    kf(p1.x, p1.y, 1,   0.18, 'ease-in-out'),
+    kf(p2.x, p2.y, 1,   0.28, 'linear'),
+    kf(p2.x, p2.y, 0.3, 0.32, 'ease-out'),
+    kf(p2.x, p2.y, 1,   0.38, 'ease-in-out'),
+    kf(p3.x, p3.y, 1,   0.48, 'linear'),
+    kf(p3.x, p3.y, 0.3, 0.52, 'ease-out'),
+    kf(p3.x, p3.y, 1,   0.58, 'ease-in-out'),
+    kf(p4.x, p4.y, 1,   0.66, 'linear'),
+    kf(p4.x, p4.y, 0.3, 0.70, 'ease-out'),
+    kf(p4.x, p4.y, 1,   0.76, 'ease-in-out'),
+    kf(p1.x, p1.y, 0,   0.88, 'linear'),
+    kf(p1.x, p1.y, 0,   1.00)
+  ], { duration: 8000, iterations: Infinity, easing: 'linear' });
+
+  _demoRestartRipple(cursor, 'demo-cursor--focus');
+}
+
+/* ── 9. Traffic light ── */
+function initTrafficCursor(stage, cursor, pos, kf) {
+  var p1 = pos('.demo-anim-tl-red');
+  var p2 = pos('.demo-anim-tl-amber');
+  var p3 = pos('.demo-anim-tl-green');
+
+  _demoCursorAnim = cursor.animate([
+    kf(p1.x, p1.y, 1,   0.00, 'linear'),
+    kf(p1.x, p1.y, 1,   0.08, 'linear'),
+    kf(p1.x, p1.y, 0.3, 0.12, 'ease-out'),
+    kf(p1.x, p1.y, 1,   0.18, 'ease-in-out'),
+    kf(p2.x, p2.y, 1,   0.34, 'linear'),
+    kf(p2.x, p2.y, 0.3, 0.38, 'ease-out'),
+    kf(p2.x, p2.y, 1,   0.44, 'ease-in-out'),
+    kf(p3.x, p3.y, 1,   0.58, 'linear'),
+    kf(p3.x, p3.y, 0.3, 0.62, 'ease-out'),
+    kf(p3.x, p3.y, 1,   0.68, 'ease-in-out'),
+    kf(p1.x, p1.y, 0,   0.86, 'linear'),
+    kf(p1.x, p1.y, 0,   1.00)
+  ], { duration: 7000, iterations: Infinity, easing: 'linear' });
+
+  _demoRestartRipple(cursor, 'demo-cursor--traffic');
+}
+
+/* ── 10. Lens ── */
+function initLensCursor(stage, cursor, pos, kf) {
+  var p1 = pos('.demo-anim-lens-wide');
+  var p2 = pos('.demo-anim-lens-mid');
+  var p3 = pos('.demo-anim-lens-narrow');
+
+  _demoCursorAnim = cursor.animate([
+    kf(p1.x, p1.y, 1,   0.00, 'linear'),
+    kf(p1.x, p1.y, 1,   0.08, 'linear'),
+    kf(p1.x, p1.y, 0.3, 0.12, 'ease-out'),
+    kf(p1.x, p1.y, 1,   0.18, 'ease-in-out'),
+    kf(p2.x, p2.y, 1,   0.36, 'linear'),
+    kf(p2.x, p2.y, 0.3, 0.40, 'ease-out'),
+    kf(p2.x, p2.y, 1,   0.46, 'ease-in-out'),
+    kf(p3.x, p3.y, 1,   0.66, 'linear'),
+    kf(p3.x, p3.y, 0.3, 0.70, 'ease-out'),
+    kf(p3.x, p3.y, 1,   0.76, 'ease-in-out'),
+    kf(p1.x, p1.y, 0,   0.90, 'linear'),
+    kf(p1.x, p1.y, 0,   1.00)
+  ], { duration: 7000, iterations: Infinity, easing: 'linear' });
+
+  _demoRestartRipple(cursor, 'demo-cursor--lens');
+}
+</script>
+{% if step.key == 'final_overall' %}
+<script>
+(function () {
+  var form  = document.querySelector('form');
+  var toast = document.getElementById('case-done-toast');
+  if (!form || !toast) return;
+  form.addEventListener('submit', function (e) {
+    /* Let the browser validate first */
+    if (!form.checkValidity()) return;
+    e.preventDefault();
+    toast.style.display = 'flex';
+    var data = new FormData(form);
+    fetch(form.action || window.location.href, {
+      method: 'POST',
+      body: data,
+      headers: { 'X-Requested-With': 'XMLHttpRequest' },
+      credentials: 'same-origin'
+    }).then(function (resp) {
+      var dest = resp.redirected ? resp.url : resp.url;
+      setTimeout(function () { window.location.href = dest; }, 2000);
+    }).catch(function () {
+      /* Fallback: normal submit after delay */
+      setTimeout(function () { form.submit(); }, 2000);
+    });
+  });
+})();
+</script>
+{% endif %}
+{% endblock %}

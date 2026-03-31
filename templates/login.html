@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="center-wrap">
+  <div class="card login-card">
+    <div class="login-header">
+      <div class="login-icon">&#9673;</div>
+      <h1>Anmelden</h1>
+      <p class="subtitle">Tumorboard-Evaluationsstudie</p>
+    </div>
+
+    {% if error %}
+    <div class="alert alert-error">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" autocomplete="off">
+      <div class="form-group">
+        <label for="username">Benutzername</label>
+        <input type="text" id="username" name="username" required autofocus
+               value="{{ request.form.get('username', '') }}">
+      </div>
+      <div class="form-group">
+        <label for="password">Passwort</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-full">Anmelden</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

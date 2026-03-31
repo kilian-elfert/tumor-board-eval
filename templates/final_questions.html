@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="center-wrap">
+  <div class="card final-questions-card">
+
+    <div class="fq-header">
+      <div class="fq-icon">&#127881;</div>
+      <h1>Fast geschafft!</h1>
+      <p class="subtitle">Bitte beantworten Sie abschließend noch einige Fragen zur Studie.</p>
+    </div>
+
+    <form method="post" class="fq-form">
+
+      {# ── Blinding ──────────────────────────────────────────────────────── #}
+      <div class="fq-section">
+        <h2 class="fq-section-title">Verblindung</h2>
+
+        <div class="fq-item">
+          <label class="fq-label">
+            Hatten Sie während der Studie den Eindruck, erkennen zu können, ob ein Text von einem Menschen oder von einer KI verfasst wurde?
+          </label>
+          <div class="chip-group">
+            {% for opt in ['Nein', 'Ja'] %}
+            <label class="chip-option {% if existing.get('blinding_seen_through') == opt %}selected{% endif %}">
+              <input type="radio" name="blinding_seen_through" value="{{ opt }}"
+                     {% if existing.get('blinding_seen_through') == opt %}checked{% endif %} required>
+              <span>{{ opt }}</span>
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="fq-item" id="indicators-wrap"
+             style="{% if existing.get('blinding_seen_through') != 'Ja' %}display:none{% endif %}">
+          <label class="fq-label" for="blinding_indicators">
+            Welche Hinweise oder Merkmale haben Ihnen dabei geholfen, den Ursprung eines Textes einzuschätzen?
+          </label>
+          <textarea id="blinding_indicators" name="blinding_indicators" class="comment-textarea" rows="4"
+                    placeholder="z.\u2009B. Formulierungsstil, Detailtiefe, typische Fehler…">{{ existing.get('blinding_indicators', '') }}</textarea>
+        </div>
+      </div>
+
+      {# ── Optional comment ──────────────────────────────────────────────── #}
+      <div class="fq-section">
+        <h2 class="fq-section-title">Abschließender Kommentar</h2>
+
+        <div class="fq-item">
+          <label class="fq-label" for="additional_comments">
+            Haben Sie weitere Anmerkungen zur Studie? <span style="color:#6b7280; font-weight:400;">(optional)</span>
+          </label>
+          <textarea id="additional_comments" name="additional_comments" class="comment-textarea" rows="4"
+                    placeholder="Sonstige Kommentare…">{{ existing.get('additional_comments', '') }}</textarea>
+        </div>
+      </div>
+
+      <div class="fq-actions">
+        <a href="{{ url_for('evaluate_resume') }}" class="btn btn-secondary">&larr; Zurück</a>
+        <button type="submit" class="btn btn-primary">Studie abschließen &#10003;</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<script>
+(function () {
+  var radios = document.querySelectorAll('input[name="blinding_seen_through"]');
+  var wrap   = document.getElementById('indicators-wrap');
+  radios.forEach(function (r) {
+    r.addEventListener('change', function () {
+      wrap.style.display = r.value === 'Ja' ? '' : 'none';
+      // chip highlight
+      r.closest('.chip-group').querySelectorAll('.chip-option').forEach(function (c) {
+        c.classList.remove('selected');
+      });
+      r.closest('.chip-option').classList.add('selected');
+    });
+  });
+})();
+</script>
+{% endblock %}
