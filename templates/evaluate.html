@@ -1,34 +1,30 @@
 {% extends 'base.html' %}
 {% block content %}
 
-{# ── overall progress bar ──────────────────────────────────────────────────── #}
-<div class="progress-header">
-  <div class="progress-meta">
-    <span class="progress-label">
-      Fall <strong>{{ case_index + 1 }}</strong> von <strong>{{ total_cases }}</strong>
-    </span>
-    <span class="progress-count" style="color:#1a4f8a; font-weight:600;">{{ ((done_cases / total_cases) * 100) | int if total_cases else 0 }}%</span>
-  </div>
-  <div class="progress-track">
-    <div class="progress-fill"
-         style="width: {{ ((done_cases / total_cases) * 100) | int if total_cases else 0 }}%"></div>
-  </div>
-</div>
-
 {# ── page body ─────────────────────────────────────────────────────────────── #}
 <div class="evaluate-layout">
 
   {# ── steps sidebar ────────────────────────────────────────────────────────── #}
   <aside class="steps-sidebar">
-    <p class="steps-heading">Fall {{ case_index + 1 }}</p>
-
-
+    <div class="progress-header">
+      <div class="progress-meta">
+        <span class="progress-label">Fall <strong>{{ case_index + 1 }}</strong> von <strong>{{ total_cases }}</strong></span>
+        <span class="progress-count">{{ ((done_cases / total_cases) * 100) | int if total_cases else 0 }}%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" style="width: {{ ((done_cases / total_cases) * 100) | int if total_cases else 0 }}%"></div>
+      </div>
+    </div>
+    <hr class="sidebar-divider">
     <div class="steps">
       {% set ns = namespace(prev_section='') %}
       {% for s in rating_steps %}
       {% set st = step_statuses[loop.index0] %}
 
       {% if s.section != ns.prev_section %}
+        {% if ns.prev_section != '' %}
+          <hr class="sidebar-divider">
+        {% endif %}
         {% set ns.prev_section = s.section %}
         <div class="step-group-header">{{ s.section }}</div>
       {% endif %}
@@ -66,18 +62,19 @@
 
     {# Card header #}
     <div class="eval-card-header">
-      {# Tab indicator (only for steps with tabs) #}
-      {% if step.key != 'case_relevance' %}
-      <button type="button" class="btn-protocol" onclick="openProtocol()">
-        <img src="{{ url_for('static', filename='pdf-icon.png') }}" width="20" height="23" style="flex-shrink:0;filter:hue-rotate(200deg) saturate(1.4)" aria-hidden="true">TK-Protokoll
-      </button>
-      {% endif %}
-      {% if step.has_tabs %}
-      <div class="tab-switcher">
-        <span class="tab-btn {% if tab_idx == 0 %}tab-active{% endif %}">Version A</span>
-        <span class="tab-btn {% if tab_idx == 1 %}tab-active{% endif %}">Version B</span>
+      <div class="eval-card-header-buttons">
+        {% if step.key != 'case_relevance' %}
+        <button type="button" class="btn-protocol" onclick="openProtocol()">
+          <img src="{{ url_for('static', filename='pdf-icon.png') }}" width="20" height="23" style="flex-shrink:0;filter:hue-rotate(200deg) saturate(1.4)" aria-hidden="true">TK-Protokoll
+        </button>
+        {% endif %}
+        {% if step.has_tabs %}
+        <div class="tab-switcher">
+          <span class="tab-btn {% if tab_idx == 0 %}tab-active{% endif %}">Version A</span>
+          <span class="tab-btn {% if tab_idx == 1 %}tab-active{% endif %}">Version B</span>
+        </div>
+        {% endif %}
       </div>
-      {% endif %}
     </div>
 
     {# ── Instruction panel ── #}
@@ -104,157 +101,121 @@
         {% if step.key == 'case_relevance' %}
         <div class="instr-goal"><strong>Aufgabe:</strong> Beurteilen Sie für jede Information innerhalb einer Informationskategorie, ob diese Information für die Tumorboardanmeldung dieses Falls klinisch relevant ist.</div>
         <div class="instr-steps">
-          <p>Bitte befolgen Sie dabei folgende Schritte:</p>
           <ol>
             <li>Lesen Sie das <strong>TK-Protokoll</strong> im linken Bereich aufmerksam durch.</li>
-            <li>Bewerten Sie im rechten Bereich jede Information, indem Sie auf die entsprechenden Schaltflächen klicken:
-              <ul>
-                <li><strong>✓ Ja</strong> — Diese Information ist für die Tumorboardanmeldung relevant.</li>
-                <li><strong>✗ Nein</strong> — Diese Information ist nicht relevant.</li>
-              </ul>
-            </li>
+            <li>Bewerten Sie im rechten Bereich jede Information.</li>
             <li>Nutzen Sie die <strong>Gruppenaktionen</strong> (<em>alle ✓</em> / <em>alle ✗</em>), um alle Informationen in einer Kategorie gleichzeitig zu bewerten.</li>
-            <li>Nutzen Sie die <strong>▶ Demo</strong>-Schaltfläche oben rechts für eine interaktive Demonstration dieser Bewertungsaufgabe.</li>
-            <li>Hinterlassen Sie optional einen <strong>Kommentar</strong> unterhalb der Bewertung.</li>
           </ol>
+        </div>
+        <div class="instr-options">
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--yes">✓ Ja</span> Information ist klinisch relevant</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--no">✗ Nein</span> Information ist nicht relevant</div>
         </div>
         <div class="instr-hint"><strong>Hinweis:</strong> Diese Einschätzung gilt für den gesamten Fall und wird für die nachfolgenden Bewertungsschritte herangezogen.</div>
 
         {% elif step.key == 'summary_integrity' %}
         <div class="instr-goal"><strong>Aufgabe:</strong> Prüfen Sie, ob die als relevant eingestuften Informationen in dieser Version der Zusammenfassung enthalten sind.</div>
         <div class="instr-steps">
-          <p>Bitte befolgen Sie dabei folgende Schritte:</p>
           <ol>
             <li>Lesen Sie die <strong>Zusammenfassung</strong> im linken Bereich.</li>
-            <li>Klicken Sie im Diagramm auf die einzelnen <strong>Informationsknoten</strong>:
-              <ul>
-                <li><strong>Blau</strong> = Information ist in der Zusammenfassung enthalten</li>
-                <li><strong>Grau</strong> = Information ist nicht in der Zusammenfassung enthalten</li>
-              </ul>
-            </li>
+            <li>Klicken Sie im Diagramm auf die einzelnen <strong>Informationsknoten</strong>.</li>
             <li>Klicken Sie auf eine <strong>Kategorie</strong> (größerer Kreis), um alle zugehörigen Einträge gemeinsam umzuschalten.</li>
-            <li>Nutzen Sie die <strong>▶ Demo</strong>-Schaltfläche oben rechts für eine interaktive Demonstration dieser Bewertungsaufgabe.</li>
-            <li>Hinterlassen Sie optional einen <strong>Kommentar</strong> unterhalb der Bewertung.</li>
           </ol>
+        </div>
+        <div class="instr-options">
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--blue">●</span> Information ist in der Zusammenfassung enthalten</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--gray">●</span> Information ist nicht enthalten</div>
         </div>
         <div class="instr-hint"><strong>Hinweis:</strong> Klick-Reihenfolge je Knoten: <em>enthalten → nicht enthalten → zurücksetzen</em>.</div>
 
         {% elif step.key == 'summary_falseinfo' %}
         <div class="instr-goal"><strong>Aufgabe:</strong> Identifizieren Sie inhaltlich falsche oder irreführende Informationen in der Zusammenfassung.</div>
         <div class="instr-steps">
-          <p>Bitte befolgen Sie dabei folgende Schritte:</p>
           <ol>
             <li>Lesen Sie die <strong>Zusammenfassung</strong> im linken Bereich.</li>
-            <li>Markieren Sie per <strong>Checkbox</strong> alle als fehlerhaft erkannten Informationen im rechten Bereich.</li>
-            <li>Bewerten Sie für jede markierte Information die möglichen Folgen des Fehlers, indem Sie auf das entsprechende <strong>Ampelsymbol</strong> klicken:
-              <ul>
-                <li><strong>Schwere des Schadens</strong> — Kein Schaden / Leichter Schaden / Schwerer Schaden </li>
-                <li><strong>Eintrittswahrscheinlichkeit des Schadens</strong> — Gering / Moderat / Hoch</li>
-              </ul>
-            </li>
-            <li>Nutzen Sie die <strong>▶ Demo</strong>-Schaltfläche oben rechts für eine interaktive Demonstration dieser Bewertungsaufgabe.</li>
-            <li>Hinterlassen Sie optional einen <strong>Kommentar</strong> unterhalb der Bewertung.</li>
+            <li>Markieren Sie per <strong>Checkbox</strong> alle als fehlerhaft erkannten Informationen.</li>
+            <li>Bewerten Sie für jede markierte Information die möglichen Folgen:</li>
           </ol>
+        </div>
+        <div class="instr-options">
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--neutral">Schwere</span> Kein Schaden · Leichter Schaden · Schwerer Schaden</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--neutral">Wahrscheinlichkeit</span> Gering · Moderat · Hoch</div>
         </div>
         <div class="instr-hint"><strong>Hinweis:</strong> Es werden nur Informationen angezeigt, die im vorherigen Schritt als „enthalten" markiert wurden.</div>
 
         {% elif step.key == 'summary_correctness' %}
         <div class="instr-goal"><strong>Aufgabe:</strong> Beurteilen Sie die Korrektheit der Zusammenfassung. Sind alle enthaltenen Informationen medizinisch korrekt und frei von Ungenauigkeiten?</div>
         <div class="instr-steps">
-          <p>Bitte befolgen Sie dabei folgende Schritte:</p>
           <ol>
             <li>Lesen Sie die <strong>Zusammenfassung</strong> im linken Bereich.</li>
-            <li>Wählen Sie den gewünschten Wert (0–100), indem Sie im rechten Bereich auf die entsprechende Position innerhalb der Bewertungsskala klicken:
-              <ul>
-                <li><strong>0 = Sehr schlecht</strong> — Viele Fehler</li>
-                <li><strong>100 = Ausgezeichnet</strong> — Vollständig korrekt</li>
-              </ul>
-            </li>
-            <li>Nutzen Sie die <strong>▶ Demo</strong>-Schaltfläche oben rechts für eine interaktive Demonstration dieser Bewertungsaufgabe.</li>
-            <li>Hinterlassen Sie optional einen <strong>Kommentar</strong> unterhalb der Bewertung.</li>
+            <li>Wählen Sie den gewünschten Wert (0–100) auf der Bewertungsskala.</li>
           </ol>
+        </div>
+        <div class="instr-options instr-options--scale">
+          <span class="instr-scale-end"><strong>0</strong> Sehr schlecht — Viele Fehler</span>
+          <span class="instr-scale-end"><strong>100</strong> Ausgezeichnet — Vollständig korrekt</span>
         </div>
 
         {% elif step.key == 'summary_completeness' %}
         <div class="instr-goal"><strong>Aufgabe:</strong> Beurteilen Sie, wie vollständig die Zusammenfassung alle klinisch relevanten Informationen des Falles abbildet.</div>
         <div class="instr-steps">
-          <p>Bitte befolgen Sie dabei folgende Schritte:</p>
           <ol>
             <li>Lesen Sie die <strong>Zusammenfassung</strong> im linken Bereich.</li>
-            <li>Wählen Sie den gewünschten Wert (0–100), indem Sie im rechten Bereich auf die entsprechende Position innerhalb der Bewertungsskala klicken:
-              <ul>
-                <li><strong>0 = Sehr schlecht</strong> — Wesentliche Informationen fehlen</li>
-                <li><strong>100 = Ausgezeichnet</strong> — Alle relevanten Informationen enthalten</li>
-              </ul>
-            </li>
-            <li>Nutzen Sie die <strong>▶ Demo</strong>-Schaltfläche oben rechts für eine interaktive Demonstration dieser Bewertungsaufgabe.</li>
-            <li>Hinterlassen Sie optional einen <strong>Kommentar</strong> unterhalb der Bewertung.</li>
+            <li>Wählen Sie den gewünschten Wert (0–100) auf der Bewertungsskala.</li>
           </ol>
+        </div>
+        <div class="instr-options instr-options--scale">
+          <span class="instr-scale-end"><strong>0</strong> Sehr schlecht — Wesentliche Informationen fehlen</span>
+          <span class="instr-scale-end"><strong>100</strong> Ausgezeichnet — Alle relevanten Informationen enthalten</span>
         </div>
 
         {% elif step.key == 'summary_conciseness' %}
         <div class="instr-goal"><strong>Aufgabe:</strong> Beurteilen Sie, ob die Zusammenfassung angemessen prägnant ist — weder zu knapp noch zu ausführlich.</div>
         <div class="instr-steps">
-          <p>Bitte befolgen Sie dabei folgende Schritte:</p>
           <ol>
             <li>Lesen Sie die <strong>Zusammenfassung</strong> im linken Bereich.</li>
-            <li>Wählen Sie den gewünschten Wert (0–100), indem Sie im rechten Bereich auf die entsprechende Position innerhalb der Bewertungsskala klicken:
-              <ul>
-                <li><strong>0 = Sehr schlecht</strong> — Zu knapp oder zu ausführlich</li>
-                <li><strong>100 = Ausgezeichnet</strong> — Optimal prägnant</li>
-              </ul>
-            </li>
-            <li>Nutzen Sie die <strong>▶ Demo</strong>-Schaltfläche oben rechts für eine interaktive Demonstration dieser Bewertungsaufgabe.</li>
-            <li>Hinterlassen Sie optional einen <strong>Kommentar</strong> unterhalb der Bewertung.</li>
+            <li>Wählen Sie den gewünschten Wert (0–100) auf der Bewertungsskala.</li>
           </ol>
+        </div>
+        <div class="instr-options instr-options--scale">
+          <span class="instr-scale-end"><strong>0</strong> Sehr schlecht — Zu knapp oder zu ausführlich</span>
+          <span class="instr-scale-end"><strong>100</strong> Ausgezeichnet — Optimal prägnant</span>
         </div>
 
         {% elif step.key == 'summary_postedit' %}
         <div class="instr-goal"><strong>Aufgabe:</strong> Schätzen Sie den Aufwand ein, der nötig wäre, um diese Zusammenfassung für den klinischen Einsatz zu überarbeiten.</div>
         <div class="instr-steps">
-          <p>Bitte befolgen Sie dabei folgende Schritte:</p>
           <ol>
             <li>Lesen Sie die <strong>Zusammenfassung</strong> im linken Bereich.</li>
-            <li>Entscheiden Sie im rechten Bereich:
-              <ul>
-                <li><strong>Direkt verwenden</strong> — Der Text kann ohne Änderungen übernommen werden.</li>
-                <li><strong>Überarbeitung nötig</strong> — Wählen Sie die Art der Überarbeitung und passen Sie den Text im linken Bereich an.</li>
-              </ul>
-            </li>
-            <li>Nutzen Sie die <strong>▶ Demo</strong>-Schaltfläche oben rechts für eine interaktive Demonstration dieser Bewertungsaufgabe.</li>
-            <li>Hinterlassen Sie optional einen <strong>Kommentar</strong> unterhalb der Bewertung.</li>
+            <li>Entscheiden Sie im rechten Bereich.</li>
           </ol>
+        </div>
+        <div class="instr-options">
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--yes">Direkt verwenden</span> Der Text kann ohne Änderungen übernommen werden</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--neutral">Überarbeitung nötig</span> Wählen Sie die Art und passen Sie den Text an</div>
         </div>
         <div class="instr-hint"><strong>Hinweis:</strong> Die Bearbeitungszeit wird automatisch erfasst, sobald Sie den Text bearbeiten.</div>
 
         {% elif step.key == 'summary_origin_guess' %}
         <div class="instr-goal"><strong>Aufgabe:</strong> Schätzen Sie ein, ob diese Version der Zusammenfassung von einem Menschen oder von einer KI verfasst wurde.</div>
         <div class="instr-steps">
-          <p>Bitte befolgen Sie dabei folgende Schritte:</p>
           <ol>
             <li>Lesen Sie die <strong>Zusammenfassung</strong> im linken Bereich.</li>
-            <li>Wählen Sie eine der drei Optionen, indem Sie im rechten Bereich auf das entsprechende Symbol klicken:
-              <ul>
-                <li><strong>Mensch</strong> — Sie glauben, ein Mensch hat den Text verfasst.</li>
-                <li><strong>Unsicher</strong> — Sie können es nicht eindeutig zuordnen.</li>
-                <li><strong>KI</strong> — Sie glauben, eine KI hat den Text verfasst.</li>
-              </ul>
-            </li>
-            <li>Nutzen Sie die <strong>▶ Demo</strong>-Schaltfläche oben rechts für eine interaktive Demonstration dieser Bewertungsaufgabe.</li>
-            <li>Hinterlassen Sie optional einen <strong>Kommentar</strong> unterhalb der Bewertung.</li>
+            <li>Wählen Sie eine der drei Optionen.</li>
           </ol>
+        </div>
+        <div class="instr-options">
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--neutral">Mensch</span> Sie glauben, ein Mensch hat den Text verfasst</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--neutral">Unsicher</span> Sie können es nicht eindeutig zuordnen</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--neutral">KI</span> Sie glauben, eine KI hat den Text verfasst</div>
         </div>
 
         {% elif step.key == 'summary_preference' %}
         <div class="instr-goal"><strong>Aufgabe:</strong> Vergleichen Sie beide Versionen der Zusammenfassung und wählen Sie, welche Version Sie für den klinischen Einsatz bevorzugen würden.</div>
         <div class="instr-steps">
-          <p>Bitte befolgen Sie dabei folgende Schritte:</p>
           <ol>
             <li>Lesen Sie <strong>beide Versionen</strong> nebeneinander.</li>
-            <li>Klicken Sie auf die Version, die Sie bevorzugen.</li>
-            <li>Alternativ wählen Sie <strong>„Keine Präferenz"</strong>, wenn beide Versionen gleichwertig sind.</li>
-            <li>Nutzen Sie die <strong>▶ Demo</strong>-Schaltfläche oben rechts für eine interaktive Demonstration dieser Bewertungsaufgabe.</li>
-            <li>Hinterlassen Sie optional einen <strong>Kommentar</strong> unterhalb der Bewertung.</li>
+            <li>Klicken Sie auf die bevorzugte Version oder wählen Sie <strong>„Keine Präferenz"</strong>.</li>
           </ol>
         </div>
         <div class="instr-hint"><strong>Hinweis:</strong> Erneutes Klicken auf eine bereits gewählte Version hebt die Auswahl auf.</div>
@@ -262,105 +223,81 @@
         {% elif step.key == 'problem_focus' %}
         <div class="instr-goal"><strong>Aufgabe:</strong> Bestimmen Sie den aktuellen Krankheitsstatus und identifizieren Sie die in der Fragestellung vorgeschlagenen Diskussionsschwerpunkte.</div>
         <div class="instr-steps">
-          <p>Bitte befolgen Sie dabei folgende Schritte:</p>
           <ol>
             <li>Lesen Sie die <strong>Fragestellung</strong> im linken Bereich.</li>
-            <li>Wählen Sie den <strong>Krankheitsstatus</strong>:
-              <ul>
-                <li><strong>Progredient</strong> — Fortschreitende Erkrankung</li>
-                <li><strong>Unverändert</strong> — Stabile Erkrankung</li>
-                <li><strong>Regredient</strong> — Rückläufige Erkrankung</li>
-              </ul>
-            </li>
+            <li>Wählen Sie den <strong>Krankheitsstatus</strong>.</li>
             <li>Wählen Sie die vorgeschlagenen <strong>Diskussionsschwerpunkte</strong> (Mehrfachauswahl möglich).</li>
-            <li>Nutzen Sie die <strong>▶ Demo</strong>-Schaltfläche oben rechts für eine interaktive Demonstration dieser Bewertungsaufgabe.</li>
-            <li>Hinterlassen Sie optional einen <strong>Kommentar</strong> unterhalb der Bewertung.</li>
           </ol>
+        </div>
+        <div class="instr-options">
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--neutral">Progredient</span> Fortschreitende Erkrankung</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--neutral">Unverändert</span> Stabile Erkrankung</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--neutral">Regredient</span> Rückläufige Erkrankung</div>
         </div>
         <div class="instr-hint"><strong>Hinweis:</strong> „Keine Spezifizierung" schließt alle anderen Optionen aus.</div>
 
         {% elif step.key == 'problem_correctness' %}
         <div class="instr-goal"><strong>Aufgabe:</strong> Beurteilen Sie, ob die Fragestellung sachlich korrekt, leitlinienkonform und klinisch treffend formuliert ist.</div>
         <div class="instr-steps">
-          <p>Bitte befolgen Sie dabei folgende Schritte:</p>
           <ol>
             <li>Lesen Sie die <strong>Fragestellung</strong> im linken Bereich.</li>
-            <li>Wählen Sie eine der drei <strong>Bewertungsstufen</strong>:
-              <ul>
-                <li><strong>Trifft nicht zu</strong> — Nicht leitlinienkonform</li>
-                <li><strong>Trifft teilweise zu</strong> — Teilweise leitlinienkonform</li>
-                <li><strong>Trifft zu</strong> — Vollständig leitlinienkonform</li>
-              </ul>
-            </li>
-            <li>Nutzen Sie die <strong>▶ Demo</strong>-Schaltfläche oben rechts für eine interaktive Demonstration dieser Bewertungsaufgabe.</li>
-            <li>Hinterlassen Sie optional einen <strong>Kommentar</strong> unterhalb der Bewertung.</li>
+            <li>Wählen Sie eine der drei <strong>Bewertungsstufen</strong>.</li>
           </ol>
+        </div>
+        <div class="instr-options">
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--no">Trifft nicht zu</span> Nicht leitlinienkonform</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--neutral">Trifft teilweise zu</span> Teilweise leitlinienkonform</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--yes">Trifft zu</span> Vollständig leitlinienkonform</div>
         </div>
 
         {% elif step.key == 'problem_specificity' %}
         <div class="instr-goal"><strong>Aufgabe:</strong> Beurteilen Sie den Grad der Spezifität der Fragestellung für die Tumorkonferenz.</div>
         <div class="instr-steps">
-          <p>Bitte befolgen Sie dabei folgende Schritte:</p>
           <ol>
             <li>Lesen Sie die <strong>Fragestellung</strong> im linken Bereich.</li>
-            <li>Wählen Sie die passende <strong>Einordnung</strong>:
-              <ul>
-                <li><strong>Zu generisch</strong> — Die Fragestellung ist zu breit gefasst.</li>
-                <li><strong>Optimal</strong> — Die Fragestellung ist passend eingegrenzt.</li>
-                <li><strong>Zu spezifisch</strong> — Die Fragestellung ist zu eng gefasst.</li>
-              </ul>
-            </li>
-            <li>Nutzen Sie die <strong>▶ Demo</strong>-Schaltfläche oben rechts für eine interaktive Demonstration dieser Bewertungsaufgabe.</li>
-            <li>Hinterlassen Sie optional einen <strong>Kommentar</strong> unterhalb der Bewertung.</li>
+            <li>Wählen Sie die passende <strong>Einordnung</strong>.</li>
           </ol>
+        </div>
+        <div class="instr-options">
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--no">Zu generisch</span> Die Fragestellung ist zu breit gefasst</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--yes">Optimal</span> Die Fragestellung ist passend eingegrenzt</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--no">Zu spezifisch</span> Die Fragestellung ist zu eng gefasst</div>
         </div>
 
         {% elif step.key == 'problem_postedit' %}
         <div class="instr-goal"><strong>Aufgabe:</strong> Schätzen Sie den Aufwand ein, der nötig wäre, um diese Fragestellung für den klinischen Einsatz zu überarbeiten.</div>
         <div class="instr-steps">
-          <p>Bitte befolgen Sie dabei folgende Schritte:</p>
           <ol>
             <li>Lesen Sie die <strong>Fragestellung</strong> im linken Bereich.</li>
-            <li>Entscheiden Sie im rechten Bereich:
-              <ul>
-                <li><strong>Direkt verwenden</strong> — Der Text kann ohne Änderungen übernommen werden.</li>
-                <li><strong>Überarbeitung nötig</strong> — Wählen Sie die Art der Überarbeitung und passen Sie den Text im linken Bereich an.</li>
-              </ul>
-            </li>
-            <li>Nutzen Sie die <strong>▶ Demo</strong>-Schaltfläche oben rechts für eine interaktive Demonstration dieser Bewertungsaufgabe.</li>
-            <li>Hinterlassen Sie optional einen <strong>Kommentar</strong> unterhalb der Bewertung.</li>
+            <li>Entscheiden Sie im rechten Bereich.</li>
           </ol>
+        </div>
+        <div class="instr-options">
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--yes">Direkt verwenden</span> Der Text kann ohne Änderungen übernommen werden</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--neutral">Überarbeitung nötig</span> Wählen Sie die Art und passen Sie den Text an</div>
         </div>
         <div class="instr-hint"><strong>Hinweis:</strong> Die Bearbeitungszeit wird automatisch erfasst, sobald Sie den Text bearbeiten.</div>
 
         {% elif step.key == 'problem_origin_guess' %}
         <div class="instr-goal"><strong>Aufgabe:</strong> Schätzen Sie ein, ob diese Version der Fragestellung von einem Menschen oder von einer KI verfasst wurde.</div>
         <div class="instr-steps">
-          <p>Bitte befolgen Sie dabei folgende Schritte:</p>
           <ol>
             <li>Lesen Sie die <strong>Fragestellung</strong> im linken Bereich.</li>
-            <li>Wählen Sie eine der drei Optionen:
-              <ul>
-                <li><strong>Mensch</strong> — Sie glauben, ein Mensch hat den Text verfasst.</li>
-                <li><strong>Unsicher</strong> — Sie können es nicht eindeutig zuordnen.</li>
-                <li><strong>KI</strong> — Sie glauben, eine KI hat den Text verfasst.</li>
-              </ul>
-            </li>
-            <li>Nutzen Sie die <strong>▶ Demo</strong>-Schaltfläche oben rechts für eine interaktive Demonstration dieser Bewertungsaufgabe.</li>
-            <li>Hinterlassen Sie optional einen <strong>Kommentar</strong> unterhalb der Bewertung.</li>
+            <li>Wählen Sie eine der drei Optionen.</li>
           </ol>
+        </div>
+        <div class="instr-options">
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--neutral">Mensch</span> Sie glauben, ein Mensch hat den Text verfasst</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--neutral">Unsicher</span> Sie können es nicht eindeutig zuordnen</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--neutral">KI</span> Sie glauben, eine KI hat den Text verfasst</div>
         </div>
 
         {% elif step.key == 'problem_preference' %}
         <div class="instr-goal"><strong>Aufgabe:</strong> Vergleichen Sie beide Versionen der Fragestellung und wählen Sie, welche Version Sie für den klinischen Einsatz bevorzugen würden.</div>
         <div class="instr-steps">
-          <p>Bitte befolgen Sie dabei folgende Schritte:</p>
           <ol>
             <li>Lesen Sie <strong>beide Versionen</strong> nebeneinander.</li>
-            <li>Klicken Sie auf die Version, die Sie bevorzugen.</li>
-            <li>Alternativ wählen Sie <strong>„Keine Präferenz"</strong>, wenn beide Versionen gleichwertig sind.</li>
-            <li>Nutzen Sie die <strong>▶ Demo</strong>-Schaltfläche oben rechts für eine interaktive Demonstration dieser Bewertungsaufgabe.</li>
-            <li>Hinterlassen Sie optional einen <strong>Kommentar</strong> unterhalb der Bewertung.</li>
+            <li>Klicken Sie auf die bevorzugte Version oder wählen Sie <strong>„Keine Präferenz"</strong>.</li>
           </ol>
         </div>
         <div class="instr-hint"><strong>Hinweis:</strong> Erneutes Klicken auf eine bereits gewählte Version hebt die Auswahl auf.</div>
@@ -368,18 +305,14 @@
         {% elif step.key == 'final_overall' %}
         <div class="instr-goal"><strong>Aufgabe:</strong> Bewerten Sie die klinische Komplexität dieses Falls und hinterlassen Sie gegebenenfalls einen Kommentar.</div>
         <div class="instr-steps">
-          <p>Bitte befolgen Sie dabei folgende Schritte:</p>
           <ol>
             <li>Betrachten Sie das <strong>TK-Protokoll</strong> im linken Bereich.</li>
-            <li>Wählen Sie den gewünschten Wert (0–100), indem Sie auf die entsprechende Position innerhalb der Bewertungsskala klicken:
-              <ul>
-                <li><strong>0 = Sehr gering</strong> — Einfacher, unkomplizierter Fall</li>
-                <li><strong>100 = Sehr hoch</strong> — Hochkomplexer Fall</li>
-              </ul>
-            </li>
-            <li>Hinterlassen Sie optional einen <strong>Kommentar</strong> zur Gesamteinschätzung.</li>
-            <li>Nutzen Sie die <strong>▶ Demo</strong>-Schaltfläche oben rechts für eine interaktive Demonstration dieser Bewertungsaufgabe.</li>
+            <li>Wählen Sie den gewünschten Wert (0–100) auf der Bewertungsskala.</li>
           </ol>
+        </div>
+        <div class="instr-options instr-options--scale">
+          <span class="instr-scale-end"><strong>0</strong> Sehr gering — Einfacher Fall</span>
+          <span class="instr-scale-end"><strong>100</strong> Sehr hoch — Hochkomplexer Fall</span>
         </div>
 
         {% else %}
@@ -387,7 +320,12 @@
         <div class="instr-goal"><strong>Aufgabe:</strong> {{ step.alert }}</div>
         {% endif %}
 
-        <div class="instr-hint"><strong>Tipp:</strong> Über die Schaltfläche <strong>TK-Protokoll</strong> können Sie jederzeit das originale Tumorkonferenz-Protokoll einsehen.</div>
+        {# ── persistent footer strip ── #}
+        <div class="instr-footer">
+          <span class="instr-footer-item">▶ <strong>Demo</strong> — Interaktive Demonstration</span>
+          <span class="instr-footer-sep">|</span>
+          <span class="instr-footer-item">💬 <strong>Kommentar</strong> — Optional unterhalb der Bewertung</span>
+        </div>
 
       </div>
     </div>
@@ -439,13 +377,13 @@
         {% endif %}
       {% endfor %}
       <div class="eval-body eval-body--pdf">
-        <iframe src="{{ url_for('protocol_pdf', case_id=case_id) }}#view=FitH&pagemode=none&navpanes=0" class="inline-pdf"></iframe>
+        <iframe src="{{ url_for('protocol_pdf', case_id=case_id) }}#toolbar=0&view=FitH&pagemode=none&navpanes=0" class="inline-pdf"></iframe>
 
         <div class="rel-panel">
 
           {# ── progress header ── #}
           <div class="rel-panel-header">
-            <span class="rel-panel-title">Relevante Informationen für diesen Fall</span>
+            <span class="rel-panel-title">Relevante Informationen</span>
             <span class="rel-prog-label" id="rel-prog-label">{{ ns_prog.rated }} / {{ info_items | length }} bewertet</span>
           </div>
           <div class="rel-prog-track">
@@ -1506,7 +1444,7 @@
       <div class="eval-body">
         <div class="text-display">
           <div class="text-label">TK-Protokoll</div>
-          <iframe src="{{ url_for('protocol_pdf', case_id=case_id) }}#view=FitH&pagemode=none&navpanes=0" class="inline-pdf" style="width:100%;height:100%;min-height:500px;border:none;border-radius:8px;"></iframe>
+          <iframe src="{{ url_for('protocol_pdf', case_id=case_id) }}#toolbar=0&view=FitH&pagemode=none&navpanes=0" class="inline-pdf" style="width:100%;height:100%;min-height:500px;border:none;border-radius:8px;"></iframe>
         </div>
         <div class="rating-section">
           <h3 class="rating-title">Komplexität des Falls</h3>
@@ -1528,9 +1466,7 @@
       {% endif %}
 
       {# ── full-width comment ────────────────────────────────────────────── #}
-      {% if step.key not in ['case_relevance', 'summary_integrity'] %}
       <div class="full-comment">{{ comment_block(existing) }}</div>
-      {% endif %}
 
       {# ── navigation buttons ──────────────────────────────────────────────── #}
       <div class="form-actions">
@@ -1605,7 +1541,7 @@ function openProtocol() {
   var modal  = document.getElementById('protocol-modal');
   var iframe = document.getElementById('protocol-iframe');
   if (!iframe.src || iframe.src === window.location.href) {
-    iframe.src = "{{ url_for('protocol_pdf', case_id=case_id) }}#view=FitH&pagemode=none&navpanes=0";
+    iframe.src = "{{ url_for('protocol_pdf', case_id=case_id) }}#toolbar=0&view=FitH&pagemode=none&navpanes=0";
   }
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
@@ -2113,23 +2049,23 @@ updateRelProgress();
       if (!c) return;
 
       if (v === 'yes') {
-        c.setAttribute('fill', '#dbeafe');
-        c.setAttribute('stroke', '#1a4f8a');
-        c.setAttribute('stroke-width', '2');
+        c.style.fill = '#dbeafe';
+        c.style.stroke = '#1a4f8a';
+        c.style.strokeWidth = '2.5';
         if (tx) { tx.style.fill = '#1a4f8a'; tx.style.fontWeight = 'bold'; }
         if (ck) ck.style.display = 'block';
         if (cr) cr.style.display = 'none';
       } else if (v === 'no') {
-        c.setAttribute('fill', '#f3f4f6');
-        c.setAttribute('stroke', '#d1d5db');
-        c.setAttribute('stroke-width', '1.8');
+        c.style.fill = '#f3f4f6';
+        c.style.stroke = '#d1d5db';
+        c.style.strokeWidth = '1.8';
         if (tx) { tx.style.fill = '#6b7280'; tx.style.fontWeight = ''; }
         if (ck) ck.style.display = 'none';
         if (cr) cr.style.display = 'block';
       } else {
-        c.setAttribute('fill', '#f8fafc');
-        c.setAttribute('stroke', '#94a3b8');
-        c.setAttribute('stroke-width', '1.8');
+        c.style.fill = '#f8fafc';
+        c.style.stroke = '#94a3b8';
+        c.style.strokeWidth = '1.8';
         if (tx) { tx.style.fill = '#334155'; tx.style.fontWeight = ''; }
         if (ck) ck.style.display = 'none';
         if (cr) cr.style.display = 'none';
@@ -2197,7 +2133,7 @@ updateRelProgress();
     if (val === 'yes') {
       circle.style.fill = '#dbeafe';
       circle.style.stroke = '#1a4f8a';
-      circle.style.strokeWidth = '2';
+      circle.style.strokeWidth = '2.5';
     } else if (val === 'no') {
       circle.style.fill = '#f3f4f6';
       circle.style.stroke = '#d1d5db';
@@ -2267,11 +2203,30 @@ updateRelProgress();
         catG.setAttribute('transform', 'translate(' + catX + ',' + catY + ')');
         var nameEl = catG.querySelector('.rt-cat-name');
         if (nameEl) {
-          nameEl.textContent = cat.label;
           nameEl.setAttribute('dominant-baseline', 'middle');
           nameEl.setAttribute('transform', '');
           nameEl.setAttribute('x', '-25');
           nameEl.setAttribute('text-anchor', 'end');
+          /* Split long labels into two lines */
+          if (cat.label.length > 20) {
+            var words = cat.label.split(' ');
+            var mid = Math.ceil(words.length / 2);
+            var line1 = words.slice(0, mid).join(' ');
+            var line2 = words.slice(mid).join(' ');
+            nameEl.textContent = '';
+            var ts1 = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+            ts1.textContent = line1;
+            ts1.setAttribute('x', '-25');
+            ts1.setAttribute('dy', '-0.6em');
+            var ts2 = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+            ts2.textContent = line2;
+            ts2.setAttribute('x', '-25');
+            ts2.setAttribute('dy', '1.2em');
+            nameEl.appendChild(ts1);
+            nameEl.appendChild(ts2);
+          } else {
+            nameEl.textContent = cat.label;
+          }
         }
       }
 

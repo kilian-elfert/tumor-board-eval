@@ -22,19 +22,6 @@
 
     <form method="post" class="demographics-form" novalidate>
 
-      {# ── Age ── #}
-      <div class="demo-field">
-        <label for="age" class="demo-label">
-          Alter <span class="demo-required">*</span>
-        </label>
-        <div class="demo-input-wrap">
-          <input type="number" id="age" name="age" min="18" max="99"
-                 placeholder="z.&thinsp;B. 34"
-                 value="{{ existing.get('age', '') }}" required>
-          <span class="demo-unit">Jahre</span>
-        </div>
-      </div>
-
       {# ── Job experience ── #}
       <div class="demo-field">
         <label for="experience_years" class="demo-label">
