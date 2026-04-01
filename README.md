@@ -10,10 +10,10 @@ Physicians log in and are guided through a structured, multi-step evaluation of 
 
 1. Rate the **clinical relevance** of a defined set of information items.
 2. Evaluate both a human-written and an LLM-generated **case summary** across several dimensions (information content, false information, correctness, completeness, conciseness, post-editing effort, origin guess, and overall preference).
-3. Evaluate both versions of the **problem formulation** (focus, guideline conformity, specificity, post-editing effort, origin guess, and preference).
+3. Evaluate both versions of the **problem statement** (focus, guideline conformity, specificity, post-editing effort, origin guess, and preference).
 4. Provide a final **case complexity** rating and optional comment.
 
-Text assignment (which version appears as "A" or "B") is randomised per participant to prevent order bias.
+Text assignment (which version appears as "A" or "B") is randomised per participant and independently per block (case summary and problem statement each get their own counterbalanced assignment) to prevent order bias.
 
 ---
 
