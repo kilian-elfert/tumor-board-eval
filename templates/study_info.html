@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="center-wrap">
+  <div class="card consent-card" style="max-width:1100px">
+
+    <div class="consent-header">
+      <div class="consent-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+             stroke-linejoin="round" style="width:48px;height:48px;color:#1a4f8a;">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="16" x2="12" y2="12"/>
+          <line x1="12" y1="8" x2="12.01" y2="8"/>
+        </svg>
+      </div>
+      <h1>Allgemeine Informationen zum Ablauf der Studie</h1>
+      <p class="subtitle">Bitte lesen Sie die folgenden Hinweise, bevor Sie mit der Bewertung beginnen.</p>
+    </div>
+
+    <div class="consent-body">
+
+      <h3>Anzahl der Fälle</h3>
+      <p>
+        Im Rahmen dieser Studie werden Ihnen insgesamt <strong>{{ num_cases }} klinische Fälle</strong>
+        zur Bewertung vorgelegt. Jeder Fall basiert auf einer realen dermatoonkologischen
+        Tumorboardanmeldung.
+      </p>
+
+      <h3>Bewertungskriterien</h3>
+      <p>
+        Für jeden Fall bewerten Sie die zugehörigen Texte anhand mehrerer Dimensionen, darunter:
+      </p>
+      <ul>
+        <li><strong>Relevanz</strong> – Klinische Relevanz der enthaltenen Informationen</li>
+        <li><strong>Informationsgehalt</strong> – Vollständigkeit der enthaltenen Informationskategorien</li>
+        <li><strong>Falschinformationen</strong> – Identifikation inhaltlich falscher oder irreführender Angaben</li>
+        <li><strong>Korrektheit</strong> – Medizinische Richtigkeit der Inhalte</li>
+        <li><strong>Vollständigkeit</strong> – Abdeckung aller klinisch relevanten Informationen</li>
+        <li><strong>Prägnanz</strong> – Angemessene Kürze und Fokussierung</li>
+        <li><strong>Fokus</strong> – Klarheit und Präzision der formulierten Fragestellung</li>
+        <li><strong>Leitlinienkonformität</strong> – Übereinstimmung der Fragestellung mit medizinischen Leitlinienempfehlungen</li>
+        <li><strong>Fallspezifität</strong> – Bezug der Fragestellung auf die individuelle Patientensituation</li>
+        <li><strong>Bearbeitungsaufwand</strong> – Geschätzter Aufwand zur Überarbeitung für den klinischen Einsatz</li>
+        <li><strong>Ursprung</strong> – Einschätzung, ob der Text von einem Menschen oder einer KI verfasst wurde</li>
+        <li><strong>Präferenz</strong> – Vergleichende Bewertung beider Versionen</li>
+      </ul>
+
+      <h3>Blockstruktur pro Fall</h3>
+      <p>
+        Jeder Fall gliedert sich in drei Bewertungsblöcke:
+      </p>
+      <ol style="padding-left: 2rem;">
+        <li><strong>Zusammenfassung</strong> – Bewertung der Fallzusammenfassung (Relevanz, Informationsgehalt, Falschinformationen, Korrektheit, Vollständigkeit, Prägnanz, Bearbeitungsaufwand, Ursprung, Präferenz)</li>
+        <li><strong>Fragestellung</strong> – Bewertung der Fragestellung für die Tumorkonferenz (Fokus, Leitlinienkonformität, Fallspezifität, Bearbeitungsaufwand, Ursprung, Präferenz)</li>
+        <li><strong>Abschluss</strong> – Einschätzung der Fallkomplexität und optionaler Kommentar</li>
+      </ol>
+
+      <h3>Herkunft der Texte und Versionszuordnung</h3>
+      <p>
+        Für jeden Fall existieren zwei Versionen der Zusammenfassung und der Fragestellung:
+        Eine Version wurde von einem Arzt bzw. einer Ärztin erstellt, die andere von einem
+        KI-Sprachmodell (LLM) generiert. Die Versionen werden als <strong>Version&nbsp;A</strong>
+        und <strong>Version&nbsp;B</strong> bezeichnet.
+      </p>
+      <p>
+        Die Zuordnung, welche Version als A oder B angezeigt wird, wird für jeden Fall und
+        jeden Block (Zusammenfassung / Fragestellung) <strong>zufällig und unabhängig</strong> festgelegt.
+        Das bedeutet, dass sich die Zuordnung zwischen Blöcken und zwischen Fällen ändern kann.
+        Während der Bewertung ist Ihnen nicht bekannt, welche Version von welchem Urheber stammt.
+      </p>
+
+      <h3>TK-Protokoll</h3>
+      <p>
+        Über die Schaltfläche <strong>TK-Protokoll</strong> im oberen Bereich der Bewertungsseite
+        können Sie jederzeit das originale Tumorkonferenz-Protokoll (PDF) zum aktuellen Fall einsehen.
+        Dieses dient als Referenzdokument, um die zu bewertenden Texte mit der Originalquelle
+        abgleichen zu können.
+      </p>
+
+      <h3>Interaktive Demo</h3>
+      <p>
+        Bei jedem Bewertungsschritt steht Ihnen oben rechts eine <strong>▶&nbsp;Demo</strong>-Schaltfläche
+        zur Verfügung. Diese öffnet eine interaktive Demonstration der jeweiligen Bewertungsaufgabe
+        und zeigt Ihnen anhand eines Beispiels, wie die Bewertung durchzuführen ist. Sie können die
+        Demo jederzeit nutzen, insbesondere wenn eine Bewertungsdimension unklar ist.
+      </p>
+
+      <h3>Unterbrechen und Fortsetzen</h3>
+      <p>
+        Sie können die Bearbeitung <strong>jederzeit unterbrechen</strong>, indem Sie auf den
+        <em>Abmelden</em>-Button in der oberen rechten Ecke klicken. Ihr Fortschritt wird
+        automatisch gespeichert. Beim nächsten Login setzen Sie die Studie genau dort fort,
+        wo Sie aufgehört haben.
+      </p>
+
+      <h3>Optionale Kommentare</h3>
+      <p>
+        Bei jedem Fall haben Sie die Möglichkeit, einen optionalen Kommentar zu hinterlassen,
+        um Auffälligkeiten, Schwierigkeiten oder sonstige Anmerkungen festzuhalten.
+      </p>
+
+      <h3>Abschlussfragen</h3>
+      <p>
+        Nachdem Sie alle Fälle bewertet haben, werden Ihnen abschließend einige kurze Fragen
+        zur Studie gestellt.
+      </p>
+    </div>
+
+    <form method="post" class="consent-form">
+      <div class="consent-actions">
+        <a href="{{ url_for('demographics') }}" class="btn btn-secondary">&larr; Zurück</a>
+        <button type="submit" class="btn btn-primary">Bewertung starten &rarr;</button>
+      </div>
+    </form>
+
+  </div>
+</div>
+{% endblock %}

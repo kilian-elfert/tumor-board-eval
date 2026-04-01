@@ -21,3 +21,6 @@ original_documents/
 # Texts to be evaluated 
 texts_human/
 texts_llm/
+
+# Generated login credentials 
+users.json

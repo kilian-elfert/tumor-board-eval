@@ -4,6 +4,7 @@ import json, csv, io, os, random
 from werkzeug.security import check_password_hash
 from functools import wraps
 from datetime import datetime
+from markupsafe import Markup, escape
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'change-this-in-production-please')
@@ -271,6 +272,21 @@ PROBLEM_FOCUS_TOPIC_OPTIONS  = [
 
 def slugify(label):
     return ''.join(ch.lower() if ch.isalnum() else '_' for ch in label)
+
+
+_SECTION_HEADER_RE = _re.compile(
+    r'^(\d+\.\s+(?:Basisdaten|Aktuelles Staging|Verlauf|Wichtige Befunde))(.*)$',
+    _re.MULTILINE,
+)
+
+
+def _bold_headers(text):
+    """Escape text for HTML and wrap known section headers in <strong>."""
+    if not text:
+        return text
+    safe = str(escape(text))
+    safe = _SECTION_HEADER_RE.sub(r'<strong>\1</strong>\2', safe)
+    return Markup(safe)
 
 
 # ── helpers ──────────────────────────────────────────────────────────────────
@@ -609,23 +625,19 @@ def demographics():
     existing = user_data.get('demographics', {})
 
     if request.method == 'POST':
-        age = request.form.get('age', '').strip()
         experience_years = request.form.get('experience_years', '').strip()
         dermatology_years = request.form.get('dermatology_years', '').strip()
         role = request.form.get('role', '').strip()
         role_other = request.form.get('role_other', '').strip()
 
-        if not age or not experience_years or not dermatology_years or not role:
+        if not experience_years or not dermatology_years or not role:
             return render_template('demographics.html',
                 error='Bitte füllen Sie alle Pflichtfelder aus.',
                 existing=request.form)
 
         try:
-            age_int = int(age)
             exp_int = int(experience_years)
             derm_int = int(dermatology_years)
-            if not (18 <= age_int <= 99):
-                raise ValueError('Alter muss zwischen 18 und 99 liegen.')
             if not (0 <= exp_int <= 60):
                 raise ValueError('Berufserfahrung muss zwischen 0 und 60 liegen.')
             if not (0 <= derm_int <= 60):
@@ -640,7 +652,6 @@ def demographics():
                 existing=request.form)
 
         demo_data = {
-            'age': age_int,
             'experience_years': exp_int,
             'dermatology_years': derm_int,
             'role': role,
@@ -651,11 +662,33 @@ def demographics():
 
         user_data = load_responses(username)
         user_data['demographics'] = demo_data
+        user_data['page'] = 'study_info'
+        save_responses(username, user_data)
+        return redirect(url_for('study_info'))
+
+    return render_template('demographics.html', error=None, existing=existing)
+
+
+@app.route('/study_info', methods=['GET', 'POST'])
+@login_required
+def study_info():
+    username = session['username']
+    user_data = load_responses(username)
+
+    if not user_data.get('consent_given'):
+        return redirect(url_for('consent'))
+    if not user_data.get('demographics'):
+        return redirect(url_for('demographics'))
+
+    if request.method == 'POST':
+        user_data = load_responses(username)
+        user_data['study_info_seen'] = True
         user_data['page'] = 'evaluation'
         save_responses(username, user_data)
         return redirect(url_for('evaluate_resume'))
 
-    return render_template('demographics.html', error=None, existing=existing)
+    texts = load_texts()
+    return render_template('study_info.html', num_cases=len(texts))
 
 
 @app.route('/evaluate')
@@ -678,6 +711,9 @@ def evaluate_resume():
 
     if not user_data.get('demographics'):
         return redirect(url_for('demographics'))
+
+    if not user_data.get('study_info_seen'):
+        return redirect(url_for('study_info'))
 
     if user_data.get('completed'):
         return redirect(url_for('end'))
@@ -759,12 +795,11 @@ def evaluate_step(case_id, step_idx, tab_idx):
     total_cases = len(case_order)
 
     # Step statuses for sidebar
-    # Current step is always 'process'; steps after it are 'wait' even if saved.
     step_statuses = []
     for i, s in enumerate(RATING_STEPS):
         if i == step_idx:
             st = 'process'
-        elif i < step_idx and is_step_done(user_data, case_id, i):
+        elif is_step_done(user_data, case_id, i):
             st = 'finish'
         else:
             st = 'wait'
@@ -793,6 +828,11 @@ def evaluate_step(case_id, step_idx, tab_idx):
             next_url = compute_next_url(user_data, case_id, case_order, case_index,
                                         step_idx, tab_idx, step)
             return redirect(next_url)
+        else:
+            # Validation failed – merge submitted form values into existing
+            # so the template preserves what the user already rated.
+            for form_key in request.form:
+                existing[form_key] = request.form[form_key]
 
     # Previous URL
     prev_url = compute_prev_url(case_id, case_order, case_index, step_idx, tab_idx, step)
@@ -805,9 +845,9 @@ def evaluate_step(case_id, step_idx, tab_idx):
         step=step,
         step_idx=step_idx,
         tab_idx=tab_idx,
-        text_content=text_content,
-        text_a=text_a,
-        text_b=text_b,
+        text_content=_bold_headers(text_content),
+        text_a=_bold_headers(text_a),
+        text_b=_bold_headers(text_b),
         existing=existing,
         case_ratings=case_ratings,
         step_statuses=step_statuses,
@@ -826,7 +866,19 @@ def parse_step_form(step, tab_idx, form, enthalten_items):
     rating = {}
 
     try:
-        if key in ('summary_correctness', 'summary_completeness', 'summary_conciseness'):
+        if key == 'case_relevance':
+            missing = []
+            for item in INFO_ITEMS:
+                slug = slugify(item)
+                val = form.get('relevant_' + slug, '')
+                rating['relevant_' + slug] = val
+                if val not in ('yes', 'no'):
+                    missing.append(item)
+            if missing:
+                return None, f'Bitte bewerten Sie alle Informationen. Es fehlen noch {len(missing)} Bewertung(en).'
+            rating['comment'] = form.get('comment', '').strip()
+
+        elif key in ('summary_correctness', 'summary_completeness', 'summary_conciseness'):
             vas = form.get('vas_score', '').strip()
             if not vas:
                 return None, 'Bitte bewerten Sie auf der Skala.'
@@ -859,9 +911,15 @@ def parse_step_form(step, tab_idx, form, enthalten_items):
             rating['comment'] = form.get('comment', '').strip()
 
         elif key == 'summary_integrity':
+            missing = []
             for item in INFO_ITEMS:
                 slug = slugify(item)
-                rating['enthalten_' + slug] = form.get('enthalten_' + slug, '')
+                val = form.get('enthalten_' + slug, '')
+                rating['enthalten_' + slug] = val
+                if val not in ('yes', 'no'):
+                    missing.append(item)
+            if missing:
+                return None, f'Bitte bewerten Sie alle Informationen. Es fehlen noch {len(missing)} Bewertung(en).'
 
         elif key == 'summary_falseinfo':
             false_items = form.getlist('false_item')
@@ -1019,14 +1077,18 @@ def protocol_pdf():
                 continue
             m = _re.match(r'[Ff]all(\d+)', fname)
             if m and m.group(1) == str(case_id):
-                return send_file(os.path.join(DOCUMENTS_DIR, fname),
+                resp = send_file(os.path.join(DOCUMENTS_DIR, fname),
                                  mimetype='application/pdf')
+                resp.headers['Content-Disposition'] = 'inline'
+                return resp
     # Fallback: first PDF in original_documents/
     if os.path.isdir(DOCUMENTS_DIR):
         for fname in sorted(os.listdir(DOCUMENTS_DIR)):
             if fname.lower().endswith('.pdf'):
-                return send_file(os.path.join(DOCUMENTS_DIR, fname),
+                resp = send_file(os.path.join(DOCUMENTS_DIR, fname),
                                  mimetype='application/pdf')
+                resp.headers['Content-Disposition'] = 'inline'
+                return resp
     return 'Kein Protokoll-PDF gefunden.', 404
 
 
@@ -1063,7 +1125,7 @@ def _generate_ratings_csv():
         'integrity_enthalten_count', 'falseinfo_count',
         'comment', 'saved_at',
         'assignment_summary', 'assignment_problem',
-        'age', 'experience_years', 'dermatology_years', 'role',
+        'experience_years', 'dermatology_years', 'role',
         'completed',
     ]
     writer.writerow(header)
@@ -1129,7 +1191,6 @@ def _generate_ratings_csv():
                         r.get('saved_at', ''),
                         assign_sum.get(case_id, ''),
                         assign_prob.get(case_id, ''),
-                        demo.get('age', ''),
                         demo.get('experience_years', ''),
                         demo.get('dermatology_years', ''),
                         demo.get('role', ''),
@@ -1300,7 +1361,6 @@ def _generate_export_json():
                         'saved_at':             r.get('saved_at'),
                         'assignment_summary':   assign_sum.get(case_id),
                         'assignment_problem':   assign_prob.get(case_id),
-                        'age':                  demo.get('age'),
                         'experience_years':     demo.get('experience_years'),
                         'dermatology_years':    demo.get('dermatology_years'),
                         'role':                 demo.get('role'),

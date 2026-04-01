@@ -1,6 +1,6 @@
 # Tumor Board Evaluation
 
-A Flask web application for a clinical study evaluating LLM-generated tumor board case summaries and problem formulations. Medical experts rate AI- vs. human-written texts on completeness, correctness, and clinical relevance across multiple melanoma cases.
+A Flask web application for a clinical study evaluating LLM-generated tumor board case summaries and problem statements. Medical experts rate AI- vs. human-written texts on completeness, correctness, and clinical relevance across multiple melanoma cases.
 
 ---
 
