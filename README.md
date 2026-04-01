@@ -47,6 +47,7 @@ templates/              Jinja2 HTML templates
   login.html            Login page
   consent.html          Informed consent
   demographics.html     Demographic questionnaire
+  study_info.html       Study procedure overview
   intro.html            Per-case introduction / PDF viewer
   evaluate.html         Main rating step template
   final_questions.html  Final case questions
