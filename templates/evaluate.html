@@ -63,6 +63,11 @@
     {# Card header #}
     <div class="eval-card-header">
       <div class="eval-card-header-buttons">
+        {% if step.key == 'problem_correctness' %}
+        <button type="button" class="btn-protocol" onclick="openGuideline()">
+          <img src="{{ url_for('static', filename='pdf-icon.png') }}" width="20" height="23" style="flex-shrink:0;filter:hue-rotate(200deg) saturate(1.4)" aria-hidden="true">Kurzversion der S3-Leitlinie
+        </button>
+        {% endif %}
         {% if step.key != 'case_relevance' %}
         <button type="button" class="btn-protocol" onclick="openProtocol()">
           <img src="{{ url_for('static', filename='pdf-icon.png') }}" width="20" height="23" style="flex-shrink:0;filter:hue-rotate(200deg) saturate(1.4)" aria-hidden="true">TK-Protokoll
@@ -76,6 +81,9 @@
         {% endif %}
       </div>
     </div>
+
+    {# ── Step counter breadcrumb ── #}
+    <div class="step-counter">Schritt {{ step_idx + 1 }} von {{ rating_steps | length }}{% if step.has_tabs %} &middot; Version {{ 'A' if tab_idx == 0 else 'B' }}{% endif %}</div>
 
     {# ── Instruction panel ── #}
     <div class="instruction-panel" id="instr-panel">
@@ -143,17 +151,35 @@
         </div>
         <div class="instr-hint"><strong>Hinweis:</strong> Es werden nur Informationen angezeigt, die im vorherigen Schritt als „enthalten" markiert wurden.</div>
 
+        {% elif step.key == 'summary_missinginfo' %}
+        <div class="instr-goal"><strong>Aufgabe:</strong> Identifizieren Sie relevante Informationen, die in der Zusammenfassung fehlen, und bewerten Sie die möglichen Folgen.</div>
+        <div class="instr-steps">
+          <ol>
+            <li>Lesen Sie die <strong>Zusammenfassung</strong> im linken Bereich.</li>
+            <li>Markieren Sie per <strong>Checkbox</strong> alle fehlenden Informationen, deren Fehlen klinisch problematisch ist.</li>
+            <li>Bewerten Sie für jede markierte Information die möglichen Folgen:</li>
+          </ol>
+        </div>
+        <div class="instr-options">
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--neutral">Schwere</span> Kein Schaden · Leichter Schaden · Schwerer Schaden</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--neutral">Wahrscheinlichkeit</span> Gering · Moderat · Hoch</div>
+        </div>
+        <div class="instr-hint"><strong>Hinweis:</strong> Es werden nur Informationen angezeigt, die als „relevant" eingestuft, aber in der Zusammenfassung als „nicht enthalten" markiert wurden.</div>
+
         {% elif step.key == 'summary_correctness' %}
         <div class="instr-goal"><strong>Aufgabe:</strong> Beurteilen Sie die Korrektheit der Zusammenfassung. Sind alle enthaltenen Informationen medizinisch korrekt und frei von Ungenauigkeiten?</div>
         <div class="instr-steps">
           <ol>
             <li>Lesen Sie die <strong>Zusammenfassung</strong> im linken Bereich.</li>
-            <li>Wählen Sie den gewünschten Wert (0–100) auf der Bewertungsskala.</li>
+            <li>Wählen Sie eine der <strong>fünf Bewertungsstufen</strong>.</li>
           </ol>
         </div>
-        <div class="instr-options instr-options--scale">
-          <span class="instr-scale-end"><strong>0</strong> Sehr schlecht — Viele Fehler</span>
-          <span class="instr-scale-end"><strong>100</strong> Ausgezeichnet — Vollständig korrekt</span>
+        <div class="instr-options">
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--no">1 – Sehr schlecht</span> Enthält schwerwiegende Ungenauigkeiten oder irreführende Informationen</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--no">2 – Schlecht</span> Mehrere Fehler, die zu Fehlinterpretationen führen könnten</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--neutral">3 – Akzeptabel</span> Einige kleinere Ungenauigkeiten, aber insgesamt verständlich</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--yes">4 – Gut</span> Weitgehend korrekt, nur gelegentlich kleinere Fehler</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--yes">5 – Ausgezeichnet</span> Vollständig korrekt, keine erkennbaren Fehler</div>
         </div>
 
         {% elif step.key == 'summary_completeness' %}
@@ -161,12 +187,15 @@
         <div class="instr-steps">
           <ol>
             <li>Lesen Sie die <strong>Zusammenfassung</strong> im linken Bereich.</li>
-            <li>Wählen Sie den gewünschten Wert (0–100) auf der Bewertungsskala.</li>
+            <li>Wählen Sie eine der <strong>fünf Bewertungsstufen</strong>.</li>
           </ol>
         </div>
-        <div class="instr-options instr-options--scale">
-          <span class="instr-scale-end"><strong>0</strong> Sehr schlecht — Wesentliche Informationen fehlen</span>
-          <span class="instr-scale-end"><strong>100</strong> Ausgezeichnet — Alle relevanten Informationen enthalten</span>
+        <div class="instr-options">
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--no">1 – Sehr schlecht</span> Lässt die meisten wesentlichen klinischen Details aus; unvollständig</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--no">2 – Schlecht</span> Es fehlen mehrere wichtige Details, der Fall ist schwer zu verstehen</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--neutral">3 – Akzeptabel</span> Einige wichtige Details enthalten, aber wichtiger Kontext fehlt</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--yes">4 – Gut</span> Meiste wesentliche Details erfasst, nur geringfügige Auslassungen</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--yes">5 – Ausgezeichnet</span> Gründliche, umfassende Zusammenfassung mit allen kritischen Details</div>
         </div>
 
         {% elif step.key == 'summary_conciseness' %}
@@ -174,12 +203,15 @@
         <div class="instr-steps">
           <ol>
             <li>Lesen Sie die <strong>Zusammenfassung</strong> im linken Bereich.</li>
-            <li>Wählen Sie den gewünschten Wert (0–100) auf der Bewertungsskala.</li>
+            <li>Wählen Sie eine der <strong>fünf Bewertungsstufen</strong>.</li>
           </ol>
         </div>
-        <div class="instr-options instr-options--scale">
-          <span class="instr-scale-end"><strong>0</strong> Sehr schlecht — Zu knapp oder zu ausführlich</span>
-          <span class="instr-scale-end"><strong>100</strong> Ausgezeichnet — Optimal prägnant</span>
+        <div class="instr-options">
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--no">1 – Sehr schlecht</span> Übermäßig lang und mit irrelevanten Details überladen</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--no">2 – Schlecht</span> Unnötige Informationen, die von den Kernpunkten ablenken</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--neutral">3 – Akzeptabel</span> Einigermaßen fokussiert, könnte aber prägnanter sein</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--yes">4 – Gut</span> Überwiegend prägnant, mit nur geringfügig überflüssigen Details</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--yes">5 – Ausgezeichnet</span> Sehr fokussiert, nur die notwendigen Details für Klarheit</div>
         </div>
 
         {% elif step.key == 'summary_postedit' %}
@@ -187,14 +219,14 @@
         <div class="instr-steps">
           <ol>
             <li>Lesen Sie die <strong>Zusammenfassung</strong> im linken Bereich.</li>
-            <li>Entscheiden Sie im rechten Bereich.</li>
+            <li>Entscheiden Sie, ob der Text direkt verwendet werden kann oder Überarbeitungen erfordert.</li>
+            <li>Falls Überarbeitungen nötig sind: Schätzen Sie den zeitlichen Aufwand.</li>
           </ol>
         </div>
         <div class="instr-options">
           <div class="instr-opt"><span class="instr-opt-label instr-opt--yes">Direkt verwenden</span> Der Text kann ohne Änderungen übernommen werden</div>
-          <div class="instr-opt"><span class="instr-opt-label instr-opt--neutral">Überarbeitung nötig</span> Wählen Sie die Art und passen Sie den Text an</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--neutral">Überarbeitung nötig</span> Wählen Sie die geschätzte Bearbeitungsdauer</div>
         </div>
-        <div class="instr-hint"><strong>Hinweis:</strong> Die Bearbeitungszeit wird automatisch erfasst, sobald Sie den Text bearbeiten.</div>
 
         {% elif step.key == 'summary_origin_guess' %}
         <div class="instr-goal"><strong>Aufgabe:</strong> Schätzen Sie ein, ob diese Version der Zusammenfassung von einem Menschen oder von einer KI verfasst wurde.</div>
@@ -221,15 +253,21 @@
         <div class="instr-hint"><strong>Hinweis:</strong> Erneutes Klicken auf eine bereits gewählte Version hebt die Auswahl auf.</div>
 
         {% elif step.key == 'problem_focus' %}
-        <div class="instr-goal"><strong>Aufgabe:</strong> Bestimmen Sie den aktuellen Krankheitsstatus und identifizieren Sie die in der Fragestellung vorgeschlagenen Diskussionsschwerpunkte.</div>
+        <div class="instr-goal"><strong>Aufgabe:</strong> Bestimmen Sie das Behandlungsziel, den aktuellen Krankheitsstatus und identifizieren Sie die in der Fragestellung vorgeschlagenen Diskussionsschwerpunkte.</div>
         <div class="instr-steps">
           <ol>
             <li>Lesen Sie die <strong>Fragestellung</strong> im linken Bereich.</li>
+            <li>Wählen Sie das <strong>Behandlungsziel</strong>.</li>
             <li>Wählen Sie den <strong>Krankheitsstatus</strong>.</li>
             <li>Wählen Sie die vorgeschlagenen <strong>Diskussionsschwerpunkte</strong> (Mehrfachauswahl möglich).</li>
           </ol>
         </div>
         <div class="instr-options">
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--neutral">Kurativ</span> Heilung als Ziel</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--neutral">Palliativ</span> Symptomlinderung als Ziel</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--neutral">Nicht spezifiziert</span> Kein Behandlungsziel erkennbar</div>
+        </div>
+        <div class="instr-options" style="margin-top:.5rem">
           <div class="instr-opt"><span class="instr-opt-label instr-opt--neutral">Progredient</span> Fortschreitende Erkrankung</div>
           <div class="instr-opt"><span class="instr-opt-label instr-opt--neutral">Unverändert</span> Stabile Erkrankung</div>
           <div class="instr-opt"><span class="instr-opt-label instr-opt--neutral">Regredient</span> Rückläufige Erkrankung</div>
@@ -237,7 +275,7 @@
         <div class="instr-hint"><strong>Hinweis:</strong> „Keine Spezifizierung" schließt alle anderen Optionen aus.</div>
 
         {% elif step.key == 'problem_correctness' %}
-        <div class="instr-goal"><strong>Aufgabe:</strong> Beurteilen Sie, ob die Fragestellung sachlich korrekt, leitlinienkonform und klinisch treffend formuliert ist.</div>
+        <div class="instr-goal"><strong>Aufgabe:</strong> Vergleichen Sie die Empfehlung in der Fragestellung mit der S3-Leitlinie für die Melanomtherapie und ordnen Sie sie einer der drei Kategorien zu.</div>
         <div class="instr-steps">
           <ol>
             <li>Lesen Sie die <strong>Fragestellung</strong> im linken Bereich.</li>
@@ -245,9 +283,9 @@
           </ol>
         </div>
         <div class="instr-options">
-          <div class="instr-opt"><span class="instr-opt-label instr-opt--no">Trifft nicht zu</span> Nicht leitlinienkonform</div>
-          <div class="instr-opt"><span class="instr-opt-label instr-opt--neutral">Trifft teilweise zu</span> Teilweise leitlinienkonform</div>
-          <div class="instr-opt"><span class="instr-opt-label instr-opt--yes">Trifft zu</span> Vollständig leitlinienkonform</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--yes">Konkordant</span> Empfehlung stimmt mit der Leitlinie überein</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--neutral">Korrekte Alternative</span> Abweichende, aber klinisch vertretbare Empfehlung</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--no">Inkorrekte Empfehlung</span> Nicht leitlinienkonform oder fehlende Empfehlung</div>
         </div>
 
         {% elif step.key == 'problem_specificity' %}
@@ -265,18 +303,17 @@
         </div>
 
         {% elif step.key == 'problem_postedit' %}
-        <div class="instr-goal"><strong>Aufgabe:</strong> Schätzen Sie den Aufwand ein, der nötig wäre, um diese Fragestellung für den klinischen Einsatz zu überarbeiten.</div>
+        <div class="instr-goal"><strong>Aufgabe:</strong> Entscheiden Sie, ob diese Fragestellung direkt für den klinischen Einsatz übernommen werden kann oder ob Überarbeitungen erforderlich sind.</div>
         <div class="instr-steps">
           <ol>
             <li>Lesen Sie die <strong>Fragestellung</strong> im linken Bereich.</li>
-            <li>Entscheiden Sie im rechten Bereich.</li>
+            <li>Entscheiden Sie, ob der Text direkt verwendet werden kann oder Überarbeitungen erfordert.</li>
           </ol>
         </div>
         <div class="instr-options">
           <div class="instr-opt"><span class="instr-opt-label instr-opt--yes">Direkt verwenden</span> Der Text kann ohne Änderungen übernommen werden</div>
-          <div class="instr-opt"><span class="instr-opt-label instr-opt--neutral">Überarbeitung nötig</span> Wählen Sie die Art und passen Sie den Text an</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--neutral">Überarbeitung nötig</span> Änderungen sind erforderlich</div>
         </div>
-        <div class="instr-hint"><strong>Hinweis:</strong> Die Bearbeitungszeit wird automatisch erfasst, sobald Sie den Text bearbeiten.</div>
 
         {% elif step.key == 'problem_origin_guess' %}
         <div class="instr-goal"><strong>Aufgabe:</strong> Schätzen Sie ein, ob diese Version der Fragestellung von einem Menschen oder von einer KI verfasst wurde.</div>
@@ -356,7 +393,7 @@
       <button type="button" class="comment-toggle" onclick="toggleComment(this)">
         &#128172; Kommentar (optional)
       </button>
-      <div class="comment-body comment-open">
+      <div class="comment-body {% if existing.get('comment', '') %}comment-open{% endif %}">
         <textarea name="comment" class="comment-textarea" rows="3"
                   placeholder="Optionaler Kommentar zu dieser Bewertung...">{{ existing.get('comment', '') }}</textarea>
       </div>
@@ -413,7 +450,8 @@
                     <svg class="rel-group-chevron" viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
                       <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/>
                     </svg>
-                    <span class="rel-cat-name">{{ cat }} <span class="rel-cat-status" data-cat-status="{{ cat_slug }}"></span></span>
+                    <span class="rel-cat-name">{{ cat }}</span>
+                    <span class="rel-cat-status" data-cat-status="{{ cat_slug }}"></span>
                     <span class="rel-group-badge" data-cat-count="{{ cat_slug }}">0/0</span>
                     <div class="rel-cat-actions">
                       <button type="button" class="rel-cat-btn rel-cat-btn--no"
@@ -716,9 +754,167 @@
       </div>
 
       {# ════════════════════════════════════════════════════════════════════════
-         STEP: slider steps (correctness, completeness, conciseness)
+         STEP: summary_missinginfo
          ════════════════════════════════════════════════════════════════════════ #}
-      {% elif step.key in ['summary_correctness', 'summary_completeness',
+      {% elif step.key == 'summary_missinginfo' %}
+      <div class="eval-body">
+        <div class="text-display">
+          <div class="text-label">Zusammenfassung – Version {{ 'A' if tab_idx == 0 else 'B' }}</div>
+          <div class="text-content">{{ text_content }}</div>
+        </div>
+        <div class="rating-section">
+          <h3 class="rating-title">Fehlende Informationen</h3>
+          {% if missing_items %}
+          <p class="rating-hint">Bewerten Sie für jede fehlende Information die möglichen Folgen:</p>
+          <div class="mi-list" id="mi-list">
+            {% for item in missing_items %}
+            {% set slug = slugify(item) %}
+            {% set has_sev  = existing.get('severity_' + slug, '') != '' %}
+            {% set has_prob = existing.get('prob_' + slug, '') != '' %}
+            {% set is_done  = has_sev and has_prob %}
+            <div class="mi-card {% if is_done %}mi-card--done{% endif %} {% if not loop.first or is_done %}mi-card--collapsed{% endif %}"
+                 id="mic_{{ slug }}" data-slug="{{ slug }}">
+
+              {# ── accordion header ── #}
+              <div class="mi-hdr" onclick="toggleMiCard('{{ slug }}')">
+                <svg class="mi-chevron" viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+                  <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/>
+                </svg>
+                <span class="mi-item-name">{{ item }}</span>
+                {% if is_done %}
+                <span class="mi-done-badge">Fertig</span>
+                {% else %}
+                <span class="mi-done-badge" style="display:none">Fertig</span>
+                {% endif %}
+              </div>
+
+              {# ── collapsible body ── #}
+              <div class="mi-body">
+                <div class="fi-tl-row">
+
+                  <div class="fi-tl-col">
+                    <div class="fi-sub-label">Schwere des Schadens</div>
+                    <div class="tl-housing">
+                      <label class="tl-light tl-red">
+                        <input type="radio" name="severity_{{ slug }}" value="Schwerer Schaden"
+                               {% if existing.get('severity_' + slug) == 'Schwerer Schaden' %}checked{% endif %}
+                               onchange="onMiChange('{{ slug }}')">
+                        <span class="tl-bulb"></span>
+                        <span class="tl-opt-label">Schwerer Schaden</span>
+                      </label>
+                      <label class="tl-light tl-amber">
+                        <input type="radio" name="severity_{{ slug }}" value="Leichter Schaden"
+                               {% if existing.get('severity_' + slug) == 'Leichter Schaden' %}checked{% endif %}
+                               onchange="onMiChange('{{ slug }}')">
+                        <span class="tl-bulb"></span>
+                        <span class="tl-opt-label">Leichter Schaden</span>
+                      </label>
+                      <label class="tl-light tl-green">
+                        <input type="radio" name="severity_{{ slug }}" value="Kein Schaden"
+                               {% if existing.get('severity_' + slug) == 'Kein Schaden' %}checked{% endif %}
+                               onchange="onMiChange('{{ slug }}')">
+                        <span class="tl-bulb"></span>
+                        <span class="tl-opt-label">Kein Schaden</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="fi-tl-col">
+                    <div class="fi-sub-label">Eintrittswahrscheinlichkeit</div>
+                    <div class="tl-housing">
+                      <label class="tl-light tl-red">
+                        <input type="radio" name="prob_{{ slug }}" value="Hoch"
+                               {% if existing.get('prob_' + slug) == 'Hoch' %}checked{% endif %}
+                               onchange="onMiChange('{{ slug }}')">
+                        <span class="tl-bulb"></span>
+                        <span class="tl-opt-label">Hoch</span>
+                      </label>
+                      <label class="tl-light tl-amber">
+                        <input type="radio" name="prob_{{ slug }}" value="Moderat"
+                               {% if existing.get('prob_' + slug) == 'Moderat' %}checked{% endif %}
+                               onchange="onMiChange('{{ slug }}')">
+                        <span class="tl-bulb"></span>
+                        <span class="tl-opt-label">Moderat</span>
+                      </label>
+                      <label class="tl-light tl-green">
+                        <input type="radio" name="prob_{{ slug }}" value="Gering"
+                               {% if existing.get('prob_' + slug) == 'Gering' %}checked{% endif %}
+                               onchange="onMiChange('{{ slug }}')">
+                        <span class="tl-bulb"></span>
+                        <span class="tl-opt-label">Gering</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="fi-tl-col fi-comment-col">
+                    <div class="fi-sub-label">Kommentar (optional)</div>
+                    <textarea name="comment_{{ slug }}" class="fi-comment-textarea"
+                              placeholder="Optionaler Kommentar...">{{ existing.get('comment_' + slug, '') }}</textarea>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="empty-state">
+            <p>Keine relevanten Informationen fehlen in dieser Version der Zusammenfassung.<br>
+            Es gibt keine fehlenden Informationen zu bewerten.</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      {# ════════════════════════════════════════════════════════════════════════
+         STEP: summary_correctness – 5-point Likert
+         ════════════════════════════════════════════════════════════════════════ #}
+      {% elif step.key == 'summary_correctness' %}
+      <div class="eval-body">
+        <div class="text-display">
+          <div class="text-label">Zusammenfassung – Version {{ 'A' if tab_idx == 0 else 'B' }}</div>
+          <div class="text-content">{{ text_content }}</div>
+        </div>
+        <div class="rating-section">
+          <h3 class="rating-title">{{ step.subtitle }}</h3>
+          <div class="likert-group">
+            {% for label in step.scale_labels %}
+            <label class="likert-btn {% if existing.get('choice') == label %}likert-btn--active{% endif %}">
+              <input type="radio" name="choice" value="{{ label }}"
+                     {% if existing.get('choice') == label %}checked{% endif %} required>
+              <span class="likert-num">{{ loop.index }}</span>
+              <span class="likert-text">{{ label }}</span>
+            </label>
+            {% endfor %}
+          </div>
+          <div class="likert-description" id="likert-desc">
+            {% if existing.get('choice') and step.scale_descriptions %}
+              {% for label in step.scale_labels %}
+                {% if existing.get('choice') == label %}{{ step.scale_descriptions[loop.index0] }}{% endif %}
+              {% endfor %}
+            {% endif %}
+          </div>
+          <script>
+          (function(){
+            var descs = {{ step.scale_descriptions | tojson }};
+            var descEl = document.getElementById('likert-desc');
+            document.querySelectorAll('.likert-btn').forEach(function(btn, idx){
+              btn.addEventListener('click', function(){
+                document.querySelectorAll('.likert-btn').forEach(function(b){ b.classList.remove('likert-btn--active'); });
+                btn.classList.add('likert-btn--active');
+                descEl.textContent = descs[idx];
+              });
+            });
+          })();
+          </script>
+        </div>
+      </div>
+
+      {# ════════════════════════════════════════════════════════════════════════
+         STEP: Likert steps (completeness, conciseness)
+         ════════════════════════════════════════════════════════════════════════ #}
+      {% elif step.key in ['summary_completeness',
                             'summary_conciseness'] %}
       <div class="eval-body">
         <div class="text-display">
@@ -731,19 +927,36 @@
         </div>
         <div class="rating-section">
           <h3 class="rating-title">{{ step.subtitle }}</h3>
-          <div class="vas-wrap">
-            <div class="vas8-bar" id="vas-bar">
-              <div class="vas8-track-line"></div>
-              <div class="vas8-fill" id="vas-fill"></div>
-              <div class="vas8-thumb" id="vas-thumb"></div>
-            </div>
-            <div class="vas-tick-labels">
-              <span>0 &mdash; Sehr schlecht</span>
-              <span>Ausgezeichnet &mdash; 100</span>
-            </div>
-            <input type="hidden" name="vas_score" id="vas-hidden"
-                   value="{{ existing.get('vas_score', '') }}">
+          <div class="likert-group">
+            {% for label in step.scale_labels %}
+            <label class="likert-btn {% if existing.get('choice') == label %}likert-btn--active{% endif %}">
+              <input type="radio" name="choice" value="{{ label }}"
+                     {% if existing.get('choice') == label %}checked{% endif %} required>
+              <span class="likert-num">{{ loop.index }}</span>
+              <span class="likert-text">{{ label }}</span>
+            </label>
+            {% endfor %}
           </div>
+          <div class="likert-description" id="likert-desc">
+            {% if existing.get('choice') and step.scale_descriptions %}
+              {% for label in step.scale_labels %}
+                {% if existing.get('choice') == label %}{{ step.scale_descriptions[loop.index0] }}{% endif %}
+              {% endfor %}
+            {% endif %}
+          </div>
+          <script>
+          (function(){
+            var descs = {{ step.scale_descriptions | tojson }};
+            var descEl = document.getElementById('likert-desc');
+            document.querySelectorAll('.likert-btn').forEach(function(btn, idx){
+              btn.addEventListener('click', function(){
+                document.querySelectorAll('.likert-btn').forEach(function(b){ b.classList.remove('likert-btn--active'); });
+                btn.classList.add('likert-btn--active');
+                descEl.textContent = descs[idx];
+              });
+            });
+          })();
+          </script>
         </div>
       </div>
 
@@ -752,43 +965,29 @@
          ════════════════════════════════════════════════════════════════════════ #}
       {% elif step.key in ['summary_postedit', 'problem_postedit'] %}
       <div class="eval-body">
-        {# ── left panel: read-only → editable text ──────────────────────── #}
+        {# ── left panel: read-only text ──────────────────────────────────── #}
         <div class="text-display pe-text-panel" id="pe-text-panel">
           {% if step.section_type == 'summary' %}
           <div class="text-label">
             Zusammenfassung – Version {{ 'A' if tab_idx == 0 else 'B' }}
-            <span class="pe-edit-badge" id="pe-edit-badge" style="display:none"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg> Bearbeitungsmodus</span>
           </div>
           {% else %}
           <div class="text-label">
             Fragestellung – Version {{ 'A' if tab_idx == 0 else 'B' }}
-            <span class="pe-edit-badge" id="pe-edit-badge" style="display:none"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg> Bearbeitungsmodus</span>
           </div>
           {% endif %}
 
-          {# read-only view #}
-          <div class="text-content" id="pe-text-readonly">{{ text_content }}</div>
-
-          {# editable view (hidden initially) #}
-          <div class="pe-editor-wrap" id="pe-editor-wrap" style="display:none">
-            <div class="pe-editor-toolbar">
-              <span class="pe-editor-status">Passen Sie den Text nach Bedarf an</span>
-              <button type="button" class="pe-reset-btn" id="pe-reset-btn"
-                      title="Originaltext wiederherstellen"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg> Zurücksetzen</button>
-            </div>
-            <textarea name="pe_edited_text" id="pe-editor" class="pe-editor-textarea">{{ existing.get('pe_edited_text', text_content) }}</textarea>
-          </div>
-
-          {# hidden fields for original text + timing #}
-          <input type="hidden" name="pe_original_text" value="{{ text_content }}">
-          <input type="hidden" name="pe_edit_duration" id="pe-edit-duration"
-                 value="{{ existing.get('pe_edit_duration', '0') }}">
+          <div class="text-content">{{ text_content }}</div>
         </div>
 
         {# ── right panel: decision tree ─────────────────────────────────── #}
         <div class="rating-section">
           <h3 class="rating-title">{{ step.subtitle }}</h3>
-          <p class="pe-intro-text">Kann dieser Text direkt für die klinische Verwendung übernommen werden, oder sind Anpassungen erforderlich?</p>
+          {% if step.key == 'summary_postedit' %}
+          <p class="pe-intro-text">Kann dieser Text direkt für die klinische Verwendung übernommen werden, oder sind Überarbeitungen erforderlich? Falls ja, schätzen Sie den Zeitaufwand.</p>
+          {% else %}
+          <p class="pe-intro-text">Kann dieser Text direkt für die klinische Verwendung übernommen werden, oder sind Überarbeitungen erforderlich?</p>
+          {% endif %}
 
           {# Level 1: use as-is vs needs edit #}
           <div class="pe-level1">
@@ -798,7 +997,7 @@
                      {% if existing.get('pe_decision') == 'use_as_is' %}checked{% endif %} required>
               <span class="pe-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
               <span class="pe-card-label">Direkt verwenden</span>
-              <span class="pe-card-sub">Text ist bereit für den<br>klinischen Einsatz</span>
+              <span class="pe-card-sub">Kein Überarbeitungsbedarf</span>
             </label>
             <label class="pe-card pe-card--amber
               {% if existing.get('pe_decision') == 'needs_edit' %}pe-card--active{% endif %}">
@@ -806,54 +1005,74 @@
                      {% if existing.get('pe_decision') == 'needs_edit' %}checked{% endif %}>
               <span class="pe-card-icon"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><g transform="translate(12 12) scale(1.1) translate(-10.9 -10.9)"><path fill-rule="evenodd" d="M12.7 7.2L14.4 6.9L14.4 9.1L12.7 8.8L11.9 10.8L13.3 11.7L11.7 13.3L10.8 11.9L8.8 12.7L9.1 14.4L6.9 14.4L7.2 12.7L5.2 11.9L4.3 13.3L2.7 11.7L4.1 10.8L3.3 8.8L1.6 9.1L1.6 6.9L3.3 7.2L4.1 5.2L2.7 4.3L4.3 2.7L5.2 4.1L7.2 3.3L6.9 1.6L9.1 1.6L8.8 3.3L10.8 4.1L11.7 2.7L13.3 4.3L11.9 5.2ZM10.2 8A2.2 2.2 0 1 0 5.8 8A2.2 2.2 0 1 0 10.2 8Z"/><path fill-rule="evenodd" d="M19.1 15.5L20.2 15.3L20.2 16.7L19.1 16.5L18.6 17.8L19.5 18.4L18.4 19.5L17.8 18.6L16.5 19.1L16.7 20.2L15.3 20.2L15.5 19.1L14.2 18.6L13.6 19.5L12.5 18.4L13.5 17.8L12.9 16.5L11.8 16.7L11.8 15.3L12.9 15.5L13.5 14.2L12.5 13.6L13.6 12.5L14.2 13.5L15.5 12.9L15.3 11.8L16.7 11.8L16.5 12.9L17.8 13.5L18.4 12.5L19.5 13.6L18.6 14.2ZM17.4 16A1.4 1.4 0 1 0 14.6 16A1.4 1.4 0 1 0 17.4 16Z"/></g></svg></span>
               <span class="pe-card-label">Überarbeitung nötig</span>
-              <span class="pe-card-sub">Text muss vor Verwendung<br>angepasst werden</span>
+              {% if step.key == 'summary_postedit' %}
+              <span class="pe-card-sub">Bitte Aufwand schätzen</span>
+              {% else %}
+              <span class="pe-card-sub">Änderungen erforderlich</span>
+              {% endif %}
             </label>
           </div>
 
-          {# Level 2: effort category (shown when needs_edit) #}
+          {# Level 2: effort category (shown when needs_edit, summary only) #}
+          {% if step.key == 'summary_postedit' %}
           <div class="pe-level2" id="pe-level2"
                style="{% if existing.get('pe_decision') != 'needs_edit' %}display:none{% endif %}">
-            <div class="pe-level2-header">Art der Überarbeitung:</div>
+            <div class="pe-level2-header">Geschätzte Dauer der Überarbeitung:</div>
             <div class="pe-level2-options">
               <label class="pe-sub-card
                 {% if existing.get('pe_effort') == 'minor' %}pe-sub-card--active{% endif %}">
                 <input type="radio" name="pe_effort" value="minor"
                        {% if existing.get('pe_effort') == 'minor' %}checked{% endif %}>
-                <span class="pe-sub-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span>
+                <span class="pe-sub-icon"><svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="24" cy="26" r="19" fill="none" stroke="#1a4f8a" stroke-width="3.5"/>
+                  <path d="M24 26 L24 7 A19 19 0 0 1 28.0 7.4 Z" fill="#e74c3c"/>
+                  <line x1="21" y1="4" x2="27" y2="4" stroke="#1a4f8a" stroke-width="3" stroke-linecap="round"/>
+                  <line x1="24" y1="4" x2="24" y2="9" stroke="#1a4f8a" stroke-width="2.5"/>
+                  <line x1="37" y1="11" x2="40" y2="8" stroke="#1a4f8a" stroke-width="2.5" stroke-linecap="round"/>
+                  <circle cx="24" cy="26" r="1.5" fill="#1a4f8a"/>
+                </svg></span>
                 <span class="pe-sub-label">Kleine Korrekturen</span>
-                <span class="pe-sub-desc">Formulierung, Stil, Tippfehler</span>
+                <span class="pe-sub-desc">max. 2 min</span>
               </label>
               <label class="pe-sub-card
                 {% if existing.get('pe_effort') == 'major' %}pe-sub-card--active{% endif %}">
                 <input type="radio" name="pe_effort" value="major"
                        {% if existing.get('pe_effort') == 'major' %}checked{% endif %}>
-                  <span class="pe-sub-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><g transform="rotate(35 12 12)"><rect x="6.75" y="4" width="10.5" height="5" rx="1.3" fill="currentColor"/><rect x="10.45" y="8.8" width="3" height="11.2" rx="1.3"/></g></svg></span>
-                <span class="pe-sub-label">Größere Überarbeitung</span>
-                <span class="pe-sub-desc">Fakten, Struktur, fehlende Inhalte</span>
+                <span class="pe-sub-icon"><svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="24" cy="26" r="19" fill="none" stroke="#1a4f8a" stroke-width="3.5"/>
+                  <path d="M24 26 L24 7 A19 19 0 0 1 33.5 9.5 Z" fill="#e74c3c"/>
+                  <line x1="21" y1="4" x2="27" y2="4" stroke="#1a4f8a" stroke-width="3" stroke-linecap="round"/>
+                  <line x1="24" y1="4" x2="24" y2="9" stroke="#1a4f8a" stroke-width="2.5"/>
+                  <line x1="37" y1="11" x2="40" y2="8" stroke="#1a4f8a" stroke-width="2.5" stroke-linecap="round"/>
+                  <circle cx="24" cy="26" r="1.5" fill="#1a4f8a"/>
+                </svg></span>
+                <span class="pe-sub-label">Größere Überarbeitungen</span>
+                <span class="pe-sub-desc">max. 5 min</span>
               </label>
               <label class="pe-sub-card
                 {% if existing.get('pe_effort') == 'rewrite' %}pe-sub-card--active{% endif %}">
                 <input type="radio" name="pe_effort" value="rewrite"
                        {% if existing.get('pe_effort') == 'rewrite' %}checked{% endif %}>
-                <span class="pe-sub-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg></span>
+                <span class="pe-sub-icon"><svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="24" cy="26" r="19" fill="none" stroke="#1a4f8a" stroke-width="3.5"/>
+                  <path d="M24 26 L24 7 A19 19 0 0 1 43 26 Z" fill="#e74c3c"/>
+                  <line x1="21" y1="4" x2="27" y2="4" stroke="#1a4f8a" stroke-width="3" stroke-linecap="round"/>
+                  <line x1="24" y1="4" x2="24" y2="9" stroke="#1a4f8a" stroke-width="2.5"/>
+                  <line x1="37" y1="11" x2="40" y2="8" stroke="#1a4f8a" stroke-width="2.5" stroke-linecap="round"/>
+                  <circle cx="24" cy="26" r="1.5" fill="#1a4f8a"/>
+                </svg></span>
                 <span class="pe-sub-label">Vollständig neu verfassen</span>
-                <span class="pe-sub-desc">Text nicht verwendbar</span>
+                <span class="pe-sub-desc">ca. 15 min</span>
               </label>
             </div>
           </div>
-
-          {# Editing prompt (shown when needs_edit) #}
-          <div class="pe-edit-prompt" id="pe-edit-prompt"
-               style="{% if existing.get('pe_decision') != 'needs_edit' %}display:none{% endif %}">
-            <span class="pe-edit-prompt-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
-            <span>Bitte passen Sie den Text im linken Bereich an. Die Bearbeitungszeit wird automatisch erfasst.</span>
-          </div>
+          {% endif %}
 
           {# Confirmation message (shown when use_as_is) #}
           <div class="pe-confirm-msg" id="pe-confirm-msg"
                style="{% if existing.get('pe_decision') != 'use_as_is' %}display:none{% endif %}">
             <span class="pe-confirm-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
-            <span>Der Text wird unverändert übernommen.</span>
+            <span>Kein Überarbeitungsbedarf.</span>
           </div>
 
         </div>{# end rating-section #}
@@ -861,58 +1080,11 @@
 
       <script>
       (function(){
-        /* ── DOM refs ── */
-        var cards     = document.querySelectorAll('.pe-card input[type="radio"]');
-        var level2    = document.getElementById('pe-level2');
-        var subCards  = document.querySelectorAll('.pe-sub-card');
-        var textPanel = document.getElementById('pe-text-panel');
-        var readonly  = document.getElementById('pe-text-readonly');
-        var editorW   = document.getElementById('pe-editor-wrap');
-        var editor    = document.getElementById('pe-editor');
-        var badge     = document.getElementById('pe-edit-badge');
-        var prompt    = document.getElementById('pe-edit-prompt');
-        var confirm   = document.getElementById('pe-confirm-msg');
-        var resetBtn  = document.getElementById('pe-reset-btn');
-        var durInput  = document.getElementById('pe-edit-duration');
-        var origText  = editor ? editor.defaultValue : '';
+        var cards    = document.querySelectorAll('.pe-card input[type="radio"]');
+        var level2   = document.getElementById('pe-level2');
+        var subCards = document.querySelectorAll('.pe-sub-card');
+        var confirm  = document.getElementById('pe-confirm-msg');
 
-        if (!level2 || !editor) return;
-
-        /* ── Timing state ── */
-        var editStartTs  = null;          /* Date.now() when editing began       */
-        var accumulated  = parseInt(durInput.value, 10) || 0; /* prior seconds  */
-        var timerRunning = false;
-
-        function startTimer() {
-          if (!timerRunning) { editStartTs = Date.now(); timerRunning = true; }
-        }
-        function pauseTimer() {
-          if (timerRunning) {
-            accumulated += Math.round((Date.now() - editStartTs) / 1000);
-            timerRunning = false;
-          }
-        }
-        function flushTimer() {
-          if (timerRunning) {
-            accumulated += Math.round((Date.now() - editStartTs) / 1000);
-            editStartTs = Date.now();
-          }
-          durInput.value = accumulated;
-        }
-
-        /* ── Editor mode toggle ── */
-        function setEditMode(on) {
-          readonly.style.display = on ? 'none' : '';
-          editorW.style.display  = on ? ''     : 'none';
-          badge.style.display    = on ? 'inline-flex' : 'none';
-          prompt.style.display   = on ? 'flex' : 'none';
-          confirm.style.display  = on ? 'none' : (document.querySelector('.pe-card input[value="use_as_is"]:checked') ? 'flex' : 'none');
-          textPanel.classList.toggle('pe-text-panel--editing', on);
-          if (on) { startTimer(); editor.focus(); }
-          else    { pauseTimer(); }
-        }
-
-        /* ── Decision card sync ── */
         function syncCards() {
           document.querySelectorAll('.pe-card').forEach(function(c) {
             var inp = c.querySelector('input');
@@ -920,58 +1092,23 @@
           });
           var needsEdit = document.querySelector('.pe-card input[value="needs_edit"]');
           var isEdit    = needsEdit && needsEdit.checked;
-          level2.style.display = isEdit ? 'flex' : 'none';
-          if (!isEdit) {
-            document.querySelectorAll('input[name="pe_effort"]').forEach(function(r){ r.checked = false; });
-            subCards.forEach(function(s){ s.classList.remove('pe-sub-card--active'); });
-            setEditMode(false);
-          } else {
-            /* Only open editor if an effort sub-card is already chosen */
-            var effortChosen = document.querySelector('input[name="pe_effort"]:checked');
-            if (effortChosen) { setEditMode(true); }
-            else {
-              /* Show prompt to pick effort, but no editor yet */
-              setEditMode(false);
-              prompt.style.display = 'flex';
-              confirm.style.display = 'none';
+          if (level2) {
+            level2.style.display = isEdit ? 'flex' : 'none';
+            if (!isEdit) {
+              document.querySelectorAll('input[name="pe_effort"]').forEach(function(r){ r.checked = false; });
+              subCards.forEach(function(s){ s.classList.remove('pe-sub-card--active'); });
             }
           }
+          confirm.style.display = (!isEdit && document.querySelector('.pe-card input[value="use_as_is"]:checked')) ? 'flex' : 'none';
         }
 
         subCards.forEach(function(card) {
           card.addEventListener('change', function() {
             subCards.forEach(function(s){ s.classList.remove('pe-sub-card--active'); });
             this.closest('.pe-sub-card').classList.add('pe-sub-card--active');
-            setEditMode(true);
           });
         });
         cards.forEach(function(r) { r.addEventListener('change', syncCards); });
-
-        /* ── Reset button ── */
-        resetBtn.addEventListener('click', function() {
-          editor.value = origText;
-          editor.focus();
-        });
-
-        /* ── Track active editing time (pause when textarea loses focus) ── */
-        editor.addEventListener('focus', startTimer);
-        editor.addEventListener('blur',  pauseTimer);
-
-        /* ── Flush timer on form submit ── */
-        var form = editor.closest('form');
-        if (form) {
-          form.addEventListener('submit', function() {
-            flushTimer();
-            /* If use_as_is is selected, clear edited text to signal "no change" */
-            var useAsIs = document.querySelector('.pe-card input[value="use_as_is"]:checked');
-            if (useAsIs) { editor.value = ''; durInput.value = '0'; }
-          });
-        }
-
-        /* ── Restore state on page load (e.g. returning to tab) ── */
-        var isEdit = document.querySelector('.pe-card input[value="needs_edit"]:checked');
-        var effortPicked = document.querySelector('input[name="pe_effort"]:checked');
-        if (isEdit && effortPicked) setEditMode(true);
       })();
       </script>
 
@@ -1139,6 +1276,50 @@
           <h3 class="rating-title">{{ step.subtitle }}</h3>
 
           <div class="sub-section">
+            <div class="sub-section-label">Behandlungsziel:</div>
+            <div class="ks-widget">
+
+              <label class="ks-option {% if existing.get('behandlungsziel') == 'Kurativ' %}ks-selected{% endif %}">
+                <input type="radio" name="behandlungsziel" value="Kurativ"
+                       {% if existing.get('behandlungsziel') == 'Kurativ' %}checked{% endif %} required>
+                <div class="ks-icon">
+                  <svg viewBox="0 0 40 40" width="40" height="40" fill="none">
+                    <circle cx="20" cy="20" r="16" stroke="#2563eb" stroke-width="2.5"/>
+                    <path d="M14 20h12M20 14v12" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <div class="ks-label">Kurativ</div>
+              </label>
+
+              <label class="ks-option {% if existing.get('behandlungsziel') == 'Palliativ' %}ks-selected{% endif %}">
+                <input type="radio" name="behandlungsziel" value="Palliativ"
+                       {% if existing.get('behandlungsziel') == 'Palliativ' %}checked{% endif %} required>
+                <div class="ks-icon">
+                  <svg viewBox="0 0 40 40" width="40" height="40" fill="none">
+                    <circle cx="20" cy="20" r="16" stroke="#a855f7" stroke-width="2.5"/>
+                    <rect x="17" y="18" width="6" height="12" rx="1" stroke="#a855f7" stroke-width="2" fill="none"/>
+                    <path d="M20 18c0 0-3-3-3-5.5a3 3 0 0 1 6 0c0 2.5-3 5.5-3 5.5z" fill="#a855f7"/>
+                  </svg>
+                </div>
+                <div class="ks-label">Palliativ</div>
+              </label>
+
+              <label class="ks-option {% if existing.get('behandlungsziel') == 'Nicht spezifiziert' %}ks-selected{% endif %}">
+                <input type="radio" name="behandlungsziel" value="Nicht spezifiziert"
+                       {% if existing.get('behandlungsziel') == 'Nicht spezifiziert' %}checked{% endif %} required>
+                <div class="ks-icon">
+                  <svg viewBox="0 0 40 40" width="40" height="40" fill="none">
+                    <circle cx="20" cy="20" r="16" stroke="#6b7280" stroke-width="2.5"/>
+                    <text x="20" y="25" text-anchor="middle" fill="#6b7280" font-size="16" font-weight="600">?</text>
+                  </svg>
+                </div>
+                <div class="ks-label">Nicht spezifiziert</div>
+              </label>
+
+            </div>
+          </div>
+
+          <div class="sub-section">
             <div class="sub-section-label">Krankheitsstatus:</div>
             <div class="ks-widget">
 
@@ -1185,7 +1366,7 @@
           </div>
 
           <div class="sub-section">
-            <div class="sub-section-label">Vorgeschlagene Diskussionsschwerpunkte (Mehrfachauswahl):</div>
+            <div class="sub-section-label">Vorgeschlagene Diskussionsschwerpunkte (Mehrfachauswahl möglich):</div>
 
             {# hidden checkboxes – still submitted with the form #}
             {% for opt in step.topic_options %}
@@ -1203,7 +1384,7 @@
               {# ── trunk + horizontal rail ── #}
               <div class="fc-trunk-wrap">
                 <div class="fc-trunk"></div>
-                <div class="fc-rail"></div>
+                <div class="fc-rail-wrap" id="fc_rail_wrap"></div>
               </div>
 
               {# ── option nodes ── #}
@@ -1257,8 +1438,135 @@
               </div>{# /fc-nodes-row #}
             </div>{# /fc-widget #}
 
+            {# ── Sub-options for Weitere Diagnostik ── #}
+            <div class="fc-sub-panel" id="fc-sub-diagnostik"
+                 style="{% if 'Weitere Diagnostik' not in existing.get('topics', []) %}display:none{% endif %}">
+              <div class="sub-section-label">Art der Diagnostik (Mehrfachauswahl möglich):</div>
+              <div class="fc-sub-checks">
+                {% set diag_opts = ['Histopathologische Diagnostik', 'Molekulare / Genetische Diagnostik', 'Radiologische Bildgebung (inkl. Sonographie)', 'Funktionale Diagnostik (z. B. PET-CT)', 'Laborchemische Diagnostik'] %}
+                {% for opt in diag_opts %}
+                <label class="fc-sub-check">
+                  <input type="checkbox" name="diagnostik_types" value="{{ opt }}"
+                         {% if opt in existing.get('diagnostik_types', []) %}checked{% endif %}>
+                  <span>{{ opt }}</span>
+                </label>
+                {% endfor %}
+              </div>
+            </div>
+
+            {# ── Sub-options for Therapie ── #}
+            <div class="fc-sub-panel" id="fc-sub-therapie"
+                 style="{% if 'Therapie (Beginn, Auswahl, Modifikation)' not in existing.get('topics', []) %}display:none{% endif %}">
+              <div class="sub-section-label">Vorgeschlagene Therapie (Mehrfachauswahl möglich):</div>
+              <div class="fc-sub-checks">
+                {% set ther_opts = ['Chirurgische Intervention', 'Strahlentherapie', 'Andere lokoregionäre Therapien', 'Immuntherapie', 'Zielgerichtete Therapie', 'Chemotherapie'] %}
+                {% for opt in ther_opts %}
+                <label class="fc-sub-check">
+                  <input type="checkbox" name="therapie_types" value="{{ opt }}"
+                         {% if opt in existing.get('therapie_types', []) %}checked{% endif %}>
+                  <span>{{ opt }}</span>
+                </label>
+                {% endfor %}
+              </div>
+            </div>
+
             <script>
             (function(){
+              var diagPanel = document.getElementById('fc-sub-diagnostik');
+              var therPanel = document.getElementById('fc-sub-therapie');
+
+              function syncSubPanels() {
+                var diagNode = document.querySelector('#fc_widget .fc-node[data-value="Weitere Diagnostik"]');
+                var therNode = document.querySelector('#fc_widget .fc-node[data-value="Therapie (Beginn, Auswahl, Modifikation)"]');
+                var diagOn = diagNode && diagNode.classList.contains('fc-node--on');
+                var therOn = therNode && therNode.classList.contains('fc-node--on');
+                diagPanel.style.display = diagOn ? '' : 'none';
+                therPanel.style.display = therOn ? '' : 'none';
+                // Clear checkboxes when panel is hidden
+                if (!diagOn) diagPanel.querySelectorAll('input[type="checkbox"]').forEach(function(c){ c.checked = false; });
+                if (!therOn) therPanel.querySelectorAll('input[type="checkbox"]').forEach(function(c){ c.checked = false; });
+              }
+
+              // ── Rail: base line + two active overlays from center to outermost selected ──
+              var railWrap = document.getElementById('fc_rail_wrap');
+              var branchWraps = document.querySelectorAll('#fc_widget .fc-branch-wrap');
+              var centerIndex = 2; // Verlaufskontrolle is the 3rd card (index 2)
+
+              // Persistent overlay elements
+              var railBase    = document.createElement('div');
+              var railActiveL = document.createElement('div');
+              var railActiveR = document.createElement('div');
+              railBase.className    = 'fc-rail-base';
+              railActiveL.className = 'fc-rail-active';
+              railActiveR.className = 'fc-rail-active';
+              railWrap.appendChild(railBase);
+              railWrap.appendChild(railActiveL);
+              railWrap.appendChild(railActiveR);
+
+              var branchCenters = []; // pixel offsets relative to railWrap
+
+              function measureCenters() {
+                branchCenters = [];
+                var wrapRect = railWrap.getBoundingClientRect();
+                branchWraps.forEach(function(bw) {
+                  var r = bw.getBoundingClientRect();
+                  branchCenters.push(r.left + r.width / 2 - wrapRect.left);
+                });
+                // base rail spans first to last center
+                railBase.style.left  = branchCenters[0] + 'px';
+                railBase.style.width = (branchCenters[branchCenters.length - 1] - branchCenters[0]) + 'px';
+                // align trunk to center branch
+                var trunk = document.querySelector('#fc_widget .fc-trunk');
+                if (trunk && branchCenters.length > centerIndex) {
+                  var trunkWrap = trunk.parentElement;
+                  var twRect = trunkWrap.getBoundingClientRect();
+                  trunk.style.left = (branchCenters[centerIndex] + wrapRect.left - twRect.left) + 'px';
+                }
+              }
+
+              function syncBranchLines() {
+                var anyOn = false;
+                var leftMost  = centerIndex;
+                var rightMost = centerIndex;
+                branchWraps.forEach(function(wrap, i) {
+                  var line = wrap.querySelector('.fc-branch-line');
+                  var card = wrap.querySelector('.fc-node');
+                  if (line && card) {
+                    var on = card.classList.contains('fc-node--on');
+                    line.classList.toggle('fc-branch-line--on', on);
+                    if (on) {
+                      anyOn = true;
+                      if (i < leftMost)  leftMost  = i;
+                      if (i > rightMost) rightMost = i;
+                    }
+                  }
+                });
+                var trunk = document.querySelector('#fc_widget .fc-trunk');
+                if (trunk) trunk.classList.toggle('fc-trunk--on', anyOn);
+
+                if (!anyOn || branchCenters.length === 0) {
+                  railActiveL.style.width = '0';
+                  railActiveR.style.width = '0';
+                  return;
+                }
+
+                // Left active bar: from leftmost selected center to trunk center
+                if (leftMost < centerIndex) {
+                  railActiveL.style.left  = (branchCenters[leftMost] - 2) + 'px';
+                  railActiveL.style.width = (branchCenters[centerIndex] - branchCenters[leftMost] + 4) + 'px';
+                } else {
+                  railActiveL.style.width = '0';
+                }
+
+                // Right active bar: from trunk center to rightmost selected center
+                if (rightMost > centerIndex) {
+                  railActiveR.style.left  = (branchCenters[centerIndex] - 2) + 'px';
+                  railActiveR.style.width = (branchCenters[rightMost] - branchCenters[centerIndex] + 4) + 'px';
+                } else {
+                  railActiveR.style.width = '0';
+                }
+              }
+
               document.querySelectorAll('#fc_widget .fc-node').forEach(function(node){
                 node.addEventListener('click', function(){
                   var cbId = node.dataset.cb;
@@ -1268,14 +1576,12 @@
                   // "Keine Spezifizierung" is mutually exclusive
                   var isNone = node.classList.contains('fc-node--none');
                   if(isNone){
-                    // deselect all others
                     document.querySelectorAll('#fc_widget .fc-node:not(.fc-node--none)').forEach(function(n){
                       n.classList.remove('fc-node--on');
                       var c = document.getElementById(n.dataset.cb);
                       if(c) c.checked = false;
                     });
                   } else {
-                    // deselect "Keine Spezifizierung"
                     var noneNode = document.querySelector('#fc_widget .fc-node--none');
                     if(noneNode){
                       noneNode.classList.remove('fc-node--on');
@@ -1286,8 +1592,15 @@
 
                   var on = node.classList.toggle('fc-node--on');
                   cb.checked = on;
+                  syncBranchLines();
+                  syncSubPanels();
                 });
               });
+
+              // initial build + sync
+              measureCenters();
+              syncBranchLines();
+              window.addEventListener('resize', function(){ measureCenters(); syncBranchLines(); });
             })();
             </script>
 
@@ -1308,23 +1621,23 @@
         <div class="rating-section">
           <h3 class="rating-title">{{ step.subtitle }}</h3>
           <div class="tl-housing">
-            <label class="tl-light tl-red">
-              <input type="radio" name="choice" value="Trifft nicht zu"
-                     {% if existing.get('choice') == 'Trifft nicht zu' %}checked{% endif %} required>
+            <label class="tl-light tl-green">
+              <input type="radio" name="choice" value="Konkordant"
+                     {% if existing.get('choice') == 'Konkordant' %}checked{% endif %} required>
               <span class="tl-bulb"></span>
-              <span class="tl-opt-label">Trifft nicht zu</span>
+              <span class="tl-opt-label">Konkordant</span>
             </label>
             <label class="tl-light tl-amber">
-              <input type="radio" name="choice" value="Trifft teilweise zu"
-                     {% if existing.get('choice') == 'Trifft teilweise zu' %}checked{% endif %} required>
+              <input type="radio" name="choice" value="Korrekte Alternative"
+                     {% if existing.get('choice') == 'Korrekte Alternative' %}checked{% endif %} required>
               <span class="tl-bulb"></span>
-              <span class="tl-opt-label">Trifft teilweise zu</span>
+              <span class="tl-opt-label">Korrekte Alternative</span>
             </label>
-            <label class="tl-light tl-green">
-              <input type="radio" name="choice" value="Trifft zu"
-                     {% if existing.get('choice') == 'Trifft zu' %}checked{% endif %} required>
+            <label class="tl-light tl-red">
+              <input type="radio" name="choice" value="Inkorrekte Empfehlung"
+                     {% if existing.get('choice') == 'Inkorrekte Empfehlung' %}checked{% endif %} required>
               <span class="tl-bulb"></span>
-              <span class="tl-opt-label">Trifft zu</span>
+              <span class="tl-opt-label">Inkorrekte Empfehlung</span>
             </label>
           </div>
         </div>
@@ -1342,94 +1655,62 @@
         <div class="rating-section">
           <h3 class="rating-title">{{ step.subtitle }}</h3>
 
-          <div class="lens-widget">
+          <div class="spec-widget">
 
             {# ── Zu generisch ── #}
-            <label class="lens-option {% if existing.get('choice') == 'Zu generisch' %}lens-selected{% endif %}" data-val="Zu generisch">
+            <label class="spec-option {% if existing.get('choice') == 'Zu generisch' %}spec-selected{% endif %}">
               <input type="radio" name="choice" value="Zu generisch"
                      {% if existing.get('choice') == 'Zu generisch' %}checked{% endif %} required>
-              <div class="lens-visual lens-wide">
-                <div class="lens-circle lens-c1"></div>
-                <div class="lens-blur-overlay"></div>
-                <div class="lens-crosshair"></div>
+              <div class="spec-icon">
+                <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="28" cy="28" r="24" stroke="currentColor" stroke-width="2" stroke-dasharray="4 3" opacity=".35"/>
+                  <circle cx="28" cy="28" r="16" stroke="currentColor" stroke-width="2" stroke-dasharray="4 3" opacity=".5"/>
+                  <circle cx="28" cy="28" r="3" fill="currentColor" opacity=".4"/>
+                </svg>
               </div>
-              <div class="lens-label">Zu generisch</div>
-              <div class="lens-sublabel">Zu breit gefasst</div>
+              <div class="spec-label">Zu generisch</div>
+              <div class="spec-sub">Zu breit gefasst</div>
             </label>
 
             {# ── Optimal ── #}
-            <label class="lens-option {% if existing.get('choice') == 'Optimal' %}lens-selected{% endif %}" data-val="Optimal">
+            <label class="spec-option {% if existing.get('choice') == 'Optimal' %}spec-selected{% endif %}">
               <input type="radio" name="choice" value="Optimal"
                      {% if existing.get('choice') == 'Optimal' %}checked{% endif %} required>
-              <div class="lens-visual lens-mid">
-                <div class="lens-circle lens-c2"></div>
-                <div class="lens-crosshair"></div>
+              <div class="spec-icon">
+                <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="28" cy="28" r="22" stroke="currentColor" stroke-width="2.2"/>
+                  <circle cx="28" cy="28" r="13" stroke="currentColor" stroke-width="2"/>
+                  <circle cx="28" cy="28" r="4.5" fill="currentColor"/>
+                </svg>
               </div>
-              <div class="lens-label">Optimal</div>
-              <div class="lens-sublabel">Passend eingegrenzt</div>
+              <div class="spec-label">Optimal</div>
+              <div class="spec-sub">Passend eingegrenzt</div>
             </label>
 
             {# ── Zu spezifisch ── #}
-            <label class="lens-option {% if existing.get('choice') == 'Zu spezifisch' %}lens-selected{% endif %}" data-val="Zu spezifisch">
+            <label class="spec-option {% if existing.get('choice') == 'Zu spezifisch' %}spec-selected{% endif %}">
               <input type="radio" name="choice" value="Zu spezifisch"
                      {% if existing.get('choice') == 'Zu spezifisch' %}checked{% endif %} required>
-              <div class="lens-visual lens-narrow">
-                <div class="lens-circle lens-c3"></div>
-                <div class="lens-crosshair"></div>
+              <div class="spec-icon">
+                <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="28" cy="28" r="8" stroke="currentColor" stroke-width="2.5"/>
+                  <circle cx="28" cy="28" r="3" fill="currentColor"/>
+                </svg>
               </div>
-              <div class="lens-label">Zu spezifisch</div>
-              <div class="lens-sublabel">Zu eng gefasst</div>
+              <div class="spec-label">Zu spezifisch</div>
+              <div class="spec-sub">Zu eng gefasst</div>
             </label>
 
-          </div>
-
-          {# ── Goldilocks scale ── #}
-          <div class="goldilocks-scale" id="goldi_{{ step.key }}_{{ tab_idx }}">
-            <div class="goldilocks-label-row">
-              <!-- labels removed -->
-            </div>
-            <div class="goldilocks-bar-wrap">
-              <div class="goldilocks-bar">
-                <button type="button" class="gl-zone gl-zone--left  {% if existing.get('choice') == 'Zu generisch'  %}gl-active{% endif %}"
-                        data-choice="Zu generisch">Zu generisch</button>
-                <button type="button" class="gl-zone gl-zone--mid   {% if existing.get('choice') == 'Optimal'        %}gl-active{% endif %}"
-                        data-choice="Optimal">Optimal</button>
-                <button type="button" class="gl-zone gl-zone--right {% if existing.get('choice') == 'Zu spezifisch'  %}gl-active{% endif %}"
-                        data-choice="Zu spezifisch">Zu spezifisch</button>
-              </div>
-              <div class="goldilocks-marker {% if existing.get('choice') == 'Zu generisch' %}gl-pos-left{% elif existing.get('choice') == 'Optimal' %}gl-pos-mid{% elif existing.get('choice') == 'Zu spezifisch' %}gl-pos-right{% endif %}" id="glmarker_{{ step.key }}_{{ tab_idx }}">▲</div>
-            </div>
           </div>
 
           <script>
           (function(){
-            var scale = document.getElementById('goldi_{{ step.key }}_{{ tab_idx }}');
-            var marker = document.getElementById('glmarker_{{ step.key }}_{{ tab_idx }}');
-            var zones = scale.querySelectorAll('.gl-zone');
-            var posMap = {'Zu generisch':'gl-pos-left','Optimal':'gl-pos-mid','Zu spezifisch':'gl-pos-right'};
-            zones.forEach(function(btn){
-              btn.addEventListener('click', function(){
-                var val = btn.dataset.choice;
-                // sync radio
-                var radio = document.querySelector('input[name="choice"][value="'+val+'"]');
-                if(radio){ radio.checked = true; radio.dispatchEvent(new Event('change',{bubbles:true})); }
-                // update zones
-                zones.forEach(function(z){ z.classList.remove('gl-active'); });
-                btn.classList.add('gl-active');
-                // update marker
-                marker.className = 'goldilocks-marker ' + (posMap[val]||'');
-                // sync lens cards
-                document.querySelectorAll('.lens-option').forEach(function(l){
-                  l.classList.toggle('lens-selected', l.dataset.val === val);
-                });
-              });
-            });
-            // keep lens → goldilocks in sync too
-            document.querySelectorAll('.lens-option').forEach(function(lbl){
+            document.querySelectorAll('.spec-option').forEach(function(lbl){
               lbl.addEventListener('click', function(){
-                var val = lbl.dataset.val;
-                zones.forEach(function(z){ z.classList.toggle('gl-active', z.dataset.choice===val); });
-                marker.className = 'goldilocks-marker ' + (posMap[val]||'');
+                document.querySelectorAll('.spec-option').forEach(function(o){
+                  o.classList.remove('spec-selected');
+                });
+                lbl.classList.add('spec-selected');
               });
             });
           })();
@@ -1476,7 +1757,10 @@
         <span></span>
         {% endif %}
 
-        <button type="submit" class="btn btn-primary">
+        <button type="submit" class="btn btn-primary"
+          {% if step.key == 'final_overall' and not all_prior_done %}
+          disabled title="Fehlende Schritte: {{ missing_step_names | join(', ') }}"
+          {% endif %}>
           {% if step.key == 'final_overall' %}
             Fall abschließen &#10003;
           {% elif step.has_tabs and tab_idx == 0 %}
@@ -1527,6 +1811,17 @@
   </div>
 </div>
 
+{# ── S3-Leitlinie PDF modal ───────────────────────────────────────────────── #}
+<div id="guideline-modal" class="modal-overlay" onclick="closeGuideline(event)">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title">Kurzversion der S3-Leitlinie</span>
+      <button type="button" class="modal-close" onclick="closeGuideline()">&times;</button>
+    </div>
+    <iframe id="guideline-iframe" class="modal-pdf" src="" allowfullscreen></iframe>
+  </div>
+</div>
+
 
 
 <script>
@@ -1535,6 +1830,24 @@ function toggleInstrPanel() {
   var panel = document.getElementById('instr-panel');
   if (panel) panel.classList.toggle('instr-collapsed');
 }
+
+/* ── Tab indicator on text panels ───────────────────────────────────────── */
+{% if step.has_tabs %}
+document.querySelectorAll('.text-display').forEach(function(el) {
+  el.classList.add('text-display--tab-{{ "a" if tab_idx == 0 else "b" }}');
+});
+{% endif %}
+
+/* ── Auto-collapse instructions on revisit ──────────────────────────────── */
+(function() {
+  var panel = document.getElementById('instr-panel');
+  if (!panel) return;
+  var visitKey = 'visited_' + {{ case_id | tojson }} + '_' + {{ step_idx | tojson }} + '_' + {{ tab_idx | tojson }};
+  if (sessionStorage.getItem(visitKey)) {
+    panel.classList.add('instr-collapsed');
+  }
+  sessionStorage.setItem(visitKey, '1');
+})();
 
 /* ── PDF modal ──────────────────────────────────────────────────────────── */
 function openProtocol() {
@@ -1554,8 +1867,25 @@ function closeProtocol(e) {
 }
 
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closeProtocol();
+  if (e.key === 'Escape') { closeProtocol(); closeGuideline(); }
 });
+
+/* ── Guideline PDF modal ────────────────────────────────────────────────── */
+function openGuideline() {
+  var modal  = document.getElementById('guideline-modal');
+  var iframe = document.getElementById('guideline-iframe');
+  if (!iframe.src || iframe.src === window.location.href) {
+    iframe.src = "{{ url_for('guideline_pdf') }}#toolbar=1&view=FitH&pagemode=none&navpanes=0";
+  }
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeGuideline(e) {
+  if (e && e.target !== document.getElementById('guideline-modal')) return;
+  document.getElementById('guideline-modal').classList.remove('active');
+  document.body.style.overflow = '';
+}
 
 /* ── falseinfo: show/hide sub-form ─────────────────────────────────────── */
 function toggleFalseinfo(slug, checked) {
@@ -1569,6 +1899,54 @@ function toggleFalseinfo(slug, checked) {
     badge.textContent = checked ? '⚠ Fehlerhaft' : 'Korrekt';
   }
 }
+
+/* ── missinginfo: accordion toggle & auto-advance ──────────────────────── */
+function toggleMiCard(slug) {
+  var card = document.getElementById('mic_' + slug);
+  if (!card) return;
+  var willExpand = card.classList.contains('mi-card--collapsed');
+  if (willExpand) {
+    document.querySelectorAll('.mi-card').forEach(function(c) {
+      c.classList.add('mi-card--collapsed');
+    });
+  }
+  card.classList.toggle('mi-card--collapsed');
+}
+
+function onMiChange(slug) {
+  var card = document.getElementById('mic_' + slug);
+  if (!card) return;
+  var sev  = card.querySelector('input[name^="severity_"]:checked');
+  var prob = card.querySelector('input[name^="prob_"]:checked');
+  if (sev && prob) {
+    card.classList.add('mi-card--done');
+    card.classList.add('mi-card--collapsed');
+    var badge = card.querySelector('.mi-done-badge');
+    if (badge) badge.style.display = '';
+    /* expand next incomplete */
+    var next = card.nextElementSibling;
+    while (next) {
+      if (next.classList.contains('mi-card') && !next.classList.contains('mi-card--done')) {
+        next.classList.remove('mi-card--collapsed');
+        next.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        break;
+      }
+      next = next.nextElementSibling;
+    }
+  }
+}
+
+/* auto-expand first incomplete mi-card on load */
+(function () {
+  var cards = document.querySelectorAll('.mi-card');
+  if (!cards.length) return;
+  for (var i = 0; i < cards.length; i++) {
+    if (!cards[i].classList.contains('mi-card--done')) {
+      cards[i].classList.remove('mi-card--collapsed');
+      break;
+    }
+  }
+})();
 
 /* ── comment toggle ─────────────────────────────────────────────────────── */
 function toggleComment(btn) {
@@ -1819,7 +2197,7 @@ function toggleRelGroup(hdr) {
 }
 
 function updateRelProgress() {
-  var items = document.querySelectorAll('.rel-item');
+  var items = document.querySelectorAll('#rating-form .rel-item');
   if (!items.length) return;
   var total = items.length, rated = 0, catCounts = {};
   items.forEach(function(item) {
@@ -1857,7 +2235,7 @@ function updateRelProgress() {
 }
 
 function setAllInCat(cat, value) {
-  document.querySelectorAll('.rel-item[data-cat="' + cat + '"]').forEach(function(item) {
+  document.querySelectorAll('#rating-form .rel-item[data-cat="' + cat + '"]').forEach(function(item) {
     var radio = item.querySelector('input[value="' + value + '"]');
     if (!radio) return;
     radio.checked = true;
@@ -1865,6 +2243,9 @@ function setAllInCat(cat, value) {
     radio.closest('.rel-btn').classList.add('rel-btn--active');
   });
   updateRelProgress();
+  /* notify inline validation that form state changed */
+  var form = document.getElementById('rating-form');
+  if (form) form.dispatchEvent(new Event('change', {bubbles: true}));
   /* auto-collapse completed group and expand next incomplete */
   var thisGroup = document.querySelector('.rel-group[data-cat="' + cat + '"]');
   if (thisGroup && thisGroup.classList.contains('rel-group--complete')) {
@@ -1881,7 +2262,7 @@ function setAllInCat(cat, value) {
   }
 }
 
-document.querySelectorAll('.rel-item-btns input[type="radio"]').forEach(function(radio) {
+document.querySelectorAll('#rating-form .rel-item-btns input[type="radio"]').forEach(function(radio) {
   radio.addEventListener('change', function() {
     var item = this.closest('.rel-item');
     item.querySelectorAll('.rel-btn').forEach(function(b) { b.classList.remove('rel-btn--active'); });
@@ -2784,8 +3165,93 @@ if (noPrefBtn) {
         <div class="demo-cursor demo-cursor--falseinfo"></div>
       </div>
 
-      {# ── 4. VAS 0-100 ── #}
-      {% elif step.key in ['summary_correctness','summary_completeness','summary_conciseness','final_overall'] %}
+      {# ── 3b. Missinginfo (checkbox + traffic lights) ── #}
+      {% elif step.key == 'summary_missinginfo' %}
+      <p class="demo-modal-desc">Markieren Sie fehlende relevante Informationen per <strong>Checkbox</strong>. Bewerten Sie dann <strong>Schwere</strong> und <strong>Wahrscheinlichkeit</strong> über die Ampelsymbole.</p>
+      <div class="demo-stage demo-stage--textwidget">
+        <div class="demo-text-pane">
+          <div class="demo-text-bar">
+            <span class="demo-text-bar-label">Zusammenfassung</span>
+            <span class="demo-tab demo-tab--active">Version A</span>
+            <span class="demo-tab">Version B</span>
+          </div>
+          <div class="demo-text-body">
+            <div class="demo-pdf-line demo-pdf-line--h" style="width:50%"></div>
+            <div class="demo-pdf-line" style="width:92%"></div>
+            <div class="demo-pdf-line" style="width:85%"></div>
+            <div class="demo-pdf-line" style="width:90%"></div>
+            <div class="demo-pdf-line" style="width:60%"></div>
+            <div class="demo-pdf-line demo-pdf-line--h" style="margin-top:.6rem;width:45%"></div>
+            <div class="demo-pdf-line" style="width:88%"></div>
+            <div class="demo-pdf-line" style="width:78%"></div>
+          </div>
+        </div>
+        <div class="demo-widget-pane" style="pointer-events:none">
+          <div class="fi-card demo-anim-fi-card">
+            <label class="fi-row" style="pointer-events:none">
+              <span class="fi-checkbox demo-anim-fi-cb">
+                <svg class="fi-check-icon" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <span class="fi-item-label demo-anim-fi-label">ECOG Status</span>
+
+            </label>
+            <div class="fi-sub demo-anim-fi-sub" style="display:block">
+              <div class="fi-tl-row">
+                <div class="fi-tl-col">
+                  <div class="fi-sub-label">Schwere</div>
+                  <div class="tl-housing">
+                    <label class="tl-light tl-red demo-anim-fi-sev-red" style="pointer-events:none"><span class="tl-bulb"></span><span class="tl-opt-label">Schwerer Schaden</span></label>
+                    <label class="tl-light tl-amber" style="pointer-events:none"><span class="tl-bulb"></span><span class="tl-opt-label">Leichter Schaden</span></label>
+                    <label class="tl-light tl-green" style="pointer-events:none"><span class="tl-bulb"></span><span class="tl-opt-label">Kein Schaden</span></label>
+                  </div>
+                </div>
+                <div class="fi-tl-col">
+                  <div class="fi-sub-label">Wahrscheinlichkeit</div>
+                  <div class="tl-housing">
+                    <label class="tl-light tl-red" style="pointer-events:none"><span class="tl-bulb"></span><span class="tl-opt-label">Hoch</span></label>
+                    <label class="tl-light tl-amber demo-anim-fi-prob-amber" style="pointer-events:none"><span class="tl-bulb"></span><span class="tl-opt-label">Mittel</span></label>
+                    <label class="tl-light tl-green" style="pointer-events:none"><span class="tl-bulb"></span><span class="tl-opt-label">Niedrig</span></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="demo-cursor demo-cursor--falseinfo"></div>
+      </div>
+
+      {# ── 4a. Likert (summary_correctness, summary_completeness, summary_conciseness) ── #}
+      {% elif step.key in ['summary_correctness', 'summary_completeness', 'summary_conciseness'] %}
+      <p class="demo-modal-desc">Wählen Sie eine der fünf Bewertungsstufen: <strong>1 = Sehr schlecht</strong> bis <strong>5 = Ausgezeichnet</strong>.</p>
+      <div class="demo-stage demo-stage--textwidget">
+        <div class="demo-text-pane">
+          <div class="demo-text-bar">
+            <span class="demo-text-bar-label">Zusammenfassung</span>
+            <span class="demo-tab demo-tab--active">Version A</span>
+            <span class="demo-tab">Version B</span>
+          </div>
+          <div class="demo-text-body">
+            <div class="demo-pdf-line demo-pdf-line--h" style="width:50%"></div>
+            <div class="demo-pdf-line" style="width:92%"></div>
+            <div class="demo-pdf-line" style="width:85%"></div>
+            <div class="demo-pdf-line" style="width:90%"></div>
+            <div class="demo-pdf-line" style="width:60%"></div>
+          </div>
+        </div>
+        <div class="demo-widget-pane" style="pointer-events:none">
+          <div class="likert-group">
+            <div class="likert-btn demo-anim-likert-1"><span class="likert-num">1</span><span class="likert-text">Sehr schlecht</span></div>
+            <div class="likert-btn demo-anim-likert-2"><span class="likert-num">2</span><span class="likert-text">Schlecht</span></div>
+            <div class="likert-btn demo-anim-likert-3"><span class="likert-num">3</span><span class="likert-text">Akzeptabel</span></div>
+            <div class="likert-btn demo-anim-likert-4"><span class="likert-num">4</span><span class="likert-text">Gut</span></div>
+            <div class="likert-btn demo-anim-likert-5"><span class="likert-num">5</span><span class="likert-text">Ausgezeichnet</span></div>
+          </div>
+        </div>
+        <div class="demo-cursor demo-cursor--likert"></div>
+      </div>
+
+      {# ── 4b. VAS 0-100 ── #}
+      {% elif step.key in ['final_overall'] %}
       <p class="demo-modal-desc">Klicken Sie auf die gewünschte Position auf der Skala (0–100). <strong>0 = Sehr schlecht</strong>, <strong>100 = Ausgezeichnet</strong>.</p>
       <div class="demo-stage demo-stage--textwidget">
         <div class="demo-text-pane">
@@ -2821,15 +3287,15 @@ if (noPrefBtn) {
 
       {# ── 5. Post-edit effort ── #}
       {% elif step.key in ['summary_postedit','problem_postedit'] %}
-      <p class="demo-modal-desc">Entscheiden Sie: <strong>Direkt verwenden</strong> oder <strong>Überarbeitung nötig</strong>. Bei Überarbeitung wählen Sie die Art und bearbeiten den Text im Editor.</p>
+      {% if step.key == 'summary_postedit' %}
+      <p class="demo-modal-desc">Entscheiden Sie: <strong>Direkt verwenden</strong> oder <strong>Überarbeitung nötig</strong>. Bei Überarbeitung wählen Sie die geschätzte Bearbeitungsdauer.</p>
+      {% else %}
+      <p class="demo-modal-desc">Entscheiden Sie: <strong>Direkt verwenden</strong> oder <strong>Überarbeitung nötig</strong>.</p>
+      {% endif %}
       <div class="demo-stage demo-stage--textwidget">
-        <div class="demo-text-pane demo-anim-pe-textpane">
+        <div class="demo-text-pane">
           <div class="demo-text-bar">
-            <span class="demo-text-bar-label">Zusammenfassung</span>
-            <span class="demo-pe-edit-badge">
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
-              Bearbeitungsmodus
-            </span>
+            <span class="demo-text-bar-label">{% if step.key == 'summary_postedit' %}Zusammenfassung{% else %}Fragestellung{% endif %}</span>
             <span class="demo-tab demo-tab--active">Version A</span>
             <span class="demo-tab">Version B</span>
           </div>
@@ -2849,34 +3315,40 @@ if (noPrefBtn) {
             <div class="pe-card pe-card--green demo-anim-pe-green">
               <span class="pe-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
               <span class="pe-card-label">Direkt verwenden</span>
-              <span class="pe-card-sub">Text ist bereit für den<br>klinischen Einsatz</span>
+              <span class="pe-card-sub">Kein Überarbeitungsbedarf</span>
             </div>
             <div class="pe-card pe-card--amber demo-anim-pe-amber">
               <span class="pe-card-icon"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><g transform="translate(12 12) scale(1.1) translate(-10.9 -10.9)"><path fill-rule="evenodd" d="M12.7 7.2L14.4 6.9L14.4 9.1L12.7 8.8L11.9 10.8L13.3 11.7L11.7 13.3L10.8 11.9L8.8 12.7L9.1 14.4L6.9 14.4L7.2 12.7L5.2 11.9L4.3 13.3L2.7 11.7L4.1 10.8L3.3 8.8L1.6 9.1L1.6 6.9L3.3 7.2L4.1 5.2L2.7 4.3L4.3 2.7L5.2 4.1L7.2 3.3L6.9 1.6L9.1 1.6L8.8 3.3L10.8 4.1L11.7 2.7L13.3 4.3L11.9 5.2ZM10.2 8A2.2 2.2 0 1 0 5.8 8A2.2 2.2 0 1 0 10.2 8Z"/><path fill-rule="evenodd" d="M19.1 15.5L20.2 15.3L20.2 16.7L19.1 16.5L18.6 17.8L19.5 18.4L18.4 19.5L17.8 18.6L16.5 19.1L16.7 20.2L15.3 20.2L15.5 19.1L14.2 18.6L13.6 19.5L12.5 18.4L13.5 17.8L12.9 16.5L11.8 16.7L11.8 15.3L12.9 15.5L13.5 14.2L12.5 13.6L13.6 12.5L14.2 13.5L15.5 12.9L15.3 11.8L16.7 11.8L16.5 12.9L17.8 13.5L18.4 12.5L19.5 13.6L18.6 14.2ZM17.4 16A1.4 1.4 0 1 0 14.6 16A1.4 1.4 0 1 0 17.4 16Z"/></g></svg></span>
               <span class="pe-card-label">Überarbeitung nötig</span>
-              <span class="pe-card-sub">Text muss vor Verwendung<br>angepasst werden</span>
+              {% if step.key == 'summary_postedit' %}
+              <span class="pe-card-sub">Bitte Aufwand schätzen</span>
+              {% else %}
+              <span class="pe-card-sub">Änderungen erforderlich</span>
+              {% endif %}
             </div>
           </div>
+          {% if step.key == 'summary_postedit' %}
           <div class="pe-level2 demo-anim-pe-level2">
-            <div class="pe-level2-header">Art der Überarbeitung:</div>
+            <div class="pe-level2-header">Geschätzte Dauer der Überarbeitung:</div>
             <div class="pe-level2-options">
               <div class="pe-sub-card demo-anim-pe-minor">
-                <span class="pe-sub-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span>
-                <span class="pe-sub-label">Kleine Korrektionen</span>
-                <span class="pe-sub-desc">Formulierung, Stil, Tippfehler</span>
+                <span class="pe-sub-icon"><svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="26" r="19" fill="none" stroke="#1a4f8a" stroke-width="3.5"/><path d="M24 26 L24 7 A19 19 0 0 1 28.0 7.4 Z" fill="#e74c3c"/><line x1="21" y1="4" x2="27" y2="4" stroke="#1a4f8a" stroke-width="3" stroke-linecap="round"/><line x1="24" y1="4" x2="24" y2="9" stroke="#1a4f8a" stroke-width="2.5"/><circle cx="24" cy="26" r="1.5" fill="#1a4f8a"/></svg></span>
+                <span class="pe-sub-label">Kleine Korrekturen</span>
+                <span class="pe-sub-desc">max. 2 min</span>
               </div>
               <div class="pe-sub-card">
-                <span class="pe-sub-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><g transform="rotate(35 12 12)"><rect x="6.75" y="4" width="10.5" height="5" rx="1.3" fill="currentColor"/><rect x="10.45" y="8.8" width="3" height="11.2" rx="1.3"/></g></svg></span>
-                <span class="pe-sub-label">Größere Überarbeitung</span>
-                <span class="pe-sub-desc">Fakten, Struktur, fehlende Inhalte</span>
+                <span class="pe-sub-icon"><svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="26" r="19" fill="none" stroke="#1a4f8a" stroke-width="3.5"/><path d="M24 26 L24 7 A19 19 0 0 1 33.5 9.5 Z" fill="#e74c3c"/><line x1="21" y1="4" x2="27" y2="4" stroke="#1a4f8a" stroke-width="3" stroke-linecap="round"/><line x1="24" y1="4" x2="24" y2="9" stroke="#1a4f8a" stroke-width="2.5"/><circle cx="24" cy="26" r="1.5" fill="#1a4f8a"/></svg></span>
+                <span class="pe-sub-label">Größere Überarbeitungen</span>
+                <span class="pe-sub-desc">max. 5 min</span>
               </div>
               <div class="pe-sub-card">
-                <span class="pe-sub-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg></span>
-                <span class="pe-sub-label">Vollständig neu</span>
-                <span class="pe-sub-desc">Text nicht verwendbar</span>
+                <span class="pe-sub-icon"><svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="26" r="19" fill="none" stroke="#1a4f8a" stroke-width="3.5"/><path d="M24 26 L24 7 A19 19 0 0 1 43 26 Z" fill="#e74c3c"/><line x1="21" y1="4" x2="27" y2="4" stroke="#1a4f8a" stroke-width="3" stroke-linecap="round"/><line x1="24" y1="4" x2="24" y2="9" stroke="#1a4f8a" stroke-width="2.5"/><circle cx="24" cy="26" r="1.5" fill="#1a4f8a"/></svg></span>
+                <span class="pe-sub-label">Vollständig neu verfassen</span>
+                <span class="pe-sub-desc">ca. 15 min</span>
               </div>
             </div>
           </div>
+          {% endif %}
         </div>
         <div class="demo-cursor demo-cursor--postedit"></div>
       </div>
@@ -2960,7 +3432,7 @@ if (noPrefBtn) {
 
       {# ── 8. Problem focus (status + topics) ── #}
       {% elif step.key == 'problem_focus' %}
-      <p class="demo-modal-desc">Wählen Sie den <strong>Krankheitsstatus</strong> und die <strong>Diskussionsschwerpunkte</strong> (Mehrfachauswahl möglich).</p>
+      <p class="demo-modal-desc">Wählen Sie das <strong>Behandlungsziel</strong>, den <strong>Krankheitsstatus</strong> und die <strong>Diskussionsschwerpunkte</strong> (Mehrfachauswahl möglich).</p>
       <div class="demo-stage demo-stage--textwidget">
         <div class="demo-text-pane">
           <div class="demo-text-bar">
@@ -2977,6 +3449,20 @@ if (noPrefBtn) {
           </div>
         </div>
         <div class="demo-widget-pane" style="pointer-events:none">
+          <div class="ks-widget" style="margin-bottom:.75rem">
+            <div class="ks-option demo-anim-bz-kurativ">
+              <div class="ks-icon"><svg viewBox="0 0 40 40" width="40" height="40" fill="none"><circle cx="20" cy="20" r="16" stroke="#2563eb" stroke-width="2.5"/><path d="M14 20h12M20 14v12" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/></svg></div>
+              <div class="ks-label">Kurativ</div>
+            </div>
+            <div class="ks-option">
+              <div class="ks-icon"><svg viewBox="0 0 40 40" width="40" height="40" fill="none"><circle cx="20" cy="20" r="16" stroke="#a855f7" stroke-width="2.5"/><rect x="17" y="18" width="6" height="12" rx="1" stroke="#a855f7" stroke-width="2" fill="none"/><path d="M20 18c0 0-3-3-3-5.5a3 3 0 0 1 6 0c0 2.5-3 5.5-3 5.5z" fill="#a855f7"/></svg></div>
+              <div class="ks-label">Palliativ</div>
+            </div>
+            <div class="ks-option">
+              <div class="ks-icon"><svg viewBox="0 0 40 40" width="40" height="40" fill="none"><circle cx="20" cy="20" r="16" stroke="#6b7280" stroke-width="2.5"/><text x="20" y="25" text-anchor="middle" fill="#6b7280" font-size="16" font-weight="600">?</text></svg></div>
+              <div class="ks-label">Nicht spezifiziert</div>
+            </div>
+          </div>
           <div class="ks-widget" style="margin-bottom:.75rem">
             <div class="ks-option ks-option--progress demo-anim-ks-prog">
               <div class="ks-icon"><svg viewBox="0 0 40 40" width="40" height="40" fill="none"><circle cx="20" cy="20" r="16" stroke="#ef4444" stroke-width="2.5"/><polyline points="10,26 20,14 30,26" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -3018,7 +3504,7 @@ if (noPrefBtn) {
 
       {# ── 9. Traffic light (problem_correctness) ── #}
       {% elif step.key == 'problem_correctness' %}
-      <p class="demo-modal-desc">Wählen Sie eine der drei Bewertungsstufen, indem Sie auf das Ampelsymbol klicken.</p>
+      <p class="demo-modal-desc">Vergleichen Sie die Empfehlung mit der Leitlinie: <strong>Konkordant</strong>, <strong>Korrekte Alternative</strong> oder <strong>Inkorrekte Empfehlung</strong>.</p>
       <div class="demo-stage demo-stage--textwidget">
         <div class="demo-text-pane">
           <div class="demo-text-bar">
@@ -3036,15 +3522,15 @@ if (noPrefBtn) {
         </div>
         <div class="demo-widget-pane rating-section" style="pointer-events:none">
           <div class="tl-housing">
-            <label class="tl-light tl-red demo-anim-tl-red"><span class="tl-bulb"></span><span class="tl-opt-label">Trifft nicht zu</span></label>
-            <label class="tl-light tl-amber demo-anim-tl-amber"><span class="tl-bulb"></span><span class="tl-opt-label">Trifft teilweise zu</span></label>
-            <label class="tl-light tl-green demo-anim-tl-green"><span class="tl-bulb"></span><span class="tl-opt-label">Trifft zu</span></label>
+            <label class="tl-light tl-green demo-anim-tl-green"><span class="tl-bulb"></span><span class="tl-opt-label">Konkordant</span></label>
+            <label class="tl-light tl-amber demo-anim-tl-amber"><span class="tl-bulb"></span><span class="tl-opt-label">Korrekte Alternative</span></label>
+            <label class="tl-light tl-red demo-anim-tl-red"><span class="tl-bulb"></span><span class="tl-opt-label">Inkorrekte Empfehlung</span></label>
           </div>
         </div>
         <div class="demo-cursor demo-cursor--traffic"></div>
       </div>
 
-      {# ── 10. Specificity / Lens (problem_specificity) ── #}
+      {# ── 10. Specificity (problem_specificity) ── #}
       {% elif step.key == 'problem_specificity' %}
       <p class="demo-modal-desc">Beurteilen Sie die Spezifität: <strong>Zu generisch</strong>, <strong>Optimal</strong> oder <strong>Zu spezifisch</strong>.</p>
       <div class="demo-stage demo-stage--textwidget">
@@ -3063,34 +3549,21 @@ if (noPrefBtn) {
           </div>
         </div>
         <div class="demo-widget-pane" style="pointer-events:none">
-          <div class="lens-widget">
-            <label class="lens-option demo-anim-lens-wide">
-              <div class="lens-visual lens-wide"><div class="lens-circle lens-c1"></div><div class="lens-blur-overlay"></div><div class="lens-crosshair"></div></div>
-              <div class="lens-label">Zu generisch</div>
-              <div class="lens-sublabel">Zu breit gefasst</div>
-            </label>
-            <label class="lens-option demo-anim-lens-mid">
-              <div class="lens-visual lens-mid"><div class="lens-circle lens-c2"></div><div class="lens-crosshair"></div></div>
-              <div class="lens-label">Optimal</div>
-              <div class="lens-sublabel">Passend eingegrenzt</div>
-            </label>
-            <label class="lens-option demo-anim-lens-narrow">
-              <div class="lens-visual lens-narrow"><div class="lens-circle lens-c3"></div><div class="lens-crosshair"></div></div>
-              <div class="lens-label">Zu spezifisch</div>
-              <div class="lens-sublabel">Zu eng gefasst</div>
-            </label>
-          </div>
-          <div class="goldilocks-scale demo-goldilocks">
-            <div class="goldilocks-label-row">
-              <!-- labels removed -->
+          <div class="spec-widget">
+            <div class="spec-option demo-anim-spec-wide">
+              <div class="spec-icon"><svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="24" stroke="currentColor" stroke-width="2" stroke-dasharray="4 3" opacity=".35"/><circle cx="28" cy="28" r="16" stroke="currentColor" stroke-width="2" stroke-dasharray="4 3" opacity=".5"/><circle cx="28" cy="28" r="3" fill="currentColor" opacity=".4"/></svg></div>
+              <div class="spec-label">Zu generisch</div>
+              <div class="spec-sub">Zu breit gefasst</div>
             </div>
-            <div class="goldilocks-bar-wrap">
-              <div class="goldilocks-bar">
-                <div class="gl-zone gl-zone--left demo-anim-gl-left">Zu generisch</div>
-                <div class="gl-zone gl-zone--mid demo-anim-gl-mid">Optimal</div>
-                <div class="gl-zone gl-zone--right demo-anim-gl-right">Zu spezifisch</div>
-              </div>
-              <div class="goldilocks-marker demo-anim-gl-marker">▲</div>
+            <div class="spec-option demo-anim-spec-mid">
+              <div class="spec-icon"><svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="22" stroke="currentColor" stroke-width="2.2"/><circle cx="28" cy="28" r="13" stroke="currentColor" stroke-width="2"/><circle cx="28" cy="28" r="4.5" fill="currentColor"/></svg></div>
+              <div class="spec-label">Optimal</div>
+              <div class="spec-sub">Passend eingegrenzt</div>
+            </div>
+            <div class="spec-option demo-anim-spec-narrow">
+              <div class="spec-icon"><svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="8" stroke="currentColor" stroke-width="2.5"/><circle cx="28" cy="28" r="3" fill="currentColor"/></svg></div>
+              <div class="spec-label">Zu spezifisch</div>
+              <div class="spec-sub">Zu eng gefasst</div>
             </div>
           </div>
         </div>
@@ -3208,6 +3681,7 @@ function initTextWidgetCursor(stage) {
   if (cls.indexOf('demo-cursor--tree') !== -1)         return initTreeCursor(stage, cursor, pos, kf);
   if (cls.indexOf('demo-cursor--falseinfo') !== -1)    return initFalseCursor(stage, cursor, pos, kf);
   if (cls.indexOf('demo-cursor--vas') !== -1)          return initVasCursor(stage, cursor, pos, kf);
+  if (cls.indexOf('demo-cursor--likert') !== -1)       return initLikertCursor(stage, cursor, pos, kf);
   if (cls.indexOf('demo-cursor--postedit') !== -1)     return initPeCursor(stage, cursor, pos, kf);
   if (cls.indexOf('demo-cursor--origin') !== -1)       return initOriginCursor(stage, cursor, pos, kf);
   if (cls.indexOf('demo-cursor--focus') !== -1)        return initFocusCursor(stage, cursor, pos, kf);
@@ -3311,6 +3785,26 @@ function initVasCursor(stage, cursor, pos, kf) {
   ], { duration: 6000, iterations: Infinity, easing: 'linear' });
 
   _demoRestartRipple(cursor, 'demo-cursor--vas');
+}
+
+/* ── 4a. Likert ── */
+function initLikertCursor(stage, cursor, pos, kf) {
+  var p2 = pos('.demo-anim-likert-2');
+  var p4 = pos('.demo-anim-likert-4');
+
+  _demoCursorAnim = cursor.animate([
+    kf(p2.x, p2.y, 1,   0.00, 'linear'),
+    kf(p2.x, p2.y, 1,   0.10, 'linear'),
+    kf(p2.x, p2.y, 0.3, 0.14, 'ease-out'),
+    kf(p2.x, p2.y, 1,   0.20, 'ease-in-out'),
+    kf(p4.x, p4.y, 1,   0.42, 'linear'),
+    kf(p4.x, p4.y, 0.3, 0.46, 'ease-out'),
+    kf(p4.x, p4.y, 1,   0.52, 'ease-in-out'),
+    kf(p4.x, p4.y, 0,   0.80, 'linear'),
+    kf(p4.x, p4.y, 0,   1.00)
+  ], { duration: 6000, iterations: Infinity, easing: 'linear' });
+
+  _demoRestartRipple(cursor, 'demo-cursor--likert');
 }
 
 /* ── 5. Post-edit ── */
@@ -3444,11 +3938,11 @@ function initTrafficCursor(stage, cursor, pos, kf) {
   _demoRestartRipple(cursor, 'demo-cursor--traffic');
 }
 
-/* ── 10. Lens ── */
+/* ── 10. Specificity ── */
 function initLensCursor(stage, cursor, pos, kf) {
-  var p1 = pos('.demo-anim-lens-wide');
-  var p2 = pos('.demo-anim-lens-mid');
-  var p3 = pos('.demo-anim-lens-narrow');
+  var p1 = pos('.demo-anim-spec-wide');
+  var p2 = pos('.demo-anim-spec-mid');
+  var p3 = pos('.demo-anim-spec-narrow');
 
   _demoCursorAnim = cursor.animate([
     kf(p1.x, p1.y, 1,   0.00, 'linear'),
@@ -3496,4 +3990,134 @@ function initLensCursor(stage, cursor, pos, kf) {
 })();
 </script>
 {% endif %}
+
+{# ── Inline validation: enable/disable submit button based on form state ── #}
+<script>
+(function() {
+  var form = document.getElementById('rating-form');
+  var submitBtn = form ? form.querySelector('button[type="submit"]') : null;
+  if (!form || !submitBtn) return;
+
+  /* Don't override the final_overall disabled-because-prior-steps-missing gate */
+  {% if step.key == 'final_overall' and not all_prior_done %}
+  return;
+  {% endif %}
+
+  function isFormComplete() {
+    var stepKey = {{ step.key | tojson }};
+
+    /* Steps that use radio 'choice' (Likert, correctness, specificity, origin_guess) */
+    if (['summary_correctness','summary_completeness','summary_conciseness',
+         'problem_correctness','problem_specificity',
+         'summary_origin_guess','problem_origin_guess'].indexOf(stepKey) >= 0) {
+      return !!form.querySelector('input[name="choice"]:checked');
+    }
+
+    /* Postedit steps */
+    if (stepKey === 'summary_postedit' || stepKey === 'problem_postedit') {
+      var decision = form.querySelector('input[name="pe_decision"]:checked');
+      if (!decision) return false;
+      if (decision.value === 'needs_edit' && stepKey === 'summary_postedit') {
+        return !!form.querySelector('input[name="pe_effort"]:checked');
+      }
+      return true;
+    }
+
+    /* Relevance: all items must be rated */
+    if (stepKey === 'case_relevance') {
+      var items = form.querySelectorAll('.rel-item');
+      for (var i = 0; i < items.length; i++) {
+        if (!items[i].querySelector('input[type="radio"]:checked')) return false;
+      }
+      return items.length > 0;
+    }
+
+    /* Integrity (tree) – just check if any found items have been rated */
+    if (stepKey === 'summary_integrity') {
+      var inputs = form.querySelectorAll('input[name^="enthalten_"]');
+      for (var i = 0; i < inputs.length; i++) {
+        if (!inputs[i].value) return false;
+      }
+      return inputs.length > 0;
+    }
+
+    /* Preference steps: hidden input 'choice' always has a value */
+    if (stepKey === 'summary_preference' || stepKey === 'problem_preference') {
+      var prefInput = form.querySelector('input[name="choice"]');
+      return prefInput && prefInput.value !== '';
+    }
+
+    /* problem_focus: all 3 sub-questions */
+    if (stepKey === 'problem_focus') {
+      return !!form.querySelector('input[name="behandlungsziel"]:checked') &&
+             !!form.querySelector('input[name="status"]:checked') &&
+             form.querySelectorAll('input[name="topics"]:checked').length > 0;
+    }
+
+    /* final_overall: VAS must have value */
+    if (stepKey === 'final_overall') {
+      var vas = form.querySelector('input[name="vas_score"]');
+      return vas && vas.value !== '';
+    }
+
+    /* falseinfo / missinginfo: always allow submit (items are optional) */
+    return true;
+  }
+
+  function syncSubmitState() {
+    var complete = isFormComplete();
+    submitBtn.disabled = !complete;
+    submitBtn.classList.toggle('btn--disabled', !complete);
+  }
+
+  /* Initial state */
+  syncSubmitState();
+
+  /* Listen for changes */
+  form.addEventListener('change', syncSubmitState);
+  form.addEventListener('input', syncSubmitState);
+
+  /* For tree step: observe hidden input value changes via MutationObserver */
+  if ({{ (step.key == 'summary_integrity') | tojson }}) {
+    var observer = new MutationObserver(syncSubmitState);
+    form.querySelectorAll('input[name^="enthalten_"]').forEach(function(inp) {
+      observer.observe(inp, { attributes: true, attributeFilter: ['value'] });
+    });
+    /* Also poll periodically since hidden value changes don't trigger 'change' */
+    setInterval(syncSubmitState, 500);
+  }
+
+  /* For VAS: poll since custom slider doesn't trigger change events */
+  if ({{ (step.key == 'final_overall') | tojson }}) {
+    setInterval(syncSubmitState, 500);
+  }
+})();
+</script>
+
+{# ── Unsaved changes warning ─────────────────────────────────────────────── #}
+<script>
+(function() {
+  var form = document.getElementById('rating-form');
+  if (!form) return;
+  var dirty = false;
+  var submitting = false;
+
+  form.addEventListener('change', function() { dirty = true; });
+  form.addEventListener('input', function() { dirty = true; });
+  form.addEventListener('submit', function() { submitting = true; });
+
+  /* Also allow navigation via back-button links */
+  document.querySelectorAll('a.btn').forEach(function(a) {
+    a.addEventListener('click', function() { submitting = true; });
+  });
+
+  window.addEventListener('beforeunload', function(e) {
+    if (dirty && !submitting) {
+      e.preventDefault();
+      e.returnValue = '';
+    }
+  });
+})();
+</script>
+
 {% endblock %}
