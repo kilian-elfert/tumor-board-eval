@@ -14,6 +14,7 @@ TEXTS_FILE      = os.path.join(BASE_DIR, 'texts.json')
 RESPONSES_DIR   = os.path.join(BASE_DIR, 'responses')
 USERS_FILE      = os.path.join(BASE_DIR, 'users.json')
 DOCUMENTS_DIR   = os.path.join(BASE_DIR, 'original_documents')
+GUIDELINE_DIR   = os.path.join(BASE_DIR, 'guideline')
 TEXTS_HUMAN_DIR = os.path.join(BASE_DIR, 'texts_human')
 TEXTS_LLM_DIR   = os.path.join(BASE_DIR, 'texts_llm')
 EXPORTS_DIR = os.path.join(BASE_DIR, 'exports')
@@ -37,6 +38,7 @@ INFO_ITEMS = [
     "Primärtherapie: Resektionsstatus",
     "Primärtherapie: Sicherheitsabstand",
     "Primärtherapie: SLNE",
+    "Primärtherapie: CLND",
     "Primärtherapie: Anzahl LK entfernt",
     "Primärtherapie: Anzahl LK befallen",
     "Therapieverlauf: Strahlentherapie",
@@ -93,6 +95,15 @@ RATING_STEPS = [
         "alert": "Wählen Sie alle Informationen aus, die in der Zusammenfassung enthalten, aber inhaltlich falsch oder irreführend sind. Bewerten Sie dann die möglichen Folgen und ihre Eintrittswahrscheinlichkeit.",
     },
     {
+        "index": 1,
+        "key":   "summary_missinginfo",
+        "section": "Zusammenfassung",
+        "subtitle": "Fehlende Informationen",
+        "has_tabs": True,
+        "section_type": "summary",
+        "alert": "Wählen Sie alle Informationen aus, die als klinisch relevant eingestuft, aber in der Zusammenfassung nicht enthalten sind. Bewerten Sie dann die möglichen Folgen und ihre Eintrittswahrscheinlichkeit.",
+    },
+    {
         "index": 2,
         "key":   "summary_correctness",
         "section": "Zusammenfassung",
@@ -106,6 +117,13 @@ RATING_STEPS = [
             "Akzeptabel",
             "Gut",
             "Ausgezeichnet"
+        ],
+        "scale_descriptions": [
+            "Enthält schwerwiegende Ungenauigkeiten oder irreführende Informationen.",
+            "Mehrere Fehler, die zu Fehlinterpretationen führen könnten.",
+            "Einige kleinere Ungenauigkeiten, aber insgesamt verständlich.",
+            "Weitgehend korrekt, nur gelegentlich kleinere Fehler.",
+            "Vollständig korrekt, keine erkennbaren Fehler."
         ],
     },
     {
@@ -123,6 +141,13 @@ RATING_STEPS = [
             "Gut",
             "Ausgezeichnet"
         ],
+        "scale_descriptions": [
+            "Lässt die meisten wesentlichen klinischen Details aus; die Zusammenfassung ist unvollständig.",
+            "Es fehlen mehrere wichtige Details, sodass der Fall schwer zu verstehen ist.",
+            "Enthält einige wichtige Details, aber es fehlt wichtiger Kontext.",
+            "Erfasst die meisten wesentlichen Details mit nur geringfügigen Auslassungen.",
+            "Bietet eine gründliche, umfassende Zusammenfassung mit allen kritischen Details."
+        ],
     },
     {
         "index": 4,
@@ -138,6 +163,13 @@ RATING_STEPS = [
             "Akzeptabel",
             "Gut",
             "Ausgezeichnet"
+        ],
+        "scale_descriptions": [
+            "Übermäßig lang und mit irrelevanten Details überladen.",
+            "Enthält unnötige Informationen, die von den Kernpunkten ablenken.",
+            "Einigermaßen fokussiert, könnte aber prägnanter sein.",
+            "Überwiegend prägnant, mit nur geringfügig überflüssigen Details.",
+            "Sehr fokussiert, enthält nur die für die Klarheit notwendigen Details."
         ],
     },
     {
@@ -200,8 +232,8 @@ RATING_STEPS = [
         "subtitle": "Leitlinienkonformität",
         "has_tabs": True,
         "section_type": "problem",
-        "alert": "Beurteilen Sie, ob die Fragestellung sachlich korrekt und klinisch treffend formuliert ist.",
-        "options": ["Trifft nicht zu", "Trifft teilweise zu", "Trifft zu"],
+        "alert": "Vergleichen Sie die Empfehlung in der Fragestellung mit der S3-Leitlinie für die Melanomtherapie.",
+        "options": ["Konkordant", "Korrekte Alternative", "Inkorrekte Empfehlung"],
     },
     {
         "index": 10,
@@ -814,10 +846,39 @@ def evaluate_step(case_id, step_idx, tab_idx):
             if integrity_tab.get('enthalten_' + slug) == 'yes':
                 enthalten_items.append(item)
 
+    # Compute "missing" items for missinginfo step (relevant + nicht enthalten)
+    missing_items = []
+    if key == 'summary_missinginfo':
+        relevance = case_ratings.get('case_relevance', {})
+        integrity_tab = case_ratings.get('summary_integrity_tab' + str(tab_idx), {})
+        for item in INFO_ITEMS:
+            slug = slugify(item)
+            if (relevance.get('relevant_' + slug) == 'yes'
+                    and integrity_tab.get('enthalten_' + slug) == 'no'):
+                missing_items.append(item)
+
+    # Check if all prior steps are done (for final_overall gate)
+    all_prior_done = all(
+        is_step_done(user_data, case_id, i)
+        for i in range(len(RATING_STEPS))
+        if RATING_STEPS[i]['key'] != 'final_overall'
+    )
+
+    # Which steps are still missing (for tooltip on disabled button)
+    missing_step_names = []
+    if not all_prior_done:
+        for i, s in enumerate(RATING_STEPS):
+            if s['key'] != 'final_overall' and not is_step_done(user_data, case_id, i):
+                missing_step_names.append(s['subtitle'])
+
     error = None
 
     if request.method == 'POST':
-        rating, error = parse_step_form(step, tab_idx, request.form, enthalten_items)
+        # Server-side guard: cannot submit final_overall unless all others done
+        if key == 'final_overall' and not all_prior_done:
+            error = 'Bitte schlie\u00dfen Sie zuerst alle vorherigen Bewertungsschritte ab.'
+        else:
+            rating, error = parse_step_form(step, tab_idx, request.form, enthalten_items, missing_items)
         if error is None:
             rating['saved_at'] = datetime.utcnow().isoformat()
             user_data = load_responses(username)
@@ -855,12 +916,15 @@ def evaluate_step(case_id, step_idx, tab_idx):
         prev_url=prev_url,
         info_items=INFO_ITEMS,
         enthalten_items=enthalten_items,
+        missing_items=missing_items,
         slugify=slugify,
         rating_steps=RATING_STEPS,
+        all_prior_done=all_prior_done,
+        missing_step_names=missing_step_names,
     )
 
 
-def parse_step_form(step, tab_idx, form, enthalten_items):
+def parse_step_form(step, tab_idx, form, enthalten_items, missing_items=None):
     """Parse form data for the given step. Returns (rating_dict, error_string)."""
     key = step['key']
     rating = {}
@@ -878,13 +942,21 @@ def parse_step_form(step, tab_idx, form, enthalten_items):
                 return None, f'Bitte bewerten Sie alle Informationen. Es fehlen noch {len(missing)} Bewertung(en).'
             rating['comment'] = form.get('comment', '').strip()
 
-        elif key in ('summary_correctness', 'summary_completeness', 'summary_conciseness'):
-            vas = form.get('vas_score', '').strip()
-            if not vas:
-                return None, 'Bitte bewerten Sie auf der Skala.'
-            rating['vas_score'] = int(vas)
-            if not (0 <= rating['vas_score'] <= 100):
-                return None, 'Bewertung muss zwischen 0 und 100 liegen.'
+        elif key == 'summary_correctness':
+            val = form.get('choice')
+            if not val:
+                return None, 'Bitte wählen Sie eine Bewertung aus.'
+            rating['choice'] = val
+            rating['comment'] = form.get('comment', '').strip()
+            for item in INFO_ITEMS:
+                slug = slugify(item)
+                rating['relevant_' + slug] = form.get('relevant_' + slug, '')
+
+        elif key in ('summary_completeness', 'summary_conciseness'):
+            val = form.get('choice')
+            if not val:
+                return None, 'Bitte wählen Sie eine Bewertung aus.'
+            rating['choice'] = val
             rating['comment'] = form.get('comment', '').strip()
             for item in INFO_ITEMS:
                 slug = slugify(item)
@@ -895,19 +967,10 @@ def parse_step_form(step, tab_idx, form, enthalten_items):
             if not pe_decision:
                 return None, 'Bitte wählen Sie eine Option aus.'
             rating['pe_decision'] = pe_decision
-            if pe_decision == 'needs_edit':
+            if pe_decision == 'needs_edit' and key == 'summary_postedit':
                 pe_effort = form.get('pe_effort', '').strip()
                 if pe_effort:
                     rating['pe_effort'] = pe_effort
-                pe_edited = form.get('pe_edited_text', '').strip()
-                if pe_edited:
-                    rating['pe_edited_text'] = pe_edited
-                pe_original = form.get('pe_original_text', '').strip()
-                if pe_original:
-                    rating['pe_original_text'] = pe_original
-                pe_dur = form.get('pe_edit_duration', '').strip()
-                if pe_dur:
-                    rating['pe_edit_duration'] = int(pe_dur)
             rating['comment'] = form.get('comment', '').strip()
 
         elif key == 'summary_integrity':
@@ -933,6 +996,25 @@ def parse_step_form(step, tab_idx, form, enthalten_items):
                 rating['comment_' + slug]  = form.get('comment_' + slug, '').strip()
             rating['comment'] = form.get('comment', '').strip()
 
+        elif key == 'summary_missinginfo':
+            if missing_items is None:
+                missing_items = []
+            # All missing_items are implicitly flagged; validate each has severity + prob
+            rating['missing_items'] = missing_items
+            incomplete = []
+            for item in missing_items:
+                slug = slugify(item)
+                severity = form.get('severity_' + slug, '')
+                prob     = form.get('prob_' + slug, '')
+                rating['severity_' + slug] = severity
+                rating['prob_' + slug]     = prob
+                rating['comment_' + slug]  = form.get('comment_' + slug, '').strip()
+                if not severity or not prob:
+                    incomplete.append(item)
+            if incomplete:
+                return None, f'Bitte bewerten Sie alle Informationen. Es fehlen noch {len(incomplete)} Bewertung(en).'
+            rating['comment'] = form.get('comment', '').strip()
+
         elif key in ('summary_origin_guess', 'problem_origin_guess'):
             val = form.get('choice')
             if not val:
@@ -948,12 +1030,18 @@ def parse_step_form(step, tab_idx, form, enthalten_items):
             rating['comment'] = form.get('comment', '').strip()
 
         elif key == 'problem_focus':
+            behandlungsziel = form.get('behandlungsziel')
+            if not behandlungsziel:
+                return None, 'Bitte wählen Sie das Behandlungsziel aus.'
+            rating['behandlungsziel'] = behandlungsziel
             status = form.get('status')
             topics = form.getlist('topics')
             if not status:
                 return None, 'Bitte wählen Sie den Krankheitsstatus aus.'
             rating['status'] = status
             rating['topics'] = topics
+            rating['diagnostik_types'] = form.getlist('diagnostik_types')
+            rating['therapie_types'] = form.getlist('therapie_types')
             rating['comment'] = form.get('comment', '').strip()
 
         elif key in ('problem_correctness', 'problem_specificity'):
@@ -1092,6 +1180,18 @@ def protocol_pdf():
     return 'Kein Protokoll-PDF gefunden.', 404
 
 
+@app.route('/guideline-pdf')
+@login_required
+def guideline_pdf():
+    """Serve the S3-Leitlinie guideline PDF."""
+    if os.path.isdir(GUIDELINE_DIR):
+        for fname in sorted(os.listdir(GUIDELINE_DIR)):
+            if fname.lower().endswith('.pdf'):
+                resp = send_file(os.path.join(GUIDELINE_DIR, fname),
+                                 mimetype='application/pdf')
+                resp.headers['Content-Disposition'] = 'inline'
+                return resp
+    return 'Keine Leitlinie gefunden.', 404
 
 
 def _resolve_version(step, section_type, assign_sum, assign_prob, case_id, tab_idx):
@@ -1121,8 +1221,9 @@ def _generate_ratings_csv():
         'evaluator', 'case_id', 'case_order_position',
         'section_type', 'step_key', 'version', 'presentation_order',
         'vas_score', 'choice', 'pe_decision',
-        'problem_status', 'problem_topics',
-        'integrity_enthalten_count', 'falseinfo_count',
+        'behandlungsziel', 'problem_status', 'problem_topics',
+        'diagnostik_types', 'therapie_types',
+        'integrity_enthalten_count', 'falseinfo_count', 'missinginfo_count',
         'comment', 'saved_at',
         'assignment_summary', 'assignment_problem',
         'experience_years', 'dermatology_years', 'role',
@@ -1172,6 +1273,10 @@ def _generate_ratings_csv():
                     if key == 'summary_falseinfo':
                         false_count = len(r.get('false_items', []))
 
+                    missing_count = ''
+                    if key == 'summary_missinginfo':
+                        missing_count = len(r.get('missing_items', []))
+
                     writer.writerow([
                         username,
                         case_id,
@@ -1183,10 +1288,14 @@ def _generate_ratings_csv():
                         r.get('vas_score', ''),
                         r.get('choice', ''),
                         r.get('pe_decision', ''),
+                        r.get('behandlungsziel', ''),
                         r.get('status', ''),
                         '; '.join(r.get('topics', [])) if key == 'problem_focus' else '',
+                        '; '.join(r.get('diagnostik_types', [])) if key == 'problem_focus' else '',
+                        '; '.join(r.get('therapie_types', [])) if key == 'problem_focus' else '',
                         enthalten_count,
                         false_count,
+                        missing_count,
                         r.get('comment', ''),
                         r.get('saved_at', ''),
                         assign_sum.get(case_id, ''),
@@ -1217,6 +1326,8 @@ def _generate_items_csv():
         'item_category', 'item_name', 'item_slug',
         'is_relevant', 'is_present', 'is_false',
         'false_severity', 'false_probability', 'false_comment',
+        'is_missing_flagged',
+        'missing_severity', 'missing_probability', 'missing_comment',
     ]
     writer.writerow(header)
 
@@ -1237,7 +1348,7 @@ def _generate_items_csv():
                 name  = parts[1] if len(parts) == 2 else item
                 is_relevant = rel.get('relevant_' + slug, '')
 
-                # Each tab (version) for integrity + falseinfo
+                # Each tab (version) for integrity + falseinfo + missinginfo
                 for suffix, t_idx in [('_tab0', 0), ('_tab1', 1)]:
                     a = assign_sum.get(case_id, 'human_first')
                     if (a == 'human_first' and t_idx == 0) or (a == 'llm_first' and t_idx == 1):
@@ -1245,8 +1356,9 @@ def _generate_items_csv():
                     else:
                         version = 'llm'
 
-                    integrity = cr.get('summary_integrity' + suffix, {})
-                    falseinfo = cr.get('summary_falseinfo' + suffix, {})
+                    integrity   = cr.get('summary_integrity' + suffix, {})
+                    falseinfo   = cr.get('summary_falseinfo' + suffix, {})
+                    missinginfo = cr.get('summary_missinginfo' + suffix, {})
 
                     is_present = integrity.get('enthalten_' + slug, '')
                     is_false   = 'yes' if item in falseinfo.get('false_items', []) else ''
@@ -1254,13 +1366,20 @@ def _generate_items_csv():
                     false_prob = falseinfo.get('prob_' + slug, '')
                     false_cmt  = falseinfo.get('comment_' + slug, '')
 
+                    is_missing_flagged = 'yes' if item in missinginfo.get('missing_items', []) else ''
+                    missing_sev  = missinginfo.get('severity_' + slug, '')
+                    missing_prob = missinginfo.get('prob_' + slug, '')
+                    missing_cmt  = missinginfo.get('comment_' + slug, '')
+
                     # Only write rows where at least one value is populated
-                    if any([is_relevant, is_present, is_false]):
+                    if any([is_relevant, is_present, is_false, is_missing_flagged]):
                         writer.writerow([
                             username, case_id, version,
                             cat, name, slug,
                             is_relevant, is_present, is_false,
                             false_sev, false_prob, false_cmt,
+                            is_missing_flagged,
+                            missing_sev, missing_prob, missing_cmt,
                         ])
 
     output.seek(0)
@@ -1353,10 +1472,14 @@ def _generate_export_json():
                         'vas_score':            r.get('vas_score'),
                         'choice':               r.get('choice'),
                         'pe_decision':          r.get('pe_decision'),
+                        'behandlungsziel':      r.get('behandlungsziel'),
                         'problem_status':       r.get('status'),
                         'problem_topics':       r.get('topics'),
+                        'diagnostik_types':     r.get('diagnostik_types'),
+                        'therapie_types':       r.get('therapie_types'),
                         'integrity_enthalten_count': None,
                         'falseinfo_count':      None,
+                        'missinginfo_count':    None,
                         'comment':              r.get('comment'),
                         'saved_at':             r.get('saved_at'),
                         'assignment_summary':   assign_sum.get(case_id),
@@ -1373,6 +1496,8 @@ def _generate_export_json():
                             if r.get('enthalten_' + slugify(item)) == 'yes')
                     if key == 'summary_falseinfo':
                         rec['falseinfo_count'] = len(r.get('false_items', []))
+                    if key == 'summary_missinginfo':
+                        rec['missinginfo_count'] = len(r.get('missing_items', []))
 
                     records.append(rec)
 
