@@ -2658,6 +2658,255 @@ a.demo-btn {
 .mi-card--collapsed .mi-body { display: none; }
 
 
+/* ── highlight spans for falseinfo hover ─────────────────────────────── */
+.hl-info {
+  border-radius: 3px;
+  transition: background .2s, box-shadow .2s;
+}
+
+.hl-info--active {
+  background: #fef08a;           /* yellow-200 */
+  box-shadow: 0 0 0 2px #facc15; /* yellow-400 ring */
+}
+
+.hl-info--error {
+  background: #fecaca;           /* red-200 */
+  box-shadow: 0 0 0 2px #f87171; /* red-400 ring */
+}
+
+.hl-info--error.hl-info--active {
+  background: #fca5a5;           /* red-300 */
+  box-shadow: 0 0 0 2px #ef4444; /* red-500 ring */
+}
+
+.hl-info--yes {
+  background: #bbf7d0;           /* green-200 */
+  box-shadow: 0 0 0 2px #4ade80; /* green-400 ring */
+}
+
+.hl-info--yes.hl-info--active {
+  background: #86efac;           /* green-300 */
+  box-shadow: 0 0 0 2px #22c55e; /* green-500 ring */
+}
+
+/* no underline by default; highlight colours alone are the cue */
+.text-content .hl-info {
+  cursor: pointer;
+}
+
+/* footnote badges for overlapping highlights */
+.hl-footnote {
+  display: inline-block;
+  font-size: .65rem;
+  font-weight: 700;
+  color: #fff;
+  background: #6366f1;
+  border-radius: 6px;
+  padding: 0 4px;
+  margin-left: 1px;
+  cursor: pointer;
+  vertical-align: super;
+  line-height: 1.4;
+  transition: background .15s, transform .15s;
+}
+
+.hl-footnote:hover {
+  background: #4f46e5;
+  transform: scale(1.15);
+}
+
+.hl-footnote--active {
+  background: #eab308;
+  color: #1c1917;
+}
+
+/* manual annotation highlights */
+.hl-manual {
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background .2s, box-shadow .2s;
+}
+
+.hl-manual--yes {
+  background: #bbf7d0;
+  box-shadow: 0 0 0 2px #4ade80;
+}
+
+.hl-manual.hl-info--active,
+.hl-manual:hover {
+  background: #fef08a;
+  box-shadow: 0 0 0 2px #facc15;
+}
+
+.hl-manual--yes.hl-info--active,
+.hl-manual--yes:hover {
+  background: #86efac;
+  box-shadow: 0 0 0 2px #22c55e;
+}
+
+.hl-manual.hl-info--error {
+  background: #fecaca;
+  box-shadow: 0 0 0 2px #f87171;
+}
+
+.hl-manual.hl-info--error.hl-info--active {
+  background: #fca5a5;
+  box-shadow: 0 0 0 2px #ef4444;
+}
+
+/* ── annotation assignment popup ─────────────────────────────────────── */
+.hl-assign-popup {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  width: 320px;
+  max-height: 370px;
+  background: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.18);
+  overflow: hidden;
+  flex-direction: column;
+}
+
+.hl-assign-popup--open {
+  display: flex;
+}
+
+.hl-assign-popup-header {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .5rem .65rem;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f8fafc;
+}
+
+.hl-assign-popup-search {
+  flex: 1;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: .35rem .55rem;
+  font-size: .82rem;
+  outline: none;
+}
+
+.hl-assign-popup-search:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59,130,246,.25);
+}
+
+.hl-assign-popup-close {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: #6b7280;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.hl-assign-popup-close:hover {
+  background: #f3f4f6;
+  color: #1f2937;
+}
+
+.hl-assign-popup-list {
+  overflow-y: auto;
+  flex: 1;
+  padding: .25rem 0;
+}
+
+.hl-assign-popup-item {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .4rem .75rem;
+  font-size: .82rem;
+  cursor: pointer;
+  color: #334155;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+
+.hl-assign-popup-item:hover {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.hl-assign-popup-item--active {
+  background: #dcfce7;
+  color: #166534;
+  font-weight: 600;
+}
+
+.hl-assign-popup-item .hl-assign-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #d1d5db;
+  flex-shrink: 0;
+}
+
+.hl-assign-popup-item--active .hl-assign-dot {
+  background: #22c55e;
+}
+
+.hl-assign-popup-seltext {
+  padding: .35rem .75rem;
+  font-size: .75rem;
+  color: #6b7280;
+  border-bottom: 1px solid #e5e7eb;
+  background: #fefce8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── protocol ground truth tooltip ───────────────────────────────────── */
+.protocol-tooltip {
+  position: absolute;
+  z-index: 1000;
+  max-width: 420px;
+  padding: .65rem .85rem;
+  background: #1e293b;
+  color: #f1f5f9;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.25);
+  font-size: .82rem;
+  line-height: 1.45;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity .15s, transform .15s;
+}
+
+.protocol-tooltip--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.protocol-tooltip-label {
+  font-weight: 600;
+  color: #93c5fd;
+  margin-bottom: .3rem;
+  font-size: .75rem;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.protocol-tooltip-excerpt {
+  padding: .25rem 0;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.protocol-tooltip-excerpt:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
 
 /* card wrapper */
 .fi-card {
@@ -2672,6 +2921,11 @@ a.demo-btn {
   border-color: #fca5a5;
   background: #fff8f8;
   box-shadow: 0 2px 8px rgba(239,68,68,.08);
+}
+
+.fi-card--hover {
+  border-color: #facc15;
+  box-shadow: 0 2px 10px rgba(250,204,21,.2);
 }
 
 /* main item row */
@@ -3607,6 +3861,18 @@ a.demo-btn {
   fill: #f8fafc;
   stroke: #94a3b8;
   stroke-width: 1.8;
+  transition: fill .15s, stroke .15s;
+}
+
+.rt-endpoint-g--hover .rt-endpoint {
+  fill: #fef9c3;
+  stroke: #eab308;
+  stroke-width: 2.5;
+}
+
+.rt-endpoint-g--hover .rt-endpoint-label {
+  fill: #854d0e;
+  font-weight: 600;
 }
 
 .rt-endpoint-label {
@@ -3615,6 +3881,7 @@ a.demo-btn {
   pointer-events: none;
   user-select: none;
   -webkit-user-select: none;
+  transition: fill .15s;
 }
 
 .rt-endpoint-check {

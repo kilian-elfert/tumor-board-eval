@@ -641,6 +641,34 @@
           {% endfor %}
 
         </div>{# end .tree-area #}
+
+        {# ── hidden input for manual text annotations ── #}
+        <input type="hidden" id="manual-annotations-input"
+               name="manual_annotations"
+               value="{{ existing.get('manual_annotations', '{}') }}">
+
+        {# ── annotation assignment popup ── #}
+        <div class="hl-assign-popup" id="hl-assign-popup">
+          <div class="hl-assign-popup-seltext" id="hl-assign-seltext"></div>
+          <div class="hl-assign-popup-header">
+            <input type="text" class="hl-assign-popup-search"
+                   id="hl-assign-search" placeholder="Suche…" autocomplete="off">
+            <button type="button" class="hl-assign-popup-close"
+                    onclick="closeAssignPopup()">&times;</button>
+          </div>
+          <div class="hl-assign-popup-list" id="hl-assign-list">
+            {% for item in info_items %}
+            {% set slug = slugify(item) %}
+            <button type="button" class="hl-assign-popup-item"
+                    data-slug="{{ slug }}"
+                    onclick="assignAnnotation('{{ slug }}')">
+              <span class="hl-assign-dot"></span>
+              {{ item }}
+            </button>
+            {% endfor %}
+          </div>
+        </div>
+
       </div>{# end .eval-body--tree #}
 
       {# ════════════════════════════════════════════════════════════════════════
@@ -652,6 +680,13 @@
           <div class="text-label">Zusammenfassung – Version {{ 'A' if tab_idx == 0 else 'B' }}</div>
           <div class="text-content">{{ text_content }}</div>
         </div>
+        {# Tooltip for protocol ground truth #}
+        <div class="protocol-tooltip" id="protocol-tooltip"></div>
+        {% if protocol_excerpts %}
+        <script>var _protocolExcerpts = {{ protocol_excerpts | tojson }};</script>
+        {% else %}
+        <script>var _protocolExcerpts = {};</script>
+        {% endif %}
         <div class="rating-section">
           <h3 class="rating-title">Fehlerhafte Informationen</h3>
           {% if enthalten_items %}
@@ -660,7 +695,10 @@
             {% for item in enthalten_items %}
             {% set slug = slugify(item) %}
             {% set is_checked = item in existing.get('false_items', []) %}
-            <div class="fi-card {% if is_checked %}fi-card--active{% endif %}" id="fi_{{ slug }}">
+            <div class="fi-card {% if is_checked %}fi-card--active{% endif %}" id="fi_{{ slug }}"
+                 data-hl-slug="{{ slug }}"
+                 onmouseenter="highlightExcerpts('{{ slug }}', true)"
+                 onmouseleave="highlightExcerpts('{{ slug }}', false)">
 
               {# ── item row ── #}
               <label class="fi-row">
@@ -1898,7 +1936,542 @@ function toggleFalseinfo(slug, checked) {
     badge.classList.toggle('fi-badge--on', checked);
     badge.textContent = checked ? '⚠ Fehlerhaft' : 'Korrekt';
   }
+  /* Toggle permanent red highlight on text excerpts */
+  var spans = document.querySelectorAll('.hl-info[data-hl-slug="' + slug + '"], .hl-manual[data-hl-slug="' + slug + '"]');
+  spans.forEach(function(el) {
+    el.classList.toggle('hl-info--error', checked);
+  });
 }
+
+/* ── falseinfo: hover-highlight corresponding text excerpts ───────────── */
+function highlightExcerpts(slug, on) {
+  /* Match primary slug OR slug listed in data-hl-slugs (overlapping highlights) */
+  var spans = document.querySelectorAll(
+    '.hl-info[data-hl-slug="' + slug + '"], .hl-manual[data-hl-slug="' + slug + '"]'
+  );
+  /* Also match multi-slug spans where this slug is secondary */
+  document.querySelectorAll('.hl-info[data-hl-slugs]').forEach(function(el) {
+    var slugs = el.getAttribute('data-hl-slugs').split(',');
+    if (slugs.indexOf(slug) >= 0) {
+      el.classList.toggle('hl-info--active', on);
+    }
+  });
+  spans.forEach(function(el) {
+    el.classList.toggle('hl-info--active', on);
+  });
+  /* Highlight footnote badges for this slug */
+  document.querySelectorAll('.hl-footnote[data-hl-slug="' + slug + '"]').forEach(function(fn) {
+    fn.classList.toggle('hl-footnote--active', on);
+  });
+  /* Also highlight the card itself while hovering */
+  var card = document.getElementById('fi_' + slug);
+  if (card) card.classList.toggle('fi-card--hover', on);
+  /* Highlight the tree endpoint node */
+  highlightTreeEndpoint(slug, on);
+  /* Scroll first match into view */
+  if (on && spans.length > 0) {
+    var container = spans[0].closest('.text-content');
+    if (container) {
+      var rect = spans[0].getBoundingClientRect();
+      var cRect = container.getBoundingClientRect();
+      if (rect.top < cRect.top || rect.bottom > cRect.bottom) {
+        spans[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  }
+  /* Show/hide protocol ground truth tooltip */
+  var tip = document.getElementById('protocol-tooltip');
+  if (!tip) return;
+  if (on && typeof _protocolExcerpts !== 'undefined') {
+    var excerpts = _protocolExcerpts[slug] || [];
+    if (excerpts.length > 0) {
+      tip.innerHTML = '<div class="protocol-tooltip-label">TK-Protokoll:</div>' +
+        excerpts.map(function(e) { return '<div class="protocol-tooltip-excerpt">' + _escHtml(e) + '</div>'; }).join('');
+      tip.classList.add('protocol-tooltip--visible');
+      /* Position near the card */
+      var cardRect = card.getBoundingClientRect();
+      tip.style.top = (cardRect.top + window.scrollY - tip.offsetHeight - 8) + 'px';
+      tip.style.left = (cardRect.left + window.scrollX) + 'px';
+      /* Adjust if above viewport */
+      var tipRect = tip.getBoundingClientRect();
+      if (tipRect.top < 0) {
+        tip.style.top = (cardRect.bottom + window.scrollY + 8) + 'px';
+      }
+    } else {
+      tip.classList.remove('protocol-tooltip--visible');
+    }
+  } else {
+    tip.classList.remove('protocol-tooltip--visible');
+  }
+}
+
+/* ── highlight tree endpoint node from text hover ──────────────────────── */
+function highlightTreeEndpoint(slug, on) {
+  var epgs = document.querySelectorAll('.rt-endpoint-g[data-slug="' + slug + '"]');
+  epgs.forEach(function(el) {
+    el.classList.toggle('rt-endpoint-g--hover', on);
+    if (on) {
+      var svg = el.closest('svg');
+      if (svg) {
+        var container = svg.parentElement;
+        if (container) {
+          var rect = el.getBoundingClientRect();
+          var cRect = container.getBoundingClientRect();
+          if (rect.top < cRect.top || rect.bottom > cRect.bottom) {
+            container.scrollTop += rect.top - cRect.top - cRect.height / 2;
+          }
+        }
+      }
+    }
+  });
+}
+
+/* ── text span interactions: hover highlights tree item, click toggles ── */
+(function() {
+  /* Look up human-readable label for a slug from RT_DATA */
+  function labelForSlug(slug) {
+    if (typeof RT_DATA === 'undefined') return slug.replace(/__/g, ': ').replace(/_/g, ' ');
+    for (var i = 0; i < RT_DATA.length; i++)
+      for (var j = 0; j < RT_DATA[i].items.length; j++)
+        if (RT_DATA[i].items[j].slug === slug) return RT_DATA[i].items[j].label;
+    return slug.replace(/__/g, ': ').replace(/_/g, ' ');
+  }
+  function buildTitle(slug, allSlugs) {
+    var slugs = allSlugs ? allSlugs.split(',') : [slug];
+    var lines = slugs.map(function(s, i) {
+      return (slugs.length > 1 ? (i + 1) + '. ' : '') + labelForSlug(s);
+    });
+    lines.push('');
+    lines.push('Klick: Item umschalten');
+    lines.push('Rechtsklick: Zuordnung entfernen');
+    return lines.join('\n');
+  }
+  document.querySelectorAll('.hl-info[data-hl-slug]').forEach(function(span) {
+    var slug = span.getAttribute('data-hl-slug');
+    var allSlugs = span.getAttribute('data-hl-slugs');
+    span.title = buildTitle(slug, allSlugs);
+    span.addEventListener('mouseenter', function() {
+      highlightExcerpts(slug, true);
+      /* Also highlight secondary slugs on multi-slug spans */
+      if (allSlugs) {
+        allSlugs.split(',').forEach(function(s) {
+          if (s !== slug) highlightExcerpts(s, true);
+        });
+      }
+    });
+    span.addEventListener('mouseleave', function() {
+      highlightExcerpts(slug, false);
+      if (allSlugs) {
+        allSlugs.split(',').forEach(function(s) {
+          if (s !== slug) highlightExcerpts(s, false);
+        });
+      }
+    });
+    span.addEventListener('click', function() {
+      if (typeof window.rtToggleItem === 'function') {
+        window.rtToggleItem(slug);
+      }
+    });
+    span.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+      removeHighlightSpan(span);
+    });
+  });
+
+  /* Footnote badge interactions */
+  document.querySelectorAll('.hl-footnote[data-hl-slug]').forEach(function(fn) {
+    var slug = fn.getAttribute('data-hl-slug');
+    fn.style.cursor = 'pointer';
+    fn.title = 'Klick: Item umschalten · Rechtsklick: Zuordnung entfernen';
+    fn.addEventListener('mouseenter', function() {
+      highlightExcerpts(slug, true);
+      highlightTreeEndpoint(slug, true);
+    });
+    fn.addEventListener('mouseleave', function() {
+      highlightExcerpts(slug, false);
+      highlightTreeEndpoint(slug, false);
+    });
+    fn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (typeof window.rtToggleItem === 'function') {
+        window.rtToggleItem(slug);
+      }
+    });
+    fn.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      /* Find the parent hl-info span (walk back past sibling footnotes) */
+      var span = fn.previousElementSibling;
+      while (span && span.classList && span.classList.contains('hl-footnote')) {
+        span = span.previousElementSibling;
+      }
+      if (!span || !span.classList.contains('hl-info')) return;
+      var isPrimary = (span.getAttribute('data-hl-slug') === slug);
+      var slugsAttr = span.getAttribute('data-hl-slugs');
+      if (isPrimary && slugsAttr) {
+        /* Primary slug removed: promote the next surviving slug to primary */
+        var slugs = slugsAttr.split(',').filter(function(s) { return s !== slug; });
+        if (slugs.length > 0) {
+          span.setAttribute('data-hl-slug', slugs[0]);
+          span.setAttribute('data-hl-slugs', slugs.join(','));
+        } else {
+          span.removeAttribute('data-hl-slugs');
+        }
+      } else if (!isPrimary && slugsAttr) {
+        /* Secondary slug removed: just strip from data-hl-slugs */
+        var slugs = slugsAttr.split(',').filter(function(s) { return s !== slug; });
+        if (slugs.length > 1) {
+          span.setAttribute('data-hl-slugs', slugs.join(','));
+        } else {
+          span.removeAttribute('data-hl-slugs');
+        }
+      }
+      /* Remove the footnote badge */
+      fn.remove();
+      /* Renumber remaining footnote badges for this span */
+      var sibling = span.nextElementSibling;
+      var num = 1;
+      while (sibling && sibling.classList && sibling.classList.contains('hl-footnote')) {
+        sibling.textContent = num++;
+        sibling = sibling.nextElementSibling;
+      }
+      /* If only one slug left, remove remaining single footnote badge */
+      var nextFn = span.nextElementSibling;
+      if (nextFn && nextFn.classList && nextFn.classList.contains('hl-footnote')) {
+        var nextNextFn = nextFn.nextElementSibling;
+        if (!nextNextFn || !nextNextFn.classList || !nextNextFn.classList.contains('hl-footnote')) {
+          /* Only one footnote left — remove it (no overlap label needed) */
+          nextFn.remove();
+          span.removeAttribute('data-hl-slugs');
+        }
+      }
+      /* If no remaining highlights for this slug, set to "nicht enthalten" */
+      var remaining = document.querySelectorAll(
+        '.hl-info[data-hl-slug="' + slug + '"], .hl-manual[data-hl-slug="' + slug + '"], .hl-footnote[data-hl-slug="' + slug + '"]'
+      );
+      if (remaining.length === 0 && typeof window.rtToggleItem === 'function') {
+        var inp = document.getElementById('rt-inp-' + slug);
+        if (inp && inp.value === 'yes') {
+          window.rtToggleItem(slug);
+        }
+      }
+    });
+  });
+})();
+
+/* ── remove any highlight span (pre-rendered or manual) ────────────────── */
+function removeHighlightSpan(span) {
+  var slug = span.getAttribute('data-hl-slug');
+  var text = span.textContent;
+  var parent = span.parentNode;
+  /* Unwrap: replace span with its child nodes */
+  while (span.firstChild) {
+    parent.insertBefore(span.firstChild, span);
+  }
+  parent.removeChild(span);
+  parent.normalize();
+  /* Also remove from manual annotations store if it was manual */
+  if (_manualAnnotations[slug]) {
+    var idx = _manualAnnotations[slug].indexOf(text);
+    if (idx >= 0) _manualAnnotations[slug].splice(idx, 1);
+    if (_manualAnnotations[slug].length === 0) delete _manualAnnotations[slug];
+    saveManualAnnotations();
+  }
+  /* If no remaining highlights for this slug, set to "nicht enthalten" */
+  var remaining = document.querySelectorAll(
+    '.hl-info[data-hl-slug="' + slug + '"], .hl-manual[data-hl-slug="' + slug + '"]'
+  );
+  if (remaining.length === 0 && typeof window.rtToggleItem === 'function') {
+    var inp = document.getElementById('rt-inp-' + slug);
+    if (inp && inp.value === 'yes') {
+      window.rtToggleItem(slug);  /* toggles yes → no */
+    }
+  }
+}
+
+function _escHtml(s) {
+  var d = document.createElement('div');
+  d.appendChild(document.createTextNode(s));
+  return d.innerHTML;
+}
+
+/* ── manual text annotation: select text → assign to item ──────────────── */
+var _assignRange = null;
+var _manualAnnotations = {};  /* slug → [text, …] */
+
+/* Load saved annotations */
+(function() {
+  var inp = document.getElementById('manual-annotations-input');
+  if (inp && inp.value && inp.value !== '{}') {
+    try { _manualAnnotations = JSON.parse(inp.value); } catch(e) {}
+  }
+  /* Apply saved manual annotations as highlights */
+  var tc = document.querySelector('#tree-textpanel .text-content');
+  if (tc) applyManualAnnotations(tc);
+
+  /* Listen for text selection inside the text panel */
+  if (tc) {
+    tc.addEventListener('mouseup', function(e) {
+      /* Small delay to let selection finalize */
+      setTimeout(function() { onTextSelected(e); }, 10);
+    });
+  }
+})();
+
+function onTextSelected(e) {
+  var sel = window.getSelection();
+  if (!sel || sel.isCollapsed || !sel.toString().trim()) {
+    return;
+  }
+  var tc = document.querySelector('#tree-textpanel .text-content');
+  if (!tc) return;
+  /* Ensure selection is within the text panel */
+  if (!tc.contains(sel.anchorNode) || !tc.contains(sel.focusNode)) return;
+
+  _assignRange = sel.getRangeAt(0).cloneRange();
+  var selectedText = sel.toString().trim();
+  if (selectedText.length < 2) return;
+
+  /* Show popup near selection */
+  var popup = document.getElementById('hl-assign-popup');
+  if (!popup) return;
+  var rect = _assignRange.getBoundingClientRect();
+  popup.classList.add('hl-assign-popup--open');
+
+  /* Position to the right of the text panel so it never covers the text */
+  var panel = document.getElementById('tree-textpanel');
+  var panelRect = panel ? panel.getBoundingClientRect() : rect;
+  var popupW = popup.offsetWidth || 320;
+  var popupH = popup.offsetHeight || 370;
+  var gap = 8;
+
+  var left = panelRect.right + gap;
+  /* If no room to the right, place to the left of the panel */
+  if (left + popupW > window.innerWidth) {
+    left = panelRect.left - popupW - gap;
+  }
+  if (left < 10) left = 10;
+
+  /* Vertically align with the selection, clamped to viewport */
+  var top = rect.top;
+  if (top + popupH > window.innerHeight) top = window.innerHeight - popupH - 10;
+  if (top < 10) top = 10;
+
+  popup.style.left = left + 'px';
+  popup.style.top = top + 'px';
+
+  /* Show selected text preview */
+  var selLabel = document.getElementById('hl-assign-seltext');
+  if (selLabel) {
+    selLabel.textContent = '"' + (selectedText.length > 80 ? selectedText.substring(0, 77) + '…' : selectedText) + '"';
+  }
+
+  /* Update active states */
+  updateAssignPopupStates();
+
+  /* Focus search */
+  var search = document.getElementById('hl-assign-search');
+  if (search) { search.value = ''; filterAssignItems(''); search.focus(); }
+}
+
+function closeAssignPopup() {
+  var popup = document.getElementById('hl-assign-popup');
+  if (popup) popup.classList.remove('hl-assign-popup--open');
+  _assignRange = null;
+  window.getSelection().removeAllRanges();
+}
+
+function updateAssignPopupStates() {
+  var items = document.querySelectorAll('.hl-assign-popup-item');
+  items.forEach(function(btn) {
+    var slug = btn.getAttribute('data-slug');
+    /* Green dot = item is already set to "enthalten" in the tree */
+    var inp = document.getElementById('rt-inp-' + slug);
+    var isYes = inp && inp.value === 'yes';
+    btn.classList.toggle('hl-assign-popup-item--active', isYes);
+  });
+}
+
+function filterAssignItems(query) {
+  var items = document.querySelectorAll('.hl-assign-popup-item');
+  var q = query.toLowerCase();
+  items.forEach(function(btn) {
+    var text = btn.textContent.toLowerCase();
+    btn.style.display = (!q || text.indexOf(q) >= 0) ? '' : 'none';
+  });
+}
+
+/* Search input handler */
+(function() {
+  var search = document.getElementById('hl-assign-search');
+  if (search) {
+    search.addEventListener('input', function() {
+      filterAssignItems(this.value);
+    });
+    search.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeAssignPopup();
+    });
+  }
+})();
+
+function assignAnnotation(slug) {
+  if (!_assignRange) return;
+  var selectedText = _assignRange.toString().trim();
+  if (!selectedText) { closeAssignPopup(); return; }
+
+  /* Wrap selection in a manual highlight span.
+     Use surroundContents for simple cases; for cross-boundary
+     selections, split text nodes and wrap each part individually. */
+  var success = false;
+  try {
+    /* surroundContents only works if the range doesn't partially
+       select a non-text node */
+    var span = document.createElement('span');
+    span.className = 'hl-manual hl-manual--yes';
+    span.setAttribute('data-hl-slug', slug);
+    _assignRange.surroundContents(span);
+    attachManualSpanEvents(span);
+    success = true;
+  } catch(e) {
+    /* Cross-boundary fallback: highlight each text node segment
+       within the range separately */
+    var tc = document.querySelector('#tree-textpanel .text-content');
+    if (tc) {
+      var walker = document.createTreeWalker(tc, NodeFilter.SHOW_TEXT, null, false);
+      var textNodes = [];
+      var node;
+      while ((node = walker.nextNode())) {
+        if (_assignRange.intersectsNode(node)) {
+          textNodes.push(node);
+        }
+      }
+      textNodes.forEach(function(tn) {
+        var start = 0, end = tn.textContent.length;
+        if (tn === _assignRange.startContainer) start = _assignRange.startOffset;
+        if (tn === _assignRange.endContainer) end = _assignRange.endOffset;
+        if (start >= end) return;
+        var r = document.createRange();
+        r.setStart(tn, start);
+        r.setEnd(tn, end);
+        var s = document.createElement('span');
+        s.className = 'hl-manual hl-manual--yes';
+        s.setAttribute('data-hl-slug', slug);
+        r.surroundContents(s);
+        attachManualSpanEvents(s);
+      });
+      success = textNodes.length > 0;
+    }
+  }
+
+  if (!success) { closeAssignPopup(); return; }
+
+  /* Store the annotation */
+  if (!_manualAnnotations[slug]) _manualAnnotations[slug] = [];
+  _manualAnnotations[slug].push(selectedText);
+  saveManualAnnotations();
+
+  /* Set the tree item to "yes" (enthalten) */
+  if (typeof window.rtToggleItem === 'function') {
+    /* Only set to yes if not already yes */
+    var inp = document.getElementById('rt-inp-' + slug);
+    if (inp && inp.value !== 'yes') {
+      window.rtToggleItem(slug);
+    }
+  }
+
+  closeAssignPopup();
+}
+
+function attachManualSpanEvents(span) {
+  var slug = span.getAttribute('data-hl-slug');
+  /* Build tooltip with item label */
+  var label = slug;
+  if (typeof RT_DATA !== 'undefined') {
+    for (var i = 0; i < RT_DATA.length; i++)
+      for (var j = 0; j < RT_DATA[i].items.length; j++)
+        if (RT_DATA[i].items[j].slug === slug) { label = RT_DATA[i].items[j].label; break; }
+  } else {
+    label = slug.replace(/__/g, ': ').replace(/_/g, ' ');
+  }
+  span.title = label + '\n\nKlick: Item umschalten\nRechtsklick: Zuordnung entfernen';
+  span.addEventListener('mouseenter', function() {
+    highlightExcerpts(slug, true);
+  });
+  span.addEventListener('mouseleave', function() {
+    highlightExcerpts(slug, false);
+  });
+  span.addEventListener('click', function(e) {
+    if (typeof window.rtToggleItem === 'function') {
+      window.rtToggleItem(slug);
+    }
+  });
+  /* Right-click to remove annotation */
+  span.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    removeHighlightSpan(span);
+  });
+}
+
+function removeManualAnnotation(span, slug) {
+  removeHighlightSpan(span);
+}
+
+function saveManualAnnotations() {
+  var inp = document.getElementById('manual-annotations-input');
+  if (inp) inp.value = JSON.stringify(_manualAnnotations);
+}
+
+function applyManualAnnotations(container) {
+  /* Walk all text nodes, find stored excerpts, wrap in spans */
+  for (var slug in _manualAnnotations) {
+    var excerpts = _manualAnnotations[slug];
+    for (var i = 0; i < excerpts.length; i++) {
+      wrapTextInContainer(container, excerpts[i], slug);
+    }
+  }
+}
+
+function wrapTextInContainer(container, text, slug) {
+  /* Find the text in the container's textContent via TreeWalker */
+  var walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null, false);
+  var node;
+  while ((node = walker.nextNode())) {
+    var idx = node.textContent.indexOf(text);
+    if (idx >= 0) {
+      var range = document.createRange();
+      range.setStart(node, idx);
+      range.setEnd(node, idx + text.length);
+      var span = document.createElement('span');
+      span.className = 'hl-manual hl-manual--yes';
+      span.setAttribute('data-hl-slug', slug);
+      range.surroundContents(span);
+      attachManualSpanEvents(span);
+      return;
+    }
+  }
+}
+
+/* Close popup on outside click */
+document.addEventListener('mousedown', function(e) {
+  var popup = document.getElementById('hl-assign-popup');
+  if (popup && popup.classList.contains('hl-assign-popup--open')) {
+    if (!popup.contains(e.target)) {
+      closeAssignPopup();
+    }
+  }
+});
+
+/* Prevent popup clicks from clearing the text selection */
+(function() {
+  var popup = document.getElementById('hl-assign-popup');
+  if (popup) {
+    popup.addEventListener('mousedown', function(e) {
+      /* Allow the search input to receive focus normally */
+      if (e.target.id === 'hl-assign-search') return;
+      e.preventDefault();
+    });
+  }
+})();
 
 /* ── missinginfo: accordion toggle & auto-advance ──────────────────────── */
 function toggleMiCard(slug) {
@@ -2350,6 +2923,24 @@ updateRelProgress();
       g.setAttribute('data-val', val);
       renderItemVisual(g, val);
     }
+    /* Toggle green permanent highlight on text excerpts (pre-rendered + manual) */
+    var spans = document.querySelectorAll('.hl-info[data-hl-slug="' + slug + '"], .hl-manual[data-hl-slug="' + slug + '"]');
+    spans.forEach(function(el) {
+      el.classList.toggle('hl-info--yes', val === 'yes');
+      el.classList.toggle('hl-manual--yes', val === 'yes');
+    });
+    /* Also handle multi-slug spans where this slug is secondary.
+       Keep green if ANY slug in the group is still 'yes'. */
+    document.querySelectorAll('.hl-info[data-hl-slugs]').forEach(function(el) {
+      var slugs = el.getAttribute('data-hl-slugs').split(',');
+      if (slugs.indexOf(slug) >= 0) {
+        var anyYes = slugs.some(function(s) {
+          var inp = document.getElementById('rt-inp-' + s);
+          return inp && inp.value === 'yes';
+        });
+        el.classList.toggle('hl-info--yes', anyYes);
+      }
+    });
     refreshCat(catOfSlug(slug));
     refreshProgress();
     refreshLines();
@@ -2364,18 +2955,16 @@ updateRelProgress();
 
   window.rtToggleItem = function(slug) {
     var cur = getS(slug);
-    setS(slug, cur === '' ? 'yes' : cur === 'yes' ? 'no' : '');
+    setS(slug, cur === 'yes' ? 'no' : 'yes');
   };
 
   window.rtToggleCat = function(catSlug) {
     var cat = null;
     for (var i = 0; i < RT_DATA.length; i++) if (RT_DATA[i].slug === catSlug) { cat = RT_DATA[i]; break; }
     if (!cat) return;
-    var allYes   = cat.items.every(function(i) { return getS(i.slug) === 'yes'; });
-    var allNo    = cat.items.every(function(i) { return getS(i.slug) === 'no'; });
-    var allEmpty = cat.items.every(function(i) { return getS(i.slug) === ''; });
-    /* cycle: unrated → all yes → all no → unrated */
-    var next = allEmpty ? 'yes' : allYes ? 'no' : '';
+    var allYes = cat.items.every(function(i) { return getS(i.slug) === 'yes'; });
+    /* cycle: yes → no, otherwise → yes */
+    var next = allYes ? 'no' : 'yes';
     cat.items.forEach(function(i) { setS(i.slug, next); });
   };
 
@@ -2637,6 +3226,18 @@ updateRelProgress();
         epg.addEventListener('click', (function(slug) {
           return function() { window.rtToggleItem(slug); };
         })(item.slug));
+        epg.addEventListener('mouseenter', (function(slug) {
+          return function() { highlightExcerpts(slug, true); };
+        })(item.slug));
+        epg.addEventListener('mouseleave', (function(slug) {
+          return function() { highlightExcerpts(slug, false); };
+        })(item.slug));
+        /* init green highlight for already-selected items */
+        if (getS(item.slug) === 'yes') {
+          document.querySelectorAll('.hl-info[data-hl-slug="' + item.slug + '"]').forEach(function(el) {
+            el.classList.add('hl-info--yes');
+          });
+        }
 
         var ep = mk('circle');
         ep.setAttribute('r', '9');
@@ -4116,6 +4717,16 @@ function initLensCursor(stage, cursor, pos, kf) {
       e.preventDefault();
       e.returnValue = '';
     }
+  });
+})();
+
+/* Apply persistent red highlights for already-checked falseinfo items on page load */
+(function() {
+  document.querySelectorAll('.fi-card--active[data-hl-slug]').forEach(function(card) {
+    var slug = card.getAttribute('data-hl-slug');
+    document.querySelectorAll('.hl-info[data-hl-slug="' + slug + '"]').forEach(function(el) {
+      el.classList.add('hl-info--error');
+    });
   });
 })();
 </script>

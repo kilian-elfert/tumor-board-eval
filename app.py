@@ -18,6 +18,7 @@ GUIDELINE_DIR   = os.path.join(BASE_DIR, 'guideline')
 TEXTS_HUMAN_DIR = os.path.join(BASE_DIR, 'texts_human')
 TEXTS_LLM_DIR   = os.path.join(BASE_DIR, 'texts_llm')
 EXPORTS_DIR = os.path.join(BASE_DIR, 'exports')
+HIGHLIGHT_FILE  = os.path.join(BASE_DIR, 'highlight_mappings.json')
 import re as _re
 
 # ── constants ────────────────────────────────────────────────────────────────
@@ -319,6 +320,82 @@ def _bold_headers(text):
     safe = str(escape(text))
     safe = _SECTION_HEADER_RE.sub(r'<strong>\1</strong>\2', safe)
     return Markup(safe)
+
+
+def _load_highlight_mappings():
+    """Load pre-generated highlight mappings (slug → [excerpt, …])."""
+    if os.path.exists(HIGHLIGHT_FILE):
+        with open(HIGHLIGHT_FILE, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    return {}
+
+
+def _annotate_highlights(raw_text, mapping):
+    """Apply _bold_headers then wrap mapped excerpts in <span> elements.
+
+    *mapping* is {slug: [excerpt, …]} where excerpts are from the raw text.
+    Returns Markup.
+    """
+    if not raw_text or not mapping:
+        return _bold_headers(raw_text)
+
+    # Step 1: collect (start, end, slug) on the *raw* text
+    regions = []
+    for slug, excerpts in mapping.items():
+        for exc in excerpts:
+            idx = raw_text.find(exc)
+            if idx != -1:
+                regions.append((idx, idx + len(exc), slug))
+
+    if not regions:
+        return _bold_headers(raw_text)
+
+    # Step 2: sort by start; merge overlapping regions, tracking all slugs
+    regions.sort(key=lambda r: (r[0], -(r[1] - r[0])))
+    merged = []  # list of (start, end, [slugs])
+    for start, end, slug in regions:
+        if merged and start < merged[-1][1]:
+            # Overlap — add slug to existing region and extend end if needed
+            prev_start, prev_end, prev_slugs = merged[-1]
+            if slug not in prev_slugs:
+                prev_slugs.append(slug)
+            merged[-1] = (prev_start, max(prev_end, end), prev_slugs)
+        else:
+            merged.append((start, end, [slug]))
+
+    # Step 3: build output by splicing raw text with <span> wrappers,
+    #         escaping each segment individually so tags stay intact.
+    parts = []
+    prev = 0
+    for start, end, slugs in merged:
+        primary_slug = slugs[0]
+        # Text before this region
+        parts.append(str(escape(raw_text[prev:start])))
+        # The highlighted region — use first slug as primary
+        escaped_excerpt = str(escape(raw_text[start:end]))
+        slug_attr = f'data-hl-slug="{primary_slug}"'
+        if len(slugs) > 1:
+            all_slugs = ','.join(slugs)
+            slug_attr += f' data-hl-slugs="{all_slugs}"'
+        parts.append(
+            f'<span class="hl-info" {slug_attr}>{escaped_excerpt}</span>'
+        )
+        # Add numbered footnote badges for every slug in an overlap
+        if len(slugs) > 1:
+            for i, fn_slug in enumerate(slugs, start=1):
+                label = fn_slug.replace('__', ': ').replace('_', ' ')
+                parts.append(
+                    f'<sup class="hl-footnote" data-hl-slug="{fn_slug}" '
+                    f'title="{str(escape(label))}">'
+                    f'{i}</sup>'
+                )
+        prev = end
+    parts.append(str(escape(raw_text[prev:])))
+
+    html = ''.join(parts)
+    # Bold section headers (regex works on the joined HTML)
+    html = _SECTION_HEADER_RE.sub(r'<strong>\1</strong>\2', html)
+    return Markup(html)
 
 
 # ── helpers ──────────────────────────────────────────────────────────────────
@@ -839,6 +916,14 @@ def evaluate_step(case_id, step_idx, tab_idx):
 
     # Compute "enthalten" items for falseinfo step (from tab0 rating of integrity)
     enthalten_items = []
+    hl_version_key = None
+    if key in ('summary_falseinfo', 'summary_integrity'):
+        # Determine which version (human/llm) is shown for highlight mappings
+        assign = assign_sum
+        if tab_idx == 0:
+            hl_version_key = 'human_summary' if assign == 'human_first' else 'llm_summary'
+        else:
+            hl_version_key = 'llm_summary' if assign == 'human_first' else 'human_summary'
     if key == 'summary_falseinfo':
         integrity_tab = case_ratings.get('summary_integrity_tab' + str(tab_idx), {})
         for item in INFO_ITEMS:
@@ -898,6 +983,17 @@ def evaluate_step(case_id, step_idx, tab_idx):
     # Previous URL
     prev_url = compute_prev_url(case_id, case_order, case_index, step_idx, tab_idx, step)
 
+    # Apply highlight annotations for falseinfo / integrity steps
+    protocol_excerpts = {}
+    if key in ('summary_falseinfo', 'summary_integrity') and text_content and hl_version_key:
+        hl_mappings = _load_highlight_mappings()
+        case_hl = hl_mappings.get(case_id, {}).get(hl_version_key, {})
+        rendered_text = _annotate_highlights(text_content, case_hl)
+        if key == 'summary_falseinfo':
+            protocol_excerpts = hl_mappings.get(case_id, {}).get('protocol', {})
+    else:
+        rendered_text = _bold_headers(text_content)
+
     return render_template('evaluate.html',
         case_id=case_id,
         case_index=case_index,
@@ -906,7 +1002,7 @@ def evaluate_step(case_id, step_idx, tab_idx):
         step=step,
         step_idx=step_idx,
         tab_idx=tab_idx,
-        text_content=_bold_headers(text_content),
+        text_content=rendered_text,
         text_a=_bold_headers(text_a),
         text_b=_bold_headers(text_b),
         existing=existing,
@@ -917,6 +1013,7 @@ def evaluate_step(case_id, step_idx, tab_idx):
         info_items=INFO_ITEMS,
         enthalten_items=enthalten_items,
         missing_items=missing_items,
+        protocol_excerpts=protocol_excerpts,
         slugify=slugify,
         rating_steps=RATING_STEPS,
         all_prior_done=all_prior_done,
@@ -983,6 +1080,7 @@ def parse_step_form(step, tab_idx, form, enthalten_items, missing_items=None):
                     missing.append(item)
             if missing:
                 return None, f'Bitte bewerten Sie alle Informationen. Es fehlen noch {len(missing)} Bewertung(en).'
+            rating['manual_annotations'] = form.get('manual_annotations', '{}')
 
         elif key == 'summary_falseinfo':
             false_items = form.getlist('false_item')

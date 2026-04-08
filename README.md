@@ -22,6 +22,8 @@ Text assignment (which version appears as "A" or "B") is randomised per particip
 ```
 app.py                  Main Flask application (routes, logic, data loading)
 setup_users.py          Interactive script to create evaluator accounts
+generate_highlights.py  Generates highlight_mappings.json via OpenAI API
+highlight_mappings.json Pre-computed text excerpt → info-category mappings
 pyproject.toml          Project metadata and dependencies
 users.json              Hashed credentials for all evaluator accounts
 
@@ -33,8 +35,10 @@ texts_llm/
   zusammenfassungen/    LLM-generated case summaries (fall_1 … fall_5)
   fragestellungen/      LLM-generated problem formulations (fall_1 … fall_5)
 
-original_documents/     Source PDF case files (fall_1.pdf … fall_5.pdf)
-                        The app auto-discovers cases from this folder.
+original_documents/     Case PDFs (Fall<N>_<hash>.pdf) + companion .txt protocols
+                        The app auto-discovers cases from PDF filenames.
+
+guideline/              S3-Leitlinie PDF shown during guideline-conformity rating
 
 responses/              Per-evaluator response files (responses_<username>.json)
 
@@ -75,6 +79,19 @@ uv run setup_users.py
 
 `setup_users.py` prompts for username/password pairs and writes hashed credentials to `users.json`.
 
+### Generate highlight mappings (optional)
+
+Highlight mappings power the colour-coded text annotations during evaluation. To generate or regenerate them:
+
+```bash
+export OPENAI_API_KEY=sk-...
+uv run generate_highlights.py          # all cases
+uv run generate_highlights.py --case 3  # single case
+uv run generate_highlights.py --dry-run # preview without API calls
+```
+
+The script writes `highlight_mappings.json`. It runs incrementally — existing cases are skipped unless `--case` is specified.
+
 ---
 
 ## Running the App
@@ -96,8 +113,11 @@ SECRET_KEY=your-secret-key uv run app.py
 ## Data Flow
 
 1. The app reads case content from `texts_human/` and `texts_llm/` at startup.
-2. Case discovery is driven by PDF files in `original_documents/` (named `fall_1.pdf`, `fall_2.pdf`, …).
-3. Evaluator responses are saved per-user as `responses/responses_<username>.json`.
+2. Case discovery is driven by PDF files in `original_documents/` matching the pattern `Fall<N>_*.pdf`. A companion `.txt` file with the same stem provides the protocol text.
+3. `highlight_mappings.json` (if present) is loaded to annotate text excerpts during evaluation.
+4. The guideline PDF in `guideline/` is served to evaluators during the guideline-conformity step.
+5. Evaluator responses are saved per-user as `responses/responses_<username>.json`.
+6. The `responses/` and `exports/` directories are created automatically when needed.
 4. An admin can download all responses as JSON or CSV via the `/export` route.
 
 ---
