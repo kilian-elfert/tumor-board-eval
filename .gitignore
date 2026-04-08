@@ -6,6 +6,9 @@ dist/
 wheels/
 *.egg-info
 
+# Environment / secrets
+.env
+
 # Virtual environments
 .venv
 
@@ -21,6 +24,9 @@ original_documents/
 # Texts to be evaluated 
 texts_human/
 texts_llm/
+
+# Highlight mappings (contains patient data excerpts)
+highlight_mappings.json
 
 # Generated login credentials 
 users.json
