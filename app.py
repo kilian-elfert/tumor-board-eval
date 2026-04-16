@@ -840,6 +840,12 @@ def evaluate_resume():
     if case_id is None:
         return redirect(url_for('final_questions'))
 
+    # Show patient dashboard before first step of each case
+    if step_idx == 0 and tab_idx == 0:
+        dashboards_seen = user_data.get('dashboards_seen', [])
+        if case_id not in dashboards_seen:
+            return redirect(url_for('case_dashboard', case_id=case_id))
+
     return redirect(url_for('evaluate_step',
                             case_id=case_id,
                             step_idx=step_idx,
@@ -1181,11 +1187,10 @@ def compute_next_url(user_data, case_id, case_order, case_index,
         return url_for('evaluate_step',
                        case_id=case_id, step_idx=next_step, tab_idx=0)
 
-    # All steps for this case done — next case or final questions
+    # All steps for this case done — next case (show dashboard first) or final questions
     if case_index + 1 < len(case_order):
         next_case = case_order[case_index + 1]
-        return url_for('evaluate_step',
-                       case_id=next_case, step_idx=0, tab_idx=0)
+        return url_for('case_dashboard', case_id=next_case)
 
     return url_for('final_questions')
 
@@ -1200,13 +1205,8 @@ def compute_prev_url(case_id, case_order, case_index, step_idx, tab_idx, step):
         prev_tab  = 1 if prev_step['has_tabs'] else 0
         return url_for('evaluate_step',
                        case_id=case_id, step_idx=step_idx - 1, tab_idx=prev_tab)
-    if case_index > 0:
-        prev_case = case_order[case_index - 1]
-        prev_step = RATING_STEPS[-1]
-        prev_tab  = 1 if prev_step['has_tabs'] else 0
-        return url_for('evaluate_step',
-                       case_id=prev_case, step_idx=len(RATING_STEPS) - 1, tab_idx=prev_tab)
-    return url_for('intro')
+    # step_idx == 0, tab 0 → back to this case's dashboard
+    return url_for('case_dashboard', case_id=case_id)
 
 
 @app.route('/final-questions', methods=['GET', 'POST'])
@@ -1647,5 +1647,480 @@ def export():
     )
 
 
+# ── Patient Dashboard Data ───────────────────────────────────────────────────
+
+PATIENT_DATA = {
+    "1": {
+        "name": "Wesolowski, Lydia",
+        "dob": "06.06.1964",
+        "age": 60,
+        "sex": "W",
+        "location": "46325 Borken",
+        "pat_id": "23509334",
+        "comorbidities": ["Keine Komorbiditäten / unbekannt"],
+        "ecog": "0 – Normale, uneingeschränkte Aktivität",
+        "primary_diagnosis": "Superfiziell spreitendes malignes Melanom (SSM)",
+        "primary_location": "Unterarm rechts",
+        "diagnosis_date": "30.08.2024",
+        "tumor_thickness": "1 mm",
+        "ulceration": "Nein",
+        "mitoses": "0",
+        "histology": "Haut Unterarm SSM",
+        "initial_staging": {
+            "t": "pT1b", "n": "pN0", "m": "cM0",
+            "uicc": "IA", "classification": "AJCC 2017"
+        },
+        "staging": {
+            "t": "pT1b", "n": "pN0", "m": "cM0",
+            "uicc": "IA", "classification": "AJCC 2017"
+        },
+        "mutations": {},
+        "pdl1": "Nicht bestimmt",
+        "lab_values": [
+            {"date": "23.09.2024", "marker": "LDH", "value": "210", "unit": "U/l", "ref": "< 250"},
+            {"date": "23.09.2024", "marker": "S-100", "value": "0.06", "unit": "µg/l", "ref": "< 0.10"},
+        ],
+        "imaging": [
+            {
+                "date": "23.09.2024",
+                "type": "Lymphknotensonographie",
+                "region": "Axillär beidseits",
+                "finding": "Ovaläre Raumforderungen mit echoreichem Zentrum und verbreitertem echoarmen Randsaum. Zentral echoarm jeweils eine Lipatrophie. Beidseits regelrechte Lymphknoten mit SI > 2, positivem Hiluszeichen und zentraler Vaskularisation. Primariusregion und Intransitstrecke unauffällig.",
+                "assessment": "Aktuell kein Hinweis für Malignität.",
+                "body_region": "axilla_right",
+            },
+        ],
+        "timeline": [
+            {"date": "30.08.2024", "event": "R0 Exzision SSM über niedergelassenen Hautfacharzt (NHFA)", "type": "surgery"},
+            {"date": "23.09.2024", "event": "Erstvorstellung HTZ zur Beratung bzgl. Sicherheitsabstand + SLNE; Lymphknotensonographie + Laborwerte", "type": "diagnostic"},
+            {"date": "02.10.2024", "event": "Stationäre Aufnahme zur Nachexzision mit Sicherheitsabstand (1,0 cm) und SLNE axillär rechts", "type": "surgery"},
+            {"date": "04.10.2024", "event": "Entlassung nach Nachexzision + SLNE", "type": "surgery"},
+            {"date": "16.10.2024", "event": "Histologie: Tumorfreies Nachexzidat, SLN negativ (0/1+)", "type": "result"},
+            {"date": "23.10.2024", "event": "Tumorkonferenz: Bei neg. Sentinel weitere Nachsorge leitliniengerecht für Std. IA über NHFA", "type": "conference"},
+        ],
+        "primary_tumor_body": ["right_forearm"],
+        "metastases_body": [],
+        "imaged_regions": ["axilla_right", "axilla_left", "right_forearm"],
+        "therapies": {
+            "surgery": "R0, Nachexzision mit SA 1,0 cm, SLNE (0/1+)",
+            "radiation": None,
+            "systemic": None,
+            "current": "Nachsorge über NHFA",
+        },
+        "disease_status": "Tumorfrei",
+    },
+    "2": {
+        "name": "Schuler, Kay",
+        "dob": "30.04.1964",
+        "age": 59,
+        "sex": "M",
+        "location": "45145 Essen",
+        "pat_id": "22739546",
+        "comorbidities": [
+            "Arterielle Hypertonie",
+            "Z.n. Leistenbruch als Säugling",
+            "Z.n. Bänderriss OSG links",
+            "Z.n. Mittelfußbruch rechts",
+        ],
+        "ecog": "0 – Normale, uneingeschränkte Aktivität",
+        "primary_diagnosis": "Noduläres malignes Melanom (NM)",
+        "primary_location": "Abdomen links",
+        "diagnosis_date": "06.11.2023",
+        "tumor_thickness": "9,2 mm",
+        "ulceration": "Ja",
+        "mitoses": "Nicht angegeben",
+        "histology": "Haut Abdomen NM",
+        "initial_staging": {
+            "t": "pT4b", "n": "pN1b", "m": "cM0",
+            "uicc": "IIIC", "classification": "AJCC 2017"
+        },
+        "staging": {
+            "t": "pT4b", "n": "pN1b", "m": "cM0",
+            "uicc": "IIIC", "classification": "AJCC 2017"
+        },
+        "mutations": {
+            "BRAF": "V600E", "NRAS": "Wildtyp", "KIT": "Wildtyp",
+            "PTEN": "Y174H", "hTERT": "1,295,228 G>A",
+        },
+        "pdl1": "Nicht bestimmt",
+        "lab_values": [
+            {"date": "14.11.2023", "marker": "LDH", "value": "219", "unit": "U/l", "ref": "< 250"},
+            {"date": "14.11.2023", "marker": "S-100", "value": "0.13", "unit": "µg/l", "ref": "< 0.10"},
+            {"date": "11.12.2023", "marker": "S-100", "value": "0.14", "unit": "µg/l", "ref": "< 0.10"},
+        ],
+        "imaging": [
+            {
+                "date": "14.11.2023",
+                "type": "LK-Sonographie",
+                "region": "Axillär links",
+                "finding": "3,6 x 1,5 cm echoarme Raumforderung, hochgradig verdächtig für Malignität.",
+                "assessment": "V.a. LK-Metastase axillär links.",
+                "body_region": "axilla_left",
+            },
+            {
+                "date": "22.11.2023",
+                "type": "CT Thorax/Abdomen",
+                "region": "Thorax, Abdomen",
+                "finding": "Pathologisch vergrößerter axillärer Lymphknoten links, 10 mm hilärer LK, kleine Osteolyse Os ilium.",
+                "assessment": "LK-Metastase axillär links bestätigt; Osteolysen Os ilium a.e. keine Metastasen.",
+                "body_region": "thorax_abdomen",
+            },
+        ],
+        "timeline": [
+            {"date": "06.11.2023", "event": "Erstvorstellung Poliklinik mit neuer Hautveränderung, ED amelanotisches MM, TD 9,2 mm, R0", "type": "diagnosis"},
+            {"date": "14.11.2023", "event": "Blutbild in Poliklinik + LK-Sonographie: V.a. LK-Metastase axillär links", "type": "diagnostic"},
+            {"date": "22.11.2023", "event": "CT Thorax/Abdomen: pathologisch vergrößerter axillärer LK links", "type": "diagnostic"},
+            {"date": "12.12.2023", "event": "Erstvorstellung HTZ mit Staging, V.a. LK-Metastase axillär links", "type": "diagnostic"},
+            {"date": "13.12.2023", "event": "Tumorkonferenz: Studieneinschluss IOB-32 prüfen, alternativ LAD + RTX + adjuvante Studientherapie", "type": "conference"},
+            {"date": "15.12.2023", "event": "Erstvorstellung Studienambulanz zur Beratung IO32PN-E40", "type": "consultation"},
+            {"date": "08.01.2024", "event": "Stationäre Aufnahme: Therapeutische axilläre Lymphonodektomie links (1+/24, 0+/6, 0+/1)", "type": "surgery"},
+            {"date": "12.01.2024", "event": "Entlassung nach LAD", "type": "surgery"},
+            {"date": "17.01.2024", "event": "Tumorkonferenz: Weiteres Procedere nach LAD", "type": "conference"},
+        ],
+        "primary_tumor_body": ["abdomen_left"],
+        "metastases_body": ["axilla_left"],
+        "imaged_regions": ["axilla_left", "thorax", "abdomen", "pelvis"],
+        "therapies": {
+            "surgery": "R0 Exzision Primärtumor, Therapeutische LAD axillär links (1/31 LK befallen)",
+            "radiation": None,
+            "systemic": None,
+            "current": "Adjuvante Therapie empfohlen (Studie oder Standard)",
+        },
+        "disease_status": "Tumorfrei nach LAD",
+    },
+    "3": {
+        "name": "Tumanova, Nataliia",
+        "dob": "14.07.1964",
+        "age": 60,
+        "sex": "W",
+        "location": "58095 Hagen",
+        "pat_id": "23479656",
+        "comorbidities": [
+            "Varikosis rechtes Bein",
+            "Arterieller Hypertonus",
+        ],
+        "ecog": "0 – Normale, uneingeschränkte Aktivität",
+        "primary_diagnosis": "Malignes Melanom (initial fehldiagnostiziert als Liposarkom)",
+        "primary_location": "Rippenbogen / Brust / Oberbauch",
+        "diagnosis_date": "03/2023 (Korrektur: 23.07.2024)",
+        "tumor_thickness": "Nicht angegeben",
+        "ulceration": "Nicht angegeben",
+        "mitoses": "Nicht angegeben",
+        "histology": "Haut Brust/Oberbauch",
+        "initial_staging": {
+            "t": "T0", "n": "pN1b", "m": "cM1c",
+            "uicc": "IV", "classification": "AJCC 2017"
+        },
+        "staging": {
+            "t": "T0", "n": "pN1b", "m": "cM1c",
+            "uicc": "IV", "classification": "AJCC 2017"
+        },
+        "mutations": {},
+        "pdl1": "Nicht bestimmt",
+        "lab_values": [
+            {"date": "28.10.2024", "marker": "LDH", "value": "178", "unit": "U/l", "ref": "< 250"},
+            {"date": "28.10.2024", "marker": "S-100", "value": "0.03", "unit": "µg/l", "ref": "< 0.10"},
+            {"date": "05.11.2024", "marker": "LDH", "value": "180", "unit": "U/l", "ref": "< 250"},
+            {"date": "05.11.2024", "marker": "S-100", "value": "0.03", "unit": "µg/l", "ref": "< 0.10"},
+        ],
+        "imaging": [
+            {
+                "date": "04/2024",
+                "type": "MRT Abdomen",
+                "region": "Abdomen",
+                "finding": "Ohne Tumornachweis.",
+                "assessment": "Kein Tumornachweis.",
+                "body_region": "abdomen",
+            },
+            {
+                "date": "23.07.2024",
+                "type": "CT Thorax/Abdomen",
+                "region": "Thorax, Abdomen",
+                "finding": "V.a. multilokulären Progress. Stanzbiopsie mit histologischer Sicherung eines Melanoms.",
+                "assessment": "Multilokulärer Progress; Diagnose korrigiert: Melanom statt Liposarkom.",
+                "body_region": "thorax_abdomen",
+            },
+            {
+                "date": "22.10.2024",
+                "type": "MRT LWS",
+                "region": "Wirbelsäule (BWK12/LWK1)",
+                "finding": "Raumforderung linksseitig bei BWK12/LWK1 mit teils intraspinalem Wachstum und Pelottierung des Spinalkanals.",
+                "assessment": "Intraspinale Metastase mit Spinalkanalkompression.",
+                "body_region": "spine",
+            },
+            {
+                "date": "05.11.2024",
+                "type": "CT Thorax/Abdomen",
+                "region": "Thorax, Abdomen",
+                "finding": "Deutlich regrediente Tumormanifestation/Metastasen.",
+                "assessment": "Partielle Remission (PR) unter Immuntherapie.",
+                "body_region": "thorax_abdomen",
+            },
+        ],
+        "timeline": [
+            {"date": "03/2023", "event": "Schwellung rechte Leiste, ED Liposarkom (Ukraine)", "type": "diagnosis"},
+            {"date": "23.03.2023", "event": "Varizenstripping + Entfernung 12 cm zystische Läsion Oberschenkel rechts, ED Liposarkom (Kiew)", "type": "surgery"},
+            {"date": "15.11.2023", "event": "Rezidiv rechte Leiste, Resektion + Lymphadenektomie (Ukraine), R0", "type": "surgery"},
+            {"date": "11/2023", "event": "Beginn Chemotherapie: Doxorubicin 100 mg + Dacarbazin 2000 mg (4 Zyklen)", "type": "therapy"},
+            {"date": "01/2024", "event": "Abbruch Chemotherapie aufgrund Flucht nach Deutschland", "type": "therapy"},
+            {"date": "04/2024", "event": "MRT Abdomen: ohne Tumornachweis", "type": "diagnostic"},
+            {"date": "19.06.2024", "event": "Vorstellung zur Beratung Therapiefortsetzung, Empfehlung Staging-Komplettierung", "type": "consultation"},
+            {"date": "23.07.2024", "event": "CT: multilokulärer Progress; Stanzbiopsie bestätigt Melanom (kein Liposarkom!)", "type": "diagnosis"},
+            {"date": "12.08.2024", "event": "Erstvorstellung HTZ zur Aufklärung Ipi/Nivo", "type": "consultation"},
+            {"date": "05.09.2024", "event": "Einleitung Ipilimumab/Nivolumab", "type": "therapy"},
+            {"date": "14.09.2024", "event": "Stationäre Aufnahme bei irMyokarditis, Kardio-MRT, Steroid-Stoß 70 mg", "type": "adverse_event"},
+            {"date": "20.09.2024", "event": "Therapiepause bei irMyokarditis, engmaschige Kontrolle", "type": "therapy"},
+            {"date": "09.10.2024", "event": "irThyreoiditis, Beginn L-Thyroxin 125 µg", "type": "adverse_event"},
+            {"date": "22.10.2024", "event": "MRT LWS: RF bei BWK12/LWK1 mit intraspinalem Wachstum", "type": "diagnostic"},
+            {"date": "05.11.2024", "event": "CT: Deutlich regrediente Tumormanifestation → Partielle Remission", "type": "diagnostic"},
+            {"date": "13.11.2024", "event": "Tumorkonferenz", "type": "conference"},
+        ],
+        "primary_tumor_body": ["chest_right", "groin_right"],
+        "metastases_body": ["groin_right", "spine", "thorax"],
+        "imaged_regions": ["abdomen", "thorax", "spine", "groin_right"],
+        "therapies": {
+            "surgery": "Resektion Primarius + Lymphadenektomie rechte Leiste (Ukraine)",
+            "radiation": "Indiziert (TK-Beschluss), zurückgestellt bei Remission",
+            "systemic": "Doxorubicin/Dacarbazin (4 Zyklen, abgebrochen); Ipilimumab/Nivolumab (1 Gabe, Pause wg. irMyokarditis)",
+            "current": "Therapiepause, engmaschige Kontrolle",
+        },
+        "disease_status": "Partielle Remission (PR)",
+    },
+    "4": {
+        "name": "Striemer, Erwin",
+        "dob": "07.09.1943",
+        "age": 81,
+        "sex": "M",
+        "location": "45888 Gelsenkirchen",
+        "pat_id": "23060289",
+        "comorbidities": [
+            "Aortenklappenersatz (biologisch) 2010",
+            "Knie-TEP 2017",
+            "VHF (Vorhofflimmern)",
+            "Aortenklappenstenose II°",
+            "Mitralinsuffizienz II°",
+            "Leichtkettenmyelom (ED 01/2025)",
+        ],
+        "ecog": "Nicht explizit dokumentiert",
+        "primary_diagnosis": "Mukosales Melanom",
+        "primary_location": "Schleimhaut Mund (harter + weicher Gaumen)",
+        "diagnosis_date": "14.07.2023",
+        "tumor_thickness": "Nicht angegeben",
+        "ulceration": "Ja",
+        "mitoses": "Nicht angegeben",
+        "histology": "Mukosales Melanom, Gaumen",
+        "initial_staging": {
+            "t": "pT4a", "n": "cN0", "m": "cM0",
+            "uicc": "IVA+", "classification": "AJCC (mukosal)"
+        },
+        "staging": {
+            "t": "pT4a", "n": "cN0", "m": "cM0",
+            "uicc": "IVA+", "classification": "AJCC (mukosal)"
+        },
+        "mutations": {
+            "BRAF": "Wildtyp", "NRAS": "Wildtyp", "KIT": "Wildtyp",
+            "ARID1B": "G319del",
+        },
+        "pdl1": "0 (negativ)",
+        "lab_values": [
+            {"date": "22.11.2024", "marker": "LDH", "value": "225", "unit": "U/l", "ref": "< 250"},
+            {"date": "22.11.2024", "marker": "S-100", "value": "0.03", "unit": "µg/l", "ref": "< 0.10"},
+            {"date": "27.12.2024", "marker": "LDH", "value": "194", "unit": "U/l", "ref": "< 250"},
+        ],
+        "imaging": [
+            {
+                "date": "08.08.2023",
+                "type": "PET-CT",
+                "region": "Ganzkörper",
+                "finding": "Staging-Untersuchung.",
+                "assessment": "Initiales Staging.",
+                "body_region": "whole_body",
+            },
+            {
+                "date": "20.02.2025",
+                "type": "MRT Schädel",
+                "region": "Schädel",
+                "finding": "Konstante Veränderungen nach Oberkieferteilresektion, keine zerebralen Metastasen.",
+                "assessment": "Kein Hinweis auf zerebrale Metastasen.",
+                "body_region": "head",
+            },
+            {
+                "date": "21.02.2025",
+                "type": "MRT Schädel/Hals",
+                "region": "Schädel, Hals",
+                "finding": "Narbe / posttherapeutische Veränderungen.",
+                "assessment": "Postoperative Veränderungen, kein Rezidiv.",
+                "body_region": "head_neck",
+            },
+            {
+                "date": "20.02.2025",
+                "type": "CT Thorax",
+                "region": "Thorax",
+                "finding": "Progressive Pleuraergüsse (30 mm), Milchglas- und streifige Konsolidierungen bds. Unterlappen.",
+                "assessment": "V.a. Nivolumab-assoziierte Pneumonitis oder kardiale Genese.",
+                "body_region": "thorax",
+            },
+        ],
+        "timeline": [
+            {"date": "14.07.2023", "event": "Erstvorstellung mit V.a. malignes Melanom am Gaumen", "type": "diagnosis"},
+            {"date": "25.07.2023", "event": "MKG-Vorstellung zur histologischen Sicherung", "type": "diagnostic"},
+            {"date": "08.08.2023", "event": "PET-CT Staging", "type": "diagnostic"},
+            {"date": "15.08.2023", "event": "R0-Exzision über MKG-Chirurgie (Oberkieferteilresektion)", "type": "surgery"},
+            {"date": "02.11.2023", "event": "Beginn Radiotherapie (66 Gy, 2 Gy/Fraktion)", "type": "therapy"},
+            {"date": "19.12.2023", "event": "Abschluss Radiotherapie", "type": "therapy"},
+            {"date": "02.01.2024", "event": "Beginn Nivolumab adjuvant", "type": "therapy"},
+            {"date": "30.12.2024", "event": "9. Nivolumab-Gabe → Stopp wegen steigender Nierenwerte", "type": "adverse_event"},
+            {"date": "16.01.2025", "event": "ED Leichtkettenmyelom", "type": "diagnosis"},
+            {"date": "20.02.2025", "event": "MRT Schädel + CT Thorax: keine zerebralen Metastasen, progressive Pleuraergüsse", "type": "diagnostic"},
+        ],
+        "primary_tumor_body": ["head_mouth"],
+        "metastases_body": [],
+        "imaged_regions": ["head", "neck", "thorax"],
+        "therapies": {
+            "surgery": "R0 Exzision (Oberkieferteilresektion) über MKG",
+            "radiation": "66 Gy (2 Gy/F), 02.11.–19.12.2023",
+            "systemic": "Nivolumab adjuvant (9 Gaben, Stopp wg. Nierenwerten)",
+            "current": "Therapiepause, DD Leichtkettenmyelom",
+        },
+        "disease_status": "Kein Rezidivnachweis, Therapiekomplikationen",
+    },
+    "5": {
+        "name": "Vervoort, Renate",
+        "dob": "21.08.1945",
+        "age": 78,
+        "sex": "W",
+        "location": "47839 Krefeld",
+        "pat_id": "21403410",
+        "comorbidities": [
+            "Arterieller Hypertonus (ED 2007)",
+        ],
+        "ecog": "Nicht explizit dokumentiert",
+        "primary_diagnosis": "Ulzeriertes polypöses noduläres malignes Melanom",
+        "primary_location": "Rücken mittig",
+        "diagnosis_date": "27.03.2019",
+        "tumor_thickness": "4,8 mm",
+        "ulceration": "Ja",
+        "mitoses": "Nicht angegeben",
+        "histology": "Haut Rücken NM, ulzeriert, polypös",
+        "initial_staging": {
+            "t": "pT4b", "n": "Nx", "m": "Mx",
+            "uicc": "IIC", "classification": "AJCC 2017"
+        },
+        "staging": {
+            "t": "pT4b", "n": "N2c", "m": "M1b",
+            "uicc": "IV", "classification": "AJCC 2017"
+        },
+        "mutations": {
+            "BRAF": "V600E + G455R", "NRAS": "Wildtyp", "KIT": "Wildtyp",
+            "hTERT": "1,295,250 G>A",
+        },
+        "pdl1": "0 (negativ)",
+        "lab_values": [
+            {"date": "11.12.2023", "marker": "LDH", "value": "309", "unit": "U/l", "ref": "< 250"},
+            {"date": "11.12.2023", "marker": "S-100", "value": "0.03", "unit": "µg/l", "ref": "< 0.10"},
+            {"date": "08.02.2024", "marker": "LDH", "value": "299", "unit": "U/l", "ref": "< 250"},
+            {"date": "08.02.2024", "marker": "S-100", "value": "0.17", "unit": "µg/l", "ref": "< 0.10"},
+        ],
+        "imaging": [
+            {
+                "date": "21.02.2024",
+                "type": "CT Thorax",
+                "region": "Thorax",
+                "finding": "Größenregrediente Weichteilmetastasen-Aspekte, größenprogrediente Verdichtung rechte Mamma zentral unten, gering größenprogrediente subkutane Verdichtungen Abdomen.",
+                "assessment": "Gemischtes Ansprechen: teils Regression, teils Progression.",
+                "body_region": "thorax",
+            },
+        ],
+        "timeline": [
+            {"date": "27.03.2019", "event": "ED SSM Rücken, TD 4,8 mm, ulzeriert, R1-Situation", "type": "diagnosis"},
+            {"date": "17.05.2019", "event": "Exzision MM-Metastase scapulär links (R1); SLNE axillär rechts negativ, axillär links positiv (1+/2)", "type": "surgery"},
+            {"date": "13.06.2019", "event": "Exzision MM-Metastase Scapula dorsal links, R0", "type": "surgery"},
+            {"date": "02.09.2019", "event": "Beginn Dabrafenib/Trametinib (MAPKi)", "type": "therapy"},
+            {"date": "2019–2020", "event": "Mehrfache Pausen MAPKi wg. NW (Übelkeit, Muskelschmerzen, CK-Erhöhung)", "type": "adverse_event"},
+            {"date": "07.05.2020", "event": "Uveitis intermedia rechtes Auge, Steroid-Therapie, MAPKi pausiert", "type": "adverse_event"},
+            {"date": "20.05.2021", "event": "Beginn Nivolumab adjuvant, V.a. irMyokarditis nach 1 Gabe → Stopp", "type": "adverse_event"},
+            {"date": "08.06.2021", "event": "Radiotherapie axillär rechts", "type": "therapy"},
+            {"date": "29.11.2023", "event": "Keilresektion Lunge S3, R0 → Histologie bestätigt MM-Metastase", "type": "surgery"},
+            {"date": "04.12.2023", "event": "Pathologiebefund: MM-Metastase Lunge bestätigt", "type": "result"},
+            {"date": "21.02.2024", "event": "CT Thorax: gemischtes Ansprechen, neue subkutane Verdichtungen", "type": "diagnostic"},
+        ],
+        "primary_tumor_body": ["back_center"],
+        "metastases_body": ["back_left_scapula", "axilla_left", "axilla_right", "lung", "breast_right", "abdomen_subcutaneous"],
+        "imaged_regions": ["thorax", "back_left_scapula", "axilla_right", "axilla_left", "lung", "abdomen"],
+        "therapies": {
+            "surgery": "Exzision Primarius (R1 → R0); Exzision In-transit-Metastasen; SLNE (1+/2 li); LAD axillär re (0/9); Keilresektion Lunge S3",
+            "radiation": "RTX axillär rechts (08.06.2021)",
+            "systemic": "Dabrafenib/Trametinib (Pausen wg. NW); Nivolumab (1 Gabe, Stopp wg. irMyokarditis)",
+            "current": "Therapiepause, Verlaufskontrolle",
+        },
+        "disease_status": "Metastasiert, gemischtes Ansprechen",
+    },
+}
+
+
+def _read_original_document(case_id):
+    """Read the original TXT document for a case."""
+    if not os.path.isdir(DOCUMENTS_DIR):
+        return ''
+    for fname in os.listdir(DOCUMENTS_DIR):
+        if fname.lower().endswith('.txt'):
+            m = _re.match(r'[Ff]all(\d+)', fname)
+            if m and m.group(1) == str(case_id):
+                return _read_text_file(os.path.join(DOCUMENTS_DIR, fname))
+    return ''
+
+
+@app.route('/evaluate/<case_id>/dashboard', methods=['GET', 'POST'])
+@login_required
+def case_dashboard(case_id):
+    """Patient dashboard shown before evaluation steps for each case."""
+    if case_id not in PATIENT_DATA:
+        return redirect(url_for('evaluate_resume'))
+
+    username = session['username']
+    texts = load_texts()
+    user_data = init_evaluator(username, texts)
+    case_order = user_data.get('case_order', [])
+    case_index = case_order.index(case_id) if case_id in case_order else 0
+
+    if request.method == 'POST':
+        user_data = load_responses(username)
+        dashboards_seen = user_data.get('dashboards_seen', [])
+        if case_id not in dashboards_seen:
+            dashboards_seen.append(case_id)
+        user_data['dashboards_seen'] = dashboards_seen
+        save_responses(username, user_data)
+        return redirect(url_for('evaluate_step',
+                                case_id=case_id, step_idx=0, tab_idx=0))
+
+    patient = PATIENT_DATA[case_id]
+    original_doc = _read_original_document(case_id)
+
+    # Compute progress for the header
+    done_cases = sum(
+        1 for cid in case_order
+        if all(is_step_done(user_data, cid, i) for i in range(len(RATING_STEPS)))
+    )
+    total_cases = len(case_order)
+
+    return render_template('case_dashboard.html',
+                           case_id=case_id,
+                           case_index=case_index,
+                           patient=patient,
+                           original_doc=original_doc,
+                           done_cases=done_cases,
+                           total_cases=total_cases)
+
+
+@app.route('/api/original-doc/<case_id>')
+@login_required
+def api_original_doc(case_id):
+    """Return the raw original document text for a case (for modal display)."""
+    if case_id not in PATIENT_DATA:
+        return {'error': 'Not found'}, 404
+    doc = _read_original_document(case_id)
+    return {'text': doc}
+
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5001)

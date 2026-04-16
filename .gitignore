@@ -30,3 +30,6 @@ highlight_mappings.json
 
 # Generated login credentials 
 users.json
+
+# Main app (temporary, for development purposes)
+app.py
