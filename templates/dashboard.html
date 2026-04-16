@@ -1,0 +1,388 @@
+{% extends "base.html" %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}?v=1">
+
+<div class="dash-container">
+
+  {# ── HEADER ──────────────────────────────────────────────────────────────── #}
+  <div class="dash-header">
+    <a href="{{ url_for('dashboard_index') }}" class="back-link">&larr; Alle Fälle</a>
+    <h1>Fall {{ case_id }}: {{ patient.name }}</h1>
+    <span class="case-status-pill
+      {% if 'Tumorfrei' in patient.disease_status %}status-free
+      {% elif 'Remission' in patient.disease_status %}status-remission
+      {% elif 'Metastasiert' in patient.disease_status %}status-metastatic
+      {% else %}status-other{% endif %}">{{ patient.disease_status }}</span>
+  </div>
+
+  {# ── TAB NAVIGATION ─────────────────────────────────────────────────────── #}
+  <div class="dash-tabs">
+    <button class="dash-tab active" data-target="tab-overview">Übersicht</button>
+    <button class="dash-tab" data-target="tab-timeline">Verlauf</button>
+    <button class="dash-tab" data-target="tab-lab">Laborwerte</button>
+    <button class="dash-tab" data-target="tab-imaging">Bildgebung</button>
+  </div>
+
+  {# ══════════════════════════════════════════════════════════════════════════ #}
+  {# TAB 1 – OVERVIEW (Basic Info + Body Map)                                  #}
+  {# ══════════════════════════════════════════════════════════════════════════ #}
+  <div id="tab-overview" class="dash-tab-content active">
+    <div class="overview-grid">
+
+      {# ── left column: Patient info card ────────────────────────────────── #}
+      <div class="info-card">
+        <h2 class="card-title">Basisdaten</h2>
+        <table class="info-table">
+          <tr><th>Name</th><td>{{ patient.name }}</td></tr>
+          <tr><th>Geburtsdatum</th><td>{{ patient.dob }} ({{ patient.age }} J.)</td></tr>
+          <tr><th>Geschlecht</th><td>{{ patient.sex }}</td></tr>
+          <tr><th>Wohnort</th><td>{{ patient.location }}</td></tr>
+          <tr><th>Pat-ID</th><td>{{ patient.pat_id }}</td></tr>
+          <tr><th>ECOG</th><td>{{ patient.ecog }}</td></tr>
+        </table>
+
+        <h3 class="card-subtitle">Komorbiditäten</h3>
+        <ul class="info-list">
+          {% for c in patient.comorbidities %}
+          <li>{{ c }}</li>
+          {% endfor %}
+        </ul>
+
+        <h3 class="card-subtitle">Primärdiagnose</h3>
+        <table class="info-table">
+          <tr><th>Diagnose</th><td>{{ patient.primary_diagnosis }}</td></tr>
+          <tr><th>Lokalisation</th><td>{{ patient.primary_location }}</td></tr>
+          <tr><th>Erstdiagnose</th><td>{{ patient.diagnosis_date }}</td></tr>
+          <tr><th>Tumordicke</th><td>{{ patient.tumor_thickness }}</td></tr>
+          <tr><th>Ulzeration</th><td>{{ patient.ulceration }}</td></tr>
+          <tr><th>Mitosen</th><td>{{ patient.mitoses }}</td></tr>
+        </table>
+
+        <h3 class="card-subtitle">Aktuelles Staging</h3>
+        <div class="staging-box">
+          <span class="staging-item"><strong>T</strong> {{ patient.staging.t }}</span>
+          <span class="staging-item"><strong>N</strong> {{ patient.staging.n }}</span>
+          <span class="staging-item"><strong>M</strong> {{ patient.staging.m }}</span>
+          <span class="staging-divider">|</span>
+          <span class="staging-item"><strong>UICC</strong> {{ patient.staging.uicc }}</span>
+          <span class="staging-item stage-class">{{ patient.staging.classification }}</span>
+        </div>
+
+        <h3 class="card-subtitle">Molekularpathologie</h3>
+        {% if patient.mutations %}
+        <div class="mutation-chips">
+          {% for gene, status in patient.mutations.items() %}
+          <span class="mutation-chip {% if status != 'Wildtyp' %}mutation-positive{% endif %}">
+            <strong>{{ gene }}:</strong> {{ status }}
+          </span>
+          {% endfor %}
+        </div>
+        {% else %}
+        <p>Keine molekularpathologischen Befunde vorhanden.</p>
+        {% endif %}
+
+        <p class="pdl1-line"><strong>PD-L1:</strong> {{ patient.pdl1 if patient.pdl1 else 'Nicht bestimmt' }}</p>
+
+        <h3 class="card-subtitle">Therapie</h3>
+        <table class="info-table">
+          <tr><th>Chirurgie</th><td>{{ patient.therapies.surgery or '–' }}</td></tr>
+          <tr><th>Bestrahlung</th><td>{{ patient.therapies.radiation or '–' }}</td></tr>
+          <tr><th>Systemtherapie</th><td>{{ patient.therapies.systemic or '–' }}</td></tr>
+          <tr><th>Aktuell</th><td><strong>{{ patient.therapies.current or '–' }}</strong></td></tr>
+        </table>
+      </div>
+
+      {# ── right column: Body map ────────────────────────────────────────── #}
+      <div class="body-map-card">
+        {% include '_body_map.html' %}
+      </div>
+    </div>
+  </div>
+
+  {# ══════════════════════════════════════════════════════════════════════════ #}
+  {# TAB 2 – TIMELINE (Verlaufsdokumentation)                                 #}
+  {# ══════════════════════════════════════════════════════════════════════════ #}
+  <div id="tab-timeline" class="dash-tab-content">
+    <h2 class="section-title">Verlaufsdokumentation</h2>
+    <div class="timeline-reel">
+      {% for entry in patient.timeline %}
+      <div class="timeline-card tl-{{ entry.type }}">
+        <div class="tl-date">{{ entry.date }}</div>
+        <div class="tl-dot-line">
+          <span class="tl-dot"></span>
+          {% if not loop.last %}<span class="tl-line"></span>{% endif %}
+        </div>
+        <div class="tl-body">
+          <span class="tl-type-badge">{{ entry.type | replace('_', ' ') | title }}</span>
+          <p class="tl-text">{{ entry.event }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  {# ══════════════════════════════════════════════════════════════════════════ #}
+  {# TAB 3 – LAB VALUES                                                       #}
+  {# ══════════════════════════════════════════════════════════════════════════ #}
+  <div id="tab-lab" class="dash-tab-content">
+    <h2 class="section-title">Laborwerte</h2>
+    <div class="lab-grid">
+      <div class="lab-chart-box">
+        <canvas id="labChart" height="300"></canvas>
+      </div>
+      <div class="lab-table-box">
+        <table class="lab-table">
+          <thead><tr><th>Datum</th><th>Marker</th><th>Wert</th><th>Einheit</th><th>Ref.</th></tr></thead>
+          <tbody>
+            {% for lv in patient.lab_values %}
+            <tr>
+              <td>{{ lv.date }}</td>
+              <td><strong>{{ lv.marker }}</strong></td>
+              <td>{{ lv.value }}</td>
+              <td>{{ lv.unit }}</td>
+              <td>{{ lv.ref }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  {# ══════════════════════════════════════════════════════════════════════════ #}
+  {# TAB 4 – IMAGING DIAGNOSTICS                                              #}
+  {# ══════════════════════════════════════════════════════════════════════════ #}
+  <div id="tab-imaging" class="dash-tab-content">
+    <h2 class="section-title">Bildgebende Diagnostik</h2>
+    <div class="imaging-cards">
+      {% for img in patient.imaging %}
+      <div class="imaging-card">
+        <div class="img-card-header">
+          <span class="img-date">{{ img.date }}</span>
+          <span class="img-type-badge">{{ img.type }}</span>
+        </div>
+        <p class="img-region"><strong>Region:</strong> {{ img.region }}</p>
+        <p class="img-finding"><strong>Befund:</strong> {{ img.finding }}</p>
+        <p class="img-assess"><strong>Beurteilung:</strong> {{ img.assessment }}</p>
+        <button class="btn-raw-text" onclick="openRawDoc('{{ case_id }}')">
+          Originaldokument anzeigen
+        </button>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+</div>{# / .dash-container #}
+
+{# ── RAW DOCUMENT MODAL ─────────────────────────────────────────────────── #}
+<div id="rawDocModal" class="modal-overlay" style="display:none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Originaldokument — Fall {{ case_id }}</h3>
+      <button class="modal-close" onclick="closeRawDoc()">&times;</button>
+    </div>
+    <pre class="modal-body" id="rawDocBody">Laden…</pre>
+  </div>
+</div>
+
+{# ── SCRIPTS ─────────────────────────────────────────────────────────────── #}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+  /* ── Tab switching ─────────────────────────────────────────────────────── */
+  document.querySelectorAll('.dash-tab').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.dash-tab').forEach(function(b) { b.classList.remove('active'); });
+      document.querySelectorAll('.dash-tab-content').forEach(function(c) { c.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.target).classList.add('active');
+    });
+  });
+
+  /* ── Body map: colour regions ──────────────────────────────────────────── */
+  var primaryRegions  = {{ patient.primary_tumor_body | tojson }};
+  var metaRegions     = {{ patient.metastases_body | tojson }};
+  var imagingData     = {{ patient.imaging | tojson }};
+  var imagedRegions   = imagingData.map(function(img){ return img.body_region; }).filter(function(v,i,a){ return a.indexOf(v)===i; });
+
+  // Build tooltip text map per region
+  var regionInfo = {};
+  primaryRegions.forEach(function(r) {
+    regionInfo[r] = regionInfo[r] || [];
+    regionInfo[r].push('🔴 Primärtumor: {{ patient.primary_location }}');
+  });
+  metaRegions.forEach(function(r) {
+    regionInfo[r] = regionInfo[r] || [];
+    regionInfo[r].push('🟠 Metastase');
+  });
+  imagingData.forEach(function(img) {
+    var r = img.body_region;
+    regionInfo[r] = regionInfo[r] || [];
+    regionInfo[r].push('🔵 ' + img.type + ' (' + img.date + '): ' + img.assessment);
+  });
+
+  document.querySelectorAll('.body-region').forEach(function(el) {
+    var region = el.dataset.region;
+    var isPrimary = primaryRegions.indexOf(region) !== -1;
+    var isMeta    = metaRegions.indexOf(region) !== -1;
+    var isImaged  = imagedRegions.indexOf(region) !== -1;
+
+    if (isPrimary) {
+      el.classList.add('region-primary');
+    } else if (isMeta) {
+      el.classList.add('region-metastasis');
+    } else if (isImaged) {
+      el.classList.add('region-imaged');
+    } else {
+      el.style.display = 'none';
+    }
+
+    // Tooltip
+    var tooltip = document.getElementById('body-tooltip');
+    el.addEventListener('mouseenter', function(e) {
+      var info = regionInfo[region];
+      if (!info) return;
+      tooltip.innerHTML = info.join('<br>');
+      tooltip.style.display = 'block';
+    });
+    el.addEventListener('mousemove', function(e) {
+      tooltip.style.left = (e.pageX + 14) + 'px';
+      tooltip.style.top  = (e.pageY + 14) + 'px';
+    });
+    el.addEventListener('mouseleave', function() {
+      tooltip.style.display = 'none';
+    });
+  });
+
+  /* Whole-body silhouette outline */
+  var outlineEl = document.querySelector('.bmap-body-outline[data-region="whole_body"]');
+  var bmapBody = document.querySelector('.bmap-body');
+  if (outlineEl && bmapBody) {
+    var wbPrimary = primaryRegions.indexOf('whole_body') !== -1;
+    var wbMeta    = metaRegions.indexOf('whole_body') !== -1;
+    var wbImaged  = imagedRegions.indexOf('whole_body') !== -1;
+    var wbActive = false;
+    if (wbPrimary)      { bmapBody.classList.add('whole-body-primary'); wbActive = true; }
+    else if (wbMeta)    { bmapBody.classList.add('whole-body-meta'); wbActive = true; }
+    else if (wbImaged)  { bmapBody.classList.add('whole-body-imaged'); wbActive = true; }
+    if (wbActive) {
+      outlineEl.classList.add('outline-active');
+      var tooltip = document.getElementById('body-tooltip');
+      outlineEl.addEventListener('mouseenter', function() {
+        bmapBody.classList.add('whole-body-hovered');
+        var info = regionInfo['whole_body'];
+        if (info) { tooltip.innerHTML = info.join('<br>'); tooltip.style.display = 'block'; }
+      });
+      outlineEl.addEventListener('mousemove', function(e) {
+        tooltip.style.left = (e.pageX + 14) + 'px';
+        tooltip.style.top  = (e.pageY + 14) + 'px';
+      });
+      outlineEl.addEventListener('mouseleave', function() {
+        bmapBody.classList.remove('whole-body-hovered');
+        tooltip.style.display = 'none';
+      });
+    }
+  }
+
+  /* ── Lab chart ─────────────────────────────────────────────────────────── */
+  var labValues = {{ patient.lab_values | tojson }};
+  if (labValues.length > 0) {
+    // Group by marker
+    var markers = {};
+    labValues.forEach(function(lv) {
+      if (!markers[lv.marker]) markers[lv.marker] = [];
+      markers[lv.marker].push(lv);
+    });
+
+    var datasets = [];
+    var colours = { 'LDH': '#e74c3c', 'S-100': '#3498db' };
+    var colourList = ['#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6'];
+    var ci = 0;
+    var allLabels = [];
+
+    Object.keys(markers).forEach(function(m) {
+      var colour = colours[m] || colourList[ci++ % colourList.length];
+      var points = markers[m];
+      var labels = points.map(function(p) { return p.date; });
+      var values = points.map(function(p) { return parseFloat(p.value.replace(',', '.')); });
+      labels.forEach(function(l) { if (allLabels.indexOf(l) === -1) allLabels.push(l); });
+      datasets.push({
+        label: m + ' (' + points[0].unit + ')',
+        data: values,
+        borderColor: colour,
+        backgroundColor: colour + '33',
+        tension: 0.3,
+        pointRadius: 5,
+        fill: false,
+      });
+    });
+
+    // Use first marker's labels as x-axis
+    var firstMarker = Object.keys(markers)[0];
+    var chartLabels = markers[firstMarker].map(function(p) { return p.date; });
+
+    // Build per-dataset data aligned to allLabels
+    allLabels.sort(function(a, b) {
+      var pa = a.split('.'), pb = b.split('.');
+      var da = new Date(pa[2], pa[1]-1, pa[0]), db = new Date(pb[2], pb[1]-1, pb[0]);
+      return da - db;
+    });
+    var alignedDatasets = [];
+    Object.keys(markers).forEach(function(m) {
+      var colour = colours[m] || colourList[ci++ % colourList.length];
+      var points = markers[m];
+      var dataMap = {};
+      points.forEach(function(p) { dataMap[p.date] = parseFloat(p.value.replace(',', '.')); });
+      var data = allLabels.map(function(l) { return dataMap[l] !== undefined ? dataMap[l] : null; });
+      alignedDatasets.push({
+        label: m + ' (' + points[0].unit + ')',
+        data: data,
+        borderColor: colour,
+        backgroundColor: colour + '33',
+        tension: 0.3,
+        pointRadius: 5,
+        fill: false,
+        spanGaps: true,
+      });
+    });
+
+    var ctx = document.getElementById('labChart');
+    if (ctx) {
+      new Chart(ctx, {
+        type: 'line',
+        data: { labels: allLabels, datasets: alignedDatasets },
+        options: {
+          responsive: true,
+          plugins: { legend: { position: 'top' } },
+          scales: {
+            y: { beginAtZero: false, title: { display: true, text: 'Wert' } },
+            x: { title: { display: true, text: 'Datum' } },
+          },
+        },
+      });
+    }
+  }
+
+});
+
+/* ── Raw document modal ────────────────────────────────────────────────────── */
+function openRawDoc(caseId) {
+  var modal = document.getElementById('rawDocModal');
+  var body  = document.getElementById('rawDocBody');
+  modal.style.display = 'flex';
+  body.textContent = 'Laden…';
+  fetch('/api/original-doc/' + caseId)
+    .then(function(r) { return r.json(); })
+    .then(function(d) { body.textContent = d.text || 'Kein Dokument gefunden.'; })
+    .catch(function() { body.textContent = 'Fehler beim Laden.'; });
+}
+function closeRawDoc() {
+  document.getElementById('rawDocModal').style.display = 'none';
+}
+document.getElementById('rawDocModal').addEventListener('click', function(e) {
+  if (e.target === this) closeRawDoc();
+});
+</script>
+
+{% endblock %}

@@ -8,6 +8,7 @@ A Flask web application for a clinical study evaluating LLM-generated tumor boar
 
 Physicians log in and are guided through a structured, multi-step evaluation of multiple melanoma cases. For each case they:
 
+0. Review a **patient dashboard** with an interactive anatomical body map, staging, molecular pathology, lab values, imaging diagnostics, and clinical timeline.
 1. Rate the **clinical relevance** of a defined set of information items.
 2. Evaluate both a human-written and an LLM-generated **case summary** across several dimensions (information content, false information, correctness, completeness, conciseness, post-editing effort, origin guess, and overall preference).
 3. Evaluate both versions of the **problem statement** (focus, guideline conformity, specificity, post-editing effort, origin guess, and preference).
@@ -35,8 +36,8 @@ texts_llm/
   zusammenfassungen/    LLM-generated case summaries (fall_1 … fall_5)
   fragestellungen/      LLM-generated problem formulations (fall_1 … fall_5)
 
-original_documents/     Case PDFs (Fall<N>_<hash>.pdf) + companion .txt protocols
-                        The app auto-discovers cases from PDF filenames.
+original_documents/     Case source files (Fall<N>_<hash>.txt)
+                        The app auto-discovers cases from filenames.
 
 guideline/              S3-Leitlinie PDF shown during guideline-conformity rating
 
@@ -48,6 +49,8 @@ exports/
 
 templates/              Jinja2 HTML templates
   base.html             Base layout (navigation, stepper)
+  _body_map.html        Reusable body map component (anatomical overview)
+  case_dashboard.html   Patient dashboard shown before evaluation steps
   login.html            Login page
   consent.html          Informed consent
   demographics.html     Demographic questionnaire
@@ -61,6 +64,9 @@ templates/              Jinja2 HTML templates
 
 static/
   style.css             Application stylesheet
+  dashboard.css         Dashboard-specific styles (body map, charts, timeline)
+  body_map_echelon.png  Male body map image
+  body_map_echelon_female.png  Female body map image
 ```
 
 ---
@@ -113,12 +119,12 @@ SECRET_KEY=your-secret-key uv run app.py
 ## Data Flow
 
 1. The app reads case content from `texts_human/` and `texts_llm/` at startup.
-2. Case discovery is driven by PDF files in `original_documents/` matching the pattern `Fall<N>_*.pdf`. A companion `.txt` file with the same stem provides the protocol text.
+2. Case discovery is driven by `.txt` files in `original_documents/` matching the pattern `Fall<N>_*.txt`.
 3. `highlight_mappings.json` (if present) is loaded to annotate text excerpts during evaluation.
 4. The guideline PDF in `guideline/` is served to evaluators during the guideline-conformity step.
 5. Evaluator responses are saved per-user as `responses/responses_<username>.json`.
 6. The `responses/` and `exports/` directories are created automatically when needed.
-4. An admin can download all responses as JSON or CSV via the `/export` route.
+7. An admin can download all responses as JSON or CSV via the `/export` route.
 
 ---
 
