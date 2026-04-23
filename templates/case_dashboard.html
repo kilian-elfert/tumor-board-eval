@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}?v=8">
-{% set type_de = {'diagnosis':'Diagnose','surgery':'Operation','diagnostic':'Diagnostik','therapy':'Therapie','conference':'Konferenz','consultation':'Konsultation','adverse_event':'Nebenwirkung','result':'Ergebnis'} %}
+<link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}?v=23">
+{% set type_de = {'Diagnostik':'Diagnostik','Therapie':'Therapie','Nebenwirkung':'Nebenwirkung','Tumorkonferenz':'Tumorkonferenz','Staging':'Staging','Nachsorge':'Nachsorge','Konsil':'Konsil','Sonstiges':'Sonstiges'} %}
 
 <div class="dash-container">
 
@@ -18,12 +18,7 @@
 
   {# ── HEADER ──────────────────────────────────────────────────────────────── #}
   <div class="dash-header">
-    <h1>Patientenakte — Fall {{ case_id }}: {{ patient.name }}</h1>
-    <span class="case-status-pill
-      {% if 'Tumorfrei' in patient.disease_status %}status-free
-      {% elif 'Remission' in patient.disease_status %}status-remission
-      {% elif 'Metastasiert' in patient.disease_status %}status-metastatic
-      {% else %}status-other{% endif %}">{{ patient.disease_status }}</span>
+    <h1>Patientenakte — Fall {{ case_index + 1 }}: {{ patient.name }}</h1>
   </div>
 
   <p class="dash-intro-hint">
@@ -49,32 +44,52 @@
       <div class="info-card">
         <h2 class="card-title">Basisdaten</h2>
         <table class="info-table">
-          <tr><th>Name</th><td>{{ patient.name }}</td></tr>
-          <tr><th>Geburtsdatum</th><td>{{ patient.dob }} ({{ patient.age }} J.)</td></tr>
-          <tr><th>Geschlecht</th><td>{{ patient.sex }}</td></tr>
-          <tr><th>Wohnort</th><td>{{ patient.location }}</td></tr>
-          <tr><th>Pat-ID</th><td>{{ patient.pat_id }}</td></tr>
-          <tr><th>ECOG</th><td>{{ patient.ecog }}</td></tr>
+          <tr><th>Name</th><td>{{ patient.name|ka }}</td></tr>
+          <tr><th>Geburtsdatum</th><td>{% if patient.dob %}{{ patient.dob }} ({{ patient.age }} J.){% else %}Keine Angabe{% endif %}</td></tr>
+          <tr><th>Geschlecht</th><td>{{ patient.sex|ka }}</td></tr>
+          <tr><th>Wohnort</th><td>{{ patient.location|ka }}</td></tr>
+          <tr><th>Pat-ID</th><td>{{ patient.pat_id|ka }}</td></tr>
+          <tr><th>ECOG</th><td>{{ patient.ecog|ka }}</td></tr>
+          <tr><th>Karnofsky</th><td>{{ patient.karnofsky|ka }}</td></tr>
         </table>
 
         <h3 class="card-subtitle">Primärdiagnose</h3>
         <table class="info-table">
-          <tr><th>Diagnose</th><td>{{ patient.primary_diagnosis }}</td></tr>
-          <tr><th>Lokalisation</th><td>{{ patient.primary_location }}</td></tr>
-          <tr><th>Erstdiagnose</th><td>{{ patient.diagnosis_date }}</td></tr>
-          <tr><th>Tumordicke</th><td>{{ patient.tumor_thickness }}</td></tr>
-          <tr><th>Ulzeration</th><td>{{ patient.ulceration }}</td></tr>
-          <tr><th>Mitosen</th><td>{{ patient.mitoses }}</td></tr>
+          <tr><th>Diagnose</th><td>{{ patient.primary_diagnosis|ka }}</td></tr>
+          <tr><th>Lokalisation</th><td>{{ patient.primary_location|ka }}</td></tr>
+          <tr><th>Erstdiagnose</th><td>{{ patient.diagnosis_date|ka }}</td></tr>
+          <tr><th>Tumordicke</th><td>{{ patient.tumor_thickness|ka }}</td></tr>
+          <tr><th>Ulzeration</th><td>{{ patient.ulceration|ka }}</td></tr>
+          <tr><th>Mitosen</th><td>{{ patient.mitoses|ka }}</td></tr>
         </table>
 
-        <h3 class="card-subtitle">Therapie</h3>
-        <table class="info-table">
-          <tr><th>Chirurgie</th><td>{{ patient.therapies.surgery or '–' }}</td></tr>
-          <tr><th>Bestrahlung</th><td>{{ patient.therapies.radiation or '–' }}</td></tr>
-          <tr><th>Andere lokoregionäre Therapien</th><td>{{ patient.therapies.other_locoregional or '–' }}</td></tr>
-          <tr><th>Systemtherapie</th><td>{{ patient.therapies.systemic or '–' }}</td></tr>
-          <tr><th>Aktuell</th><td><strong>{{ patient.therapies.current or '–' }}</strong></td></tr>
-        </table>
+        <h3 class="card-subtitle">Therapieverlauf</h3>
+
+        {# ── Macro for a single therapy category ── #}
+        {% macro therapy_category(label, items, dot_class) %}
+        {% if items %}
+        <div class="therapy-cat">
+          <h4 class="therapy-cat-label"><span class="therapy-tl-dot {{ dot_class }}"></span> {{ label }}</h4>
+          <ol class="therapy-timeline">
+            {% for entry in items %}
+            <li class="therapy-tl-item">
+              <span class="therapy-tl-date">{{ entry.date }}</span>
+              <span class="therapy-tl-dot-wrap"><span class="therapy-tl-dot {{ dot_class }}"></span></span>
+              <span class="therapy-tl-content">{{ entry.text }}</span>
+            </li>
+            {% endfor %}
+          </ol>
+        </div>
+        {% endif %}
+        {% endmacro %}
+
+        {{ therapy_category('Chirurgie', patient.therapies.surgery, 'dot-surgery') }}
+        {{ therapy_category('Bestrahlung', patient.therapies.radiation, 'dot-radiation') }}
+        {% if patient.therapies.other_locoregional %}
+        {{ therapy_category('Andere lokoregion&auml;re Therapien', patient.therapies.other_locoregional, 'dot-locoregional') }}
+        {% endif %}
+        {{ therapy_category('Systemtherapie', patient.therapies.systemic, 'dot-systemic') }}
+        {{ therapy_category('Aktuell', patient.therapies.current, 'dot-current') }}
       </div>
 
       {# ── right column: Body map ────────────────────────────────────────── #}
@@ -82,26 +97,53 @@
         {% include '_body_map.html' %}
       </div>
 
-      {# ── far-right column: Verlauf ─────────────────────────────────────── #}
+      {# ── far-right column: Verlauf (concise overview) ──────────────────── #}
       <div class="verlauf-card">
         <h2 class="card-title">Verlauf</h2>
-        <div class="timeline-reel">
+        <div class="verlauf-filters">
+          <select id="verlauf-year-filter" class="verlauf-filter-select">
+            <option value="all">Alle Jahre</option>
+          </select>
+          <input
+            id="verlauf-keyword-filter"
+            class="verlauf-filter-input"
+            type="search"
+            placeholder="Stichwort suchen"
+            aria-label="Stichwortsuche Verlauf"
+          >
+        </div>
+        <div class="tag-select" id="verlauf-type-filter" aria-label="Verlauf Kategorien">
+          <div class="tag-select-tags"></div>
+          <div class="tag-select-actions">
+            <button type="button" class="tag-select-clear" title="Alle entfernen">&times;</button>
+            <button type="button" class="tag-select-toggle" title="Kategorien">&#9662;</button>
+          </div>
+          <div class="tag-select-dropdown"></div>
+        </div>
+        <div class="timeline-reel" id="verlauf-reel">
           {% for entry in patient.timeline %}
-          <div class="timeline-card tl-{{ entry.type }}">
+          <div class="timeline-card tl-{{ entry.category | default('Sonstiges') }}" data-type="{{ entry.category | default('Sonstiges') }}" data-date="{{ entry.date }}">
             <div class="tl-dot-line">
               <span class="tl-dot"></span>
               {% if not loop.last %}<span class="tl-line"></span>{% endif %}
             </div>
             <div class="tl-body">
               <div class="tl-body-header">
-                <span class="tl-type-badge">{{ type_de.get(entry.type, entry.type | replace('_', ' ') | title) }}</span>
+                <span class="tl-type-badge">{{ entry.category | default('Sonstiges') }}</span>
                 <span class="tl-date">{{ entry.date }}</span>
               </div>
-              <p class="tl-text">{{ entry.event }}</p>
+              <p class="tl-text">{{ entry.summary | default(entry.event) }}</p>
+              {% if entry.cleaned_event or entry.event %}
+              <details class="tl-removed-details">
+                <summary class="tl-removed-toggle">Originaltext anzeigen</summary>
+                <pre class="tl-removed-lines">{{ entry.cleaned_event | default(entry.event) }}</pre>
+              </details>
+              {% endif %}
             </div>
           </div>
           {% endfor %}
         </div>
+        <p class="verlauf-empty-state" id="verlauf-empty">Keine Einträge für diese Filter gefunden.</p>
       </div>
     </div>
   </div>
@@ -111,47 +153,124 @@
   {# ══════════════════════════════════════════════════════════════════════════ #}
   <div id="tab-timeline" class="dash-tab-content">
     <h2 class="section-title">Verlaufsdokumentation</h2>
-    <div class="timeline-reel">
+    <div class="verlauf-filters">
+      <select id="verlauf-year-filter-tab" class="verlauf-filter-select">
+        <option value="all">Alle Jahre</option>
+      </select>
+      <input
+        id="verlauf-keyword-filter-tab"
+        class="verlauf-filter-input"
+        type="search"
+        placeholder="Stichwort suchen"
+        aria-label="Stichwortsuche Verlauf"
+      >
+    </div>
+    <div class="tag-select" id="verlauf-type-filter-tab" aria-label="Verlauf Kategorien">
+      <div class="tag-select-tags"></div>
+      <div class="tag-select-actions">
+        <button type="button" class="tag-select-clear" title="Alle entfernen">&times;</button>
+        <button type="button" class="tag-select-toggle" title="Kategorien">&#9662;</button>
+      </div>
+      <div class="tag-select-dropdown"></div>
+    </div>
+    <div class="timeline-reel" id="verlauf-reel-tab">
       {% for entry in patient.timeline %}
-      <div class="timeline-card tl-{{ entry.type }}">
+      <div class="timeline-card tl-{{ entry.category | default('Sonstiges') }}" data-type="{{ entry.category | default('Sonstiges') }}" data-date="{{ entry.date }}">
         <div class="tl-date">{{ entry.date }}</div>
         <div class="tl-dot-line">
           <span class="tl-dot"></span>
           {% if not loop.last %}<span class="tl-line"></span>{% endif %}
         </div>
         <div class="tl-body">
-          <span class="tl-type-badge">{{ type_de.get(entry.type, entry.type | replace('_', ' ') | title) }}</span>
-          <p class="tl-text">{{ entry.event }}</p>
+          <span class="tl-type-badge">{{ entry.category | default('Sonstiges') }}</span>
+          <p class="tl-text">{{ entry.cleaned_event | default(entry.event) }}</p>
+          {% if entry.removed_lines %}
+          <details class="tl-removed-details">
+            <summary class="tl-removed-toggle">Entfernte Zeilen anzeigen ({{ entry.removed_lines.split('\n') | length }})</summary>
+            <pre class="tl-removed-lines">{{ entry.removed_lines }}</pre>
+          </details>
+          {% endif %}
         </div>
       </div>
       {% endfor %}
     </div>
+    <p class="verlauf-empty-state" id="verlauf-empty-tab">Keine Einträge für diese Filter gefunden.</p>
   </div>
 
   {# ══════════════════════════════════════════════════════════════════════════ #}
   {# TAB 3 – LAB VALUES                                                       #}
   {# ══════════════════════════════════════════════════════════════════════════ #}
   <div id="tab-lab" class="dash-tab-content">
-    <h2 class="section-title">Laborwerte</h2>
+    <div class="section-title-row">
+      <h2 class="section-title" style="margin:0">Laborwerte</h2>
+      <label class="toggle-switch">
+        <input type="checkbox" id="lab-oor-filter">
+        <span class="toggle-slider"></span>
+        <span class="toggle-label">Nur auffällige Werte anzeigen</span>
+      </label>
+    </div>
+    <div class="verlauf-filters">
+      <select id="lab-year-filter" class="verlauf-filter-select">
+        <option value="all">Alle Jahre</option>
+      </select>
+    </div>
+    <div class="imaging-tag-filters">
+      <div class="tag-select" id="lab-category-filter" aria-label="Kategorie">
+        <div class="tag-select-tags"></div>
+        <div class="tag-select-actions">
+          <button type="button" class="tag-select-clear" title="Alle entfernen">&times;</button>
+          <button type="button" class="tag-select-toggle" title="Kategorie">&#9662;</button>
+        </div>
+        <div class="tag-select-dropdown"></div>
+      </div>
+      <div class="tag-select" id="lab-marker-filter" aria-label="Laborwerte Marker">
+        <div class="tag-select-tags"></div>
+        <div class="tag-select-actions">
+          <button type="button" class="tag-select-clear" title="Alle entfernen">&times;</button>
+          <button type="button" class="tag-select-toggle" title="Marker">&#9662;</button>
+        </div>
+        <div class="tag-select-dropdown"></div>
+      </div>
+    </div>
+    <div id="lab-category-overview" class="lab-category-overview"></div>
     <div id="lab-charts-container" class="lab-charts-grid"></div>
     <div class="lab-grid">
       <div class="lab-table-box">
         <table class="lab-table">
-          <thead><tr><th>Datum</th><th>Marker</th><th>Wert</th><th>Einheit</th><th>Ref.</th></tr></thead>
-          <tbody>
+          <thead><tr><th>Datum</th><th>Marker</th><th>Wert</th><th>Einheit</th><th>Ref.</th><th></th></tr></thead>
+          <tbody id="lab-table-body">
             {% for lv in patient.lab_values %}
-            <tr>
+            {% set val_num = lv.value | replace(',', '.') | float(0) %}
+            {% set ref_str = lv.ref | trim %}
+            {% set ref_upper = none %}
+            {% set ref_lower = none %}
+            {% if ref_str.startswith('<') %}
+              {% set ref_upper = ref_str[1:] | trim | replace(',', '.') | float(0) %}
+            {% elif ref_str.startswith('>') %}
+              {% set ref_lower = ref_str[1:] | trim | replace(',', '.') | float(0) %}
+            {% elif '-' in ref_str and ref_str.split('-') | length >= 2 %}
+              {% set ref_parts = ref_str.split('-') %}
+              {% set ref_lower = ref_parts[0] | trim | replace(',', '.') | float(none) %}
+              {% set ref_upper_raw = ref_parts[1] | trim %}
+              {# strip trailing unit text from upper bound #}
+              {% set ref_upper_parts = ref_upper_raw.split(' ') %}
+              {% set ref_upper = ref_upper_parts[0] | replace(',', '.') | float(none) %}
+            {% endif %}
+            {% set out_of_range = (ref_upper is not none and val_num > ref_upper) or (ref_lower is not none and val_num < ref_lower) %}
+            <tr data-marker="{{ lv.marker }}" data-date="{{ lv.date }}"{% if out_of_range %} class="lab-row-warn"{% endif %}>
               <td>{{ lv.date }}</td>
               <td><strong>{{ lv.marker }}</strong></td>
               <td>{{ lv.value }}</td>
               <td>{{ lv.unit }}</td>
               <td>{{ lv.ref }}</td>
+              <td class="lab-warn-cell">{% if out_of_range %}⚠{% endif %}</td>
             </tr>
             {% endfor %}
           </tbody>
         </table>
       </div>
     </div>
+    <p class="verlauf-empty-state" id="lab-empty">Keine Laborwerte für diese Filter gefunden.</p>
   </div>
 
   {# ══════════════════════════════════════════════════════════════════════════ #}
@@ -159,14 +278,37 @@
   {# ══════════════════════════════════════════════════════════════════════════ #}
   <div id="tab-imaging" class="dash-tab-content">
     <h2 class="section-title">Bildgebende Diagnostik</h2>
-    {% set region_names = {'head':'Kopf','head_mouth':'Mundbereich','head_neck':'Kopf/Hals','neck':'Hals','chest_right':'Brustkorb re.','chest_left':'Brustkorb li.','thorax':'Thorax','thorax_abdomen':'Thorax/Abdomen','lung':'Lunge','breast_right':'Brust re.','abdomen':'Abdomen','abdomen_left':'Abdomen li.','abdomen_subcutaneous':'Abdomen (s.c.)','spine':'Wirbelsäule','back_center':'Rücken zentral','back_left_scapula':'Schulterblatt li.','pelvis':'Becken','groin_right':'Leiste re.','groin_left':'Leiste li.','axilla_left':'Axilla li.','axilla_right':'Axilla re.','left_forearm':'Unterarm li.','right_forearm':'Unterarm re.','whole_body':'Ganzkörper'} %}
-    <div class="imaging-flow-grid">
+    {% set region_names = {'head':'Kopf','head_mouth':'Mundbereich','head_neck':'Kopf/Hals','neck':'Hals','chest_right':'Brustkorb re.','chest_left':'Brustkorb li.','thorax':'Thorax','thorax_abdomen':'Thorax/Abdomen','lung':'Lunge','breast_right':'Brust re.','abdomen':'Abdomen','abdomen_left':'Abdomen li.','abdomen_subcutaneous':'Abdomen (s.c.)','spine':'Wirbelsäule','back_center':'Rücken zentral','back_left_scapula':'Schulterblatt li.','pelvis':'Becken','groin_right':'Leiste re.','groin_left':'Leiste li.','thigh_left':'Oberschenkel li.','thigh_right':'Oberschenkel re.','lower_leg_right':'Unterschenkel re.','axilla_left':'Axilla li.','axilla_right':'Axilla re.','left_forearm':'Unterarm li.','right_forearm':'Unterarm re.','whole_body':'Ganzkörper'} %}
+    <div class="verlauf-filters">
+      <select id="img-year-filter" class="verlauf-filter-select">
+        <option value="all">Alle Jahre</option>
+      </select>
+    </div>
+    <div class="imaging-tag-filters">
+      <div class="tag-select" id="img-modality-filter" aria-label="Modalität">
+        <div class="tag-select-tags"></div>
+        <div class="tag-select-actions">
+          <button type="button" class="tag-select-clear" title="Alle entfernen">&times;</button>
+          <button type="button" class="tag-select-toggle" title="Modalität">&#9662;</button>
+        </div>
+        <div class="tag-select-dropdown"></div>
+      </div>
+      <div class="tag-select" id="img-region-filter" aria-label="Region">
+        <div class="tag-select-tags"></div>
+        <div class="tag-select-actions">
+          <button type="button" class="tag-select-clear" title="Alle entfernen">&times;</button>
+          <button type="button" class="tag-select-toggle" title="Region">&#9662;</button>
+        </div>
+        <div class="tag-select-dropdown"></div>
+      </div>
+    </div>
+    <div class="imaging-flow-grid" id="imaging-grid">
       {% for group in patient.imaging | groupby('body_region') %}
-      <div class="imaging-lane">
+      <div class="imaging-lane" data-region="{{ region_names.get(group.grouper, group.list[0].region) }}">
         <h3 class="imaging-lane-title">{{ region_names.get(group.grouper, group.list[0].region) }}</h3>
         <div class="imaging-lane-flow">
           {% for img in group.list %}
-          <div class="imaging-flow-node">
+          <div class="imaging-flow-node" data-date="{{ img.date }}" data-modality="{{ img.modality }}" data-region="{{ region_names.get(img.body_region, img.region) }}">
             <div class="imaging-flow-dot-col">
               <span class="imaging-flow-dot"></span>
               {% if not loop.last %}<span class="imaging-flow-line"></span>{% endif %}
@@ -174,10 +316,24 @@
             <div class="imaging-flow-card">
               <div class="img-card-header">
                 <span class="img-date">{{ img.date }}</span>
-                <span class="img-type-badge">{{ img.type }}</span>
+                <span class="img-card-actions">
+                  {% if img.has_pdf %}
+                  <button type="button" class="img-btn img-btn-pdf" data-pdf-url="{{ url_for('imaging_pdf', case_id=case_id, dir=img.img_dir, file=img.pdf_filename) }}" data-pdf-title="{{ img.type }} – {{ img.date }}" title="PDF öffnen">PDF</button>
+                  {% endif %}
+                  <button type="button" class="img-btn img-btn-txt" data-dir="{{ img.img_dir }}" data-date="{{ img.date }}" data-type="{{ img.type }}" title="Rohtext anzeigen">TXT</button>
+                  <span class="img-type-badge">{{ img.type }}</span>
+                </span>
               </div>
-              <p class="img-finding"><strong>Befund:</strong> {{ img.finding }}</p>
+              {% if img.summary %}
+              <p class="img-summary">{{ img.summary }}</p>
+              {% endif %}
+              <details class="img-finding-details">
+                <summary class="img-finding-toggle">Befund anzeigen</summary>
+                <p class="img-finding">{{ img.finding }}</p>
+              </details>
+              {% if img.assessment %}
               <p class="img-assess"><strong>Beurteilung:</strong> {{ img.assessment }}</p>
+              {% endif %}
             </div>
           </div>
           {% endfor %}
@@ -185,6 +341,7 @@
       </div>
       {% endfor %}
     </div>
+    <p class="verlauf-empty-state" id="img-empty">Keine Bildgebung für diese Filter gefunden.</p>
   </div>
 
   {# ── CONTINUE BUTTON ────────────────────────────────────────────────────── #}
@@ -207,6 +364,17 @@
   </div>
 </div>
 
+{# ── PDF VIEWER MODAL ────────────────────────────────────────────────────── #}
+<div id="pdfViewerModal" class="modal-overlay" style="display:none;" onclick="if(event.target===this)closePdfViewer()">
+  <div class="modal-content" style="height:90vh;">
+    <div class="modal-header">
+      <h3 id="pdfViewerTitle">PDF</h3>
+      <button class="modal-close" onclick="closePdfViewer()">&times;</button>
+    </div>
+    <iframe id="pdfViewerFrame" style="flex:1;width:100%;border:none;border-radius:0 0 14px 14px;" src=""></iframe>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.1.0/dist/chartjs-plugin-annotation.min.js"></script>
 <script>
@@ -224,7 +392,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
   /* ── Body map (Echelon-style) ──────────────────────────────────────── */
   var primaryRegions = {{ patient.primary_tumor_body | tojson }};
+  var primaryStatus  = {{ patient.primary_tumor_status | tojson }};
   var metaRegions    = {{ patient.metastases_body | tojson }};
+  var metaDetail     = {{ patient.metastases_detail | tojson }};
   var imagingData    = {{ patient.imaging | tojson }};
   var imagedRegions  = imagingData.map(function(img){ return img.body_region; }).filter(function(v,i,a){ return a.indexOf(v)===i; });
 
@@ -237,47 +407,108 @@ document.addEventListener('DOMContentLoaded', function() {
     'spine':'Wirbelsäule','back_center':'Rücken zentral',
     'back_left_scapula':'Schulterblatt li.','pelvis':'Becken',
     'groin_right':'Leiste re.','groin_left':'Leiste li.',
+    'thigh_left':'Oberschenkel li.','thigh_right':'Oberschenkel re.',
+    'lower_leg_right':'Unterschenkel re.',
     'axilla_left':'Axilla li.','axilla_right':'Axilla re.',
     'left_forearm':'Unterarm li.','right_forearm':'Unterarm re.',
     'whole_body':'Ganzkörper'
   };
 
   var regionInfo = {};
+  function tipDot(color, inactive) {
+    return '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:' + color + (inactive ? ';opacity:.55' : '') + ';vertical-align:middle;margin-right:4px"></span>';
+  }
+  var pDot = primaryStatus === 'active' ? tipDot('#dc3545', false) : tipDot('#dc3545', true);
+  var pTag = pDot + 'Prim\u00e4rtumor (' + (primaryStatus === 'active' ? 'aktiv' : 'inaktiv') + ')';
+  var primaryInactiveReason = {{ patient.primary_inactive_reason | default('', true) | tojson }};
   primaryRegions.forEach(function(r) {
     regionInfo[r] = regionInfo[r] || [];
-    regionInfo[r].push('\ud83d\udd34 Primärtumor: {{ patient.primary_location }}');
+    var line = pTag + ': {{ patient.primary_location }}';
+    if (primaryStatus !== 'active' && primaryInactiveReason) line += '<br>\u2192 ' + primaryInactiveReason;
+    regionInfo[r].push(line);
   });
-  metaRegions.forEach(function(r) {
-    regionInfo[r] = regionInfo[r] || [];
-    regionInfo[r].push('\ud83d\udfe0 Metastase');
+  metaDetail.forEach(function(m) {
+    regionInfo[m.region] = regionInfo[m.region] || [];
+    var isResponding = m.status === 'responding';
+    var mDot = m.status === 'active' ? tipDot('#ff9900', false) : isResponding ? tipDot('#2ecc71', false) : tipDot('#ff9900', true);
+    var statusLabel = isResponding ? 'Ansprechen' : (m.status === 'active' ? 'aktiv' : 'inaktiv');
+    var tag = mDot + 'Metastase (' + statusLabel + ')';
+    var line = tag + ': ' + m.label;
+    if (m.status === 'inactive' && m.inactive_reason) line += '<br>\u2192 ' + m.inactive_reason;
+    regionInfo[m.region].push(line);
   });
   imagingData.forEach(function(img) {
     var r = img.body_region;
     regionInfo[r] = regionInfo[r] || [];
-    regionInfo[r].push('\ud83d\udfe2 ' + img.type + ' (' + img.date + '): ' + img.assessment);
+    regionInfo[r].push(tipDot('#1a4f8a', false) + img.type + ' (' + img.date + '): ' + img.assessment);
   });
 
-  /* Show & color dots */
+  /* Build lookup for active/responding metastases from detail data */
+  var activeMetaRegions = {};
+  var respondingMetaRegions = {};
+  metaDetail.forEach(function(m) {
+    if (m.status === 'active') activeMetaRegions[m.region] = true;
+    if (m.status === 'responding') respondingMetaRegions[m.region] = true;
+  });
+
+  /* Show & color dots — a region can be both primary AND meta */
   var outlineEl = document.querySelector('.bmap-body-outline[data-region="whole_body"]');
   var bmapBody = document.querySelector('.bmap-body');
   document.querySelectorAll('.body-point').forEach(function(el) {
     var region = el.dataset.region;
     var isPrimary = primaryRegions.indexOf(region) !== -1;
     var isMeta    = metaRegions.indexOf(region) !== -1;
-    var isImaged  = imagedRegions.indexOf(region) !== -1;
-    if (isPrimary)      el.classList.add('point-primary', 'active');
-    else if (isMeta)    el.classList.add('point-meta', 'active');
-    else if (isImaged)  el.classList.add('point-imaged', 'active');
+
+    if (isPrimary && isMeta) {
+      /* Duplicate the dot: original becomes primary, clone becomes meta */
+      var pCls = primaryStatus === 'active' ? 'point-primary-active' : 'point-primary';
+      el.classList.add(pCls, 'active');
+      var clone = el.cloneNode(true);
+      var mCls = respondingMetaRegions[region] ? 'point-meta-responding' : (activeMetaRegions[region] ? 'point-meta-active' : 'point-meta');
+      clone.className = 'body-point active ' + mCls;
+      el.parentNode.appendChild(clone);
+    } else if (isPrimary) {
+      el.classList.add(primaryStatus === 'active' ? 'point-primary-active' : 'point-primary', 'active');
+    } else if (isMeta && respondingMetaRegions[region]) {
+      el.classList.add('point-meta-responding', 'active');
+    } else if (isMeta && activeMetaRegions[region]) {
+      el.classList.add('point-meta-active', 'active');
+    } else if (isMeta) {
+      el.classList.add('point-meta', 'active');
+    }
   });
+
+  /* Offset overlapping active dots so both are visible */
+  (function() {
+    var activeDots = Array.prototype.slice.call(document.querySelectorAll('.body-point.active'));
+    var THRESHOLD = 3; /* % proximity that counts as overlap */
+    var OFFSET    = 1.2; /* % to nudge apart */
+    for (var i = 0; i < activeDots.length; i++) {
+      for (var j = i + 1; j < activeDots.length; j++) {
+        var a = activeDots[i], b = activeDots[j];
+        var ax = parseFloat(a.style.left), ay = parseFloat(a.style.top);
+        var bx = parseFloat(b.style.left), by = parseFloat(b.style.top);
+        var dx = ax - bx, dy = ay - by;
+        var dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < THRESHOLD) {
+          /* Push apart along perpendicular or horizontal axis */
+          var nx = dist > 0.1 ? dx/dist : 1;
+          var ny = dist > 0.1 ? dy/dist : 0;
+          a.style.left = (ax + nx * OFFSET) + '%';
+          a.style.top  = (ay + ny * OFFSET) + '%';
+          b.style.left = (bx - nx * OFFSET) + '%';
+          b.style.top  = (by - ny * OFFSET) + '%';
+        }
+      }
+    }
+  })();
   /* Whole-body silhouette outline */
   var wbActive = false;
   if (outlineEl && bmapBody) {
     var wbPrimary = primaryRegions.indexOf('whole_body') !== -1;
     var wbMeta    = metaRegions.indexOf('whole_body') !== -1;
-    var wbImaged  = imagedRegions.indexOf('whole_body') !== -1;
     if (wbPrimary)      { bmapBody.classList.add('whole-body-primary'); wbActive = true; }
     else if (wbMeta)    { bmapBody.classList.add('whole-body-meta'); wbActive = true; }
-    else if (wbImaged)  { bmapBody.classList.add('whole-body-imaged'); wbActive = true; }
     if (wbActive) outlineEl.classList.add('outline-active');
   }
 
@@ -290,31 +521,75 @@ document.addEventListener('DOMContentLoaded', function() {
     li.innerHTML = '<span class="bmap-item-dot"></span>' + (REGION_NAMES[region]||region) + (extra||'');
     ul.appendChild(li);
   }
-  primaryRegions.forEach(function(r) { addBmapItem('bmap-primary-list', r, 'item-primary'); });
-  metaRegions.forEach(function(r)    { addBmapItem('bmap-meta-list', r, 'item-meta'); });
-  var imgAdded = {};
-  imagingData.forEach(function(img) {
-    if (!imgAdded[img.body_region]) {
-      addBmapItem('bmap-imaged-list', img.body_region, 'item-imaged',
-        '<br><small style="color:#666">' + img.type + '</small>');
-      imgAdded[img.body_region] = true;
-    }
+  function addTimelineItem(listId, region, cls, date, title, subtitle, isActive) {
+    var ol = document.getElementById(listId);
+    var li = document.createElement('li');
+    li.className = 'bmap-tl-item ' + cls;
+    li.dataset.region = region;
+    var warn = isActive ? '<span class="bmap-tl-warn" title="Aktiv">&#9889;</span>' : '';
+    li.innerHTML =
+      '<span class="bmap-tl-date">' + date + '</span>' +
+      '<span class="bmap-tl-dot-wrap"><span class="bmap-tl-dot"></span></span>' +
+      '<span class="bmap-tl-content">' +
+        '<span class="bmap-tl-title">' + warn + title + '</span>' +
+        (subtitle ? '<span class="bmap-tl-sub">' + subtitle + '</span>' : '') +
+      '</span>';
+    ol.appendChild(li);
+  }
+  var pCls = primaryStatus === 'active' ? 'item-primary-active' : 'item-primary';
+  primaryRegions.forEach(function(r) { addBmapItem('bmap-primary-list', r, pCls); });
+  metaDetail.slice().sort(function(a, b) {
+    if (!a.date && !b.date) return 0;
+    if (!a.date) return 1;
+    if (!b.date) return -1;
+    var pa = a.date.split('.'), pb = b.date.split('.');
+    var da = new Date(pa[2], pa[1]-1, pa[0]), db = new Date(pb[2], pb[1]-1, pb[0]);
+    return da - db;
+  }).forEach(function(m) {
+    var cls = m.status === 'responding' ? 'item-meta-responding' : (m.status === 'active' ? 'item-meta-active' : 'item-meta');
+    var isHighlighted = m.status === 'active' || m.status === 'responding';
+    addTimelineItem('bmap-meta-list', m.region, cls, m.date,
+      REGION_NAMES[m.region]||m.region, m.label, isHighlighted);
+  });
+  imagingData.slice().sort(function(a, b) {
+    var pa = a.date.split('.'), pb = b.date.split('.');
+    var da = new Date(pa[2], pa[1]-1, pa[0]), db = new Date(pb[2], pb[1]-1, pb[0]);
+    return da - db;
+  }).forEach(function(img) {
+    addTimelineItem('bmap-imaged-list', img.body_region, 'item-imaged', img.date,
+      REGION_NAMES[img.body_region]||img.body_region, img.type, false);
   });
   ['bmap-primary-list','bmap-meta-list','bmap-imaged-list'].forEach(function(id) {
     var ul = document.getElementById(id);
     if (ul && ul.children.length === 0) ul.innerHTML = '<li class="bmap-item bmap-empty">\u2013</li>';
   });
 
+  /* Position the continuous timeline line through the center of the dots */
+  document.querySelectorAll('.bmap-timeline, .therapy-timeline').forEach(function(ol) {
+    var dots = ol.querySelectorAll('.bmap-tl-dot, .therapy-tl-dot');
+    if (dots.length < 2) { ol.classList.add('no-line'); return; }
+    var first = dots[0], last = dots[dots.length - 1];
+    var olRect = ol.getBoundingClientRect();
+    var fRect  = first.getBoundingClientRect();
+    var lRect  = last.getBoundingClientRect();
+    var cx = fRect.left + fRect.width / 2 - olRect.left;
+    var top = fRect.top + fRect.height / 2 - olRect.top;
+    var bottom = lRect.top + lRect.height / 2 - olRect.top;
+    ol.style.setProperty('--tl-line-left', cx + 'px');
+    ol.style.setProperty('--tl-line-top', top + 'px');
+    ol.style.setProperty('--tl-line-height', (bottom - top) + 'px');
+  });
+
   /* Hover interaction: list ↔ dots */
   var tooltip = document.getElementById('body-tooltip');
   function hlOn(region) {
     document.querySelectorAll('.body-point[data-region="'+region+'"]').forEach(function(p){p.classList.add('hovered');});
-    document.querySelectorAll('.bmap-item[data-region="'+region+'"]').forEach(function(l){l.classList.add('hovered');});
+    document.querySelectorAll('.bmap-item[data-region="'+region+'"], .bmap-tl-item[data-region="'+region+'"]').forEach(function(l){l.classList.add('hovered');});
     if (region === 'whole_body' && bmapBody) bmapBody.classList.add('whole-body-hovered');
   }
   function hlOff(region) {
     document.querySelectorAll('.body-point[data-region="'+region+'"]').forEach(function(p){p.classList.remove('hovered');});
-    document.querySelectorAll('.bmap-item[data-region="'+region+'"]').forEach(function(l){l.classList.remove('hovered');});
+    document.querySelectorAll('.bmap-item[data-region="'+region+'"], .bmap-tl-item[data-region="'+region+'"]').forEach(function(l){l.classList.remove('hovered');});
     if (region === 'whole_body' && bmapBody) bmapBody.classList.remove('whole-body-hovered');
   }
   function showTip(region) {
@@ -324,7 +599,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function moveTip(e) { tooltip.style.left=(e.pageX+14)+'px'; tooltip.style.top=(e.pageY+14)+'px'; }
   function hideTip()  { tooltip.style.display = 'none'; }
 
-  document.querySelectorAll('.bmap-item:not(.bmap-empty)').forEach(function(li) {
+  document.querySelectorAll('.bmap-item:not(.bmap-empty), .bmap-tl-item').forEach(function(li) {
     li.addEventListener('mouseenter', function(){ hlOn(li.dataset.region); showTip(li.dataset.region); });
     li.addEventListener('mousemove', moveTip);
     li.addEventListener('mouseleave', function(){ hlOff(li.dataset.region); hideTip(); });
@@ -343,6 +618,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   /* ── Lab charts (one per marker) ──────────────────────────────────── */
   var labValues = {{ patient.lab_values | tojson }};
+  var labChartRegistry = [];
   if (labValues.length > 0) {
     var markers = {};
     labValues.forEach(function(lv) {
@@ -353,53 +629,839 @@ document.addEventListener('DOMContentLoaded', function() {
     var colourList = ['#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6'];
     var ci = 0;
     var container = document.getElementById('lab-charts-container');
+
+    function buildExceed(dataArr, refStr) {
+      var lt = (refStr || '').match(/^<\s*([\.\d,]+)/);
+      var gt = (refStr || '').match(/^>\s*([\.\d,]+)/);
+      var rp = (refStr || '').match(/([\.\d,]+)\s*[-–]\s*([\.\d,]+)/);
+      var rMin = rp ? parseFloat(rp[1].replace(',','.')) : null;
+      var rMax = rp ? parseFloat(rp[2].replace(',','.')) : null;
+      var thr = lt ? parseFloat(lt[1].replace(',','.')) : (gt ? parseFloat(gt[1].replace(',','.')) : null);
+      return dataArr.map(function(v) {
+        if (lt && thr !== null) return v >= thr;
+        if (gt && thr !== null) return v <= thr;
+        if (rMin !== null && rMax !== null) return v < rMin || v > rMax;
+        return false;
+      });
+    }
+
     Object.keys(markers).forEach(function(m) {
       var colour = colours[m] || colourList[ci++ % colourList.length];
-      var points = markers[m].slice().sort(function(a,b){
+      var allPoints = markers[m].slice().sort(function(a,b){
         var pa = a.date.split('.'), pb = b.date.split('.');
         var da = new Date(pa[2], pa[1]-1, pa[0]), db = new Date(pb[2], pb[1]-1, pb[0]);
         return da - db;
       });
-      var labels = points.map(function(p){ return p.date; });
-      var data = points.map(function(p){ return parseFloat(p.value.replace(',', '.')); });
-      var unit = points[0].unit;
-      /* parse ref range for annotation */
-      var refParts = (points[0].ref || '').match(/([\d.,]+)\s*[-–]\s*([\d.,]+)/);
+      var unit = allPoints[0].unit;
+      var refStr = allPoints[0].ref || '';
+      /* parse ref for annotation */
+      var refParts = refStr.match(/([\.\d,]+)\s*[-–]\s*([\.\d,]+)/);
       var refMin = refParts ? parseFloat(refParts[1].replace(',','.')) : null;
       var refMax = refParts ? parseFloat(refParts[2].replace(',','.')) : null;
+      var ltMatch = refStr.match(/^<\s*([\.\d,]+)/);
+      var gtMatch = refStr.match(/^>\s*([\.\d,]+)/);
+      var refThreshold = null;
+      if (ltMatch) refThreshold = parseFloat(ltMatch[1].replace(',','.'));
+      if (gtMatch) refThreshold = parseFloat(gtMatch[1].replace(',','.'));
+
+      var labels = allPoints.map(function(p){ return p.date; });
+      var data = allPoints.map(function(p){ return parseFloat(p.value.replace(',', '.')); });
+      var exceed = buildExceed(data, refStr);
+      var ptBg = exceed.map(function(e) { return e ? '#e74c3c' : '#9e9e9e'; });
+      var ptBorder = exceed.map(function(e) { return e ? '#c0392b' : '#757575'; });
+      var ptRadius = exceed.map(function(e) { return e ? 6 : 5; });
+
       var box = document.createElement('div');
       box.className = 'lab-chart-box';
+      box.dataset.marker = m;
+      /* Header with marker name + warning if last value exceeds ref */
+      var header = document.createElement('div');
+      header.className = 'lab-chart-header';
+      var titleSpan = document.createElement('span');
+      titleSpan.className = 'lab-chart-title';
+      titleSpan.textContent = m;
+      header.appendChild(titleSpan);
+      var lastExceed = exceed.length > 0 && exceed[exceed.length - 1];
+      if (lastExceed) {
+        var warn = document.createElement('span');
+        warn.className = 'lab-chart-warn';
+        warn.textContent = '\u26a0';
+        header.appendChild(warn);
+      }
+      box.appendChild(header);
       var canvas = document.createElement('canvas');
       canvas.height = 220;
       box.appendChild(canvas);
       container.appendChild(box);
-      var plugins = [];
+
       var annotation = {};
       if (refMin !== null && refMax !== null) {
         annotation = { annotation: { annotations: { refBand: {
           type: 'box', yMin: refMin, yMax: refMax,
           backgroundColor: 'rgba(46,204,113,0.10)', borderColor: 'rgba(46,204,113,0.3)',
-          borderWidth: 1, label: { display: true, content: 'Ref ' + points[0].ref, position: 'start', font: {size:10}, color:'#888' }
+          borderWidth: 1, label: { display: true, content: 'Ref ' + refStr, position: 'start', font: {size:10}, color:'#888' }
+        }}}};
+      } else if (refThreshold !== null) {
+        annotation = { annotation: { annotations: { refLine: {
+          type: 'line', yMin: refThreshold, yMax: refThreshold,
+          borderColor: '#1a4f8a', borderWidth: 1.5, borderDash: [6, 4],
+          label: { display: true, content: 'Ref ' + refStr, position: 'end', font: {size: 10}, color: '#1a4f8a', backgroundColor: 'rgba(255,255,255,0.85)', padding: 3 }
         }}}};
       }
-      new Chart(canvas, {
+
+      /* Pulsating-ring plugin for out-of-range points */
+      var pulsePlugin = {
+        id: 'pulseRing_' + m,
+        afterDraw: function(chart) {
+          var meta = chart.getDatasetMeta(0);
+          if (!meta || !meta.data) return;
+          var ctx = chart.ctx;
+          var exc = chart._exceedFlags || [];
+          var anyExceed = false;
+          var t = (Date.now() % 1500) / 1500;
+          var radius = 6 + 12 * t;
+          var alpha = 1 - t;
+          meta.data.forEach(function(pt, i) {
+            if (!exc[i]) return;
+            anyExceed = true;
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(pt.x, pt.y, radius, 0, Math.PI * 2);
+            ctx.strokeStyle = 'rgba(231,76,60,' + alpha.toFixed(2) + ')';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.restore();
+          });
+          if (anyExceed) requestAnimationFrame(function() { chart.draw(); });
+        }
+      };
+
+      var chartInst = new Chart(canvas, {
         type: 'line',
         data: { labels: labels, datasets: [{
           label: m + ' (' + unit + ')',
-          data: data, borderColor: colour, backgroundColor: colour + '33',
-          tension: 0.3, pointRadius: 5, fill: false, spanGaps: true,
+          data: data, borderColor: '#bdbdbd', backgroundColor: '#bdbdbd33',
+          tension: 0.3, pointRadius: ptRadius, pointBackgroundColor: ptBg,
+          pointBorderColor: ptBorder, fill: false, spanGaps: true,
         }]},
+        plugins: [pulsePlugin],
         options: {
           responsive: true,
-          plugins: Object.assign({ legend: { display: true, position: 'top' } }, annotation),
+          animation: false,
+          plugins: Object.assign({ legend: { display: false } }, annotation),
           scales: {
             y: { beginAtZero: false, title: { display: true, text: unit } },
             x: { title: { display: false } },
           },
         },
       });
+      chartInst._exceedFlags = exceed;
+
+      labChartRegistry.push({
+        marker: m, chart: chartInst, allPoints: allPoints,
+        refStr: refStr, unit: unit, box: box
+      });
     });
   }
+
+  /* Update chart data when year/marker filter changes */
+  function updateLabCharts(yearFilter, selectedMarkers) {
+    labChartRegistry.forEach(function(entry) {
+      /* Hide chart if marker not selected */
+      var markerMatch = !selectedMarkers || selectedMarkers.length === 0 || selectedMarkers.indexOf(entry.marker) !== -1;
+      if (!markerMatch) { entry.box.style.display = 'none'; return; }
+
+      var filtered = entry.allPoints;
+      if (yearFilter && yearFilter !== 'all') {
+        filtered = entry.allPoints.filter(function(p) {
+          return (p.date || '').indexOf(yearFilter) !== -1;
+        });
+      }
+      var labels = filtered.map(function(p){ return p.date; });
+      var data = filtered.map(function(p){ return parseFloat(p.value.replace(',', '.')); });
+      var exceed = buildExceed(data, entry.refStr);
+      var ptBg = exceed.map(function(e) { return e ? '#e74c3c' : '#9e9e9e'; });
+      var ptBorder = exceed.map(function(e) { return e ? '#c0392b' : '#757575'; });
+      var ptRadius = exceed.map(function(e) { return e ? 6 : 5; });
+
+      var ds = entry.chart.data.datasets[0];
+      entry.chart.data.labels = labels;
+      ds.data = data;
+      ds.pointBackgroundColor = ptBg;
+      ds.pointBorderColor = ptBorder;
+      ds.pointRadius = ptRadius;
+      entry.chart._exceedFlags = exceed;
+      entry.chart.update();
+
+      entry.box.style.display = filtered.length === 0 ? 'none' : '';
+    });
+  }
+
+  /* ── Lab filter ─────────────────────────────────────────────────────── */
+  (function() {
+    /* Marker → Category mapping */
+    var markerCategoryMap = {
+      'S100': 'Tumormarker', 'LDH': 'Tumormarker',
+      'Hemoglobin': 'Blutbild', 'Leukocytes': 'Blutbild', 'Thrombozyten': 'Blutbild', 'Erythrozyten': 'Blutbild', 'Hämatokrit': 'Blutbild', 'MCV': 'Blutbild', 'MCH': 'Blutbild', 'MCHC': 'Blutbild',
+      'AST': 'Leberwerte', 'ALT': 'Leberwerte', 'GGT': 'Leberwerte', 'AP': 'Leberwerte', 'Bilirubin': 'Leberwerte',
+      'CRP': 'Entzündung', 'Procalcitonin': 'Entzündung',
+      'Creatinine': 'Nierenfunktion', 'eGFR': 'Nierenfunktion', 'Harnstoff': 'Nierenfunktion',
+      'Sodium': 'Elektrolyte', 'Potassium': 'Elektrolyte', 'Calcium': 'Elektrolyte', 'Magnesium': 'Elektrolyte', 'Phosphat': 'Elektrolyte',
+      'Cortisol': 'Endokrine Achsen', 'TSH': 'Endokrine Achsen', 'fT4': 'Endokrine Achsen', 'fT3': 'Endokrine Achsen',
+      'NT-proBNP': 'Kardiologisch', 'CK': 'Kardiologisch', 'CK-MB': 'Kardiologisch', 'Troponin': 'Kardiologisch',
+      'HLA Status': 'Molekulare Diagnostik'
+    };
+    function getCategory(marker) { return markerCategoryMap[marker] || 'Sonstige'; }
+
+    var yearSel    = document.getElementById('lab-year-filter');
+    var typeWrap   = document.getElementById('lab-marker-filter');
+    var catWrap    = document.getElementById('lab-category-filter');
+    var emptyState = document.getElementById('lab-empty');
+    var tableBody  = document.getElementById('lab-table-body');
+    if (!yearSel || !typeWrap || !tableBody) return;
+
+    var tagsContainer = typeWrap.querySelector('.tag-select-tags');
+    var dropdown      = typeWrap.querySelector('.tag-select-dropdown');
+    var clearBtn      = typeWrap.querySelector('.tag-select-clear');
+    var toggleBtn     = typeWrap.querySelector('.tag-select-toggle');
+
+    var rows      = Array.from(tableBody.querySelectorAll('tr[data-marker]'));
+    var chartBoxes = Array.from(document.querySelectorAll('#lab-charts-container .lab-chart-box[data-marker]'));
+
+    /* Collect unique years from table rows */
+    var years = [];
+    rows.forEach(function(r) {
+      var m = (r.dataset.date || '').match(/(\d{4})/);
+      if (m && years.indexOf(m[1]) === -1) years.push(m[1]);
+    });
+    years.sort();
+    years.forEach(function(y) {
+      var o = document.createElement('option'); o.value = y; o.textContent = y;
+      yearSel.appendChild(o);
+    });
+
+    /* Collect unique markers */
+    var markerNames = [];
+    rows.forEach(function(r) {
+      var mk = r.dataset.marker;
+      if (mk && markerNames.indexOf(mk) === -1) markerNames.push(mk);
+    });
+    markerNames.sort();
+
+    /* Tag-select state */
+    var selectedMarkers = [];
+
+    markerNames.forEach(function(mk) {
+      var opt = document.createElement('div');
+      opt.className = 'tag-select-option';
+      opt.dataset.value = mk;
+      opt.textContent = mk;
+      dropdown.appendChild(opt);
+    });
+
+    function renderTags() {
+      tagsContainer.innerHTML = '';
+      if (selectedMarkers.length === 0) {
+        var ph = document.createElement('span');
+        ph.className = 'tag-select-placeholder';
+        ph.textContent = 'Alle Marker';
+        tagsContainer.appendChild(ph);
+      } else {
+        selectedMarkers.forEach(function(mk) {
+          var tag = document.createElement('span');
+          tag.className = 'tag-select-tag';
+          tag.innerHTML = '<span class="tag-select-tag-text">' + mk + '</span><button type="button" class="tag-select-tag-remove" data-value="' + mk + '">&times;</button>';
+          tagsContainer.appendChild(tag);
+        });
+      }
+      dropdown.querySelectorAll('.tag-select-option').forEach(function(opt) {
+        opt.classList.toggle('selected', selectedMarkers.indexOf(opt.dataset.value) !== -1);
+      });
+      clearBtn.style.display = selectedMarkers.length > 0 ? '' : 'none';
+    }
+
+    function addMarker(mk) {
+      if (selectedMarkers.indexOf(mk) === -1) { selectedMarkers.push(mk); renderTags(); applyLabFilter(); }
+    }
+    function removeMarker(mk) {
+      var i = selectedMarkers.indexOf(mk);
+      if (i !== -1) { selectedMarkers.splice(i, 1); renderTags(); applyLabFilter(); }
+    }
+    function clearAll() { selectedMarkers = []; renderTags(); applyLabFilter(); }
+
+    function toggleDropdown() {
+      var isOpen = dropdown.classList.contains('open');
+      document.querySelectorAll('.tag-select-dropdown.open').forEach(function(d) { d.classList.remove('open'); });
+      if (!isOpen) dropdown.classList.add('open');
+    }
+
+    dropdown.addEventListener('click', function(e) {
+      var opt = e.target.closest('.tag-select-option');
+      if (!opt) return;
+      var mk = opt.dataset.value;
+      selectedMarkers.indexOf(mk) !== -1 ? removeMarker(mk) : addMarker(mk);
+    });
+    toggleBtn.addEventListener('click', function(e) { e.stopPropagation(); toggleDropdown(); });
+    tagsContainer.addEventListener('click', function(e) {
+      var rem = e.target.closest('.tag-select-tag-remove');
+      if (rem) { e.stopPropagation(); removeMarker(rem.dataset.value); return; }
+      toggleDropdown();
+    });
+    clearBtn.addEventListener('click', function(e) { e.stopPropagation(); clearAll(); });
+    document.addEventListener('click', function(e) {
+      if (!typeWrap.contains(e.target)) dropdown.classList.remove('open');
+    });
+
+    /* ── Category tag-select ────────────────────────────────────────── */
+    var selectedCategories = [];
+    var renderCatTags = function() {};
+    if (catWrap) {
+      var catTagsC   = catWrap.querySelector('.tag-select-tags');
+      var catDD      = catWrap.querySelector('.tag-select-dropdown');
+      var catClearB  = catWrap.querySelector('.tag-select-clear');
+      var catToggleB = catWrap.querySelector('.tag-select-toggle');
+
+      /* Collect categories only for markers that exist in the data */
+      var catNames = [];
+      var _seen = {};
+      markerNames.forEach(function(mk) {
+        var c = getCategory(mk);
+        if (!_seen[c]) { _seen[c] = true; catNames.push(c); }
+      });
+      catNames.sort();
+
+      catNames.forEach(function(cat) {
+        var opt = document.createElement('div');
+        opt.className = 'tag-select-option';
+        opt.dataset.value = cat;
+        opt.textContent = cat;
+        catDD.appendChild(opt);
+      });
+
+      renderCatTags = function() {
+        catTagsC.innerHTML = '';
+        if (selectedCategories.length === 0) {
+          var ph = document.createElement('span');
+          ph.className = 'tag-select-placeholder';
+          ph.textContent = 'Alle Kategorien';
+          catTagsC.appendChild(ph);
+        } else {
+          selectedCategories.forEach(function(cat) {
+            var tag = document.createElement('span');
+            tag.className = 'tag-select-tag';
+            tag.innerHTML = '<span class="tag-select-tag-text">' + cat + '</span><button type="button" class="tag-select-tag-remove" data-value="' + cat + '">&times;</button>';
+            catTagsC.appendChild(tag);
+          });
+        }
+        catDD.querySelectorAll('.tag-select-option').forEach(function(opt) {
+          opt.classList.toggle('selected', selectedCategories.indexOf(opt.dataset.value) !== -1);
+        });
+        catClearB.style.display = selectedCategories.length > 0 ? '' : 'none';
+      }
+
+      function addCat(c) { if (selectedCategories.indexOf(c) === -1) { selectedCategories.push(c); renderCatTags(); applyLabFilter(); } }
+      function removeCat(c) { var i = selectedCategories.indexOf(c); if (i !== -1) { selectedCategories.splice(i, 1); renderCatTags(); applyLabFilter(); } }
+      function clearCats() { selectedCategories = []; renderCatTags(); applyLabFilter(); }
+      function toggleCatDD() {
+        var isOpen = catDD.classList.contains('open');
+        document.querySelectorAll('.tag-select-dropdown.open').forEach(function(d) { d.classList.remove('open'); });
+        if (!isOpen) catDD.classList.add('open');
+      }
+
+      catDD.addEventListener('click', function(e) {
+        var opt = e.target.closest('.tag-select-option');
+        if (!opt) return;
+        selectedCategories.indexOf(opt.dataset.value) !== -1 ? removeCat(opt.dataset.value) : addCat(opt.dataset.value);
+      });
+      catToggleB.addEventListener('click', function(e) { e.stopPropagation(); toggleCatDD(); });
+      catTagsC.addEventListener('click', function(e) {
+        var rem = e.target.closest('.tag-select-tag-remove');
+        if (rem) { e.stopPropagation(); removeCat(rem.dataset.value); return; }
+        toggleCatDD();
+      });
+      catClearB.addEventListener('click', function(e) { e.stopPropagation(); clearCats(); });
+      document.addEventListener('click', function(e) {
+        if (!catWrap.contains(e.target)) catDD.classList.remove('open');
+      });
+      renderCatTags();
+    }
+
+    function markerMatchesCategory(mk) {
+      if (selectedCategories.length === 0) return true;
+      return selectedCategories.indexOf(getCategory(mk)) !== -1;
+    }
+
+    var oorCheckbox = document.getElementById('lab-oor-filter');
+
+    /* Determine which markers are out-of-range at their latest measurement */
+    var oorMarkers = [];
+    (function() {
+      var byMarker = {};
+      rows.forEach(function(r) {
+        var mk = r.dataset.marker;
+        if (!byMarker[mk]) byMarker[mk] = [];
+        byMarker[mk].push(r);
+      });
+      Object.keys(byMarker).forEach(function(mk) {
+        var sorted = byMarker[mk].slice().sort(function(a, b) {
+          var pa = (a.dataset.date || '').split('.'), pb = (b.dataset.date || '').split('.');
+          var da = new Date(pa[2], pa[1]-1, pa[0]), db = new Date(pb[2], pb[1]-1, pb[0]);
+          return db - da;
+        });
+        var latest = sorted[0];
+        if (latest && latest.classList.contains('lab-row-warn')) oorMarkers.push(mk);
+      });
+    })();
+
+    /* ── Category overview cards ──────────────────────────────────────── */
+    var catOverview = document.getElementById('lab-category-overview');
+    if (catOverview) {
+      /* Build category → markers present in data */
+      var catMarkers = {};
+      markerNames.forEach(function(mk) {
+        var cat = getCategory(mk);
+        if (!catMarkers[cat]) catMarkers[cat] = [];
+        catMarkers[cat].push(mk);
+      });
+      var catList = Object.keys(catMarkers).sort();
+      catList.forEach(function(cat) {
+        var hasWarn = catMarkers[cat].some(function(mk) { return oorMarkers.indexOf(mk) !== -1; });
+        var card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'lab-cat-card';
+        card.dataset.category = cat;
+        var label = cat;
+        if (hasWarn) label = '<span class="lab-cat-card-warn">⚠</span> ' + label;
+        label += ' <span class="lab-cat-card-count">(' + catMarkers[cat].length + ')</span>';
+        card.innerHTML = label;
+        card.addEventListener('click', function() {
+          var isActive = card.classList.contains('active');
+          if (isActive) {
+            card.classList.remove('active');
+            var i = selectedCategories.indexOf(cat);
+            if (i !== -1) selectedCategories.splice(i, 1);
+          } else {
+            card.classList.add('active');
+            if (selectedCategories.indexOf(cat) === -1) selectedCategories.push(cat);
+          }
+          renderCatTags();
+          applyLabFilter();
+        });
+        catOverview.appendChild(card);
+      });
+    }
+
+    if (oorCheckbox) oorCheckbox.addEventListener('change', applyLabFilter);
+
+    function applyLabFilter() {
+      var fy = yearSel.value;
+      var oorOnly = oorCheckbox && oorCheckbox.checked;
+      var visibleCount = 0;
+
+      /* Filter table rows */
+      rows.forEach(function(r) {
+        var mk = r.dataset.marker;
+        var matchY = fy === 'all' || (r.dataset.date || '').indexOf(fy) !== -1;
+        var matchM = selectedMarkers.length === 0 || selectedMarkers.indexOf(mk) !== -1;
+        var matchC = markerMatchesCategory(mk);
+        var matchOOR = !oorOnly || oorMarkers.indexOf(mk) !== -1;
+        var show = matchY && matchM && matchC && matchOOR;
+        r.style.display = show ? '' : 'none';
+        if (show) visibleCount++;
+      });
+
+      /* Filter chart boxes by marker/category + update chart data by year */
+      var effectiveMarkers = selectedMarkers.slice();
+      /* Apply category filter to effective markers */
+      if (selectedCategories.length > 0) {
+        if (effectiveMarkers.length === 0) {
+          effectiveMarkers = markerNames.filter(function(mk) { return markerMatchesCategory(mk); });
+        } else {
+          effectiveMarkers = effectiveMarkers.filter(function(mk) { return markerMatchesCategory(mk); });
+        }
+      }
+      if (oorOnly) {
+        if (effectiveMarkers.length === 0) {
+          effectiveMarkers = oorMarkers.filter(function(mk) { return markerMatchesCategory(mk); });
+        } else {
+          effectiveMarkers = effectiveMarkers.filter(function(mk) { return oorMarkers.indexOf(mk) !== -1; });
+        }
+      }
+      if (typeof updateLabCharts === 'function') updateLabCharts(fy, effectiveMarkers);
+
+      emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+
+      /* Sync category overview card active states */
+      if (catOverview) {
+        catOverview.querySelectorAll('.lab-cat-card').forEach(function(c) {
+          c.classList.toggle('active', selectedCategories.indexOf(c.dataset.category) !== -1);
+        });
+      }
+    }
+
+    yearSel.addEventListener('change', applyLabFilter);
+    renderTags();
+    applyLabFilter();
+  })();
+
+  /* ── Imaging filter ─────────────────────────────────────────────────── */
+  (function() {
+    var yearSel    = document.getElementById('img-year-filter');
+    var modWrap    = document.getElementById('img-modality-filter');
+    var regWrap    = document.getElementById('img-region-filter');
+    var emptyState = document.getElementById('img-empty');
+    var grid       = document.getElementById('imaging-grid');
+    if (!yearSel || !modWrap || !regWrap || !grid) return;
+
+    var nodes = Array.from(grid.querySelectorAll('.imaging-flow-node'));
+    var lanes = Array.from(grid.querySelectorAll('.imaging-lane'));
+
+    /* Collect unique years */
+    var years = [];
+    nodes.forEach(function(n) {
+      var m = (n.dataset.date || '').match(/(\d{4})/);
+      if (m && years.indexOf(m[1]) === -1) years.push(m[1]);
+    });
+    years.sort();
+    years.forEach(function(y) {
+      var o = document.createElement('option'); o.value = y; o.textContent = y;
+      yearSel.appendChild(o);
+    });
+
+    /* Generic tag-select initializer (reused for modality & region) */
+    function initTagSelect(wrap, values, placeholder, labelMap) {
+      var tagsC    = wrap.querySelector('.tag-select-tags');
+      var dd       = wrap.querySelector('.tag-select-dropdown');
+      var clearB   = wrap.querySelector('.tag-select-clear');
+      var toggleB  = wrap.querySelector('.tag-select-toggle');
+      var selected = [];
+      function lbl(v) { return (labelMap && labelMap[v]) || v; }
+
+      values.forEach(function(v) {
+        var opt = document.createElement('div');
+        opt.className = 'tag-select-option';
+        opt.dataset.value = v;
+        opt.textContent = lbl(v);
+        dd.appendChild(opt);
+      });
+
+      function render() {
+        tagsC.innerHTML = '';
+        if (selected.length === 0) {
+          var ph = document.createElement('span');
+          ph.className = 'tag-select-placeholder';
+          ph.textContent = placeholder;
+          tagsC.appendChild(ph);
+        } else {
+          selected.forEach(function(v) {
+            var tag = document.createElement('span');
+            tag.className = 'tag-select-tag';
+            tag.innerHTML = '<span class="tag-select-tag-text">' + lbl(v) + '</span><button type="button" class="tag-select-tag-remove" data-value="' + v + '">&times;</button>';
+            tagsC.appendChild(tag);
+          });
+        }
+        dd.querySelectorAll('.tag-select-option').forEach(function(opt) {
+          opt.classList.toggle('selected', selected.indexOf(opt.dataset.value) !== -1);
+        });
+        clearB.style.display = selected.length > 0 ? '' : 'none';
+      }
+
+      function add(v) { if (selected.indexOf(v) === -1) { selected.push(v); render(); applyImgFilter(); } }
+      function remove(v) { var i = selected.indexOf(v); if (i !== -1) { selected.splice(i, 1); render(); applyImgFilter(); } }
+      function clear() { selected = []; render(); applyImgFilter(); }
+      function toggleDD() {
+        var open = dd.classList.contains('open');
+        document.querySelectorAll('.tag-select-dropdown.open').forEach(function(d) { d.classList.remove('open'); });
+        if (!open) dd.classList.add('open');
+      }
+
+      dd.addEventListener('click', function(e) {
+        var opt = e.target.closest('.tag-select-option');
+        if (!opt) return;
+        selected.indexOf(opt.dataset.value) !== -1 ? remove(opt.dataset.value) : add(opt.dataset.value);
+      });
+      toggleB.addEventListener('click', function(e) { e.stopPropagation(); toggleDD(); });
+      tagsC.addEventListener('click', function(e) {
+        var rem = e.target.closest('.tag-select-tag-remove');
+        if (rem) { e.stopPropagation(); remove(rem.dataset.value); return; }
+        toggleDD();
+      });
+      clearB.addEventListener('click', function(e) { e.stopPropagation(); clear(); });
+      document.addEventListener('click', function(e) { if (!wrap.contains(e.target)) dd.classList.remove('open'); });
+
+      render();
+      return { getSelected: function() { return selected; } };
+    }
+
+    /* All possible modalities (not just current case) */
+    var modalities = ['CT', 'MRT', 'PET-CT', 'Sonographie'];
+    /* Regions from current case only */
+    var regions = [];
+    nodes.forEach(function(n) {
+      var reg = n.dataset.region;
+      if (reg && regions.indexOf(reg) === -1) regions.push(reg);
+    });
+    regions.sort();
+
+    var modSelect = initTagSelect(modWrap, modalities, 'Alle Verfahren');
+    var regSelect = initTagSelect(regWrap, regions, 'Alle Regionen', REGION_NAMES);
+
+    function applyImgFilter() {
+      var fy = yearSel.value;
+      var selMod = modSelect.getSelected();
+      var selReg = regSelect.getSelected();
+      var visibleCount = 0;
+
+      nodes.forEach(function(n) {
+        var matchY = fy === 'all' || (n.dataset.date || '').indexOf(fy) !== -1;
+        var matchM = selMod.length === 0 || selMod.indexOf(n.dataset.modality) !== -1;
+        var matchR = selReg.length === 0 || selReg.indexOf(n.dataset.region) !== -1;
+        var show = matchY && matchM && matchR;
+        n.style.display = show ? '' : 'none';
+        if (show) visibleCount++;
+      });
+
+      /* Hide entire lane if all its nodes are hidden */
+      lanes.forEach(function(lane) {
+        var anyVisible = Array.from(lane.querySelectorAll('.imaging-flow-node')).some(function(n) {
+          return n.style.display !== 'none';
+        });
+        lane.style.display = anyVisible ? '' : 'none';
+      });
+
+      emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+
+    yearSel.addEventListener('change', applyImgFilter);
+    applyImgFilter();
+  })();
+
+  /* ── Verlauf filter helper ──────────────────────────────────────────── */
+  var typeDe = {{ type_de | tojson }};
+
+  function initVerlaufFilter(reelId, yearSelId, typeWrapId, keywordId, emptyId) {
+    var reel = document.getElementById(reelId);
+    if (!reel) return;
+    var cards   = Array.from(reel.querySelectorAll('.timeline-card'));
+    var yearSel = document.getElementById(yearSelId);
+    var typeWrap = document.getElementById(typeWrapId);
+    var keywordInput = document.getElementById(keywordId);
+    var emptyState = document.getElementById(emptyId);
+
+    if (!yearSel || !typeWrap || !keywordInput || !emptyState) return;
+
+    var tagsContainer = typeWrap.querySelector('.tag-select-tags');
+    var dropdown      = typeWrap.querySelector('.tag-select-dropdown');
+    var clearBtn      = typeWrap.querySelector('.tag-select-clear');
+    var toggleBtn     = typeWrap.querySelector('.tag-select-toggle');
+
+    /* Collect unique years */
+    var years = [];
+    cards.forEach(function(c) {
+      var m = (c.dataset.date || '').match(/(\d{4})/);
+      if (m && years.indexOf(m[1]) === -1) years.push(m[1]);
+    });
+    years.sort();
+    years.forEach(function(y) {
+      var o = document.createElement('option'); o.value = y; o.textContent = y;
+      yearSel.appendChild(o);
+    });
+
+    /* Collect ALL categories from cards + type_de map */
+    var labelToTypes = {};
+    var seenLabels   = [];
+    Object.keys(typeDe).forEach(function(t) {
+      var label = typeDe[t];
+      if (!labelToTypes[label]) { labelToTypes[label] = []; seenLabels.push(label); }
+      if (labelToTypes[label].indexOf(t) === -1) labelToTypes[label].push(t);
+    });
+    cards.forEach(function(c) {
+      var t = c.dataset.type || '';
+      if (t && seenLabels.indexOf(t) === -1) {
+        seenLabels.push(t);
+        labelToTypes[t] = [t];
+      }
+    });
+    seenLabels.sort();
+
+    /* Tag-select state */
+    var selectedLabels = [];
+
+    /* Build dropdown options */
+    seenLabels.forEach(function(label) {
+      var opt = document.createElement('div');
+      opt.className = 'tag-select-option';
+      opt.dataset.value = label;
+      opt.textContent = label;
+      dropdown.appendChild(opt);
+    });
+
+    function normalizeText(value) {
+      return (value || '')
+        .toLowerCase()
+        .replace(/ß/g, 'ss')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
+    }
+
+    /* Render the pill tags */
+    function renderTags() {
+      tagsContainer.innerHTML = '';
+      if (selectedLabels.length === 0) {
+        var placeholder = document.createElement('span');
+        placeholder.className = 'tag-select-placeholder';
+        placeholder.textContent = 'Alle Kategorien';
+        tagsContainer.appendChild(placeholder);
+      } else {
+        selectedLabels.forEach(function(label) {
+          var tag = document.createElement('span');
+          tag.className = 'tag-select-tag';
+          tag.innerHTML = '<span class="tag-select-tag-text">' + label + '</span><button type="button" class="tag-select-tag-remove" data-value="' + label + '">&times;</button>';
+          tagsContainer.appendChild(tag);
+        });
+      }
+      /* Update dropdown option states */
+      dropdown.querySelectorAll('.tag-select-option').forEach(function(opt) {
+        opt.classList.toggle('selected', selectedLabels.indexOf(opt.dataset.value) !== -1);
+      });
+      clearBtn.style.display = selectedLabels.length > 0 ? '' : 'none';
+    }
+
+    function addLabel(label) {
+      if (selectedLabels.indexOf(label) === -1) {
+        selectedLabels.push(label);
+        renderTags();
+        applyFilter();
+      }
+    }
+
+    function removeLabel(label) {
+      var idx = selectedLabels.indexOf(label);
+      if (idx !== -1) {
+        selectedLabels.splice(idx, 1);
+        renderTags();
+        applyFilter();
+      }
+    }
+
+    function clearAll() {
+      selectedLabels = [];
+      renderTags();
+      applyFilter();
+    }
+
+    function toggleDropdown() {
+      var isOpen = dropdown.classList.contains('open');
+      closeAllDropdowns();
+      if (!isOpen) dropdown.classList.add('open');
+    }
+
+    function closeAllDropdowns() {
+      document.querySelectorAll('.tag-select-dropdown.open').forEach(function(d) {
+        d.classList.remove('open');
+      });
+    }
+
+    /* Dropdown option click */
+    dropdown.addEventListener('click', function(e) {
+      var opt = e.target.closest('.tag-select-option');
+      if (!opt) return;
+      var label = opt.dataset.value;
+      if (selectedLabels.indexOf(label) !== -1) {
+        removeLabel(label);
+      } else {
+        addLabel(label);
+      }
+    });
+
+    /* Toggle button */
+    toggleBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      toggleDropdown();
+    });
+
+    /* Clicking the tags area also toggles */
+    tagsContainer.addEventListener('click', function(e) {
+      if (e.target.closest('.tag-select-tag-remove')) return;
+      toggleDropdown();
+    });
+
+    /* Remove-tag × button */
+    tagsContainer.addEventListener('click', function(e) {
+      var removeBtn = e.target.closest('.tag-select-tag-remove');
+      if (!removeBtn) return;
+      e.stopPropagation();
+      removeLabel(removeBtn.dataset.value);
+    });
+
+    /* Clear button */
+    clearBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      clearAll();
+    });
+
+    /* Close dropdown on outside click */
+    document.addEventListener('click', function(e) {
+      if (!typeWrap.contains(e.target)) {
+        dropdown.classList.remove('open');
+      }
+    });
+
+    /* Store original HTML for highlight restoration */
+    cards.forEach(function(c) {
+      c.querySelectorAll('.tl-text').forEach(function(el) {
+        el.dataset.originalText = el.innerHTML;
+      });
+    });
+
+    function highlightText(el, keyword) {
+      var original = el.dataset.originalText || el.innerHTML;
+      if (!keyword) {
+        el.innerHTML = original;
+        return;
+      }
+      /* Escape regex special chars */
+      var escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      var re = new RegExp('(' + escaped + ')', 'gi');
+      el.innerHTML = original.replace(re, '<mark class="tl-highlight">$1</mark>');
+    }
+
+    function applyFilter() {
+      var fy = yearSel.value;
+      var rawKeyword = keywordInput.value.trim();
+      var activeKeyword = normalizeText(rawKeyword);
+      var visibleCount = 0;
+
+      cards.forEach(function(c) {
+        var cardLabel = typeDe[c.dataset.type] || (c.dataset.type || '').replace(/_/g, ' ');
+        var matchTypes = selectedLabels.length === 0 || selectedLabels.indexOf(cardLabel) !== -1;
+        var matchY = fy === 'all' || (c.dataset.date || '').indexOf(fy) !== -1;
+        var cardText = normalizeText(c.textContent || '');
+        var matchKeyword = !activeKeyword || cardText.indexOf(activeKeyword) !== -1;
+        var isVisible = matchY && matchTypes && matchKeyword;
+
+        c.style.display = isVisible ? '' : 'none';
+        if (isVisible) visibleCount += 1;
+
+        /* Apply or clear highlighting */
+        c.querySelectorAll('.tl-text').forEach(function(el) {
+          highlightText(el, isVisible ? rawKeyword : '');
+        });
+      });
+
+      emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+
+    yearSel.addEventListener('change', applyFilter);
+    keywordInput.addEventListener('input', applyFilter);
+
+    renderTags();
+    applyFilter();
+  }
+
+  initVerlaufFilter('verlauf-reel', 'verlauf-year-filter', 'verlauf-type-filter', 'verlauf-keyword-filter', 'verlauf-empty');
+  initVerlaufFilter('verlauf-reel-tab', 'verlauf-year-filter-tab', 'verlauf-type-filter-tab', 'verlauf-keyword-filter-tab', 'verlauf-empty-tab');
+
 });
 
 function openRawDoc(caseId) {
@@ -415,6 +1477,45 @@ function openRawDoc(caseId) {
 function closeRawDoc() { document.getElementById('rawDocModal').style.display = 'none'; }
 document.getElementById('rawDocModal').addEventListener('click', function(e) {
   if (e.target === this) closeRawDoc();
+});
+
+/* ── Imaging PDF button → modal ─────────────────────────────────────── */
+function openPdfViewer(url, title) {
+  var modal = document.getElementById('pdfViewerModal');
+  var frame = document.getElementById('pdfViewerFrame');
+  var titleEl = document.getElementById('pdfViewerTitle');
+  titleEl.textContent = title || 'PDF';
+  frame.src = url + '#toolbar=0&view=FitH&pagemode=none&navpanes=0';
+  modal.style.display = 'flex';
+}
+function closePdfViewer() {
+  var modal = document.getElementById('pdfViewerModal');
+  var frame = document.getElementById('pdfViewerFrame');
+  modal.style.display = 'none';
+  frame.src = '';
+}
+document.querySelectorAll('.img-btn-pdf').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    openPdfViewer(btn.dataset.pdfUrl, btn.dataset.pdfTitle);
+  });
+});
+
+/* ── Imaging TXT button → modal ─────────────────────────────────────── */
+document.querySelectorAll('.img-btn-txt').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var dir  = btn.dataset.dir;
+    var date = btn.dataset.date;
+    var type = btn.dataset.type;
+    var caseId = '{{ case_id }}';
+    var modal = document.getElementById('rawDocModal');
+    var body  = document.getElementById('rawDocBody');
+    modal.style.display = 'flex';
+    body.textContent = 'Laden…';
+    fetch('/api/imaging-txt/' + caseId + '?dir=' + encodeURIComponent(dir) + '&date=' + encodeURIComponent(date) + '&type=' + encodeURIComponent(type))
+      .then(function(r) { return r.json(); })
+      .then(function(d) { body.textContent = d.text || 'Kein Text gefunden.'; })
+      .catch(function() { body.textContent = 'Fehler beim Laden.'; });
+  });
 });
 </script>
 {% endblock %}

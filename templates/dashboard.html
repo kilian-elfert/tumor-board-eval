@@ -33,12 +33,13 @@
       <div class="info-card">
         <h2 class="card-title">Basisdaten</h2>
         <table class="info-table">
-          <tr><th>Name</th><td>{{ patient.name }}</td></tr>
-          <tr><th>Geburtsdatum</th><td>{{ patient.dob }} ({{ patient.age }} J.)</td></tr>
-          <tr><th>Geschlecht</th><td>{{ patient.sex }}</td></tr>
-          <tr><th>Wohnort</th><td>{{ patient.location }}</td></tr>
-          <tr><th>Pat-ID</th><td>{{ patient.pat_id }}</td></tr>
-          <tr><th>ECOG</th><td>{{ patient.ecog }}</td></tr>
+          <tr><th>Name</th><td>{{ patient.name|ka }}</td></tr>
+          <tr><th>Geburtsdatum</th><td>{% if patient.dob %}{{ patient.dob }} ({{ patient.age }} J.){% else %}Keine Angabe{% endif %}</td></tr>
+          <tr><th>Geschlecht</th><td>{{ patient.sex|ka }}</td></tr>
+          <tr><th>Wohnort</th><td>{{ patient.location|ka }}</td></tr>
+          <tr><th>Pat-ID</th><td>{{ patient.pat_id|ka }}</td></tr>
+          <tr><th>ECOG</th><td>{{ patient.ecog|ka }}</td></tr>
+          <tr><th>Karnofsky</th><td>{{ patient.karnofsky|ka }}</td></tr>
         </table>
 
         <h3 class="card-subtitle">Komorbiditäten</h3>
@@ -50,22 +51,24 @@
 
         <h3 class="card-subtitle">Primärdiagnose</h3>
         <table class="info-table">
-          <tr><th>Diagnose</th><td>{{ patient.primary_diagnosis }}</td></tr>
-          <tr><th>Lokalisation</th><td>{{ patient.primary_location }}</td></tr>
-          <tr><th>Erstdiagnose</th><td>{{ patient.diagnosis_date }}</td></tr>
-          <tr><th>Tumordicke</th><td>{{ patient.tumor_thickness }}</td></tr>
-          <tr><th>Ulzeration</th><td>{{ patient.ulceration }}</td></tr>
-          <tr><th>Mitosen</th><td>{{ patient.mitoses }}</td></tr>
+          <tr><th>Diagnose</th><td>{{ patient.primary_diagnosis|ka }}</td></tr>
+          <tr><th>Lokalisation</th><td>{{ patient.primary_location|ka }}</td></tr>
+          <tr><th>Erstdiagnose</th><td>{{ patient.diagnosis_date|ka }}</td></tr>
+          <tr><th>Tumordicke</th><td>{{ patient.tumor_thickness|ka }}</td></tr>
+          <tr><th>Ulzeration</th><td>{{ patient.ulceration|ka }}</td></tr>
+          <tr><th>Mitosen</th><td>{{ patient.mitoses|ka }}</td></tr>
         </table>
 
         <h3 class="card-subtitle">Aktuelles Staging</h3>
         <div class="staging-box">
+          {% if patient.staging.t %}
           <span class="staging-item"><strong>T</strong> {{ patient.staging.t }}</span>
           <span class="staging-item"><strong>N</strong> {{ patient.staging.n }}</span>
           <span class="staging-item"><strong>M</strong> {{ patient.staging.m }}</span>
           <span class="staging-divider">|</span>
           <span class="staging-item"><strong>UICC</strong> {{ patient.staging.uicc }}</span>
           <span class="staging-item stage-class">{{ patient.staging.classification }}</span>
+          {% else %}Keine Angabe{% endif %}
         </div>
 
         <h3 class="card-subtitle">Molekularpathologie</h3>
@@ -82,14 +85,36 @@
         {% endif %}
 
         <p class="pdl1-line"><strong>PD-L1:</strong> {{ patient.pdl1 if patient.pdl1 else 'Nicht bestimmt' }}</p>
+        {% if patient.hla_a %}
+        <p class="pdl1-line"><strong>HLA-A:</strong> {{ patient.hla_a }}</p>
+        {% endif %}
 
-        <h3 class="card-subtitle">Therapie</h3>
-        <table class="info-table">
-          <tr><th>Chirurgie</th><td>{{ patient.therapies.surgery or '–' }}</td></tr>
-          <tr><th>Bestrahlung</th><td>{{ patient.therapies.radiation or '–' }}</td></tr>
-          <tr><th>Systemtherapie</th><td>{{ patient.therapies.systemic or '–' }}</td></tr>
-          <tr><th>Aktuell</th><td><strong>{{ patient.therapies.current or '–' }}</strong></td></tr>
-        </table>
+        <h3 class="card-subtitle">Therapieverlauf</h3>
+
+        {% macro therapy_category(label, items, dot_class) %}
+        {% if items %}
+        <div class="therapy-cat">
+          <h4 class="therapy-cat-label"><span class="therapy-tl-dot {{ dot_class }}"></span> {{ label }}</h4>
+          <ol class="therapy-timeline">
+            {% for entry in items %}
+            <li class="therapy-tl-item">
+              <span class="therapy-tl-date">{{ entry.date }}</span>
+              <span class="therapy-tl-dot-wrap"><span class="therapy-tl-dot {{ dot_class }}"></span></span>
+              <span class="therapy-tl-content">{{ entry.text }}</span>
+            </li>
+            {% endfor %}
+          </ol>
+        </div>
+        {% endif %}
+        {% endmacro %}
+
+        {{ therapy_category('Chirurgie', patient.therapies.surgery, 'dot-surgery') }}
+        {{ therapy_category('Bestrahlung', patient.therapies.radiation, 'dot-radiation') }}
+        {% if patient.therapies.other_locoregional %}
+        {{ therapy_category('Andere lokoregion&auml;re Therapien', patient.therapies.other_locoregional, 'dot-locoregional') }}
+        {% endif %}
+        {{ therapy_category('Systemtherapie', patient.therapies.systemic, 'dot-systemic') }}
+        {{ therapy_category('Aktuell', patient.therapies.current, 'dot-current') }}
       </div>
 
       {# ── right column: Body map ────────────────────────────────────────── #}
@@ -232,8 +257,6 @@ document.addEventListener('DOMContentLoaded', function() {
       el.classList.add('region-primary');
     } else if (isMeta) {
       el.classList.add('region-metastasis');
-    } else if (isImaged) {
-      el.classList.add('region-imaged');
     } else {
       el.style.display = 'none';
     }
@@ -261,11 +284,9 @@ document.addEventListener('DOMContentLoaded', function() {
   if (outlineEl && bmapBody) {
     var wbPrimary = primaryRegions.indexOf('whole_body') !== -1;
     var wbMeta    = metaRegions.indexOf('whole_body') !== -1;
-    var wbImaged  = imagedRegions.indexOf('whole_body') !== -1;
     var wbActive = false;
     if (wbPrimary)      { bmapBody.classList.add('whole-body-primary'); wbActive = true; }
     else if (wbMeta)    { bmapBody.classList.add('whole-body-meta'); wbActive = true; }
-    else if (wbImaged)  { bmapBody.classList.add('whole-body-imaged'); wbActive = true; }
     if (wbActive) {
       outlineEl.classList.add('outline-active');
       var tooltip = document.getElementById('body-tooltip');
@@ -363,6 +384,22 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
   }
+
+  /* ── Therapy timeline: position vertical line through dots ──────────── */
+  document.querySelectorAll('.therapy-timeline').forEach(function(ol) {
+    var dots = ol.querySelectorAll('.therapy-tl-dot');
+    if (dots.length < 2) return;
+    var first = dots[0], last = dots[dots.length - 1];
+    var olRect = ol.getBoundingClientRect();
+    var fRect  = first.getBoundingClientRect();
+    var lRect  = last.getBoundingClientRect();
+    var cx = fRect.left + fRect.width / 2 - olRect.left;
+    var top = fRect.top + fRect.height / 2 - olRect.top;
+    var bottom = lRect.top + lRect.height / 2 - olRect.top;
+    ol.style.setProperty('--tl-line-left', cx + 'px');
+    ol.style.setProperty('--tl-line-top', top + 'px');
+    ol.style.setProperty('--tl-line-height', (bottom - top) + 'px');
+  });
 
 });
 

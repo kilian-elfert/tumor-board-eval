@@ -1677,6 +1677,7 @@ a.step:hover .step-title { text-decoration: underline; }
   font-weight: 600;
   cursor: pointer;
   transition: background .15s, color .15s;
+  text-decoration: none;
 }
 .btn-protocol:hover {
   background: #1a4f8a;

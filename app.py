@@ -1,25 +1,96 @@
 from flask import (Flask, render_template, request, redirect, url_for,
                    session, send_file)
-import json, csv, io, os, random
+import json, csv, io, os, random, threading, traceback
+import urllib.request
 from werkzeug.security import check_password_hash
 from functools import wraps
 from datetime import datetime
 from markupsafe import Markup, escape
+from dotenv import load_dotenv
+import re as _re
+
+load_dotenv(override=True)
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'change-this-in-production-please')
+
+_KA_SYNONYMS = {'nicht angegeben', 'nicht bestimmt', 'nicht bekannt', 'unbekannt', 'n/a', ''}
+
+@app.template_filter('ka')
+def _keine_angabe(value):
+    """Replace empty / placeholder values with 'Keine Angabe'."""
+    if not value or str(value).strip().lower() in _KA_SYNONYMS:
+        return 'Keine Angabe'
+    return value
 
 BASE_DIR        = os.path.dirname(os.path.abspath(__file__))
 TEXTS_FILE      = os.path.join(BASE_DIR, 'texts.json')
 RESPONSES_DIR   = os.path.join(BASE_DIR, 'responses')
 USERS_FILE      = os.path.join(BASE_DIR, 'users.json')
-DOCUMENTS_DIR   = os.path.join(BASE_DIR, 'original_documents')
 GUIDELINE_DIR   = os.path.join(BASE_DIR, 'guideline')
 TEXTS_HUMAN_DIR = os.path.join(BASE_DIR, 'texts_human')
 TEXTS_LLM_DIR   = os.path.join(BASE_DIR, 'texts_llm')
-EXPORTS_DIR = os.path.join(BASE_DIR, 'exports')
+EXPORTS_DIR     = os.path.join(BASE_DIR, 'exports')
 HIGHLIGHT_FILE  = os.path.join(BASE_DIR, 'highlight_mappings.json')
+DASHBOARD_DIR   = os.path.join(BASE_DIR, 'dashboard_data')
+
+# External data root (originals + imaging reports). Configured via .env:
+#   DATA_ROOT       absolute path, e.g.  C:\Users\kilia\Desktop\Data
+#   SOURCES_SUBDIR  subdirectory holding sources (default: 'sources')
+# Falls back to in-repo 'original_documents' / 'imaging' for backwards
+# compatibility if the external path is not configured / does not exist.
+_DATA_ROOT      = os.path.expanduser(os.environ.get('DATA_ROOT', '').strip())
+_SOURCES_SUBDIR = os.environ.get('SOURCES_SUBDIR', 'sources').strip()
+_SOURCES_DIR    = os.path.join(_DATA_ROOT, _SOURCES_SUBDIR) if _DATA_ROOT else ''
+
+if _SOURCES_DIR and os.path.isdir(_SOURCES_DIR):
+    DOCUMENTS_DIR = _SOURCES_DIR   # holds <case_id>.{pdf,txt}
+    IMAGING_DIR   = _SOURCES_DIR   # holds <case_id>_<modality>/...
+else:
+    DOCUMENTS_DIR = os.path.join(BASE_DIR, 'original_documents')
+    IMAGING_DIR   = os.path.join(BASE_DIR, 'imaging')
+
+# Case-id heuristic: 64-char lowercase hex (SHA-256 stem). Used to filter
+# auxiliary files in shared sources directories.
 import re as _re
+_CASE_ID_RE = _re.compile(r'^[0-9a-f]{64}$')
+def _is_case_id(s: str) -> bool:
+    return bool(_CASE_ID_RE.match(s or ''))
+
+
+# ── push notifications via ntfy.sh ───────────────────────────────────────────
+
+NTFY_URL = os.environ.get('NTFY_URL', '').strip()  # e.g. https://ntfy.sh/my-topic
+
+
+def _send_notification_email(subject, body):
+    """Send a push notification via ntfy.sh (no login, no mail server).
+
+    Set NTFY_URL in .env, e.g.:
+        NTFY_URL=https://ntfy.sh/my-secret-topic
+
+    Silently no-ops if NTFY_URL is unset. Runs in a daemon thread so failures
+    never affect request handling.
+    """
+    if not NTFY_URL:
+        return
+
+    def _worker():
+        try:
+            req = urllib.request.Request(
+                NTFY_URL,
+                data=body.encode(),
+                headers={'Title': subject, 'Content-Type': 'text/plain; charset=utf-8'},
+                method='POST',
+            )
+            urllib.request.urlopen(req, timeout=10)
+        except Exception:
+            try:
+                app.logger.warning('ntfy notification failed:\n%s', traceback.format_exc())
+            except Exception:
+                pass
+
+    threading.Thread(target=_worker, daemon=True).start()
 
 # ── constants ────────────────────────────────────────────────────────────────
 
@@ -420,59 +491,80 @@ def _read_text_file(path):
     return ''
 
 
+_TEXT_SUBDIRS = (
+    (TEXTS_HUMAN_DIR, 'zusammenfassung'),
+    (TEXTS_HUMAN_DIR, 'fragestellung'),
+    (TEXTS_LLM_DIR,   'zusammenfassung'),
+    (TEXTS_LLM_DIR,   'fragestellung'),
+)
+
+
 def _discover_cases():
-    """Discover cases from original_documents/ PDFs.
-    Returns sorted list of (fall_number, pdf_filename) tuples.
+    """Discover local cases by case_id (hash or any string identifier).
+
+    A case is any <case_id> for which at least one of these files exists:
+      - texts_human/zusammenfassung/<case_id>.txt
+      - texts_human/fragestellung/<case_id>.txt
+      - texts_llm/zusammenfassung/<case_id>.txt
+      - texts_llm/fragestellung/<case_id>.txt
+      - original_documents/<case_id>.txt
+      - original_documents/<case_id>.pdf
+      - dashboard_data/<case_id>_dashboard.json
+
+    Returns a sorted list of case_id strings.
     """
-    cases = []
-    if not os.path.isdir(DOCUMENTS_DIR):
-        return cases
-    for fname in os.listdir(DOCUMENTS_DIR):
-        if not fname.lower().endswith('.pdf'):
-            continue
-        m = _re.match(r'[Ff]all(\d+)', fname)
-        if m:
-            cases.append((int(m.group(1)), fname))
-    cases.sort(key=lambda x: x[0])
-    return cases
+    ids: set[str] = set()
+
+    # Text directories
+    for base, sub in _TEXT_SUBDIRS:
+        d = os.path.join(base, sub)
+        if os.path.isdir(d):
+            for fname in os.listdir(d):
+                if fname.lower().endswith('.txt'):
+                    ids.add(os.path.splitext(fname)[0])
+
+    # Original documents (txt or pdf). When DOCUMENTS_DIR points at an external
+    # sources/ folder it may also contain auxiliary files (e.g. <case_id>_lab.txt,
+    # <case_id>_verlaufsdoku.jsonl) and modality subdirs — filter to bare
+    # <case_id>.{txt,pdf} only by requiring the stem to be a 64-char hex hash.
+    if os.path.isdir(DOCUMENTS_DIR):
+        for fname in os.listdir(DOCUMENTS_DIR):
+            stem, ext = os.path.splitext(fname)
+            if ext.lower() in ('.txt', '.pdf') and _is_case_id(stem):
+                ids.add(stem)
+
+    # Dashboard JSONs (<case_id>_dashboard.json)
+    if os.path.isdir(DASHBOARD_DIR):
+        for fname in os.listdir(DASHBOARD_DIR):
+            if fname.lower().endswith('_dashboard.json'):
+                ids.add(fname[:-len('_dashboard.json')])
+
+    return sorted(ids)
 
 
-def _find_text_file(directory, pattern_prefix):
-    """Find a text file in directory whose name starts with pattern_prefix (case-insensitive)."""
-    if not os.path.isdir(directory):
-        return None
-    prefix_lower = pattern_prefix.lower()
-    for fname in os.listdir(directory):
-        if fname.lower().startswith(prefix_lower) and fname.lower().endswith('.txt'):
-            return os.path.join(directory, fname)
-    return None
+def _case_text_path(base, sub, case_id):
+    """Return path to <base>/<sub>/<case_id>.txt if it exists, else None."""
+    p = os.path.join(base, sub, f'{case_id}.txt')
+    return p if os.path.isfile(p) else None
 
 
 def load_texts():
-    """Dynamically build case list from original_documents/ PDFs and text files."""
-    cases = _discover_cases()
-    if not cases:
-        # Fallback to texts.json if no PDFs found
+    """Build case list from local texts_human/ and texts_llm/ folders."""
+    case_ids = _discover_cases()
+    if not case_ids:
         return load_json(TEXTS_FILE, [])
 
     texts = []
-    for fall_nr, pdf_name in cases:
-        prefix = f'fall_{fall_nr}'
-        human_summary = _read_text_file(
-            _find_text_file(os.path.join(TEXTS_HUMAN_DIR, 'zusammenfassung'), prefix))
-        human_problem = _read_text_file(
-            _find_text_file(os.path.join(TEXTS_HUMAN_DIR, 'fragestellung'), prefix))
-        llm_summary = _read_text_file(
-            _find_text_file(os.path.join(TEXTS_LLM_DIR, 'zusammenfassungen'), prefix))
-        llm_problem = _read_text_file(
-            _find_text_file(os.path.join(TEXTS_LLM_DIR, 'fragestellungen'), prefix))
+    for case_id in case_ids:
+        pdf_path = os.path.join(DOCUMENTS_DIR, f'{case_id}.pdf')
+        pdf_name = f'{case_id}.pdf' if os.path.isfile(pdf_path) else ''
         texts.append({
-            'id': fall_nr,
+            'id': case_id,
             'pdf': pdf_name,
-            'human_summary': human_summary,
-            'llm_summary': llm_summary,
-            'human_problem': human_problem,
-            'llm_problem': llm_problem,
+            'human_summary': _read_text_file(_case_text_path(TEXTS_HUMAN_DIR, 'zusammenfassung',  case_id)),
+            'human_problem': _read_text_file(_case_text_path(TEXTS_HUMAN_DIR, 'fragestellung',   case_id)),
+            'llm_summary':   _read_text_file(_case_text_path(TEXTS_LLM_DIR,   'zusammenfassung', case_id)),
+            'llm_problem':   _read_text_file(_case_text_path(TEXTS_LLM_DIR,   'fragestellung',   case_id)),
         })
     return texts
 
@@ -593,8 +685,20 @@ def _counterbalanced_assignments(case_ids):
 
 
 def init_evaluator(username, texts):
-    """Create evaluator entry if not present, return user data dict."""
+    """Create evaluator entry if not present, return user data dict.
+
+    Resets saved data if case_order doesn't match current texts (e.g. after
+    switching from legacy to external cases).
+    """
+    current_ids = {str(t['id']) for t in texts}
     user_data = load_responses(username)
+
+    # Reset if saved case_order references stale/unknown case IDs
+    if user_data:
+        saved_ids = set(user_data.get('case_order', []))
+        if saved_ids and not saved_ids.issubset(current_ids):
+            user_data = {}  # force re-init
+
     if not user_data:
         case_order = [str(t['id']) for t in texts]
         random.shuffle(case_order)
@@ -714,9 +818,21 @@ def consent():
         agreed = request.form.get('agree') == 'on'
         if agreed:
             user_data = load_responses(username)
+            already_started = user_data.get('consent_given', False)
             user_data['consent_given'] = True
             user_data['page'] = 'demographics'
+            if not already_started:
+                user_data['started_at'] = datetime.utcnow().isoformat()
             save_responses(username, user_data)
+            if not already_started:
+                _send_notification_email(
+                    subject=f'[tumor_board_eval] Studie gestartet: {username}',
+                    body=(
+                        f'Benutzer:    {username}\n'
+                        f'Zeitpunkt:   {user_data["started_at"]} UTC\n'
+                        f'Ereignis:    Einwilligung erteilt, Studie gestartet.\n'
+                    ),
+                )
             return redirect(url_for('demographics'))
         return render_template('consent.html', error='Bitte stimmen Sie der Teilnahme zu, um fortzufahren.')
     return render_template('consent.html', error=None)
@@ -976,6 +1092,22 @@ def evaluate_step(case_id, step_idx, tab_idx):
             user_data['ratings'].setdefault(case_id, {})[storage_key] = rating
             save_responses(username, user_data)
 
+            # Notify when the last step of a case is submitted
+            if key == 'final_overall':
+                completed_count = sum(
+                    1 for cid in case_order
+                    if all(is_step_done(user_data, cid, i) for i in range(len(RATING_STEPS)))
+                )
+                _send_notification_email(
+                    subject=f'[tumor_board_eval] Fall abgeschlossen: {username}',
+                    body=(
+                        f'Benutzer:           {username}\n'
+                        f'Fall-ID:            {case_id}\n'
+                        f'Gesamt abgeschlossen: {completed_count} / {len(case_order)}\n'
+                        f'Zeitpunkt:          {rating["saved_at"]} UTC\n'
+                    ),
+                )
+
             # Navigate to next step/tab
             next_url = compute_next_url(user_data, case_id, case_order, case_index,
                                         step_idx, tab_idx, step)
@@ -1223,11 +1355,25 @@ def final_questions():
             'saved_at':              datetime.utcnow().isoformat(),
         }
         user_data = load_responses(username)
+        was_completed = user_data.get('completed', False)
         user_data['final_questions'] = fq
         user_data['completed']       = True
         user_data['completed_at']    = datetime.utcnow().isoformat()
         save_responses(username, user_data)
         _export_all_to_disk(username)
+        if not was_completed:
+            started_at = user_data.get('started_at', 'unbekannt')
+            num_cases  = len(user_data.get('responses', {}) or {})
+            _send_notification_email(
+                subject=f'[tumor_board_eval] Studie abgeschlossen: {username}',
+                body=(
+                    f'Benutzer:        {username}\n'
+                    f'Gestartet:       {started_at} UTC\n'
+                    f'Abgeschlossen:   {user_data["completed_at"]} UTC\n'
+                    f'Bewertete Fälle: {num_cases}\n'
+                    f'Ereignis:        Alle Fälle und Abschlussfragen abgeschlossen.\n'
+                ),
+            )
         return redirect(url_for('end'))
 
     existing_fq = user_data.get('final_questions', {})
@@ -1254,27 +1400,15 @@ def end():
 @app.route('/protocol-pdf')
 @login_required
 def protocol_pdf():
-    """Serve the PDF for a specific case (via ?case_id=N) or fall back to first PDF found."""
+    """Serve the PDF for a specific case (via ?case_id=...) or fall back to first PDF found."""
     case_id = request.args.get('case_id', '')
-    # Try to find the case-specific PDF in original_documents/
-    if case_id and os.path.isdir(DOCUMENTS_DIR):
-        for fname in os.listdir(DOCUMENTS_DIR):
-            if not fname.lower().endswith('.pdf'):
-                continue
-            m = _re.match(r'[Ff]all(\d+)', fname)
-            if m and m.group(1) == str(case_id):
-                resp = send_file(os.path.join(DOCUMENTS_DIR, fname),
-                                 mimetype='application/pdf')
-                resp.headers['Content-Disposition'] = 'inline'
-                return resp
-    # Fallback: first PDF in original_documents/
-    if os.path.isdir(DOCUMENTS_DIR):
-        for fname in sorted(os.listdir(DOCUMENTS_DIR)):
-            if fname.lower().endswith('.pdf'):
-                resp = send_file(os.path.join(DOCUMENTS_DIR, fname),
-                                 mimetype='application/pdf')
-                resp.headers['Content-Disposition'] = 'inline'
-                return resp
+
+    if case_id:
+        pdf_path = os.path.join(DOCUMENTS_DIR, f'{case_id}.pdf')
+        if os.path.isfile(pdf_path):
+            resp = send_file(pdf_path, mimetype='application/pdf')
+            resp.headers['Content-Disposition'] = 'inline'
+            return resp
     return 'Kein Protokoll-PDF gefunden.', 404
 
 
@@ -1648,18 +1782,76 @@ def export():
 
 
 # ── Patient Dashboard Data ───────────────────────────────────────────────────
-# ...
+
+
+
+def _load_dashboard_json(case_id):
+    """Load a pre-processed dashboard JSON for a case from DASHBOARD_DIR."""
+    path = os.path.join(DASHBOARD_DIR, f'{case_id}_dashboard.json')
+    if os.path.isfile(path):
+        with open(path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        # Sort lab values chronologically (DD.MM.YYYY), newest first
+        def _date_sort_key(entry):
+            try:
+                d, m, y = entry.get('date', '').split('.')
+                return (int(y), int(m), int(d))
+            except (ValueError, AttributeError):
+                return (0, 0, 0)
+        if 'lab_values' in data:
+            data['lab_values'] = sorted(data['lab_values'], key=_date_sort_key, reverse=True)
+        # Sort imaging chronologically, oldest first (ascending)
+        if 'imaging' in data:
+            data['imaging'] = sorted(data['imaging'], key=_date_sort_key)
+        # Sort metastases chronologically, oldest first (ascending)
+        # Entries without dates go to the end
+        if 'metastases_detail' in data:
+            def _meta_sort_key(entry):
+                k = _date_sort_key(entry)
+                return (0, k) if k != (0, 0, 0) else (1, k)
+            data['metastases_detail'] = sorted(data['metastases_detail'], key=_meta_sort_key)
+        # Sort therapies oldest-first (ascending) within each category
+        if 'therapies' in data and isinstance(data['therapies'], dict):
+            def _therapy_date_key(entry):
+                d = _re.sub(r'^seit\s+', '', entry.get('date', '').strip())
+                m = _re.match(r'^(\d{1,2})\.(\d{1,2})\.(\d{4})$', d)
+                if m:
+                    return (int(m.group(3)), int(m.group(2)), int(m.group(1)))
+                m = _re.match(r'^(\d{1,2})\.(\d{4})$', d)
+                if m:
+                    return (int(m.group(2)), int(m.group(1)), 0)
+                m = _re.match(r'^(\d{1,2})/(\d{4})$', d)
+                if m:
+                    return (int(m.group(2)), int(m.group(1)), 0)
+                return (0, 0, 0)
+            for cat in ('surgery', 'radiation', 'systemic', 'other_locoregional', 'current'):
+                if cat in data['therapies'] and isinstance(data['therapies'][cat], list):
+                    data['therapies'][cat] = sorted(data['therapies'][cat], key=_therapy_date_key)
+        return data
+    return None
+
+
+def _build_patient_data():
+    """Build PATIENT_DATA dict by enumerating dashboard_data/<case_id>_dashboard.json."""
+    result = {}
+    if os.path.isdir(DASHBOARD_DIR):
+        for fname in os.listdir(DASHBOARD_DIR):
+            if fname.lower().endswith('_dashboard.json'):
+                case_id = fname[:-len('_dashboard.json')]
+                dash = _load_dashboard_json(case_id)
+                if dash:
+                    result[case_id] = dash
+    return result
+
+
+PATIENT_DATA = _build_patient_data()
 
 
 def _read_original_document(case_id):
-    """Read the original TXT document for a case."""
-    if not os.path.isdir(DOCUMENTS_DIR):
-        return ''
-    for fname in os.listdir(DOCUMENTS_DIR):
-        if fname.lower().endswith('.txt'):
-            m = _re.match(r'[Ff]all(\d+)', fname)
-            if m and m.group(1) == str(case_id):
-                return _read_text_file(os.path.join(DOCUMENTS_DIR, fname))
+    """Read the original TXT document for a case from DOCUMENTS_DIR."""
+    txt_path = os.path.join(DOCUMENTS_DIR, f'{case_id}.txt')
+    if os.path.isfile(txt_path):
+        return _read_text_file(txt_path)
     return ''
 
 
@@ -1679,12 +1871,22 @@ def case_dashboard(case_id):
     if request.method == 'POST':
         user_data = load_responses(username)
         dashboards_seen = user_data.get('dashboards_seen', [])
-        if case_id not in dashboards_seen:
+        first_time = case_id not in dashboards_seen
+        if first_time:
             dashboards_seen.append(case_id)
         user_data['dashboards_seen'] = dashboards_seen
         save_responses(username, user_data)
-        return redirect(url_for('evaluate_step',
-                                case_id=case_id, step_idx=0, tab_idx=0))
+        if first_time:
+            _send_notification_email(
+                subject=f'[tumor_board_eval] Fall gestartet: {username}',
+                body=(
+                    f'Benutzer:  {username}\n'
+                    f'Fall-ID:   {case_id}\n'
+                    f'Fall-Nr.:  {case_index + 1} / {len(case_order)}\n'
+                    f'Zeitpunkt: {datetime.utcnow().isoformat()} UTC\n'
+                ),
+            )
+        return redirect(url_for('evaluate_resume'))
 
     patient = PATIENT_DATA[case_id]
     original_doc = _read_original_document(case_id)
@@ -1713,6 +1915,48 @@ def api_original_doc(case_id):
         return {'error': 'Not found'}, 404
     doc = _read_original_document(case_id)
     return {'text': doc}
+
+
+@app.route('/api/imaging-pdf/<case_id>')
+@login_required
+def imaging_pdf(case_id):
+    """Serve an imaging PDF from imaging/<case_id>_<modality>/<file>.pdf."""
+    if case_id not in PATIENT_DATA:
+        return 'Not found', 404
+    img_dir = request.args.get('dir', '')
+    pdf_file = request.args.get('file', '')
+    if not img_dir or not pdf_file:
+        return 'Missing parameters', 400
+    # Sanitise to prevent path traversal
+    img_dir = os.path.basename(img_dir)
+    pdf_file = os.path.basename(pdf_file)
+    if not pdf_file.lower().endswith('.pdf'):
+        return 'Invalid file', 400
+    pdf_path = os.path.join(IMAGING_DIR, img_dir, pdf_file)
+    if not os.path.isfile(pdf_path):
+        return 'PDF nicht gefunden', 404
+    resp = send_file(pdf_path, mimetype='application/pdf')
+    resp.headers['Content-Disposition'] = 'inline'
+    return resp
+
+
+@app.route('/api/imaging-txt/<case_id>')
+@login_required
+def imaging_txt(case_id):
+    """Return the raw text content of an imaging report."""
+    if case_id not in PATIENT_DATA:
+        return {'error': 'Not found'}, 404
+    # Find the matching imaging entry by dir + date + type
+    img_dir = request.args.get('dir', '')
+    date = request.args.get('date', '')
+    img_type = request.args.get('type', '')
+    if not img_dir:
+        return {'error': 'Missing parameters'}, 400
+    patient = PATIENT_DATA[case_id]
+    for img in patient.get('imaging', []):
+        if img.get('img_dir', '') == img_dir and img.get('date', '') == date and img.get('type', '') == img_type:
+            return {'text': img.get('finding', '')}
+    return {'text': ''}
 
 
 if __name__ == '__main__':

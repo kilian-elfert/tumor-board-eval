@@ -1,0 +1,3538 @@
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+1 
+ 
+ 
+S3-Leitlinie Diagnostik,  
+Therapie und Nachsorge 
+des Melanoms 
+Version 3.3 – Juli 2020 
+AWMF-Register-Nummer: 032/024OL 
+ 
+ 
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+2 
+Wesentliche Neuerungen durch die Aktualisierung 
+der Leitlinie (Version 3.2, 2019)  
+ 
+Das Kapitel zur adjuvanten Therapie wurde im Rahmen eines Amendements der Leitlinie 
+überarbeitet. 
+Es erfolgten die folgenden Änderungen: 
+Neue Empfehlung 6.34. und 6.35. zur adjuvanten Therapie von Patienten im AJCC 2017 
+Tumorstadium III A-D mit anti-PD1-Antikörpern sowie BRAF‐ und MEK-Inhibitoren  
+Neue Empfehlung 6.36. zur adjuvanten Therapie von Patienten im AJCC 2017 
+Tumorstadium IV mit anti-PD1-Antikörpern. 
+Neues Statement 6.38. zur Ergebnissen bzgl. der Lebensqualität unter der adjuvanten 
+Therapie mit Interferon-alpha und Ipilimumab.  
+Eine detallierte Übersicht der Änderungen befindet sich in Tabelle 14.  
+ 
+Version 3.3, 2020 
+Es wurden ausschließlich redaktionelle Korrekturen vorgenommen. 
+ 
+  
+            
+                      
+ 
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+3 
+Inhaltsverzeichnis  
+Wesentliche Neuerungen durch die Aktualisierung der Leitlinie (Version 3.2, 2019) ............................. 2 
+1. Informationen zu dieser Leitlinie ................................ ..........................  7 
+1.1. Herausgeber ................................................................................................................... 7 
+1.2. Federführende Fachgesellschaften ................................................................................... 7 
+1.3. Finanzierung der Leitlinie ................................................................................................ 7 
+1.4. Kontakt........................................................................................................................... 7 
+1.5. Zitierweise ...................................................................................................................... 7 
+1.6. Bisherige Änderungen an der Version 3 ........................................................................... 7 
+1.7. Besonderer Hinweis......................................................................................................... 8 
+1.8. Ziele des Leitlinienprogramms Onkologie ........................................................................ 8 
+1.9. Weitere Leitliniendokumente ........................................................................................... 9 
+1.10. Zusammensetzung der Leitliniengruppe .......................................................................... 9 
+1.11. Abkürzungsverzeichnis ................................................................................................... 9 
+2. Einführung ................................ ................................ ........................  14 
+2.1. Geltungsbereich und Zweck .......................................................................................... 14 
+2.1.1. Zielsetzung und Fragestellung ...................................................................................... 14 
+2.1.2. Patientenzielgruppe ...................................................................................................... 14 
+2.1.3. Adressaten ................................................................................................................... 14 
+2.1.4. Gültigkeitsdauer und Aktualisierungsverfahren ............................................................. 14 
+2.2. Grundlagen der Methodik .............................................................................................. 15 
+2.2.1. Unabhängigkeit und Darlegung möglicher Interessenkonflikte ...................................... 15 
+3. Epidemiologie ................................ ................................ ....................  16 
+4. Diagnostik und Therapie in der Primärversorgung ................................  17 
+4.1. Klassifikation ................................................................................................................ 17 
+4.1.1. AJCC 2009 .................................................................................................................... 17 
+4.1.2. AJCC 2016/UICC 2016 .................................................................................................. 20 
+4.2. Klinische Diagnose ........................................................................................................ 26 
+            
+                      
+ 
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+4 
+4.2.1. Sequenzielle digitale Dermatoskopie ............................................................................. 26 
+4.3. Primärexzision .............................................................................................................. 26 
+4.3.1. Sicherheitsabstand bei Primärexzision .......................................................................... 27 
+4.3.2. Sicherheitsabstand In-situ-Melanome ........................................................................... 27 
+4.3.3. Exzision mit 3-D-Histologie ......................................................................................... 28 
+4.3.4. Vorgehen bei R1- oder R2-Resektion ............................................................................ 28 
+4.4. Radiotherapie des Primärtumors ................................................................................... 29 
+4.5. Histopathologische Untersuchung des Primärtumors ..................................................... 29 
+4.6. Initiale Ausbreitungsdiagnostik bis Stadium IIB .............................................................. 30 
+4.7. Wächterlymphknoten-Biopsie ........................................................................................ 32 
+5. Aufklärung und Kommunikation ................................ .........................  33 
+6. Diagnostik und Therapie bei  lokoregionaler Metastasierung ................  34 
+6.1. Ausbreitungsdiagnostik ................................................................................................ 34 
+6.2. Lymphadenektomie ....................................................................................................... 36 
+6.3. Adjuvante Radiotherapie nach Lymphadenektomie ........................................................ 41 
+6.4. Adjuvante medikamentöse Therapie .............................................................................. 42 
+6.4.1. Adjuvante Therapie im Stadium II .................................................................................. 42 
+6.4.2. Adjuvante Therapie im Stadium III/IV (NED) ................................................................... 42 
+6.4.3. Adjuvante Misteltherapie .............................................................................................. 42 
+6.4.4. Adjuvante Radiotherapie ............................................................................................... 43 
+6.4.5. Lebensqualität unter einer adjuvanten Therapie ............................................................ 43 
+6.5. Algorithmus bei lokoregionalen Metastasen .................................................................. 44 
+6.6. Operative Therapie bei lokoregionalen Metastasen ........................................................ 44 
+6.7. Radiotherapie bei lokoregionalen Metastasen ................................................................ 44 
+6.8. Medikamentöse Verfahren bei lokoregionalen Metastasen ............................................. 45 
+6.9. Extremitätenperfusion bei lokoregionalen Metastasen ................................................... 45 
+7. Diagnostik und Therapie im fernmetastasierten Stadium ......................  46 
+7.1. Algorithmus initiales Stadium IV .................................................................................... 46 
+7.2. Ausbreitungsdiagnostik im Stadium IV .......................................................................... 47 
+ 
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+5 
+7.3. Diagnostik beim metastasierten okkulten Melanom ....................................................... 48 
+7.4. Molekularpathologische Diagnostik ............................................................................... 48 
+7.5. Operative Therapie von Fernmetastasen ........................................................................ 48 
+7.6. Medikamentöse Therapie im Stadium IV ........................................................................ 49 
+Nebenwirkungsmanagement ...................................................................................................... 50 
+7.7. Radiotherapie von Fernmetastasen ................................................................................ 52 
+7.7.1. Radiotherapie – Fraktionierung ..................................................................................... 52 
+7.8. Therapie von Knochenmetastasen ................................................................................. 53 
+7.8.1. Medikamentöse Therapie bei Knochenmetastasen ......................................................... 53 
+7.8.2. Radiotherapie bei Knochenmetastasen .......................................................................... 53 
+7.9. Therapie von Lebermetastasen ...................................................................................... 53 
+7.10. Therapie von Hirnmetastasen ........................................................................................ 54 
+8. Nachsorge ................................ ................................ .........................  55 
+9. Rehabilitation ................................ ................................ ....................  57 
+10. Mukosale Melanome ................................ ................................ ........... 57 
+10.1. Klassifikation ................................................................................................................ 57 
+10.2. Primärexzision .............................................................................................................. 59 
+10.3. Initiale Ausbreitungsdiagnostik ..................................................................................... 59 
+10.4. Radiotherapie des Primärtumors ................................................................................... 60 
+10.5. Systemtherapie ............................................................................................................. 60 
+10.6. Nachsorge bei mukosalen Melanomen ........................................................................... 61 
+11. Begleittherapie ................................ ................................ ...................  62 
+11.1. Einsatz von Komplementärmedizin ................................................................................ 62 
+11.2. Aufklärung über komplementäre und alternative Therapien ........................................... 62 
+11.3. Psychoonkologie ........................................................................................................... 62 
+11.9. Palliativversorgung........................................................................................................ 63 
+12. Versorgungsstrukturen und Qualitäts-management (QM) .....................  63 
+ 
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+6 
+12.2. Klinische Studien .......................................................................................................... 63 
+13. Abbildungsverzeichnis ................................ ................................ ....... 64 
+14. Tabellenverzeichnis ................................ ................................ ............  64 
+15. Anlagen ................................ ................................ .............................  65 
+15.1. Übersicht der Änderungen in Version 3.2 (2019) ........................................................... 65 
+15.2. Zusammensetzung der Leitliniengruppe ........................................................................ 66 
+15.2.1. Koordination ................................................................................................................ 66 
+15.2.2. Beteiligte Organisationen und Personen ........................................................................ 67 
+15.2.3. Methodische Begleitung ................................................................................................ 70 
+15.2.4. Patientenbeteiligung ..................................................................................................... 70 
+15.3. Methodische Erläuterungen ........................................................................................... 71 
+15.3.1. Evidenzlevel nach Oxford (Version 2009) ...................................................................... 71 
+15.3.2. Schema der Empfehlungsgraduierung ........................................................................... 71 
+15.3.3. Statements ................................................................................................................... 72 
+15.3.4. Expertenkonsens (EK) ................................................................................................... 72 
+16. Literatur ................................ ................................ ............................  73 
+ 
+1.1 Herausgeber  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+7 
+1. Informationen zu dieser Leitlinie 
+1.1. Herausgeber 
+Leitlinienprogramm Onkologie der Arbeitsgemeinschaft der Wissenschaftlichen 
+Medizinischen Fachgesellschaften e.V. (AWMF), Deutschen Krebsgesellschaft e.V. (DKG) 
+und Deutschen Krebshilfe (DKH). 
+1.2. Federführende Fachgesellschaften 
+Deutsche Dermatologische  
+Gesellschaft (DDG) 
+Deutsche Krebsgesellschaft (DKG) vertreten durch die 
+Arbeitsgemeinschaft Dermatologische Onkologie 
+(ADO) von DKG und DGG 
+ 
+ 
+ 
+ 
+1.3. Finanzierung der Leitlinie 
+Diese Leitlinie wurde von der Deutschen Krebshilfe im Rahmen des Leitlinienprogramms 
+Onkologie gefördert. 
+1.4. Kontakt 
+Office Leitlinienprogramm Onkologie  
+c/o Deutsche Krebsgesellschaft e.V. 
+Kuno-Fischer-Straße 8 
+14057 Berlin 
+E-Mail: leitlinienprogramm@krebsgesellschaft.de 
+Internet: www.leitlinienprogramm-onkologie.de  
+1.5. Zitierweise 
+Leitlinienprogramm Onkologie (Deutsche Krebsgesellschaft, Deutsche Krebshilfe, 
+AWMF): Diagnostik, Therapie und Nachsorge des Melanoms, Kurzversion 3.3, 2020f, 
+AWMF Registernummer: 032/024OL, http://www.leitlinienprogramm-
+onkologie.de/leitlinien/melanom/ (abgerufen am: TT.MM.JJJJ) 
+1.6. Bisherige Änderungen an der Version 3 
+Juli 2018 – Version 3.1.: Die Empfehlung 4.13 wur de korrigiert. Hier war statt der 
+korrekten Empfehlung (siehe Konsultationsfassung) die Empfehlung 4.12 doppelt 
+aufgeführt. Das Kapitel mit den Änderungen infolge der letzten Aktualisierung (vorher 
+Kapitel 2.1) wurde an den Anfang gestellt. 
+
+1.7 Besonderer Hinweis  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+8 
+Oktober 2019 – Version 3.2: Komplette Überarbeitung des Kapitels zur adjuvanten 
+Therapie im Rahmen eines Amendments (siehe Einleitung).  
+Juli 2020 – Version 3.3: Ausschließlich redaktionelle Korrekturen nach umfangreichem 
+Lektorat.  
+1.7. Besonderer Hinweis 
+Die Medizin unterliegt einem fortwährenden Entwicklungsprozess, sodass alle 
+Angaben, insbesondere zu diagnostischen und therapeutischen Verfahren, immer nur 
+dem Wissensstand zurzeit der Veröffentlichung der Leitlinie entsprechen können. 
+Hinsichtlich der an gegebenen Empfehlungen zur Therapie und der Auswahl sowie 
+Dosierung von Medikamenten wurde die größtmögliche Sorgfalt beachtet. Gleichwohl 
+werden die Benutzer aufgefordert, die Beipackzettel und Fachinformationen der 
+Hersteller zur Kontrolle heranzuziehen und im Zweifelsfall einen Spezialisten zu 
+konsultieren. Fragliche Unstimmigkeiten sollen bitte im allgemeinen Interesse der OL-
+Redaktion mitgeteilt werden.  
+Der Benutzer selbst bleibt verantwortlich für jede diagnostische und 
+therapeutische Applikation, Medikation und Dosierung.  
+In dieser Leitlinie sind eingetragene Warenzeichen (geschützte Warennamen) nicht 
+besonders kenntlich gemacht. Es kann also aus dem Fehlen eines entsprechenden 
+Hinweises nicht geschlossen werden, dass es sich um einen freien Warenna men 
+handelt.  
+Das Werk ist in allen seinen Teilen urheberrechtlich geschützt. Jede Verwertung 
+außerhalb der Bestimmung des Urhebergesetzes ist ohne schriftliche Zustimmung der 
+OL-Redaktion unzulässig und strafbar. Kein Teil des Werkes darf in irgendeiner F orm 
+ohne schriftliche Genehmigung der OL -Redaktion reproduziert werden. Dies gilt 
+insbesondere für Vervielfältigungen, Übersetzungen, Mikroverfilmungen und die 
+Einspeicherung, Nutzung und Verwertung in elektronischen Systemen, Intranets und 
+dem Internet. 
+1.8. Ziele des Leitlinienprogramms Onkologie 
+Die Arbeitsgemeinschaft der Wissenschaftlichen Medizinischen Fachgesellschaften e.V., 
+die Deutsche Krebsgesellschaft e.V. und die Deutsche Krebshilfe haben sich mit dem 
+Leitlinienprogramm Onkologie (OL) das Ziel gese tzt, gemeinsam die Entwicklung und 
+Fortschreibung und den Einsatz wissenschaftlich begründeter und praktikabler Leitlinien 
+in der Onkologie zu fördern und zu unterstützen. Die Basis dieses Programms beruht 
+auf den medizinisch -wissenschaftlichen Erkenntnissen der Fachgesellschaften und der 
+DKG, dem Konsens der medizinischen Fachexperten, Anwender und Patienten sowie auf 
+dem Regelwerk für die Leitlinienerstellung der AWMF und der fachlichen Unterstützung 
+und Finanzierung durch die Deutsche Krebshilfe. Um den aktuellen Stand des 
+medizinischen Wissens abzubilden und den medizinischen Fortschritt zu 
+berücksichtigen, müssen Leitlinien regelmäßig überprüft und fortgeschrieben werden. 
+Die Anwendung des AWMF-Regelwerks soll hierbei Grundlage zur Entwicklung qualitativ 
+hochwertiger onkologischer Leitlinien sein. Da Leitlinien ein wichtiges Instrument der 
+Qualitätssicherung und des Qualitätsmanagements in der Onkologie darstellen, sollten 
+sie gezielt und nachhaltig in den Versorgungsalltag eingebracht werden. So sind ak tive 
+Implementierungsmaßnahmen und auch Evaluationsprogramme ein wichtiger 
+1.9 Weitere Leitliniendokumente  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+9 
+Bestandteil der Förderung des Leitlinienprogramms Onkologie. Ziel des Programms ist 
+es, in Deutschland professionelle und mittelfristig finanziell gesicherte Voraussetzungen 
+für die Entwicklung und Bereitstellung hochwertiger Leitlinien zu schaffen. Denn diese 
+hochwertigen Leitlinien dienen nicht nur dem strukturierten Wissenstransfer, sondern 
+können auch in der Gestaltung der Strukturen des Gesundheitssystems ihren Platz 
+finden. Zu erwähnen sind hier evidenzbasierte Leitlinien als Grundlage zum Erstellen 
+und Aktualisieren von Disease-Management-Programmen oder die Verwendung von aus 
+Leitlinien extrahierten Qualitätsindikatoren im Rahmen der Zertifizierung von 
+Organtumorzentren. 
+1.9. Weitere Leitliniendokumente 
+Bei diesem Dokument handelt es sich um die Kurzversion der S3-Leitlinie Diagnostik, 
+Therapie und Nachsorge des Melanoms. Neben der Langversion gib t es folgende 
+ergänzende Dokumente zu dieser Leitlinie: 
+• Leitlinienreport 
+• Langversion 
+• Laienversion (Patientenleitlinie) 
+• Dokumentation der Recherche und Evidenztabellen 
+Diese Leitlinie und alle Zusatzdokumente sind über die folgenden Seiten zugänglich. 
+• Leitlinienprogramm Onkologie (http://www.leitlinienprogramm-
+onkologie.de/leitlinien/melanom/) 
+• AWMF (www.leitlinien.net) 
+• Guidelines International Network (www.g-i-n.net) 
+1.10. Zusammensetzung der Leitliniengruppe 
+Im Kapitel 15.2 sind die an der Leitlinienerstellung beteiligten medizinischen 
+Fachgesellschaften und sonstigen Organisationen , deren mandatierte Vertreter /innen 
+sowie beteiligte Patientenvertreterinnen und methodische Berater/innen  aufgeführt. 
+Darüber hinaushgehenden Informationen zu den Funktionen der einzelnen Personen 
+und der Zusammensetzung der Arbeitsgruppen können der Langversion und dem 
+Leitlinienreport entnommen werden. 
+1.11. Abkürzungsverzeichnis 
+Abkürzung  Erläuterung 
+A. Arteria 
+AHB Anschlussheilbehandlung 
+AR Anschlussrehabilitationsmaßnahme 
+ASCO American Society of Clinical Oncology  
+AUC area under the curve 
+BCG  Bacillus-Calmette-Guérin 
+BSI Brief Symptom Inventory 
+1.11 Abkürzungsverzeichnis  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+10 
+Abkürzung  Erläuterung 
+CI confidence interval 
+CCOPGI Cancer Care Ontario Practice Guidelines Initiative 
+CLND  complete lymphonodectomy 
+CLSM  konfokale Laserscanningmikroskopie 
+CR Complete Response 
+CT Computertomographie 
+CTSQ Cancer Therapy Satisfaction Questionaire 
+DFI disease-free interval 
+DFS disease-free survival  
+DNCB Dinitrochlorobenzol, Dinitrochlorobenzene 
+DCP Diphencyprone 
+DSS disease-specific survival 
+DT Distress Thermometer 
+DTIC Dacarbazine 
+ECT Elektrochemotherapie 
+EK Expertenkonsens 
+EMA European Medicines Agency 
+EORTC European Organisation for Research and Treatment of Cancer 
+ERND extended radical neck dissection 
+FAMMM familial atypical multiple mole-melanoma 
+FBK Fragebogen zur Belastung von Schwerkranken 
+FDG Fluordesoxyglukose 
+FN  febrile Neutropenie 
+FUS fokussierter Ultraschall 
+G-CSF granulocyte-colony stimulating factor 
+GLQ Global Quality of Life 
+Gp100 Glycoprotein 100 
+Gy Gray 
+HADS Hospital Anxiety and Depression Scale 
+HDI high dose interferon 
+1.11 Abkürzungsverzeichnis  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+11 
+Abkürzung  Erläuterung 
+HDR high dose rate 
+HE Hämatoxylin-Eosin 
+HF Hornheider Fragebogen 
+HIAC hepatische intraarterielle Chemotherapie 
+HR Hazard Ratio 
+HRQL  health related quality of life 
+ICF International Classification of Functioning, Disability and Health 
+IDI intermediate dose interferon 
+IFN Interferon 
+IHP isolated hepatic perfusion 
+Il-2 Interleukin 2 
+ILI isolated limb infusion 
+ILP isolated limb perfusion 
+ITT intent to treat 
+LAD  Lymphadenektomie 
+LDH Laktatdehydrogenase 
+LDI low dose interferon 
+LITT laserinduzierte Thermotherapie 
+LK Lymphknoten 
+LM lentigo maligna 
+LMM  Lentigo-maligna-Melanom 
+LND Lymphonodectomy 
+LQ Lebensqualität  
+M. Musculus 
+MIA  melanoma inhibitory activity 
+MM malignant melanoma, malignes Melanom 
+MPT  Multiphotonenlasertomographie  
+MRND modifiziert radikale neck dissection 
+MRT Magnetresonanztomographie 
+MSLT Multicenter Selective Lymphadenectomy Trial 
+1.11 Abkürzungsverzeichnis  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+12 
+Abkürzung  Erläuterung 
+mSv Millisievert 
+MW Mikrowellen 
+N. Nervus 
+NCIC National Cancer Institute of Canada Clinical Trials Group 
+NK1-RA Neurokinin1-Rezeptorantagonisten 
+NSAIS nichtsteroidale antiinflammatorische Substanzen 
+n.s. not significant 
+OCT optical coherence tomography, optische Kohärenztomographie 
+OR Odds Ratio 
+OS overall survival 
+QI Qualitätsindikator 
+QWB-SA Quality of Well Being Self-administered Questionaire 
+PCR polymerase chain reaction 
+PET Positronenemissionstomographie 
+p.i. per infusionem 
+p.o.  per os 
+PO-BaDo Psychoonkologische Basisdokumentation 
+R1 mikroskopischer Residualtumor (nach R-Klassifikation) 
+R2 makroskopischer Residualtumor (nach R-Klassifikation) 
+RCT randomized controlled trial 
+RECIST Response Evaluation Criteria in Solid Tumors 
+RFA Radiofrequenzablation 
+RFS relapse-free survival, recurrence free survival 
+rhTNF recombinant human tumour necrosis factor 
+RND radical neck dissection 
+RPA recursive partitioning analysis 
+RR relatives Risiko 
+RSCL   Rotterdam Symptom Checklist  
+RT Radiotherapy 
+s.c. Subcutaneous 
+1.11 Abkürzungsverzeichnis  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+13 
+Abkürzung  Erläuterung 
+SDD sequenzielle digitale Dermatoskopie 
+SD Stable Disease 
+SIRT selektive interne Radiotherapie 
+SND selective neck dissection 
+SPECT Single-Photon-Emissionscomputertomographie 
+STAI State Trait Anxiety Inventory 
+Sv Sievert 
+TACE trans-arterial chemoembolization 
+TCM Traditionelle Chinesische Medizin  
+TD total dose 
+TLND therapeutische Lymphknotendissektion 
+TMZ Temozolomid 
+TNF tumour necrosis factor 
+UAW unerwünschte Arzneimittelwirkungen 
+V. Vena 
+vs. Versus 
+WHO World Health Organisation 
+WLK Wächterlymphknoten 
+WLKB  Wächterlymphknoten-Biopsie 
+ZNS Zentralnervensystem 
+ 
+  
+2.1 Geltungsbereich und Zweck  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+14 
+2. Einführung 
+2.1. Geltungsbereich und Zweck 
+2.1.1. Zielsetzung und Fragestellung 
+Ziel der S3 -Leitlinie Melanom ist es, den onkologisch tätigen Ärzten in der Praxis und 
+Klinik eine akzeptierte, evidenzbasierte Entscheidungshilfe für die Auswahl sowie 
+Durchführung von geeigneten Maßnahmen zur Diagnostik und Therapie und Nachsorge 
+des kutanen Mel anoms zur Verfügung zu ste llen. Die systematische Darstellung von 
+Studienergebnissen hinsichtlich Nutzen und Risiken soll Ärzte wie auch Patienten in der 
+Entscheidungsfindung unterstützen. 
+Grundlage der Empfehlungen ist die Aufarbeitung der verfügbaren Evidenz nach den 
+Kriterien der evidenzbasierten Medizin, die Adaptierung vorhandener evidenzbasierter 
+internationaler Leitlinien, sowie bei Fehlen einer Evidenzgrundlage auf Basis guter 
+klinischer Praxis. Alle Empfehlungen wurden durch interdisziplinäre Repräsentanten 
+bewertet und abgestimmt. 
+Die Leitlinie soll Qualitätsstandards setzen und damit langfristig die Versorgung von 
+Melanompatienten verbessern. 
+2.1.2. Patientenzielgruppe 
+Die vorliegende Leitlinie beinhaltet Empfehlungen zur Diagnostik, Therapie und 
+Nachsorge des kutanen  Melanoms im Primärstadium, lokoregional begrenzten sowie 
+metastasierten Stadium. Schleimhaut - sowie Aderhautmelanome wurden nicht 
+berücksichtigt. Fragestellungen zur Früherkennung wurden in der S3 -Leitlinie 
+„Prävention von Hautkrebs“ bearbeitet. 
+2.1.3. Adressaten 
+Die S3-Leitlinie Melanom richtet sich primär an Dermatologen, Hausärzte (hausärztlich 
+tätige Fachärzte für Allgemeinmedizin, Internisten, praktische Ärzte und Ärzte ohne 
+Gebiets-bezeichnung), Gynäkologen, Chirurgen, internistische Onkologen, Radiologen 
+und Strahlentherapeuten in Klinik und Praxis und andere medizinische Fachrichtungen, 
+die an der Diagnostik und Therapie von Patienten mit kutanem Melanom beteiligt sind. 
+Die Leitlinie richtet sich außerdem an betroffene Patienten sowie deren Angehörige. Des 
+Weiteren soll sie Kostenträgern und politischen Entscheidungsträgern zur Orientierung 
+dienen. 
+2.1.4. Gültigkeitsdauer und Aktualisierungsverfahren 
+Die Gültigkeitsdauer d ieser Leitlinienversion beträgt maximal 5 Jahre. Allerdings wird 
+eine kontinuierliche Aktuali sierung in kürzeren Abständen (1 -2 Jahren) der Leitlinie 
+angestrebt. Die jeweils aktuelle Version der Leitlinie kann auf der Website des 
+Leitlinienprogramms Onkologie eingesehen werden ( http://www.leitlinienprogramm-
+onkologie.de/leitlinien/melanom/ ) 
+Hinweise und Kommentare zur Aktualität der Leitlinien sind willkommen und können an 
+die folgende Adresse gesendet werden: melanom@leitlinienprogramm-onkologie.de  
+2.2 Grundlagen der Methodik  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+15 
+2.2. Grundlagen der Methodik 
+Hinweis: Die ausführliche Beschreibung des methodischen Vorgehens bei der Erstellung 
+und Aktualisierung der Leitlinie findet sich im Leitlinienreport zu dieser Leitlinie (siehe: 
+http://www.leitlinienprogramm-onkologie.de/leitlinien/melanom/). 
+Die in den Empfehlungskästen aufgeführten Angaben zur Evidenz - und 
+Empfehlungsgraduierung (Empfehlungsgrad, Level of Evidence) sind im Anhang (Kapitel 
+15.3) erläutert. 
+2.2.1. Unabhängigkeit und Darlegung möglicher 
+Interessenkonflikte 
+Die Finanzierung von Version 1, Version 2 und Version 3 der Leitlinie erfolgte vollständig 
+über die Deutsche Krebshilfe im Rahmen des Leitlinienprogramms Onkologie. Es gab 
+keine zusätzlichen Sponsoren. Interessenkonflikte wurden bei der Erstellung und der 
+Aktualisierung von allen Mitgliedern der Leitliniengruppe mit dem AWMF -Formblatt 
+(siehe Leitlinienreport) erhoben, durch die Koordinatoren gesichtet, bewertet1 und 
+anschließend das Vorgehen in der Leitliniengruppe einvernehmlich beschlossen . Bei 
+relevanten Interessenskonflikten (bezahlte Beratertätigkeit/Advisory Boards) erfolgte ein 
+Ausschluss aus der Abstimmung während der Konsensuskonferenz innerhalb des 
+jeweiligen Themenkom plexes. Im Rahmen der Konsensuskonferenz am 16.01.2017 
+(Version 3) enthielten sich deshalb die Mandatsträger der ADO und AOI bei 
+Abstimmungen zur medikamentösen Therapie. 
+Beim Amendment 2018 /2019 für die Version 3.2. wurden entsprechend der neuen 
+AWMF-Regelung bezahlte Beratertätigkeit/Advisory Boards  als moderater 
+Interessenkonflikt betrachtet. Darüberhinausgehende finanzielle Verbindungen wie 
+Eigentümerinteressen wären als hoher Interessenkonflikt angesehen worden. Bei den 
+Online-Abstimmungen für das Amendment wurde im Rahmen einer Sensitivitätsanalyse 
+kontrolliert, ob sich durch die Berücksichtigung/Nichtberücksichtigung der Personen mit 
+einem moderaten Interessenkonflikt die Abstimmungsergebnisse unterscheiden. Hierbei 
+wurden Beziehungen zu den folgenden  Firmen berücksichtigt: BMS, Merck/MSD, GSK, 
+Novartis. Ausführliche Informationen und Angaben zum Interessenkonfliktmanagement 
+können dem Leitlinienreport entnommen werden. 
+An dieser Stelle möchten wir allen Mitarbeitern für ihre ausschließlich ehrenamtliche 
+Mitarbeit an dem Projekt danken. 
+  
+ 
+1 Eine separate Bewertung der Interessenkonflikte der Koordinatoren erfolgte nicht. 
+3. Epidemiologie  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+16 
+3. Epidemiologie 
+C. Garbe, T. Eigentler, U. Leiter 
+Das maligne Melanom der Haut ist der Hauttumor mit der höchsten Metastasierungsrate 
+und ist für mehr als 90  % aller Sterbefälle an Hauttumoren verantwortlich. Deshalb ist 
+seine frühe Erkennung und bestmögliche Behandlung wichtig. 
+Das maligne Melanom galt noch vor wenigen Jahrzehnten als ein seltener Tumor, im Jahr 
+2012 dagegen rangierte es sowohl bei Frauen als auch bei Männern auf Platz fünf der 
+häufigsten soliden Tumorentitäten in Deutschland [1]. Die Umstellung der Freizeit- und 
+Urlaubsgewohnheiten mit deutlich vermehrter UV-Exposition in den letzten 5–6 Dekaden 
+ist der wichtigste Grund für die Zunahme dieser Tumorentität. Während für die Mortalität 
+des Melanoms weitgehend exakte Zahlen zur Verfügung stehen, kann die Inzidenz des 
+Melanoms in Deutschland nach wie vor nur unter Einbeziehung der Krebsregisterdaten 
+aus den Bundesländern (noch unvollständig) geschätzt werden, da eine flächendeckende 
+Krebsregistrierung in Deutschland noch nicht erreicht wurde [1]. 
+Auf der Grundlage dieser Schätzungen berechnet das Robert Koch -Institut in Berlin 
+Schätzwerte für rohe und altersstandardisierte Inzidenzraten des malignen Melanoms je 
+100 000 Einwohner und Jahr  [1]. Für die Erfassung des Anstiegs der Inzidenz und 
+Mortalität über die Zeit eignet sich am besten die Betrachtung der rohen Raten, die den 
+tatsächlichen Anstieg auch mit zunehmender Lebenserwartung der Bevölkerung 
+wiedergeben. Für Vergleiche der Inzidenz zwischen verschiedenen Bevölkerungen sind 
+altersstandardisierte Daten (europäische Standardbevölkerung) vorzuziehen, die 
+allerdings die Frequenz der höheren Altersjahrgänge unterschätzen (Stand 1960er -
+Jahre), und so zu niedrigeren Raten für Inzidenz und Mortalität führen. 
+Nach den neuesten Angaben des Robert Koch -Instituts lag im Jahr 20 12 die Zahl der 
+Todesfälle bei 2875 , die der neu aufgetretenen Melanome wird für das Jahr 2012 auf 
+20 820 geschätzt [1]. 
+Auch für die Morta litätsraten ist in den letzten vier  Dekaden eine deutliche Steigerung 
+erkennbar. Im Krebsregister des Saarlandes fand sich eine Steigerung der 
+Mortalitätsraten im Zeitraum von 1970 –2009 von ca. 1,5 auf 4,2 Fälle/100  000 
+Einwohner und Jahr bei Männern (Steigerung um 280  %) und von ca. 1,5 auf 3,8 
+Fälle/100 000 Einwohner und Jahr bei Frauen (Steigerung um 250  %). Für die Jahre von 
+1999 bis 2012 liegen Zahlen für Gesamtdeutschland vor. Hier fand eine St eigerung der 
+rohen Sterberate von 2,6 auf 4,1 Fälle/100 000 Einwohner bei Männern und von 2,3 auf 
+3,0 Fälle/100 000 Einwohner bei Frauen statt [2]. 
+Es ist wichtig zu sehen, dass der Anstieg der Mortalitätsraten deutlich geringer ausfällt 
+als der der Inzidenzraten, insofern kann von einer relativen Stabilisierung der 
+Mortalitätsraten ausgegangen werden. Der wichtigste G rund für die relative 
+Stabilisierung der Mortalitätsraten bei nach wie vor stark steigenden Inzidenzraten 
+dürfte in der verbesserten Frühdiagnose von prognostisch günstigeren Tumoren liegen. 
+Ob das 2008 eingeführte gesetzliche Hautkrebs -Screening die Morta litätsraten senken 
+kann, werden zukünftige Auswertungen zeigen müssen [3, 4]. 
+Zur Ätiologie des Melanoms sei auf die S3-Leitlinie „Prävention von Hautkrebs “ 
+http://www.leitlinienprogramm-onkologie.de/leitlinien/hautkrebs-praevention/ 
+verwiesen. 
+4.1 Klassifikation  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+17 
+4. Diagnostik und Therapie in der 
+Primärversorgung 
+4.1. Klassifikation 
+Nr. Empfehlung EG LoE Quellen 
+4.1. Die aktuelle AJCC -Klassifikation sollte der Standard für die 
+histopathologische Befundung des malignen Melanoms sein. 
+EK 
+4.1.1. AJCC 2009 
+Tabelle 1: T-Klassifikation des Primärtumors beim malignen Melanom (AJCC 2009) 
+T-Klassifikation Tumordicke Weitere prognostische Parameter 
+Tis  Melanoma In-situ, keine Tumorinvasion 
+Tx Keine Angabe Stadium nicht bestimmbar* 
+T1  1,0 mm a: ohne Ulzeration, Mitosen < 1/mm2 
+b: mit Ulzeration oder Mitoserate/mm2 ≥ 1# 
+T2 1,01-2,0 mm a: ohne Ulzeration 
+b: mit Ulzeration 
+T3 2,01-4,0 mm a: ohne Ulzeration 
+b: mit Ulzeration 
+T4 > 4,0 mm a: ohne Ulzeration 
+b: mit Ulzeration 
+* Fehlen einer Bestimmung der Tumordicke und/oder Ulzeration oder unbekannter Primärtumor; # Die Bestimmung der Mitoserate 
+erfolgt am HE-Schnitt. 
+ 
+  
+4.1 Klassifikation  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+18 
+Tabelle 2: N-Klassifikation der regionären Lymphknoten beim malignen Melanom (AJCC 2009) 
+N Klassifikation  Zahl metastatisch befallener 
+Lymphknoten (LK) 
+Ausmaß der 
+Lymphknotenmetastasierung 
+N1  1 LK a: nur mikroskopische Metastase(n) 
+(klinisch okkult)+ 
+b: nur makroskopische Metastase(n) 
+(klinisch nachweisbar) 
+N2  2-3 LK  a: nur mikroskopisch nodale Metastase(n)+ 
+b: nur makroskopische nodale 
+Metastase(n) 
+c: Satellit(en) oder In-transit-Metastase(n) 
+ohne regionäre Lymphknotenmetastasen 
+N3  > 4 LK, oder verbackene 
+Lymphknoten oder Satelliten oder 
+In-transit-Metastasen mit 
+regionärer 
+Lymphknotenbeteiligung 
+ 
++ Der Nachweis einer Mikrometastasierung ist in de r neuen AJCC-Klassifikation jetzt auch das Auffinden einer einzelnen Zelle, die 
+immunhistochemisch positiv reagiert. Diese Fälle sollten extra gekennzeichnet werden.  
+ 
+Tabelle 3: M-Klassifikation der Fernmetastasen beim malignen Melanom (AJCC 2009) 
+M Klassifikation Art der Fernmetastasierung LDH 
+M1a Metastasen in Haut, Subkutis oder Lymphknoten jenseits der 
+regionären Lymphknoten 
+Normal 
+M1b Lungenmetastase(n) Normal 
+M1c Fernmetastase(n) anderer Lokalisation  
+oder  
+Fernmetastase(n) jeder Lokalisation mit erhöhten Serumwerten 
+der Laktatdehydrogenase (LDH) 
+Normal  
+ 
+ 
+Erhöht 
+  
+4.1 Klassifikation  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+19 
+Tabelle 4: Stadieneinteilung des malignen Melanoms (AJCC 2009) 
+Stadium Primärtumor  
+(pT)  
+Regionäre 
+Lymphknotenmetastasen (N)  
+Fernmetastasen 
+(M) 
+0  In-situ-Tumoren Keine  Keine 
+IA  < 1,0 mm, keine Ulzeration  Keine  Keine 
+IB  < 1,0 mm mit Ulzeration oder 
+Mitoserate/mm2 ≥ 1 
+Keine  Keine 
+  1,01–2,0 mm, keine Ulzeration  Keine  Keine 
+IIA  1,01–2,0 mm mit Ulzeration  Keine  Keine 
+  2,01–4,0 mm, keine Ulzeration  Keine  Keine 
+IIB  2,01–4,0 mm mit Ulzeration  Keine  Keine 
+  > 4,0 mm, keine Ulzeration  Keine  Keine 
+IIC  > 4,0 mm mit Ulzeration  Keine  Keine 
+IIIA  Jede Tumordicke, keine 
+Ulzeration  
+Mikroskopische Metastasen 
+(klinisch okkult) in bis zu 3 
+Lymphknoten 
+Keine 
+IIIB  Jede Tumordicke mit 
+Ulzeration  
+Mikroskopische Metastasen 
+(klinisch okkult) in bis zu 3 
+Lymphknoten 
+Keine 
+  Jede Tumordicke, keine 
+Ulzeration  
+Bis zu drei makroskopische nodale 
+Metastasen 
+Keine 
+  Jede Tumordicke, keine 
+Ulzeration 
+Keine, aber Satelliten- und/ oder 
+In-transit-Metastasen  
+Keine 
+IIIC  Jede Tumordicke mit 
+Ulzeration  
+Bis zu drei makroskopische nodale 
+Metastasen oder Satellit(en) oder 
+In-transit-Metastase(n) ohne 
+regionäre Lymphknotenmetastasen 
+Keine 
+  Jede Tumordicke ± Ulzeration Vier oder mehr makroskopische 
+nodale Metastasen oder 
+verbackene Lymphknoten oder 
+Satelliten und/oder In-transit-
+Metastasen mit regionären 
+Lymphknotenmetastasen 
+Keine 
+IV   Fernmetastasen 
+  
+4.1 Klassifikation  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+20 
+4.1.2. AJCC 2016/UICC 2016 
+Im Januar 2017 wurde die 8. Fassung der AJCC Klassifikation publiziert [5]. Diese ist ab 
+dem 01.01.2018 verbindlich umzusetzen [6]. 
+Tabelle 5: T-Klassifikation des Primärtumors beim malignen Melanom (AJCC 2016/UICC 2016) 
+T-Klassifikation Tumordicke Ulzeration 
+Tx 
+(Primäre Tumordicke kann nicht bestimmt werden, z.B. 
+bei kürretiertem Primärtumor) 
+Keine Angabe Keine Angabe 
+T0 
+(Kein Anhalt für einen Primärtumor, z.B. bei okkultem 
+Melanom oder komplett regressivem Primärtumor) 
+Keine Angabe Keine Angabe 
+Tis (Melanoma In-situ) Keine Angabe Keine Angabe 
+T1  1,0 mm Unbekannt oder nicht 
+spezifiziert 
+T1a < 0.8mm ohne Ulzeration 
+T1b < 0.8mm mit Ulzeration 
+0.8 mm – 1.0 mm mit/ohne Ulzeration 
+T2 >1.0–2.0 mm Unbekannt oder nicht 
+spezifiziert 
+T2a >1.0–2.0 mm ohne Ulzeration 
+T2b >1.0–2.0 mm mit Ulzeration 
+T3 >2.0‐4.0 mm Unbekannt oder nicht 
+spezifiziert 
+T3a >2.0‐4.0 mm ohne Ulzeration 
+T3b >2.0‐4.0 mm mit Ulzeration 
+T4 >4.0 mm Unbekannt oder nicht 
+spezifiziert 
+T4a >4.0 mm ohne Ulzeration 
+T4b >4.0 mm mit Ulzeration 
+ 
+  
+4.1 Klassifikation  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+21 
+Tabelle 6: N-Klassifikation des Primärtumors beim malignen Melanom (AJCC 2016/UICC 2016) 
+N-
+Klassifikation 
+Anzahl der metastatisch befallenen Lymphknoten Vorhandensein von 
+Intransit-, 
+Satelliten., und/oder  
+Mikrosatelliten-
+Metastasen 
+Nx Regionale Lymphknoten wurden nicht beurteilt (z.B. keine 
+Wächterlymphknotenbiopsie durchgeführt, regionale 
+Lymphknoten bereits andersweitig entfernt). 
+Für T1-klassifizierte Melanome ist die pathologische Klassifizierung (pN) 
+nicht obligat; es soll die klinische Klassifizierung (cN) angewandt werden.  
+Nein 
+N0 Keine regionalen Lymphknotenmetastasen nachweisbar Nein 
+N1 Ein metastatisch befallener Lymphknoten 
+ODER 
+Intransit-, Satelliten., und/oder Mikrosatelliten-Metastasen 
+OHNE einen metastatisch befallenen Lymphknoten 
+ 
+N1a Ein klinisch “okkulter” metastatisch befallener 
+Lymphknoten (z.B. diagnostiziert mittels 
+Wächterlymphknotenbiopsie) 
+Nein 
+N1b Ein klinisch metastatisch befallener Lymphknoten Nein 
+N1c Kein regionärer metastatisch befalleneer Lymphknoten Ja 
+N2 Zwei oder drei metastatisch befallene Lymphknoten  
+ODER 
+Intransit-, Satelliten., und/oder Mikrosatelliten-Metastasen 
+mit einem metastatisch befallenen Lymphknoten 
+ 
+N2a Zwei oder drei klinisch “okkulte” metastatisch befallene 
+Lymphknoten (z.B. diagnostiziert mittels 
+Wächterlymphknotenbiopsie) 
+Nein 
+N2b Zwei oder drei metastatisch befallene Lymphknoten, bei 
+denen mind. ein Lymphknoten klinisch diagnostiziert 
+wurde. 
+Nein 
+N2c Ein metastatisch befallener Lymphknoten (“okkult“ oder 
+klinisch diagnostiziert) 
+Ja 
+N3 Vier oder mehr metastatisch befallene Lymphknoten 
+ODER 
+Intransit-, Satelliten- und/oder Mikrosatelliten-Metastasen 
+mit zwei oder mehr metastatisch befallenen Lymphknoten 
+ODER 
+„verbackenes“ Lymphknotenkonglomerat OHNE Intransit-, 
+Satelliten- und/oder Mikrosatelliten-Metastasen 
+ 
+4.1 Klassifikation  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+22 
+N-
+Klassifikation 
+Anzahl der metastatisch befallenen Lymphknoten Vorhandensein von 
+Intransit-, 
+Satelliten., und/oder  
+Mikrosatelliten-
+Metastasen 
+N3a Vier oder mehr klinisch “okkulte” metastatisch befallene 
+Lymphknoten (z.B. diagnostiziert mittels 
+Wächterlymphknotenbiopsie) 
+Nein 
+N3b Vier oder mehr metastatisch befallene Lymphknoten, bei 
+denen mind. ein Lymphknoten klinisch diagnostiziert 
+wurde. 
+Nein 
+N3c Zwei oder mehr “okkulte” oder klinisch metastatisch 
+befallene Lymphknoten und/oder „verbackenes“ 
+Lymphknotenkonglomerat 
+Ja 
+  
+4.1 Klassifikation  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+23 
+Tabelle 7: M-Klassifikation des Primärtumors beim malignen Melanom (AJCC 2016/UICC 2016) 
+M-Klassifikation Anatomische Lokalisation LDH-Wert 
+M0 Kein Hinweis auf Fernmetastasen  
+M1 Vorhandensein von Fernmetastasen  
+M1a Fernmetastasen i.B. der Haut, Weichteile inkl. Muskel und 
+/oder nicht regionale Lymphknoten 
+Nicht bestimmt oder 
+nicht dokumentiert 
+M1a(0) normal 
+M1a(1) erhöht 
+M1b Fernmetastasen i.B. der Lunge; mit oder ohne Beteiligung 
+der unter M1a codierten Lokalisationen 
+Nicht bestimmt oder 
+nicht dokumentiert 
+M1b(0) normal 
+M1b(1) erhöht 
+M1c Fernmetastasen i.B. anderer viszeraler Lokalisationen 
+OHNE ZNS-Beteiligung; mit oder ohne Beteiligung der 
+unter M1a oder M1b codierten Lokalisationen 
+Nicht bestimmt oder 
+nicht dokumentiert 
+M1c(0) normal 
+M1c(1) erhöht 
+M1d Fernmetastasen i.B. des ZNS; mit oder ohne Beteiligung 
+der unter M1a, M1b oder M1c codierten Lokalisationen 
+Nicht bestimmt oder 
+nicht dokumentiert 
+M1d(0) normal 
+M1d(1) erhöht 
+  
+4.1 Klassifikation  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+24 
+Tabelle 8: Stadieneinteilung des malignen Melanoms - klinisch (AJCC 2016 / UICC 2016) 
+T-Klassifikation N-Klassifikation M-Klassifikation Stadium 
+Tis N0 M0 0 
+T1a N0 M0 IA 
+T1b N0 M0 IB 
+T2a N0 M0 
+T2b N0 M0 IIA 
+ 
+T3a N0 M0 
+T3b N0 M0 IIB 
+ 
+T4a N0 M0 
+T4b N0 M0 IIC 
+T0 N1b, N1c M0 IIIB 
+Jedes T, Tis ≥N1 M0 III 
+Jedes T Jedes N M1 IV 
+ 
+  
+4.1 Klassifikation  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+25 
+Tabelle 9: Stadieneinteilung des malignen Melanoms - pathologisch (AJCC 2016 / UICC 2016) 
+T-Klassifikation N-Klassifikation M-Klassifikation Stadium 
+Tis N0 M0 0 
+T1a N0 M0 IA 
+T1b N0 M0 
+T2a N0 M0 IB 
+T2b N0 M0 IIA 
+ 
+T3a N0 M0 
+T3b N0 M0 IIB 
+ 
+T4a N0 M0 
+T4b N0 M0 IIC 
+T0 N1b, N1c M0 IIIB 
+T0 N2b, N2c, N3b oder 
+N3c 
+M0 IIIC 
+T1a/b–T2a N1a oder N2a M0 IIIA 
+T1a/b–T2a N1b/c oder N2b M0 IIIB 
+T2b/T3a N1a–N2b M0 
+T1a–T3a N2c 
+oder N3a/b/c 
+M0 IIIC 
+T3b/T4a Jedes N ≥N1 M0 
+T4b N1a–N2c M0 
+T4b N3a/b/c M0 IIID 
+Jedes T, Tis Jedes N M1 IV 
+ 
+  
+4.2 Klinische Diagnose  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+26 
+4.2. Klinische Diagnose 
+Nr. Empfehlung EG LoE Quellen 
+4.2. Die Inspektion des Patienten ohne Hilfsmittel ist geeignet, eine 
+klinische Verdachtsdiagnose zu stellen. 
+EK 
+4.3. Dermatologen sollen zur Diagnostik pigmentierter und nicht-
+pigmentierter Haut - und Nagelveränderungen die 
+Dermatoskopie anbieten und in der Dermatoskopie 
+ausgebildet sein. 
+A 1b [7-10] 
+4.2.1. Sequenzielle digitale Dermatoskopie 
+Nr. Empfehlung EG LoE Quellen 
+4.4. Die sequenzielle digitale Dermatoskopie kann die 
+Früherkennung von malignen Melanomen, die keine 
+spezifischen dermatoskopischen Malignitätskriterien 
+aufweisen, in der Verlaufskontrolle verbessern. 
+B 2b [11] 
+4.5. Die Ganzkörperphotographie stellt eine Möglichkeit zur 
+Früherkennung von malignen Melanomen in Risikokollektiven 
+dar. 
+St 3b [11] 
+4.6. Die konfokale Lasermikroskopie kann die Unterscheidung 
+zwischen malignen Melanomen, dysplastischen Nävi und 
+anderen pigmentierten Läsionen verbessern und die Rate 
+unnötiger Operationen reduzieren. 
+0 2A [12-14] 
+4.3. Primärexzision 
+Nr. Empfehlung EG LoE Quellen 
+4.7. Bei klinischem Verdacht auf ein malignes Melanom soll dieses 
+primär mit kleinem Sicherheitsabstand komplett exzidiert 
+werden. 
+EK 
+ 
+  
+4.3 Primärexzision  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+27 
+4.3.1. Sicherheitsabstand bei Primärexzision 
+Nr. Empfehlung EG LoE Quellen 
+4.8. Für das maligne Melanom soll unter kurativer Intention eine 
+radikale Exzision mit den Sicherheitsabständen zum 
+Tumorrand erfolgen, um lokale Rezidive des Tumors zu 
+vermeiden. 
+A 1a [15] 
+Stadium Tumordicke nach Breslow Sicherheitsabstand 
+pT1, pT2 ≤ 1–2 mm 1 cm 
+pT3, pT4 2,01–> 4,0 mm 2 cm 
+ 
+Nr. Empfehlung EG LoE Quellen 
+4.9. Die endgültige Entscheidung für abweichende 
+Sicherheitsabstände sollte der Operateur im Einverständnis 
+mit dem informierten Patienten treffen, auch in Abhängigkeit 
+der speziellen anatomischen Lokalisation des Tumors und 
+unter Berücksichtigung der Ergebnisse der 
+Ausbreitungsdiagnostik. 
+EK 
+4.10. Die Exzision bis ins subkutane Fettgewebe ist ausreichend, 
+eine Resektion der Faszie bringt keine zusätzlichen Vorteile. 
+B 2b [16] 
+4.3.2. Sicherheitsabstand In-situ-Melanome 
+Nr. Empfehlung EG LoE Quellen 
+4.11. Für In -situ-Melanome soll eine komplette Exzision mit 
+histopathologischer Kontrolle durchgeführt werden. 
+EK 
+ 
+  
+4.3 Primärexzision  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+28 
+4.3.3. Exzision mit 3-D-Histologie 
+Nr. Empfehlung EG LoE Quellen 
+4.12. Bei malignen Melanomen (z.  B. Lentigo -maligna-Melanom, 
+akrale Melanome) an speziellen anatomischen Lokalisationen, 
+wie Grenzflächen im Gesicht, Ohren, Finger und Zehen, 
+können reduzierte Sicherheitsabstände verwendet werden. 
+Retrospektive Arbeiten zeigten unter Einsatz der 3 -D-
+Histologie (mikrographisch kontrollierte Chirurgie) nicht 
+vermehrt Lokalrezidive oder ein geringeres Gesamtüberleben. 
+Da die Datenlage für diese Situation limitiert ist, sollte der 
+Operateur die Entscheidung mit dem informierten Patie nten 
+zusammen treffen. 
+EK 
+4.3.4. Vorgehen bei R1- oder R2-Resektion 
+Nr. Empfehlung EG LoE Quellen 
+4.13. Bei R1- und R2-Situation (mikroskopisch bzw. makroskopisch 
+nachgewiesener Residualtumor) der Primärtumorregion soll 
+immer eine Nachresektion erfolgen, wenn hierdurch eine R0 -
+Situation erreichbar ist. 
+Wenn durch operatives Vorgehen keine R0 -Resektion 
+erreichbar ist, sollten andere Therapiemodalitäten zur 
+Erreichung einer lokalen Tumorkontrolle (z.  B. hypertherme 
+Extremitätenperfusion, Strahlentherapie, Kryochirurgie) 
+eingesetzt werden. 
+Bei R1 - und R2 -Situation der lymphangischen 
+Metastasierungswege sowie der Lymphknoten des 
+lokoregionalen Lymphabflussgebietes ist ei ne Nachresektion 
+anzustreben. Bei Inoperabilität sollten andere 
+Therapiemaßnahmen erwogen werden. 
+Bei R1- und R2-Resektion von Fernmetastasen (Stadium IV) ist 
+ein individuelles Vorgehen durch eine interdisziplinäre 
+Tumorkonferenz festzulegen. 
+EK 
+ 
+  
+4.4 Radiotherapie des Primärtumors  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+29 
+4.4. Radiotherapie des Primärtumors 
+Nr. Empfehlung EG LoE Quellen 
+4.14. Bei Lentigo -maligna-Melanomen, die aufgrund von 
+Ausdehnung, Lage und/oder Alter des Patienten für eine 
+operative Therapie nicht geeignet sind, sollte die primäre 
+Radiotherapie eingesetzt werden. Hiermit lassen sich gute 
+Tumorkontrollraten erzielen. 
+B 4 [17-19] 
+4.15. Bei inoperablen R1- oder R2-resezierten Primärtumoren kann 
+eine Radiotherapie mit dem Ziel der lokalen Kontrolle 
+eingesetzt werden 
+0 4 [20-22] 
+4.16. Bei desmoplastischen Melanomen, die nicht mit 
+ausreichendem Sicherheitsabstand reseziert wurden (<  1 cm 
+bzw. R1/R2), sollte eine postoperative Radiotherapie 
+durchgeführt werden, um die lokale Tumorkontrolle zu 
+sichern. 
+B 2b [23-26] 
+4.5. Histopathologische Untersuchung des Primärtumors 
+Nr. Empfehlung EG LoE Quellen 
+4.17. Obligat ist das histologische Staging nach der gültigen TNM -
+Klassifikation (Tumordicke nach Breslow, Ulzeration,*). Die 
+Bestimmung des Tumortyps nach der WHO -Klassifikation ist 
+wünschenswert. 
+Histopathologische Besonderheiten, wie mögliche Assoziation 
+zu einem melanozytären Nävus, eine Regressionszone, 
+morphologische Besonderheiten (z.  B. desmoplastische 
+Melanomanteile) und Gefäßeinbrüche  sollen, soweit 
+vorhanden, fakultativ miterfasst werden. 
+* Mitoserate bei Tumordicke <  1 mm nach der AJCC -
+Klassifikation 2009 
+EK 
+ 
+  
+4.6 Initiale Ausbreitungsdiagnostik bis Stadium IIB  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+30 
+4.6. Initiale Ausbreitungsdiagnostik bis Stadium IIB 
+Neben der Ganzkörperuntersuchung, welche die komplette Inspektion des Integuments 
+einschließlich der angrenzenden und einsehbaren Schleimhäute sowie die Palpation der 
+Lymphabstromgebiete und Lymphknotenstationen miteinschließt, werden die im 
+Folgenden aufgeführten Untersuchungen empfohlen.  
+Tabelle 10: Übersicht der Empfehlungen zu Untersuchungsmethoden in der init ialen 
+Ausbreitungsdiagnostik für Melanompatienten bis einschließlich Stadium IIB  
+Empfehlungsnummer/ 
+Untersuchungsmethode 
+Empfehlungen  Empfehlungs-
+grad 
+Level of 
+Evidence 
+4.18. MRT Kopf Nein A 3b- 
+4.19. Schnittbildgebung 
+(Ganzkörper ohne Kopf)* 
+Nein A 1a 
+4.20. Röntgen-Thorax Nein A 2b 
+4.21. Abdomen-Sonographie Nein B 2b 
+4.22.Lymphknoten-Sonographie Ja (ab Stadium IB) A 1a 
+4.23. Skelettszinitigraphie Nein A 3b 
+4.24.Tumormarker S100B Ja (ab Stadium IB) 0 1a 
+4.25.Tumormarker LDH Nein B 2b 
+* PET/CT, CT, MRT (jeweils Ganzkörper)  
+  
+4.6 Initiale Ausbreitungsdiagnostik bis Stadium IIB  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+31 
+Nr. Empfehlung EG LoE Quellen 
+4.26. Die Ganzkörper -CT soll bei asymptomatischen Patienten mit 
+Primärdiagnose eines malignen Melanoms nicht als Standard 
+durchgeführt werden. 
+A 1a [27-29] 
+4.27. Die MRT des Schädels soll bei asymptomatischen Patienten mit 
+Primärdiagnose eines malignen Melanoms nicht als Standard 
+durchgeführt werden. 
+A 3b- [30, 31] 
+4.28. Die Röntgen-Thorax-Untersuchung soll bei asymptomatischen 
+Patienten mit Primärdiagnose eines malignen Melanoms nicht 
+als Standard durchgeführt werden. 
+A 2b [29, 32-36] 
+4.29. Die lokoregionale Lymphknoten -Sonographie soll be i 
+Patienten mit Primärdiagnose eines malignen Melanoms ab 
+Tumorstadium IB durchgeführt werden. 
+A 1a [37] 
+4.30. Die Abdomen-Sonographie sollte bei asymptomatischen 
+Patienten mit Primärdiagnose eines malignen Melanoms nicht 
+als Standard durchgeführt werden. 
+B 2b [32, 38-40] 
+4.31. S100B kann bei asymptomatischen Patienten bei der 
+Primärdiagnose eines Melanoms bestimmt werden. 
+0 1a [41] 
+4.32. Es kann aufgrund der unzureichenden Studienlage zurzeit 
+keine Aussage dazu gem acht werden, ob MIA bei der 
+Primärdiagnose eines Melanoms die gleiche prognostische 
+Aussagekraft wie S100B hat. 
+St 2b- [42-45] 
+4.33. LDH im Serum sollte bei asymptomatischen Patienten bei der 
+Primärdiagnose eines Melanoms nicht bestimmt werden. 
+B 2b [36] 
+4.34. Die PET und PET/CT sollen nicht routinemäßig als initiale 
+Staginguntersuchungen bis Stadium IIA/IIB durchgeführt 
+werden. 
+A 1a [29, 46, 47] 
+4.35. Die Skelettszintigraphie soll beim Initialstaging bei  Patienten 
+bis Stadium IIA/IIB nicht als Standard durchgeführt werden. 
+A 3b [33, 38, 48-
+50] 
+ 
+  
+4.7 Wächterlymphknoten-Biopsie  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+32 
+4.7. Wächterlymphknoten-Biopsie 
+Nr. Empfehlung EG LoE Quellen 
+4.36. Zur Stadienzuordnung soll die Wächterlymphknoten -Biopsie 
+ab einer Tumordicke von 1,0 mm und ohne Hinweis auf 
+lokoregionale oder Fernmetastasierung durchgeführt werden. 
+A 1a [51-57] 
+4.37. Bei zusätzlichen Risikofaktoren für einen positiven 
+Wächterlymphknoten sollte die Wächterlymphknoten-Biopsie 
+auch bei dünneren Primärtumoren (0,75–1 mm) durchgeführt 
+werden, dazu gehören Ulzeration und/oder erhöhte 
+Mitoserate und/oder ein jüngeres Lebensalter (< 40 Jahre). 
+B 1a [51-57] 
+4.38. Lymphdrainagewege sollten durch präoperative 
+Lymphszintigraphie lokalisiert und Wächterlymphknoten 
+mittels intraoperativ manuell gelenkter Gammasonde 
+detektiert werden. We itere Verfahren können ergänzend 
+eingesetzt werden. 
+EK 
+4.39. Wächterlymphknoten sollen durch einen in der Beurteilung von 
+Primärtumoren von Melanomen erfahrenen Histopathologen  
+beurteilt werden. Die technische Aufarbeitung des 
+Wächterlymphknotens soll nationalen oder internationalen 
+Protokollen entsprechen. 
+EK 
+4.40. Es sollen folgende Informationen im histopathologischen 
+Befund des Wächterlymphknotens enthalten sein:  
+1. Nachweis von Nävus- oder Melanomzellen 
+2. im Fall von Melanomzellen Angabe prognostisch wichtiger 
+Parameter 
+3. größter Durchmesser der Mikrometastase 
+EK 
+4.41. Der Nachweis von Mikrometastasen im Wächterlymphknoten 
+ist mit einer signifikant schlechteren Prognose assoziiert. Die 
+Prognose korreliert mit der Tumor last und der Lage der 
+Melanomzellen im Wächterlymphknoten. Derzeit bleibt offen, 
+welche Parameter als Maß der Tumorlast und der 
+Tumorzelllokalisation prognostisch am aussagekräftigsten 
+sind. 
+St 2b [58-61] 
+ 
+  
+5. Aufklärung und Kommunikation  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+33 
+5. Aufklärung und Kommunikation 
+Nr. Empfehlung EG LoE Quellen 
+5.1. Aufklärung dient der partizipativen Entscheidungsfindung und 
+soll sich an den aktuellen Informationswünschen des Patienten 
+orientieren. Patienten sollen ermutigt werden, dem Arzt ihre 
+derzeitigen Informationsbedürfnisse mitzuteilen, welche 
+Informationen aktuell für sie wichtig sind, wie umfassend und 
+wie detailliert diese sein sollen. 
+Die Aufklärung soll umfassend, verständlich und 
+wahrheitsgemäß sein und im Verlauf der Behandlung mehrfach 
+erfolgen. Hierbei ist insbesondere auf die Belastbarkeit des  
+Patienten Rücksicht zu nehmen. 
+Der aufklärende Arzt soll sich vergewissern, dass die 
+Informationen vom Patienten verstanden wurden. 
+Angehörige/Bezugspersonen so llen mit Zustimmung des 
+Patienten in den Aufklärungsprozess einbezogen werden. 
+EK 
+5.2. Patienten sollen ausführliche und angemessene Informationen 
+zu Diagnostik, Therapie, Nac hsorge und sozialmedizinischen 
+Fragen erhalten. Art und Umfang der Informationen richten 
+sich im Besonderen nach dem Stadium der Erkrankung, dem 
+Zeitpunkt im Verlauf der medizinischen Behandlung sowie den 
+Präferenzen des Patienten. 
+Hierbei soll insbesondere auch über den Nutzen und das mit 
+den ärztlichen Maßnahmen verbundene Risiko informiert 
+werden. 
+EK 
+5.3. Alle Mitarbeiter des onkologischen Behandlungsteams sollten 
+ein Kommun ikationstraining erhalten, um aufseiten der 
+Patienten eine verbesserte Compliance, Zufriedenheit und 
+Krankheitsbewältigung zu erreichen, sowie aufseiten des 
+Behandlungsteams die Arbeitszufriedenheit zu stärken. 
+EK 
+ 
+ 
+6.1 Ausbreitungsdiagnostik  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+34 
+6. Diagnostik und Therapie bei  
+lokoregionaler Metastasierung 
+Nr. Empfehlung EG LoE Quellen 
+6.1. Therapieempfehlungen für Patienten ab Stadium III sollten im 
+Rahmen interdisziplinärer Tumorkonferenzen gegeben 
+werden. 
+EK 
+6.1. Ausbreitungsdiagnostik 
+Nr. Empfehlung EG LoE Quellen 
+6.2. Patienten im Stadium IIC haben ein hohes Rezidivrisiko, dass 
+mit dem einer Mikrometastasierung im Stadium III vergleichbar 
+ist. Patienten im Stadium IIC sollen aus diesem Grund 
+bezüglich ihres diagnostischen Vorgehens wie Patienten im 
+Stadium III behandelt werden. 
+EK 
+ 
+Tabelle 11: Übersicht der Empfehlungen zu Untersuchungsmethoden im Stadium IIC und III  
+Empfehlungsnummer/ 
+Untersuchungs-methode 
+Empfehlungen Empfehlungs-
+grad 
+Level of  
+Evidence 
+6.3. MRT Kopf Ja EK - 
+6.4. Schnittbildgebung  
+(Ganzkörper ohne Kopf)* 
+Ja B 1a 
+6.5. Röntgen-Thorax Nein B 2b 
+6.6. Abdomen-Sonographie Nein B 2b 
+6.7. Lymphknoten-Sonographie Ja A 1a 
+6.8. Tumormarker S100B Ja A 1a 
+6.9. Tumormarker LDH Ja 0 1b 
+* PET/CT, CT, MRT (jeweils Ganzkörper), ** Patienten Stadium IIC und III  
+ 
+  
+6.1 Ausbreitungsdiagnostik  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+35 
+Nr. Empfehlung EG LoE Quellen 
+6.10. Die Abdomen -Sonographie sollte bei Patienten mit Verdacht 
+auf oder Nachweis von lokoregionaler Metastasierung eines 
+malignen Melanoms nicht als Standard durchgeführt werden. 
+B 2b [32, 33] 
+6.11. Die Röntgen -Thorax-Untersuchung sollte bei Patienten mit 
+Verdacht auf oder Nachweis von lokoregionaler 
+Metastasierung eines malignen Melanoms nicht als Standard 
+durchgeführt werden. 
+B 2b [32, 33, 35] 
+6.12. Die lokoregionale Lymphknoten -Sonographie soll bei 
+Patienten mit Verdacht auf oder Nachweis von lokoregionaler 
+Metastasierung eines malignen Melanoms durchgeführt 
+werden. 
+A 1a [32, 37, 47] 
+6.13. Schnittbildgebende Verfahren sind heute der Standard in der 
+Ausbreitungsdiagnostik ab Stadium III des malignen 
+Melanoms. Dabei hat sich gezeigt, dass die PET/CT in der 
+Diagnostik den anderen Verfahren in der diagnostischen 
+Genauigkeit überlegen ist. 
+A 1b [47] 
+6.14. Für die Detektion von Hirnmetastasen eines Melanoms liegt für 
+die MRT die größte diagnostische Genauigkeit vor. 
+EK 
+6.15. S100B soll bei Patienten mit Verdacht auf bzw. Nachweis von 
+lokoregionaler Metastasierung bestimmt werden. 
+A 1a [41, 62] 
+6.16. LDH kann als zusätzlicher prognostischer Marker bei Patienten 
+mit Verdacht auf bzw. Nachweis von lokoregionaler 
+Metastasierung herangezogen werden. 
+0 1b [63] 
+6.17. Die Bedeutung von MIA speziell bei Patienten mit Verdacht auf 
+bzw. Nachweis von lokoregionaler Metastasierung ist unklar. 
+St 2b- [42, 45, 64] 
+ 
+  
+6.2 Lymphadenektomie  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+36 
+6.2. Lymphadenektomie 
+Die Begriffe Lymphadenektomie und Lymphknotendissektion werden in dieser Leitlinie  
+synonym verwendet. 
+Nr. Empfehlung EG LoE Quellen 
+6.18. Die elektive (prophylaktische) Lymphadenektomie ist beim 
+malignen Melanom nicht empfohlen, unabhängig von der 
+Breslow-Dicke des Primärtumors. 
+A 1a [11] 
+6.19. Die therapeutische LAD sol l beim Nachweis einer 
+lymphogenen Metastasierung (zytologische oder histologische 
+Sicherung, Lymphknoten -Sonographie, CT, PET/CT) ohne 
+Hinweis auf Fernmetastasen durchgeführt werden (Stadium IIIB 
+und IIIC). 
+EK 
+6.20. Bei Patienten mit einem Lymphknotenrezidiv in einem bereits 
+operierten Lymphabflussgebiet ohne Hinweis auf 
+Fernmetastasen sollte je nach chirurgisch -technischer 
+Möglichkeit die Lymphknotendissektion oder Resektion von 
+Lymphknotenmetastasen durchgeführt werden. 
+EK 
+6.21. Bei Patienten mit einem maximalen Metastasendurchmesser 
+<0.1mm oder Einzelzel len im Wächterlymphknoten kann auf 
+eine komplettierende Lymphknotendissektion verzichtet 
+werden. 
+0 2b [58-60, 65-
+68] 
+6.22. Bei einem maximalen Metastasendurchmesser zwischen 0.1 
+und 1mm kann eine komplettierende Lymphknotendissektion 
+angeboten werden, hier sind weitere Risikofaktoren gemäß 
+6.24. in Betracht zu ziehen. 
+0 2b [58-60, 65-
+70] 
+6.23. Bei einem maximalen Metastasendurchmesser > 1mm sollte 
+eine komplettierende Lymphknotendissektion angeboten 
+werden 
+B 2b [58-60, 65-
+68, 70] 
+6.24. Gewichtete Scores unter Einbezug mehrerer histologischer 
+und/oder klinischer Risikofaktoren können verwendet werden, 
+um das Risiko von Metastasen in Nicht -Wächterlymphknoten 
+einzugrenzen, bedürfen aber weiterer klinischer Validierung 
+vor einer generellen Anwendungsempfehlung. 
+Zu den relevanten Parametern zählen insbesondere der 
+maximale Metastasendurchmesser, die Kapselinfiltration und 
+die Tiefenausdehnung im WLK, die Anzahl der betroffenen 
+WLK, die Dicke und Ulzeration des Primärtumors. 
+0 2b [60, 66, 70, 
+71] 
+ 
+  
+6.2 Lymphadenektomie  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+37 
+Nr. Empfehlung EG LoE Quellen 
+6.25. Vor einer Lymphknotendissektion soll eine bildgebende 
+Ausbreitungsdiagnostik erfolgen.  Die 
+Lymphknotenmetastasierung soll bildgebend oder 
+histologisch abgesichert sein. 
+Im Vorfeld einer Operation kann ggf. eine 
+Lymphabflussszintigraphie zur OP -Planung durchgeführt 
+werden. Aufgrund des erheblichen Risikos eines Rezidivs der 
+Lymphknotenregion soll eine systematische (radik ale) 
+Lymphknotendissektion durchgeführt werden. Dies gilt für die 
+triangulären Lymphknoten der Leistenregion. Im Bereich der 
+Axilla sollte die Dissek tion der typischen 
+Lymphknotenstationen Level I –III nur für Primärtumoren 
+vorgenommen werden, die ihren Lymphabfluss in diesem 
+Stromgebiet haben. Im Kopf -Hals-Bereich ist ein 
+differenziertes Vorgehen auf Basis der anatomischen 
+Abflusswege und der präoperativen Diagnostik erforderlich. 
+EK 
+ 
+Die Entfernung der Lymphknoten einer Lymphknotenregion (Lymphknotendissektion, 
+LND) erfolgt bei einer Metastasierung der regionalen Lymphknoten, unabhängig, ob eine 
+Mikro- oder Makrometastasierung vorliegt. Die Frage, inwieweit eine 
+Lymphknotendissektion ( LND) nach positivem Wächterlymphknoten das Überleben 
+verbessert, wird noch in derzeit laufenden Studien überprüft. Die Ausdehnung der 
+Eingriffe wird ebenfalls von den Begleiterkrankungen der Patient(inn)en beeinflusst. 
+Die Komplikationen einer Dissektion sind v. a. Entstehen eines Lymphödems oder eines 
+Seroms bzw. im Kop f-Hals-Bereich die ChylusfistelNeuss, Reetz [72]. Wegen der hohen 
+Rezidivneigung einer Metastasierung in den genannten Lymphknotenregionen 
+(Lymphknoten- und/oder Weichgewebsmetastasen) werden die Komplikationen dieser 
+Operation und eine erhöhte Morbidität in Kauf genommen. Da die LND beim malignen 
+Melanom Stadium III radikal durchgeführt werden soll, wird diese im Folgenden 
+beschrieben und konsensbasiert festgelegt. 
+ 
+Gebiet Ausdehnung Erweiterung 
+Kopf-Hals-Bereich Selektive neck dissection (SND) 
+je nach Lage des Primärtumors 
+bzw. betroffenen LK-Basins 
+Modifiziert radikale Neck dissection  
+Superfizielle (laterale, nerverhalten -
+de) Parotidektomie  
+Radikale Neck dissection 
+Axillär (obere Extremität, 
+Stamm) 
+Level I –III, je nach Lage des 
+Primärtumors 
+ 
+Inguinal (untere 
+Extremität, Stamm) 
+Femorale trianguläre 
+Lymphknoten 
+Lymphknoten iliakal und 
+obturatorisch 
+  
+6.2 Lymphadenektomie  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+38 
+Kopf-Hals-Bereich 
+Der häufigste Sitz von Lymphknotenmanifestationen metastasierender Kopf -Hals-
+Melanome sind die Lymphknotengruppen der Glandula parotis und die zervikalen 
+Lymphknotengruppen. Der Zuschnitt der Halslymphknotenau sräumung („neck 
+dissection“) und die Frage der Notwendigkeit einer lateralen Parotidektomie wird neben 
+der Vorgabe durch die anatomische Lage der metastatischen Manifestationen durch die 
+Lage des Primärtumors bestimmt [73-76]. Melanome der parietalen/frontalen Kopfhaut, 
+Schläfe, des seitlichen Stirnbereichs, Wange oder Ohr muschel, die anterior einer 
+virtuellen Ebene durch den äußeren Gehörgang gelegen sind, drainieren via Parotis - 
+und/oder Fazialislymphknoten (am Unterkieferrand) zu den zervikalen Lymphknoten -
+Basins. Melanome mit Sitz dorsal der o.g. Ebene drainieren hingegen eher in den Bereich 
+der retroaurikulären und okzipitalen Lymphknoten [73, 77]. Vom mittleren Stirn - und 
+Glabellabereich sowie vom zentralen Gesichtsbereich erfolgt die Drainage bilateral über 
+die Fazialis -Lymphknoten (am Unterkieferrand) nach zervikal [78]. Die Drainagewege 
+sind heutzutage auch durch die Auswertung größerer Kollektive von Sentinelbiopsien 
+gut bekannt [78, 79]. 
+Allgemeinverbindliche Grundlage der Ausräumungsgrenzen und der Definition der 
+verschiedenen Ausräumungsformen ist die Klassifikation der Ausräumungsetagen 
+(„Level“) am Hals („Academy's Committee for Head and Neck Surgery and Oncology“) [80, 
+81]. Das Basisverfahren für die therapeutische Lymp hknotendissektion am Hals ist die 
+modifiziert radikale neck dissection (MRND) als vollständige Ausräumung der Level I –V 
+zwischen Unterkieferrand und Klavikula bei Erhalt wichtiger nicht lymphatischer 
+Strukturen (M. sternocleidomastoideus, V. jugularis inte rna, N. accessorius)  [82]. 
+Retrospektive Untersuchungen der letzten Jahre haben aber gezeigt, dass die selektiven 
+Formen der Neck dissection, mit Ausräumung der von Metastasierung betroffenen und 
+der im unmittelbaren Abflussgebiet liegenden Level der klassischen MRND hinsichtlich 
+Rezidivrate und Überleben gleichwertig sind [83, 84] bei niedrigerer Morbidität. Wenn 
+regionale Rezidive nach Neck dissection au ftreten, liegen sie mehrheitlich im 
+ausgeräumten Metastasengebiet [84], was dieses Vorgehen unterstützt. Zudem is t das 
+spätere Ausräumen weiterer Level nach SND nicht erschwert. Eine Resektion von V. 
+jugularis, N. accessorius und/oder M. sternocleidomastoideus im Sinne der klassischen 
+radikalen neck dissection (RND) sollte heute nur noch bei direkter Infiltration die ser 
+Strukturen durchgeführt werden, im Falle anders nicht entfernbarer großer Metastasen 
+oder nach Voroperationen, z.  B. bei Re -Dissektionen [73, 77, 82]. Gemäß einer 
+Empfehlung der American Head and Neck Society  sollten die Präparate nach Leveln 
+separiert zur pathohistologisc hen Untersuchung eingesandt werden, um eine klare 
+Levelzuordnung zu gewährleisten [85]. 
+Das Standardverfahren für die Ausräumu ng der Parotisregion ist die konservative 
+(Fazialis-erhaltende) laterale (=  superfizielle) Parotidektomie. Der tief (medial der N. 
+fazialis-Ebene) liegende Anteil der Drüse enthält in der Regel keine Lymphknoten mit 
+Drainagefunktion für die Gesichts- und Kopfhaut. Re-Eingriffe an der Gl. parotis sind mit 
+einem deutlich erhöhten Risiko einer Fazialisschädigung verbunden. Der Ersteingriff an 
+der Parotis sollte daher möglichst definitiv sein. 
+Vorgehen in Abhängigkeit von der Lokalisation 
+Die Empfehlungen im Fo lgenden basieren auf retrospektiven Analysen zervikaler 
+therapeutischer Dissektionen mit begrenzten Fallzahlen [83, 84]. Unterlegt werden sie 
+durch die von O’Brien beschriebenen und durch das Datenmaterial von Sentinelbiopsien 
+und Lymphszintigraphien präzis ierte Kenntnis der Drainagemuster [78, 79, 86]. Sie 
+müssen im individuellen Fall je nach Ausdehnung der Metastasierung angepasst werden. 
+6.2 Lymphadenektomie  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+39 
+Die Mitnahme eines klinisch/bildgebend freien Levels in zentraler Abflussrichtung wird 
+nach Möglichkeit angestrebt, um potentielle okkulte Erkrankung zu erfassen. 
+Empfehlung für die therapeut ische Dissektion bei Melanomen mit Primärsitz fronta -
+le/parietale Kopfhaut, Schläfe, seitlicher Stirnbereich und, Wange (ventral der o. g. 
+Ebene) ist die laterale Parotidektomie in Kombination mit einer MRND (SND II–III oder II-
+IV). Bei Lokalisation Wange und seitlicher Stirnbereich sowie bei jedem 
+Metastasenverdacht sollte der Level I miteinbezogen werden.  
+Für Melanome im Kinn- und Halsbereich ist eine Parotidektomie meist nicht erforderlich 
+und die MRND bzw. SND I–IV ist Methode der Wahl. 
+Okzipitale Melanome und Melanome der Parietalregion dorsal der o. g. Ebene erfordern 
+eine posterolaterale neck dissection [73, 77]. Dabei werden ausgeräumt: retroaurikuläre 
+und subokzipitale Lymphknoten sowie seitliches Halsdreieck bis zu V. jugularis 
+(Robbins-Level). 
+Melanome der Mittellinienregion (Stirnmitte, Glabellaregion, zentraler Gesichtsbereich) 
+können bilateral drainieren. Der  Umfang der therapeutischen Aus räumung richtet sich 
+nach der Metastasenmanifestation. Primär bet roffen sind die Level I und II beidseits, 
+einschließlich der Fazialis-Lymphknoten. Bei diesen, aber auch allen anderen Kopf-Hals-
+Melanomen kann eine Lymphszintigraphie Aufschluss über das genaue Drainagemuster 
+geben. Studienergebnisse liegen bislang nicht vor. 
+Ausdehnung der LND Axilla 
+Primärtumoren der ober en Extremität/Körperstamm werden einer Axillad issektion 
+zugeführt. 
+Axilläre Metastasen entstehen aus Tumoren folgender Bereiche: 
+- Arm- und Schulterbereich 
+- Stamm 
+Die Axilladissektion wird in der Ausdehnung ihrer Durchführung mit den Leveln I bis III 
+nach Berg angegeben [82]. Hierbei ist der M. pectoralis minor die Struktur, durch die die 
+Level defi niert werden (Level I lateral des M. pectoralis minor, Level II hinter diesem 
+Muskel und Level III medial und kranial der V. axillaris). Die Ausräumung des Levels III 
+ist mit erhöhten Komplikationen verbunden. Es ist eine offene Frage, ob diese Level -
+Einteilung bei Tumoren im Schulterbereich bzw. der oberen Extremitäten Bestand hat. 
+Studien zur Modifikation von radikalen LND der Axilla stehen aus. Diese Einteilung 
+basiert auf den Erkenntnissen der Lymphabflusswege der Mammakarzinome und kann 
+in einigen Fällen nicht ohne Erweiterung angewandt werden. Bei metastatischem Befall 
+mehrerer Lymphknotenregionen infolge eines Primärtumors am Stamm oder Arm -
+Schulter-Bereich muss ggf. ein kombiniertes Verfahren gewählt werden, wie z.  B. die 
+Durchführung einer axillären Lymphadenektomie mit selektiver neck dissection oder mit 
+einer erweiterten radikalen neck dissection. Bei Tumoren mit unbekannter 
+Primärlokalisation und sog. Midlinetumoren wird zum jetzigen Zeitpunkt keine 
+Unterscheidung im Vorgehen zu denen aus dem Stam m- oder aus dem Arm - und 
+Schulterbereich gemacht. 
+Bei befallenen Lymphknoten oberhalb der V. axillaris empfiehlt sich die Wegnahme 
+dieser Lymphknoten sowie die Skelettierung der V. axillaris  [87], Lymphknotengruppen 
+6.2 Lymphadenektomie  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+40 
+wie z. B. epitrochleare oder in der Ellenbeuge liegende werden nur im Einzelfall entfernt 
+[88, 89]. 
+Die Faszie aller umgebenden Muskeln kann bei der axillären Lymphadenektomie in der 
+Regel erhalten werden [90]. 
+Ausdehnung der LND Inguinofemoral-Region 
+Primärtumoren der unteren Extremität/Körperstamm werden einer Leistendissektion 
+zugeführt.  
+Inguinofemorale Metastasen entstehen aus Tumoren folgender Bereiche: 
+- Bein- und Hüftbereich 
+- Stamm 
+Die Tiefe der Ausdehnung der inguinofemoralen LND wird anhand der 
+Oberschenkelfaszie definiert. Die in der Literatur beschriebene Ausräumung 
+oberflächlicher Lymphknoten inguinofemoral endet oberhalb dieser Faszie. Eine 
+Entfernung tief gelegener Lymphknoten erfordert die Ausräumung unterhalb der 
+Oberschenkelfaszie sowie ein Eröffnen des Leistenbandes. Ob die tiefe LND prognostisch 
+einen Vorteil erbringt , bleibt derzeit unklar  [91]. Eine Ausnahme stellt eine 
+Rezidivoperation dar. 
+Die Ausräumung der Lymphknoten in der Leistenregion umfasst das gesamte Trigonum 
+femorale unterhalb des Leistenbandes. Die Spina iliaca anterior superior stellt dabei den 
+am weitesten proximal gelegenen häutigen Resektionspunkt eingeschlossenen 
+subkutanen Fettgewebes dar. Es erfolgt immer ein Einschließen der Vena saphena magna 
+ab distalem Oberschenkel bis zum Venenstern. 
+Bei ungünstiger weichgeweblicher Deckung der Leistengefäße sollte die Durchführung 
+einer Sartorius-Muskellappen-Plastik in Betracht gezogen werden. 
+Bei Lymphknotenbefall proximal des Leistenbandes soll die iliakale Lymphadenektomie 
+und Ausräumung der Obturator-Region von einem in dieser Region erfahrenen Chirurgen 
+durchgeführt werden [92]. 
+Eine Entfernung der Lymphknotengruppen in der Fossa poplitea wird nicht regelhaft 
+durchgeführt. Auch Lymphknoten medial des Pecten ossis pubis werden nur in 
+Einzelfällen bei nachweislichem Befall entfernt. 
+  
+6.3 Adjuvante Radiotherapie nach Lymphadenektomie  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+41 
+6.3. Adjuvante Radiotherapie nach Lymphadenektomie 
+Nr. Empfehlung EG LoE Quellen 
+6.26. Zur Verbesserung der Tumorkontrolle der 
+Lymphknotenstation sollte eine postoperative adjuvante 
+Radiotherapie bei Vorliegen mindestens eines der folgenden 
+Kriterien durchgeführt werden: 
+• 3 befallene Lymphknoten, 
+• Kapseldurchbruch, 
+• Lymphknotenmetastase > 3 cm, 
+• Lymphogenes Rezidiv 
+B 1b [93-106] 
+6.27. Falls die Indikation zur Bestrahlung des Lymphabflussgebietes 
+gestellt wird, soll die Strahlentherapie mit 50 –60 Gy in 
+konventioneller Fraktionierung (5 x 1,8 –2,5 Gy/Woche) 
+erfolgen. 
+A 2b [93-101] 
+6.28. Ein positiver Einfluss einer postoperativen adjuvanten 
+Radiotherapie des regionalen Lymphabflussgebietes auf die 
+Überlebenszeit ist bisher nicht belegt worden. 
+St 1b [93-106] 
+ 
+  
+6.4 Adjuvante medikamentöse Therapie  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+42 
+6.4. Adjuvante medikamentöse Therapie 
+Nr. Empfehlung EG LoE Quellen 
+6.29. In der adjuvanten Therapie ist der relevante Endpunkt für eine 
+Nutzenbewertung das Gesamtüberleben. 
+EK 
+6.4.1. Adjuvante Therapie im Stadium II 
+Nr. Empfehlung EG LoE Quellen 
+6.30. Patienten im Stadium IIA kann eine niedrig dosierte adjuvante 
+Interferontherapie angeboten werden. 
+0 1b [107, 108] 
+6.31. Patienten im Tumorstadium IIB/C soll eine adjuvante 
+Interferontherapie angeboten werden. 
+A 1a [109-115] 
+6.32. Das individuelle Therapieschema sollte unter sorgfältiger 
+Abwägung von zu erwartendem Benefit und möglichen 
+Nebenwirkungen und Einschränkungen der Lebensqualität mit 
+betroffenen Patienten diskutiert werden. 
+EK 
+6.33. Patienten mit hohem Metastasierungsrisiko können 
+ausschließlich nachbeobachtet werden, sofern zuvor die 
+adjuvanten Therapiemöglichkeiten diskutiert wurden. 
+0 1a [109-114, 
+116] 
+6.4.2. Adjuvante Therapie im Stadium III/IV (NED) 
+Nr. Empfehlung EG LoE Quellen 
+6.34. 
+neu 
+Patienten im AJCC 2017 Tumorstadium III A -D soll eine 
+adjuvante Therapie mit einem anti-PD1-Antikörper angeboten 
+werden. 
+A 1b [117, 118] 
+6.35. 
+neu 
+Patienten im AJCC 2017 Tumorstadium III A -D mit einer BRAF 
+V600E oder V600K Mutation soll eine adjuvante Therapie mit 
+einem BRAF‐ und MEK-Inhibitor angeboten werden. 
+A 1b [119] 
+6.36. 
+neu 
+Patienten im AJCC 2017 Tumorstadium I V (NED)  soll eine 
+adjuvante Therapie mit einem anti-PD1-Antikörper angeboten 
+werden. 
+A 1b [118] 
+6.4.3. Adjuvante Misteltherapie 
+Nr. Empfehlung EG LoE Quellen 
+6.37. Eine adjuvante Therapie mit Mistelpräparaten soll nicht 
+verabreicht werden. 
+A 1b [120-123] 
+ 
+6.4 Adjuvante medikamentöse Therapie  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+43 
+6.4.4. Adjuvante Radiotherapie 
+Siehe auch Kapitel 6.3. 
+6.4.5. Lebensqualität unter einer adjuvanten Therapie 
+Nr. Empfehlung EG LoE Quellen 
+6.38. 
+neu 
+Daten zur Lebensqualität sind aus den Phase III Studien zur 
+adjuvanten Therapie mit Interferon-alpha publiziert worden. 
+Dabei berichteten die meisten Studien über eine 
+Verschlechterung der Lebensqualität unter Therapie. Nach 
+Beendigung der Therapie erreicht die Lebensqualität i.d.R. 
+wieder den Ausgangwert. 
+Für Ipilimumab zeigte sich trotz vieler Therapieabbrüche 
+aufgrund unerwünschter Ereignisse keine Verschlechterung 
+der Lebensqualität gegenüber Placebo. 
+ST 1b [124-135] 
+  
+6.5 Algorithmus bei lokoregionalen Metastasen  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+44 
+6.5. Algorithmus bei lokoregionalen Metastasen 
+ 
+6.6. Operative Therapie bei lokoregionalen Metastasen 
+Nr. Empfehlung EG LoE Quellen 
+6.39. Die chirurgische Therapie lokoregionaler Metastasen soll 
+durchgeführt werden, wenn – bei fehlendem Hinweis auf eine 
+Fernmetastasierung – dadurch perspektivisch eine 
+makroskopische und mikroskopische vollständige Entfernung 
+(R0-Resektion) der Metastasen möglich ist. 
+EK 
+6.7. Radiotherapie bei lokoregionalen Metastasen 
+Nr. Empfehlung EG LoE Quellen 
+6.40. Die lokale Radiotherapie kann bei Satelliten - und In -transit-
+Metastasen mit dem Ziel der lokalen Tumorkontrolle 
+eingesetzt werden. 
+0 4 [136-140] 
+ 
+  
+Abbildung 1: Algorithmus bei lokoregionalen Metastasen 
+6.8 Medikamentöse Verfahren bei lokoregionalen Metastasen  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+45 
+6.8. Medikamentöse Verfahren bei lokoregionalen 
+Metastasen 
+Nr. Empfehlung EG LoE Quellen 
+6.41. Patienten mit nicht -operablen Satelliten - und In -transit-
+Metastasen sollten wenn möglich im Rahmen klinischer 
+Studien behandelt werden. 
+EK 
+6.42. Bei Patienten mit nicht -operablen Satelliten - und In -transit-
+Metastasen können verschiedene lokale Verfahren angewandt 
+werden, wobei die höchsten Ansprechraten für die 
+intratumorale Injektion von Interleukin  2 und die 
+intratumorale Elektrochemotherapie mit Bleomycin oder 
+Cisplatin beschrieben sind 2. Talimogene Laherparepvec (T -
+VEC) kann als weitere Therapieoption bei lokoregionalen 
+Metastasen eingesetzt werden. 
+0 1b/
+2a 
+[141-153] 
+6.9. Extremitätenperfusion bei lokoregionalen 
+Metastasen 
+Nr. Empfehlung EG LoE Quellen 
+6.49. Bei Patienten mit multiplen, rasch rezidivierenden Haut - und 
+subkutanen Metastasen (Satellitosis, In -transit-Metastasen, 
+lokale Metastasen), die auf Arm oder Bein beschränkt sind, 
+sollte die Indikation  zur isolierten Extremitätenperfusion 
+überprüft werden, wenn durch andere Maßnahmen (z.  B. 
+wiederholte Exzision, CO 2-Laserablation) die Metastasen nicht 
+zu kontrollieren sind 
+EK 
+ 
+ 
+ 
+  
+ 
+2 Zum Zeitpunkt der Konsensuskonferenz (Januar 2019) lag keine Zulassung für die intraäsionale Therapie mit 
+Interleukin-2 vor. Der Einsatz dieser Medikamente ist daher “off-label“. Für die Anwendung müssen die „off label 
+use“ Kriterien berücksichtigt werden: 
+• nachgewiesene Wirksamkeit 
+• günstiges Nutzen-Risiko-Verhältnis 
+• fehlender Alternativ-Heilversuch 
+Ein „off label use“ ist nur bei schwerwiegender Erkrankung zulässig, wenn es keine Behandlungsalternative gibt. 
+Nach dem Stand der wissenschaftlichen Erkenntnisse muss die begründete Aussicht bestehen, dass die 
+Behandlung zu einem Erfolg führt. Darüber hinaus besteht eine besondere Aufklärungsverpflichtung. Die 
+Patientinnen/Patienten sind auf den Umstand des „off label use“ und daraus resultierenden möglichen 
+Handlungskonsequenzen hinzuweisen. Eine gemeinsame Entscheidungsfindung ist notwendig.  
+7.1 Algorithmus initiales Stadium IV  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+46 
+7. Diagnostik und Therapie im 
+fernmetastasierten Stadium3 
+7.1. Algorithmus initiales Stadium IV 
+ 
+Abbildung 2: Algorithmus zu Diagnostik und OP-Indikation bei V. a. Fernmetastasen. 
+  
+ 
+3 An dieser Stelle sei auf die allgemeinen Richtlinien hingewiesen, wie sie in der im Mai 2015 
+erschienenen ‚S3-Leitlinie Palliativmedizin für Patienten mit einer nicht heilbaren 
+Krebserkrankung‘ (AWMF-Registernummer: 128/001OL) ausführlich beschrieben werden 
+(http://www.awmf.org/uploads/tx_szleitlinien/128001OLl_S3_Palliativmedizin_2015-04.pdf). Dort 
+finden sich auch wesentliche Empfehlungen zu Versorgungsstrukturen in der Palliativmedizin mit 
+einem Behandlungspfad für Patienten und Angehörige, da den Angehörigen bei der Betreuung 
+dieser Patientengruppe eine wichtige Rolle zukommt. 
+
+7.2 Ausbreitungsdiagnostik im Stadium IV  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+47 
+7.2. Ausbreitungsdiagnostik im Stadium IV 
+Neben der Ganzkörperuntersuchung, welche die komplette Inspektion des Integuments 
+einschließlich der angrenzenden und einsehbaren Schleimhäute sowie die Palpation der 
+Lymphabstromgebiete und Lymphknotenstationen miteinschließt, werden die im 
+Folgenden aufgeführten Untersuchungen empfohlen. 
+Tabelle 12: Übersicht der Empfehlungen zu Untersuchungsmethoden im Stadium IV  
+Empfehlungsnummer/ 
+Untersuchungsmethode 
+Empfehlungen zur 
+Ausbreitungsdiagnostik bei 
+Patienten mit Verdacht auf 
+oder Nachweis von 
+Fernmetastasen 
+Empfehlungs-
+grad 
+Level of  
+Evidence 
+7.1.MRT Kopf Ja EK 
+7.2. Schnittbildgebung 
+(Ganzkörper ohne Kopf)* 
+Ja B 1a 
+7.3. Abdomen-Sonographie Ja 0 3b 
+7.4. Lymphknoten-Sonographie Ja 0 1a 
+7.5. Skelettszintigraphie Ja EK 
+7.6. Tumormarker S100B Ja A 1a 
+7.7. Tumormarker LDH Ja A 1b 
+*PET/CT, CT, MRT (jeweils Ganzkörper) 
+ 
+Nr. Empfehlung EG LoE Quellen 
+7.8. Die Abdomen -Sonographie kann bei Patienten mit Verdacht 
+auf oder Nachweis von Fernmetastasen durchgeführt werden. 
+Die Methode ist allerdings hinsichtlich der Detektion von 
+Fernmetastasen der MRT, CT und PET bzw. PET/CT unterlegen. 
+0 3b [154-156] 
+7.9. Die lokoregionale Lymphknoten -Sonographie kann bei 
+Patienten mit Verdacht auf oder Nachweis von Fernmetastasen 
+eines malignen Melanoms durchgeführt werden. 
+0 1a [37, 47] 
+7.10. Schnittbildgebende Verfahren sind heute der Standard in der 
+Ausbreitungsdiagnostik ab Stadium III des malignen 
+Melanoms. Dab ei hat sich gezeigt, dass die PET/CT den 
+anderen Verfahren in der diagnostischen Genauigkeit 
+überlegen ist. 
+St 1b [47] 
+7.11. Für die Detektion von Hirnmetastasen eines Melanoms liegt für 
+die MRT die größte diagnostische Genauigkeit vor. 
+EK 
+7.3 Diagnostik beim metastasierten okkulten Melanom  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+48 
+Nr. Empfehlung EG LoE Quellen 
+7.12. Bei Patienten mit fortgeschrittener Erkrankung mit 
+Knochenschmerzen kann eine Skelettszintigraphie zusätzlich 
+zur Abklärung einer Skelettmetastasierung eingesetzt werden. 
+EK 
+7.13. S100B soll bei Patienten mit Verdacht auf bzw. Nachweis von 
+Fernmetastasen bestimmt werden. 
+A 1a [41, 157] 
+7.14. LDH soll als Teil der aktuellen AJCC-Klassifikation bei Patienten 
+mit Verdacht auf bzw. Nachweis von Fernmetastasen bestimmt 
+werden. 
+A 1b [58, 158, 
+159] 
+7.3. Diagnostik beim metastasierten okkulten Melanom 
+Nr. Empfehlung EG LoE Quellen 
+7.15. Bei Nachweis von Haut -, Lymphknoten- oder Fernmetastasen 
+bei unbekanntem Primärmelanom wird eine Suche nach einem 
+extrakutanen Primärmelanom nicht empfohlen. 
+EK 
+7.4. Molekularpathologische Diagnostik 
+Nr. Empfehlung EG LoE Quellen 
+7.16. Ab Stadium IIIB sollte auf Mutationen (BRAF, NRAS bei BRAF 
+wildtype, c -kit bei ALM und Schleimhautmelanom) getestet 
+werden. 
+Beim Nachweis von BRAF-, NRAS- und c-kit-Mutationen stehen 
+therapeutisch spezifische Inhibitoren zur Verfügung. 
+EK 
+7.5. Operative Therapie von Fernmetastasen 
+Nr. Empfehlung EG LoE Quellen 
+7.17. Die Resektion von Fernmetastasen sollte in Betracht gezogen 
+werden, wenn sie technisch als R0-Resektion machbar ist und: 
+• kein inakzeptables funktionelles Defizit erwarten lässt, 
+• positive prädiktive Faktoren für das lokale Vorgehen 
+vorliegen (geringe Metastasenzahl, lange Dauer des 
+metastasenfreien Intervalls), 
+• andere Therapieverfahren ausgeschöpft oder weniger 
+erfolgversprechend sind. 
+B 2b [160-162] 
+ 
+7.6 Medikamentöse Therapie im Stadium IV  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+49 
+7.6. Medikamentöse Therapie im Stadium IV 
+Nr. Empfehlung EG LoE Quellen 
+7.18. Eine allgemeine Empfehlung zur adjuvanten Therapie nach 
+Metastasektomie kann aufgrund der fehlenden Datenlage 
+nicht gegeben werden. 
+EK 
+7.19. Bei BRAF -V600-Mutation soll eine Therapie mit einem BRAF -
+Inhibitor in Kombination mit einem MEK-Inhibitor oder eine 
+Checkpoint-Inhibitor-Therapie (PD -1 Monotherapie oder PD -
+1+CTLA-4 Antikörpertherapie) durchgeführt werden. 
+Aktuell liegen keine Daten zur besten sequen ziellen Therapie 
+von BRAF/MEK-Inhibitoren und Checkpoint-Inhibitoren vor. 
+A 1b [163-165] 
+7.20. Bei c -KIT-Inhibitor-sensitiver c -KIT-Mutation ist ein c -KIT-
+Kinaseinhibitor4 eine Option für eine zielgerichtete Therapie 
+nach erfolgloser Immuntherapie mit Checkpoint-Inhibitoren. 
+EK 
+7.21. Bei Melanompatienten mit nicht resezierbaren Metastasen soll 
+die Option einer Immuntherapie mit Checkpoint -Inhibitoren 
+geprüft werden. Dabei sind PD -1-Antikörper oder dere n 
+Kombination mit Ipilimumab einer Monotherapie mit 
+Ipilimumab hinsichtlich des progressionsfreien Überlebens 
+überlegen. 
+Zudem sind PD-1-Antikörper in der Monotherapie Ipilimumab 
+im Gesamtüberleben überlegen. 
+A 1b [166-170] 
+7.22. Eine palliative Therapie mit Mistelpräparaten sollte während 
+einer immunologischen Therapie nicht verabreicht werden. 
+EK 
+7.23. Falls überlegene Therapieschemata (BRAF/MEK -Inhibitoren 
+oder PD -1-Antikörper) nicht in Frage kommen, kann eine 
+Monochemotherapie mit Dacarbazin als eine etablierte 
+Systemtherapie Melanompatienten mit nicht resezierbaren 
+Metastasen angeboten werden. 
+ 
+A 1b [167, 169, 
+171-191] 
+ 
+4 Zum Zeitpunkt der Konsensuskonferenz (Januar 2017) lag keine Zulassung von KIT-Inhibitoren 
+zur Therapie von c-KIT mutierter Melanome vor. Der Einsatz dieser Medikamente ist daher “off-
+label“. Für die Anwendung müssen die „off label use“ Kriterien berücksichtigt werden: 
+• nachgewiesene Wirksamkeit 
+• günstiges Nutzen-Risiko-Verhältnis 
+• fehlender Alternativ-Heilversuch 
+Ein „off label use“ ist nur bei schwerwiegender Erkrankung zulässig, wenn es keine Behand-
+lungsalternative gibt. Nach dem Stand der wissenschaftlichen Erkenntnisse muss die begründete 
+Aussicht bestehen, dass die Behandlung zu einem Erfolg führt. Darüber hinaus besteht eine 
+besondere Aufklärungsverpflichtung. Die Patientinnen/Patienten sind auf den Umstand des „off 
+label use“ und daraus resultierenden möglichen Handlungskonsequenzen hinzuweisen. Eine 
+gemeinsame Entscheidungsfindung ist notwendig. 
+7.6 Medikamentöse Therapie im Stadium IV  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+50 
+Nr. Empfehlung EG LoE Quellen 
+7.24. Falls überlegene Therapieschemata (BRAF/MEK -Inhibitoren 
+oder PD -1-Antikörper) nicht in Frage kommen, kann eine 
+Polychemotherapie als eine etablierte Systemtherapie 
+Melanompatienten mit nicht resezierbaren Metastasen 
+angeboten werden. 
+Unter Polychemotherapie sind höhere Ansprechraten als bei 
+der Monochemotherapie zu erwarten, das mediane 
+Gesamtüberleben wird jedoch nicht signifikant verlängert. 
+0 1b [167, 169, 
+171-187, 
+192-195] 
+7.25. Die aus Polychemotherapie in Kombination mit Interferon -
+alpha und Interleukin  2 bestehende Biochemotherapie soll 
+heute nicht mehr eingesetzt werden, da einer hohen Toxizität 
+unsichere Vorteile hinsichtlich des Überlebens 
+gegenüberstehen. 
+A 1a [196] 
+7.26. Daten zur Lebensqualität sind aus den Phase III 
+Zulassungsstudien zur Monotherapie mit BRAF -Inhibitoren 
+(Vemurafenib / Dabrafenib) sowie den Kombinationsstudien 
+aus BRAF/MEK -Inhibitoren (Dabrafenib+Trametinib, 
+Vemurafenib+Cobimetinib) publiziert w orden. Dabei zeigte 
+sich eine Verbesserung der Lebensqualität der 
+Kombinationstherapien gegenüber der Monotherapie mit 
+BRAF-Inhibitoren. 
+Für PD1 -Antikörper zeigt sich im Vergleich zu einer 
+zytotoxischen Therapie anfangs eine vergleichbare, sich im 
+Verlauf der Therapie unterscheidende Lebensqualität 
+zugunsten jener Patienten, die mit PD-1 Antikörper behandelt 
+wurden. 
+St 1b [127, 132, 
+134, 135, 
+185, 186, 
+197-213] 
+ 
+Nebenwirkungsmanagement 
+Nr. Empfehlung EG LoE Quellen 
+7.27. Sowohl unter zielgerichteter Therapie mit BRAF/MEK -
+Inhibitoren sowie unter Immun -Checkpoint-Inhibitoren 
+können andere Organsysteme von Nebenwirkungen betroffen 
+sein. 
+Insbesondere bei seltenen schwerwiegenden Nebenwirkungen 
+sollte die interdiszplinäre Zusamm enarbeit zur Behandlung 
+erfolgen. 
+EK 
+7.28. Bei schwerer autoimmuner Kolitis durch Immun -Checkpoint-
+Blocker soll eine immunsuppressive Therapie mit 
+Kortikosteroiden und ggf. weiteren immunsuppressiven 
+Medikamenten unter Abbruch/Pausierung der o nkologischen 
+Therapie erfolgen. 
+EK 
+7.6 Medikamentöse Therapie im Stadium IV  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+51 
+Nr. Empfehlung EG LoE Quellen 
+ 
+7.29. Bei hepatischen Nebenwirkungen unter z ielgerichteter 
+Therapie sollen die Therapeutika pausiert werden, bis es zu 
+einem Rückgang der Toxizität auf CTCAE Grad 1 kommt. 
+Bei einer Therapie durch Checkpoint -Inhibitoren induzierten 
+Autoimmunhepatitiden mit höherem Schweregrad (CTCAE 
+Grad 2-4) soll zusätzlich eine immunsuppressive Therapie mit 
+Kortikosteroiden und ggf. weiteren immunsuppressiven 
+Medikamenten eingeleitet werden. 
+EK 
+7.30. Bei Pneumonitis soll schweregrad-abhängig eine 
+immunsuppressive Therapie mit Kortikosteroiden und ggf. 
+weiteren immunsuppressiven Medikamenten unter 
+Abbruch/Pausierung der onkologischen Therapie erfolgen.  
+EK 
+7.31. Schweregrad-abhängig soll eine Hormonersatztherapie bei 
+Endokrinopathien erfolgen. 
+Eine symptomatische oder immunsuppressive Therapie unter 
+Pausieren (bis CTCAE Grad 1) oder Abbruch der onkologischen 
+Therapie kann zusätzlich durchgeführt werden. 
+EK 
+7.32. Die Therapie kutaner Nebenwirkungen soll symptombezogen 
+erfolgen. 
+EK 
+7.33. Bei Auftreten von okulären Symptomen soll die jeweilige 
+Therapie unterbrochen, ein Ophthalmologe hinzugezogen und 
+im Konsens das weitere therapeutische Procedere festgelegt 
+werden.  
+EK 
+7.34. Bei klinisch relevanten kardialen Nebenwirkungen unter 
+zielgerichteten Therapien soll die Therapie pausiert oder 
+abgebrochen werden. 
+Bei autoimmunen Nebenwirkungen durch Immun-Checkpoint-
+Blocker soll neben einer symptomorientierten Therapie eine 
+immunsuppressive Therapie mit Kortikosteroiden und der 
+Abbruch/Pausierung der Immuntherapie erfolgen. 
+EK 
+ 
+  
+7.7 Radiotherapie von Fernmetastasen  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+52 
+7.7. Radiotherapie von Fernmetastasen 
+7.7.1. Radiotherapie – Fraktionierung 
+Nr. Statement EG LoE Quellen 
+7.35. Konventionelle Fraktionierungsschemata zeigen im Vergleich 
+zu höheren Einzeldosen (> 3 Gy) die gleiche Effektivität 
+bezüglich der lokalen Tumorkontrolle. 
+St 1b [214] 
+7.36. Bei Patienten mit akuter Beschwerdesymptomatik durch eine 
+epidurale Kompression im Rückenmarksbereich kann zur 
+lokalen Symptomkontrolle eine Bestrahlungstherapie 
+durchgeführt werden. 
+0 4 [215] 
+7.37. Mit dem Ziel der Verbesserung der Lebensqualität, der 
+Vermeidung von Schmerzen und der Ve rbesserung einer 
+lokalen Tumorkontrolle können im Stadium der 
+Fernmetastasierung Metastasen in Haut, Subkutis oder 
+Lymphknoten, die aufgrund ihrer Anzahl, Größe oder 
+Lokalisation nicht operabel sind, einer Radiotherapie 
+unterzogen werden. 
+0 4 [139, 216-
+224] 
+7.38. Die kumulativen Dosen zur Bestrahlung von Metastasen in 
+Haut, Subkutis oder Lymphknoten sollten mindestens 30 Gy 
+erreichen. Eine geringe Tumorgröße ist mit signifikant 
+besseren Ansprechraten verbunden, sodass die Indikation zur 
+Radiotherapie frühzeitig gestellt werden sollte. 
+B 4 [215, 216, 
+218, 220, 
+223, 225, 
+226] 
+ 
+  
+7.8 Therapie von Knochenmetastasen  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+53 
+7.8. Therapie von Knochenmetastasen 
+7.8.1. Medikamentöse Therapie bei Knochenmetastasen 
+H. Link 
+Bezüglich der m edikamentösen Therapie bei Knochenmetastasen  sei auf das 
+entsprechende Kapitel in der S3-Leitlinie Supportivtherapie unter 
+http://leitlinienprogramm-onkologie.de/Supportive-Therapie.95.0.html verwiesen. 
+7.8.2. Radiotherapie bei Knochenmetastasen 
+Nr. Empfehlung EG LoE Quellen 
+7.39. Zur Verbesserung der klinischen Beschwerdesymptomatik und 
+zur Prävention von lokalen Komplikationen sollte bei Patienten 
+mit ossärer Metastasierung eine Bestrahlungstherapie 
+durchgeführt werden. 
+B 4 [219, 221, 
+222, 225-
+228] 
+7.9. Therapie von Lebermetastasen 
+Nr. Empfehlung EG LoE Quellen 
+7.40. Bei Patienten mit limitierter Lebermetastasierung sollte die 
+Option einer Metastasektomie geprüft werden, wenn sie als 
+R0-Resektion durchführbar ist. 
+B 4 [229-236] 
+7.41. Ablations-, Infusions -, Perfusions - und/oder 
+Embolisationsstrategien zeigten in Studien klinisches 
+Ansprechen, jedoch keine grundlegende 
+Prognoseverbesserung und können in Abhängigkeit von der 
+Anzahl der Metastasen und deren Lokalisation angewandt 
+werden. 
+0 1b [237] 
+ 
+  
+7.10 Therapie von Hirnmetastasen  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+54 
+7.10. Therapie von Hirnmetastasen 
+Nr. Empfehlung EG LoE Quellen 
+7.42. Die palliative Bestrahlung des Ganzhirns sollte bei multiplen 
+symptomatischen Hirnmetastasen angeboten werden, wenn 
+die erwartete Lebenszeit länger als drei Monate beträgt. 
+B 1b [238] 
+7.43. Die Operation oder stereotaktische Einzeitbestrahlung s ollte 
+bei begrenzter Hirnmetastasierung eingesetzt werden. Sie 
+verbessern die lokale Tumorkontrolle und können bei 
+Patienten mit singulären Metastasen das Überleben 
+verlängern.  
+B 3b [239-242] 
+7.44. Bei akuter Symptomatik durch Hirnmetastasen sollte die 
+Möglichkeit einer Operation geprüft werden. 
+EK 
+7.45. Der Stellenwert der adjuvanten Ganzhirnbestrahlung nach 
+Lokaltherapie ist noch nicht geklärt. 
+EK 
+7.46. Bei Hirnmetastasierung kann eine Kombinationstherapie von 
+Strahlentherapie und Ipilimumab bei Patienten mit 
+zusätzlicher extrazerebraler Metastasierung eingesetzt 
+werden. 
+Es gibt keine Hinweise auf eine erhöhte zerebrale Toxizität. Es 
+ist bisher unklar, ob diese Kombinationsstrategie eine 
+Verlängerung des Überlebens erzielen kann. 
+EK 
+7.47. Eine Kombination von Radiotherapie und BRAF 
+Inihibitoren ist möglich, sollte dabei sequen ziell 
+erfolgen. 
+EK 
+7.48. Patienten mit Hirnmetastasen kann eine systemische Therapie 
+analog den Empfehlungen bei Metastasierung in andere 
+viszerale Organe angeboten werden. 
+0 2b [166, 171, 
+187, 243-
+256] 
+8. Nachsorge  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+55 
+8. Nachsorge 
+Nr. Empfehlung EG LoE Quellen 
+8.1. Die risikoadaptierte Nachsorge von Melanompatienten sollte 
+über einen Zeitraum von 10 Jahren erfolgen. Nach diesem 
+Zeitraum sollten sich die Maßnahmen auf eine regelmäßige 
+Selbstuntersuchung sowie die jährliche 
+Ganzkörperuntersuchung auf Zweitmelanome beschränken. 
+B 1b [39, 257-266] 
+8.2. Selbstuntersuchungen durch den Patienten werden als 
+essenzieller Bestandteil der Nachsorge angesehen und können 
+zur Früherkennung von Rezidiven oder Zweitmelanomen 
+führen. Die Patienten sollten eine Anleitung zur 
+Selbstuntersuchung auf ein neues Melanom od er zur 
+selbstständigen Erkennung eines Rezidivs erhalten. 
+B 3b [267-269] 
+8.3. Die Nachsorge von Melanompatienten sollte in 
+risikoadaptierten Intervallen nach nachfolgendem Schema 
+erfolgen.   
+ Jahr 1–3 Jahr 4–5 Jahr 6–10 
+IA 6-monatl. jährlich jährlich 
+IB–IIB 3-monatl. 6-monatl. 6- bis 12-monatl. 
+IIC–IV* 3-monatl. 3-monatl. 6-monatl. 
+*für R0-resezierte Stadien 
+EK 
+8.4. Die körperliche Untersuchung soll bei allen Melanompatienten 
+im Rahmen der Nachsorge erfolgen. 
+A 2b [39, 270-
+273]8 
+8.5. Lokoregionale Lymphknoten -Sonographie soll bei 
+Melanompatienten ab Stadium IB in der Nachsorge erfolgen. 
+A 1a [37, 47, 272, 
+274] 
+8.6. Der Tumormarker S100B sollte bei asymptomatischen 
+Patienten ab Stadium IB im Rahmen der regulären Nachsorge 
+bestimmt werden. 
+B 1a [41, 43, 271, 
+272, 275] 
+8.7. Röntgen-Thorax-Untersuchungen sollten nicht routinemäßig 
+in der Nachsorge erfolgen. 
+B 2b [272, 276, 
+277] 
+8.8. Abdomen-Sonographie sollte in der Nachsorge des Melanoms 
+bei asymptomatischen Patienten nicht routinemäßig 
+durchgeführt werden. 
+B 2b [39, 270, 
+278, 279] 
+8.9. Eine Schnittbildgebung sollte routinemäßig in der Nachsorge 
+von Melanompatienten ab Stadium IIC erfolgen. 
+ 
+B 1a [47, 279-
+283]8 
+8. Nachsorge  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+56 
+Nr. Empfehlung EG LoE Quellen 
+8.10.. Die Skelettszintigraphie sollte in der Melanomnachsorge nicht 
+routinemäßig durchgeführt werden. 
+B 3b [33, 47, 48] 
+8.11. Die Nachsorge sollte nach dem folgenden Schema und mit den 
+nachfolgenden Untersuchungsmethoden durchgefü hrt 
+werden. 
+EK 
+Stadium Körperliche 
+Untersuchung 
+Lymphknoten-
+Sonographie 
+Labor S100B Bildgebende  
+Untersuchungen 
+Jahr 1–3 4 + 5 6–10 1–3 4 + 5 6–10 1–3 4 + 5 6–10 1–3 4 + 5 6–10 
+IA 6-mtl. 12-
+mtl. 
+12-
+mtl. 
+- - - - - - - - - 
+IB-IIB 3-mtl. 6-mtl. 6- bis 
+12-
+mtl. 
+6-
+mtl.*
+* 
+- - 3-mtl. - - - - - 
+IIC-IV* 3-mtl. 3-mtl. 6-mtl. 3-
+mtl. 
+6-mtl. - 3-mtl. 6-
+mtl. 
+- 6-
+mtl. 
+- - 
+*für R0-resezierte Stadien, ** nur bei korrektem pathologischem Staging mittels WLKB, sonst wie IIC
+  
+10.1 Klassifikation  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+57 
+9. Rehabilitation 
+Nr. Empfehlung EG LoE Quellen 
+9.1. Patienten mit malignem Melanom sollen über den 
+Rechtsanspruch auf eine Rehabilitationsmaßnahme informiert 
+werden. Das Antragsverfahren sollte bei Patienten mit 
+beeinträchtigter Krankheitsverarbeitung (gilt dann auch für in 
+situ-Melanome), Funktions- oder Teilhabestörungen bereits im 
+Rahmen der Primärversorgung initiiert werden. Weitere 
+Voraussetzungen sind das Vorliegen von 
+Rehabilitationsfähigkeit und eine posit ive 
+Rehabilitationsprognose. 
+EK 
+10. Mukosale Melanome 
+10.1. Klassifikation 
+Nr. Empfehlung EG LoE Quellen 
+10.1. Für mukosale Melanome sind histopathologische 
+Beurteilungsstandards nicht etabliert. 
+Es sollen folgende obligate Parameter im Befundbericht 
+erwähnt werden: 
+• makroskopische Tumorgröße 
+• vertikale Tumordicke in mm 
+• Vorhandensein einer Ulzeration 
+• zytomorphologische Subtypen 
+• Vorhandensein und Anzahl der Mitosen/mm2 
+• Vorhandensein perineuraler (Pn) und lymphatisch -
+vaskulärer Invasion (LVI) 
+• Ausbreitung in den organtypischen anatomischen 
+Strukturen 
+• Bestätigung der Diagnose durch 
+melanozytenspezifische immunhistochemische 
+Färbungen 
+Fakultative Parameter umfassen: 
+• Vorhandensein einer Pigmentierung  
+• Vorhandensein von Nekrose 
+• Beschreibung und Zusammensetzung des 
+Entzündungsinfiltrats 
+Vulvamelanome sollen in Anlehnung an die pTNM -
+Klassifikation für kutane Melanome histopathologisch 
+beurteilt werden.   
+EK 
+10.1 Klassifikation  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+58 
+Nr. Empfehlung EG LoE Quellen 
+10.2. Eine sichere histopathologische Einschätzung als primäres 
+mukosales Melanom  ist nur dann möglich, wenn eine 
+intraepitheliale Schleimhautbeteiligung vorliegt. 
+EK 
+10.3. Für mukosale Melanome des oberen Aero -Digestivtrakts 
+sollten die TNM/AJCC-Klassifikation 2009 verwendet werden.  
+Vulvamelanome sollten anhand der aktuellen AJCC TNM 
+Klassifikation für kutane Melanome klassifiziert werden.  
+Für alle anderen Körperlokalisationen sollen die unter 10.1 
+definierten histopathologischen Primärtumorcharakteristika 
+sowie das Ausmaß der Lymphknoten- und Fernmetastasierung 
+einzeln dokumentiert werden. 
+EK 
+ 
+Tabelle 13: TNM/AJCC Klassifikation für mukosale Melanome des oberen Aero -Digestivtraktes 
+(2009) 
+Primärtumor 
+T3 Isolierter Schleimhautbefall 
+T4a Invasion in das tiefe Weichteilgewebe, Knorpel, Knochen oder die darüberliegende Haut 
+T4b Invasion von Dura, Gehirn, Schädelbasis, Hirnnerven, Mastoid, Arteria carotis, 
+prävertebralem Raum oder Mediastinum 
+Regionale Lymphknoten 
+NX Fehlende Beurteilbarkeit 
+N0 Kein Befall regionaler Lymphknoten 
+N1 Befall regionaler Lymphknoten 
+Fernmetastasen 
+M0 Keine Fernmetastasierung 
+M1 Fernmetastasierung 
+Klinisches Stadium 
+Stadium III T3 N0 M0 
+Stadium IVA T4a N0 M0 
+ T3-T4a N1 M0 
+10.2 Primärexzision  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+59 
+Stadium IVB T4b alle N M0 
+Stadium IVC alle T alle N M1 
+Nr. Empfehlung EG LoE Quellen 
+10.4. Bei lokaler Inoperabilität bzw. ab dem Stadium der 
+Lymphknotenmetastasierung soll der Mutationsstatus von 
+mukosalen Melanomen für KIT, BRAF und NRAS erhoben 
+werden. 
+EK 
+10.2. Primärexzision 
+Nr. Empfehlung EG LoE Quellen 
+10.5. Die Resektion mukosaler Melanome sollte mit adäquatem 
+Sicherheitsabstand (in der Regel 10mm) sicher im Gesunden 
+erfolgen und - wenn möglich - funktionserhaltend sein. 
+B 4 [284-292] 
+10.6. Die Wächterlymphknotenbiopsie kann Patienten mit einem 
+mukosalem Melanom angeboten werden. 
+Ek 
+10.3. Initiale Ausbreitungsdiagnostik 
+Nr. Statement EG LoE Quellen 
+10.7. Die initiale Ausbreitungsdiagnostik soll analog zu den 
+Empfehlungen des kutanen Melanoms erfolgen. 
+Die Region des Primärtumors sollte zusätzlich von Vertretern 
+entsprechender Fachdisziplinen (z.B. Hals -Nasen-Ohren-
+Heilkunde, Mund-, Kiefer- und Gesichtschirurgie, Gynäkologie, 
+Urologie) mit beurteilt werden. 
+Eine Sonographi e der regionären Lymphknoten sollte zur 
+Ausbreitungsdiagnostik mit Ausnahme von In-situ-Melanomen 
+durchgeführt werden. 
+Die Befunde und das therapeutische Procedere sollten in einer 
+interdisziplinären Tumorkonferenz gemeinsam besprochen 
+werden. 
+EK 
+10.8. Bei der Behandlung von Schleimhautmelanomen sollen die für 
+die jeweilige anatomische Region zuständigen Fachdisziplinen 
+(z.B. MKG, HNO, Gynäkologie, Urologie, Viszeralchirurgie) mit 
+eingebunden und beteiligt werden. 
+EK 
+ 
+  
+10.4 Radiotherapie des Primärtumors  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+60 
+10.4. Radiotherapie des Primärtumors 
+Nr. Empfehlung EG LoE Quellen 
+10.9. Im Falle einer vollständigen Entfernung des invasiven 
+Primärtumors kann eine adjuvante Strahlentherapie der 
+anatomischen Region zur Verbesserung der regionalen 
+Tumorkontrolle angeboten werden. 
+0 3a [293-301] 
+10.10. Bei R1- oder R2-resezierten mukosalen Melanomen kann eine 
+Strahlentherapie mit dem Ziel der lokalen Tumorkontrolle 
+durchgeführt werden. 
+0 3b [293-303] 
+10.11. Die adjuvante Bestrahlung bei Lymphknotenmetastasen kann 
+analog zum Vorgehen bei kutanen Melanomen durchgeführt 
+werden. 
+0 3a [293-303] 
+10.5. Systemtherapie 
+Nr. Empfehlung EG LoE Quellen 
+10.12. Patienten mit metastasiertem mukosalen Melanomen können 
+analog Patienten mit metastasiertem kutanen Melanomen 
+systemisch behandelt werden. 
+0 3a [304-308] 
+10.13. Im inoperablen oder metastasierten Stadium soll bei Vorliegen 
+einer BRAF-V600-Mutation analog zu kutanen Melanomen die 
+Indikation zur Therapie mit einem BRAF -Inhibitor in 
+Kombination mit einem MEK -Inhibitor oder 
+Checkpointblockade überprüft werden. 
+Es liegen hier keine Daten zur bestmöglichen Therapiesequenz 
+beider Therapien vor. 
+A 3a [304-308] 
+10.14. Bei c -KIT-Inhibitor-sensitiver c -KIT-Mutation ist ein c -KIT-
+Kinaseinhibitor5 eine Option für eine zielgerichtete Therapie 
+nach erfolgloser Immuntherapie mit Checkpoint-Inhibitoren. 
+St 2b [309-321] 
+ 
+5 Zum Zeitpunkt der Konsensuskonferenz (Januar 2017) lag keine Zulassung von KIT-Inhibitoren 
+zur Therapie von c-KIT mutierter Melanome vor. Der Einsatz dieser Medikamente ist daher “off-
+label“. Für die Anwendung müssen die „off label use“ Kriterien berücksichtigt werden: 
+• nachgewiesene Wirksamkeit 
+• günstiges Nutzen-Risiko-Verhältnis 
+• fehlender Alternativ-Heilversuch 
+Ein „off label use“ ist nur bei schwerwiegender Erkrankung zulässig, wenn es keine Behand-
+lungsalternative gibt. Nach dem Stand der wissenschaftlichen Erkenntnisse muss die begründete 
+Aussicht bestehen, dass die Behandlung zu einem Erfolg führt. Darüber hinaus besteht eine 
+besondere Aufklärungsverpflichtung. Die Patientinnen/Patienten sind auf den Umstand des „off 
+label use“ und daraus resultierenden möglichen Handlungskonsequenzen hinzuweisen. Eine 
+gemeinsame Entscheidungsfindung ist notwendig. 
+10.6 Nachsorge bei mukosalen Melanomen  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+61 
+10.6. Nachsorge bei mukosalen Melanomen 
+Nr. Statement EG LoE Quellen 
+10.15. Die Nachsorge bei mukosalen Melanomen soll interdisziplinär 
+von Dermatologen und der zur jeweiligen anatomischen 
+Lokalisation passenden Fachdisziplin durchgeführt werden. 
+Sie soll analog zu kutanen Melanomen risiko - und 
+stadienadaptiert erfolgen. 
+EK 
+  
+11.1 Einsatz von Komplementärmedizin  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+62 
+11. Begleittherapie 
+11.1. Einsatz von Komplementärmedizin 
+Nr. Statement EG LoE Quellen 
+11.1. Komplementäre Verfahren können auf Wunsch des Patienten 
+nach gründlicher Abwägung möglicher Risiken (Neben - und 
+Wechselwirkungen) im Einzelfall eingesetzt werden. 
+EK 
+11.2. Aufklärung über komplementäre und alternative 
+Therapien 
+Nr. Statement EG LoE Quellen 
+11.2. Patienten sollten nach ihrer Nutzung von komplementären und 
+„alternativen“ The -rapien befragt werden. Patienten, die 
+komplementäre Verfahren einsetzen, sollten auf mögliche 
+Risiken und Interaktionen hingewiesen werden. 
+Patienten sollte aktiv von der Verwendung „alternativer“ 
+Therapien abgeraten werden. 
+Hierzu gehör en u. a. Ukrain, Vitamin B 17 (Aprikosenkerne, 
+Bittermandel), insulinpotenzierte Therapie, keto -gene Diät, Vitamine 
+nach Dr. Rath, Neue Germanische Medizin®, Eigenblutzytokine, 
+Zapper, Redifferenzie-rungstherapie 
+EK 
+ 
+11.3. Psychoonkologie 
+Nr. Statement EG LoE Quellen 
+11.3. Psychosoziales Screening von Melanompatienten sollte 
+routinemäßig in die klinische Praxis implementiert werden. Die 
+Überweisung von Risikopatienten zu spezialisierten 
+psychosozialen Diensten verringert deren Wahrscheinlichkeit, 
+signifikanten Distress zu entwickeln. 
+EK 
+ 
+  
+11.9 Palliativversorgung  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+63 
+11.9. Palliativversorgung 
+Nr. Statement EG LoE Quellen 
+11.4. Bei Melanompatienten im Stadium IV sollte eine frühzeitige 
+Einbindung spezialisierter palliativmedizinischer ambulanter 
+oder stationärer Kompetenz erfolgen. Falls nicht verfügbar, 
+sollte eine entsprechende Beratung stattfinden oder 
+Kontaktadressen vermittelt werden. 
+EK 
+ 
+12. Versorgungsstrukturen und Qualitäts-
+management (QM) 
+12.2. Klinische Studien 
+Nr. Statement EG LoE Quellen 
+12.1. Patienten mit metastasiertem Melanom sollen zur 
+Abstimmung der weiteren Diagnostik und Therapie in einem 
+interdisziplinären Hauttumorboard vorgestellt werden. Die 
+Möglichkeit des Einschlusses in klinische Studien sollte in 
+jedem Fall geprüft werden. 
+EK 
+ 
+  
+12.2 Klinische Studien  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+64 
+13. Abbildungsverzeichnis 
+Abbildung 1: Algorithmus bei lokoregionalen Metastasen ................................................................. 44 
+Abbildung 2: Algorithmus zu Diagnostik und OP-Indikation bei V. a. Fernmetastasen. ....................... 46 
+14. Tabellenverzeichnis 
+Tabelle 1: T-Klassifikation des Primärtumors beim malignen Melanom (AJCC 2009) ........................... 17 
+Tabelle 2: N-Klassifikation der regionären Lymphknoten beim malignen Melanom (AJCC 2009) .......... 18 
+Tabelle 3: M-Klassifikation der Fernmetastasen beim malignen Melanom (AJCC 2009) ....................... 18 
+Tabelle 4: Stadieneinteilung des malignen Melanoms (AJCC 2009) ..................................................... 19 
+Tabelle 5: T-Klassifikation des Primärtumors beim malignen Melanom (AJCC 2016/UICC 2016) ......... 20 
+Tabelle 6: N-Klassifikation des Primärtumors beim malignen Melanom (AJCC 2016/UICC 2016) ......... 21 
+Tabelle 7: M-Klassifikation des Primärtumors beim malignen Melanom (AJCC 2016/UICC 2016) ......... 23 
+Tabelle 8: Stadieneinteilung des malignen Melanoms - klinisch (AJCC 2016 / UICC 2016) .................. 24 
+Tabelle 9: Stadieneinteilung des malignen Melanoms - pathologisch (AJCC 2016 / UICC 2016) .......... 25 
+Tabelle 10: Übersicht der Empfehlungen zu Untersuchungsmethoden in der initialen 
+Ausbreitungsdiagnostik für Melanompatienten bis einschließlich Stadium IIB ............ 30 
+Tabelle 11: Übersicht der Empfehlungen zu Untersuchungsmethoden im Stadium IIC und III .............. 34 
+Tabelle 12: Übersicht der Empfehlungen zu Untersuchungsmethoden im Stadium IV ......................... 47 
+Tabelle 13: TNM/AJCC Klassifikation für mukosale Melanome des oberen Aero-Digestivtraktes (2009) 58 
+Tabelle 14: geänderte Empfehlung und Statement in Version 3.2 ...................................................... 65 
+Tabelle 15: Schema der Evidenzgraduierung nach Oxford (Version 2009) .......................................... 71 
+Tabelle 16: Schema der Empfehlungsgraduierung ............................................................................. 72 
+   
+  
+15.1 Übersicht der Änderungen in Version 3.2 (2019)  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+65 
+15. Anlagen 
+15.1. Übersicht der Änderungen in Version 3.2 (2019) 
+Tabelle 14: geänderte Empfehlung und Statement in Version 3.2  
+Version 3.1 (2018) Version 3.2 (2019) 
+Dacarbazin soll in der adjuvanten Therapie des 
+Melanoms nicht verabreicht werden 
+gestrichen 
+Eine Poly-Chemo-Immuntherapie mit Dacarbazin, 
+Cisplatin, Vinblastin, Interleukin -2, IFN alfa -2b 
+und Granulocyten Kolonie-Stimulierungs-Faktor 
+sollte in der adjuvanten Therapie des Melanoms 
+nicht verabreicht werden. 
+gestrichen 
+Eine Vakzinationstherapie soll in der adjuvanten 
+Therapie des Melanoms außerhalb von klinischen 
+Studien nicht verabreicht werden. 
+gestrichen 
+Eine adjuvante Extremitätenperfusion mit 
+Melphalan soll in der adjuvanten Therapie des 
+Melanoms nicht verabreicht werden. 
+gestrichen 
+Eine adjuvante Therapie mit dem unspezifischen 
+Immunstimulanz Levamisol soll nicht verabreicht 
+werden. 
+gestrichen 
+Eine adjuvante Therapie mit dem unspezifischen 
+Immunstimulanz BCG soll nicht verabreicht 
+werden. 
+gestrichen 
+Patienten im AJCC 2009 Tumorstadium IIB/C und 
+III A-C soll keine adjuvante Bevacizumab Therapie 
+angeboten werden 
+gestrichen 
+Pegyliertes Interferon verlän gert das rezidivfreie 
+Überleben im Vergleich zu unbehandelten 
+Kontrollpatienten im Stadium III, nicht aber das 
+Gesamtüberleben. 
+gestrichen 
+Bei Patienten mit Hochrisiko -Melanomen sollte 
+die Möglichkeit einer Teilnahme an einer 
+klinischen Studie überprüft werden. 
+gestrichen 
+Patienten im AJCC -2009-Tumorstadium IIA kann 
+eine niedrig dosierte adjuvante 
+Interferontherapie angeboten werden. 
+Patienten im Stadium IIA kann eine niedrig 
+dosierte adjuvante Interferontherapie angeboten 
+werden. 
+15.2 Zusammensetzung der Leitliniengruppe  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+66 
+Version 3.1 (2018) Version 3.2 (2019) 
+Patienten im AJCC-2009 Tumorstadium IIB/C und 
+IIIA-C soll eine adjuvante Interferontherapie 
+angeboten werden. 
+Patienten im Tumorstadium IIB/C soll eine 
+adjuvante Interferontherapie angeboten werden. 
+Patienten im AJCC 2009 Tumorstadium III A -C 
+kann eine adjuvante Ipil imumab-Therapie 
+angeboten werden. Hierbei sollen die 
+schwerwiegenden Nebenwirkungen in die 
+Abwägung der Therapieentscheidung mit 
+einbezogen werden. 
+Patienten im AJCC 2017 Tumorstadium III A -D 
+soll eine adjuvante Therapie mit einem anti-PD1-
+Antikörper angeboten werden. 
+Patienten im AJCC 2017 Tumorstadium III A-D mit 
+einer BRAF V600E oder V600K Mutation soll eine 
+adjuvante Therapie mit einem BRAF‐ und MEK -
+Inhibitor angeboten werden. 
+ Patienten im AJCC 2017 Tumorstadium I V (NED) 
+soll eine adjuvante Therapie mit einem anti-PD1-
+Antikörper angeboten werden. 
+ Daten zur Lebensqualität sind aus den Phase III 
+Studien zur adjuvanten Therapie mit Interferon -
+alpha publiziert worden. Dabei berichteten die 
+meisten Studien über eine Verschlechterung der 
+Lebensqualität unter Therapie. Nach Beendigung 
+der Therapie erreicht die Lebensqualität i.d.R. 
+wieder den Ausgangwert. 
+Für Ipilimumab zeigte sich trotz vieler 
+Therapieabbrüche aufgrund Toxizität keine 
+Verschlechterung der Lebensqualität gegenüber 
+Placebo. 
+15.2. Zusammensetzung der Leitliniengruppe 
+15.2.1. Koordination 
+Prof. Dr. Thomas Eigentler, Universitäts-Hautklinik Tübingen 
+Dr. med. Jennifer Hoge, Klinik für Dermatologie, Universitätsklinikum Essen 
+Prof. Dr. Claus Garbe, Universitäts-Hautklinik Tübingen 
+Prof. Dr. Dirk Schadendorf, Klinik für Dermatologie, Universitätsklinikum Essen 
+Informationen zu früheren Versionen dieser Leitlinie können über das 
+Leitlinienprogramm Onkologie der DKG erfragt werden. 
+  
+15.2 Zusammensetzung der Leitliniengruppe  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+67 
+15.2.2. Beteiligte Organisationen und Personen 
+Beteiligte Fachgesellschaften und  
+Organisationen 
+Mandatsträger / Experten 
+Arbeitsgemeinschaft Dermatologische 
+Histologie (ADH) 
+Sander, Prof. Dr. Christian1,2 , Flaig, Prof. Dr. 
+Michael3,4 
+Arbeitsgemeinschaft Dermatologische 
+Onkologie (ADO) 
+Hauschild, Prof. Dr. Axel1, Garbe, Prof. Dr. 
+Claus2, Mohr, Dr. Peter3 
+Arbeitsgemeinschaft Dermatologische 
+Prävention (ADP) 
+Mohr, Dr. Peter1,3,4, Schnegelsberg, Arne2 
+Arbeitsgemeinschaft Deutscher Tumorzentren 
+(ADT) 
+Altmann, Dr. Udo1, Weichenthal, Prof. Dr. 
+Michael3,4 
+Arbeitsgemeinschaft Gesundheitsökonomie und 
+Evidenz-basierte Medizin der DDG (AGED) 
+Augustin, Prof. Dr. Matthias1 
+Arbeitsgemeinschaft Gynäkologische Onkologie 
+(AGO) 
+Mehlhorn, PD Dr. Grit3 
+Arbeitsgemeinschaft Hals-Nasen-Ohren-
+Heilkunde, Mund-Kiefer-Gesichtschirurgische 
+Onkologie (AHMO) 
+Herzog, Prof. Dr. Dr. Michael1, Stuck, Prof. Dr. 
+Boris3 
+Arbeitsgemeinschaft Internistische Onkologie 
+(AIO) 
+Keilholz, Prof. Dr. Ulrich1,2, Mackensen, Prof. Dr. 
+Andreas3 
+Arbeitsgemeinschaft Palliativmedizin (APM) Kleeberg, Prof. Dr. Ulrich1, Loquai, PD Dr. 
+Carmen3,4 
+Arbeitsgemeinschaft Prävention und integrative 
+Onkologie (PRIO) 
+Hübner, Prof. Dr. Jutta1,2,3 
+Arbeitsgemeinschaft Psychoonkologie (PSO) Werner, Dr. Andreas1, Forschner, Dr. Andrea2,3,4 
+Arbeitsgemeinschaft Radioonkologie der DKG 
+(ARO) 
+Vordermark, Prof. Dr. Dirk1,4, Kölbl, Prof. Dr. 
+Oliver3,4 
+Arbeitsgemeinschaft Rehabilitation in der 
+Dermatologie (AReD) 
+Weyergraf, Dr. Ansgar J.1, Wehrmann, Dr. 
+Jochen3,4 
+Arbeitsgemeinschaft Urologische Onkologie 
+(AUO) 
+Protzel, PD Dr. Chris3 
+Arbeitsgemeinschaft Supportive Maßnahmen in 
+der Onkologie (AGSMO) 
+Feyer, Prof. Dr. Petra1-4 
+15.2 Zusammensetzung der Leitliniengruppe  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+68 
+Beteiligte Fachgesellschaften und  
+Organisationen 
+Mandatsträger / Experten 
+Berufsverband Deutscher Strahlentherapeuten 
+e.V. (BVDST) 
+Bendel, Dr. Martin3,4 
+Bundesarbeitsgemeinschaft Selbsthilfe (BAG) Regensburger, Christiane1, Linder, Joachim2 
+Bundesverband Deutscher Dermatologen (BVDD) Reusch, Dr. Michael1, Ostendorf, Rolf2,3 
+Deutsche Dermatologische Gesellschaft (DDG) Stadler, Prof. Dr. Rudolf1, Vogt, Prof. Dr. 
+Thomas2,3,4 
+Deutsche Gesellschaft der Plastischen, 
+Rekonstruktiven und Ästhetischen Chirurgen 
+(DGPRÄC) 
+Noah, Prof. Dr. Ernst Magnus1,3,4 
+Deutsche Gesellschaft für Chirurgie (DGCH) Hohenberger, Prof. Dr. Peter1 
+Deutsche Gesellschaft für 
+Chirurgie/Arbeitsgemeinschaft chirurgische 
+Onkologie (CAO) 
+Krause-Bergmann, Dr. Albrecht1-4 
+Deutsche Gesellschaft für Dermatochirurgie 
+(DGDC) 
+Löser, Dr. Christoph1,4, Bechara, Prof. Dr. Falk G.2 
+Deutsche Gesellschaft für Gynäkologie und 
+Geburtshilfe (DGGG) 
+Mehlhorn, PD Dr. Grit3,4 
+Deutsche Gesellschaft für Hals-Nasen-Ohren-
+Heilkunde, Kopf- und Hals-Chirurgie (DGHNO-
+KHC) 
+Dietz, Prof. Dr. Andreas2, Stuck, Prof. Dr. Boris3 
+Lang, Prof. Dr. Stephan4 
+Deutsche Gesellschaft für Hämatologie und 
+Onkologie (DGHO) 
+Mackensen, Prof. Dr. Andreas1,3, Keilholz, Prof. 
+Dr. Ulrich2 
+Deutsche Gesellschaft für Mund-, Kiefer- und 
+Gesichtschirurgie (DGMKG) 
+Frerich, Prof. Dr. Dr. Bernhard1,3,4, Kramer, Prof. 
+Dr. Franz-Josef2 
+Deutsche Gesellschaft für Nuklearmedizin (DGN) Reske, Prof. Dr. Sven1, Beer, Prof. Dr. Ambros3,4 
+Deutsche Gesellschaft für Palliativmedizin (DGP) Voltz, Prof. Dr. Raymond1, Nehls, Dr. Wiebke2, 
+Meissner, Prof. Dr. Markus3,4 
+Deutsche Gesellschaft für Pathologie (DGP) Meister, Prof. Dr. Peter2, Bierhoff, Prof. Dr. med. 
+Erhard3 
+Deutsche Gesellschaft für Radioonkologie 
+(DEGRO) 
+Kölbl, Prof. Dr. Oliver1,3,4 
+15.2 Zusammensetzung der Leitliniengruppe  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+69 
+Beteiligte Fachgesellschaften und  
+Organisationen 
+Mandatsträger / Experten 
+Deutsche Gesellschaft für Thoraxchirurgie (DGT) Swoboda, Prof. Dr. Lothar1,2 
+Bölükbas, PD Dr. Servet3,4 
+Deutsche Gesellschaft für Ultraschall in der 
+Medizin (DEGUM) 
+Dill, Dr. Dorothee1, Schmid-Wendtner, Prof. Dr. 
+Monika2,3,4 
+Deutsche Gesellschaft für Urologie (DGU) Protzel, PD Dr. Chris3 
+Deutsche Röntgengesellschaft (DRG) Schlemmer, Prof. Dr. Heinz-Peter1, Pfannenberg, 
+Prof. Dr. Christina2,3 
+Beteiligte Fachexperten (ohne Stimmrecht) Berking, Prof. Dr. Carola2,3, Blum, Prof. Dr. 
+Andreas1, Bruchhage, Dr. Karl-Ludwig2, 
+Buchberger, Dr. Barbara1, Bunde, Henriette2, 
+Dippel, Prof. Dr. Edgar1,2,3, Eigentler, Prof. Dr. 
+Thomas1, Frerich, Prof. Dr. Dr. Bernhard2, 
+Gärtner, Dr. Jan1, Grabbe, Prof. Dr. Stephan2, 
+Gutzmer, Prof. Dr. Ralf1,2,3, Haferkamp, PD. Dr. 
+Sebastian3, Hassel, PD Dr. Jessica1,2,3, Hauschild, 
+Prof. Dr. Axel2,3,4, Heinzerling, Prof. Dr. Lucie3, 
+Heppt, Dr. Markus3, Kaatz, PD Dr. Martin1,2,3, 
+Klein, Prof. Dr. Dr. Martin1, Klinkhammer-
+Schalke, Dr. Monika1, Kurschat, PD Dr. Peter1, 
+Leiter-Stöppke, PD Dr. Ulrike1,2,3, Link, Prof. Dr. 
+Hartmut1, Loquai, PD Dr. Carmen1, Mauch, Prof. 
+Dr. Dr. Cornelia1, Meier, Prof. Dr. Friedegund2,3, 
+Mohr, Dr. Peter2, Möhrle, Prof. Dr. Matthias1, 
+Müller, PD Dr. Cornelia3, Nashan, Prof. Dr. 
+Dorothée1, Noah, Prof. Dr. Ernst Magnus2, Rose, 
+PD Dr. Christian1, Rösch, Prof. Dr. Alexander3, 
+Satzger, PD Dr. Imke1, Schiller, PD Dr. 
+Meinhard1, Schilling, Prof Dr. Bastian2,3, Stadler, 
+Prof. Dr. Rudolf2,3, Strittmatter, Dr. Dipl.-Psych. 
+Dipl.-Theol. Gerhard1, Sunderkötter, Prof. Dr. 
+Cord1,3, Tietze, Dr. Julia3, Trefzer, Prof. Dr. Uwe1, 
+Ugurel, Prof. Dr. Selma2, Weichenthal, Prof. Dr. 
+Michael1, Wick, Prof. Dr. Wolfgang1,2,3, Weide, PD 
+Dr. Benjamin2,3, Ziemer, PD Dr. Mirjana3, Zimmer, 
+Dr. Lisa3 
+Hautkrebs-Netzwerk Deutschland / Selbsthilfe 
+Hautkrebs 
+Buhisan, Dr. Dietrich1, Kiehl, Martina3,4 
+Konferenz Onkologischer Kranken- und 
+Kinderkrankenpflege (KOK) 
+Paradies, Kerstin1,3 
+Methodik, Koordination Czeschik, Dr. Christina1, Eigentler, Prof Dr. 
+Thomas2,3,4, Follmann, Dr. Markus1-4, Garbe, Prof. 
+15.2 Zusammensetzung der Leitliniengruppe  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+70 
+Beteiligte Fachgesellschaften und  
+Organisationen 
+Mandatsträger / Experten 
+Dr. Claus1-4, Kochs, Dr. Corinna1, Langer, 
+Thomas2,3,4, Nothacker, Dr. Monika3,4, Pflugfelder, 
+Dr. Annette1, Schadendorf, Prof. Dr. Dirk1-4, 
+Wesselmann, Dr. Simone1 
+Neuroonkologische Arbeitsgemeinschaft (NOA) Kortmann, Prof. Dr. Rolf-Dieter1, Wick, Prof. Dr. 
+Wolfgang4 
+Schnittstellengruppe – S3-Leitlinie 
+Hautkrebsprävention 
+Anders, Marcus1 
+Zeitraum der Beteiligung 
+1 = 2009-2013;  
+2 = 2014-2015; 
+3 = 2016-2019; 
+4 = Amendment 2019 – adjuvante Therapie 
+ 
+15.2.3. Methodische Begleitung 
+• Dr. Markus Follmann, MPH, MSc, Office des Leitlinienprogramms Onkologie – 
+Deutsche Krebsgesellschaft e.V. 
+• Dipl. Soz. -Wiss. Thomas Langer, Office des Leitlinienprogramms Onkologie – 
+Deutsche Krebsgesellschaft e.V. 
+• Dr. Monika Nothacker, MPH, AWMF 
+Informationen zu früheren Versionen dieser Leitlinie können über das Office des 
+Leitlinienprogramm Onkologie erfragt werden. 
+15.2.4. Patientenbeteiligung 
+Die Leitlinie wurde unt er direkter Beteiligung von  einem Patientenvertreter erstellt.Dr. 
+Buhisan (Selbsthilfegruppe Hautkrebs) war bei der Ersterstellung der Leitlinie von Beginn 
+an eingebunden und nahm mit eigenem Stimmrecht an den Konsensuskonferenzen teil. 
+An der Aktualisierung 2015-2016 (Version 2) waren Joachim Linder (BAG Selbsthilfe) und 
+Annegret Meyer (Selbsthilfegruppe Hautkrebs, Buxtehude) als Patientenvertreter/innen 
+beteiligt. An der Aktualsierung 2016 -2019 (Version 3) arbeitete Martina Kiehl  
+(Selbsthilfgegruppe Hautkrebs Buxtehude und Hautkrebs -Netzwerk Deutschland e.V.) 
+mit. 
+  
+15.3 Methodische Erläuterungen  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+71 
+15.3. Methodische Erläuterungen 
+Die Empfehlungen wurden auf Basis von Schlüsselfragen erarbeitet, die zu Begin n im 
+Kick-off-Meeting durch die Mandatsträger konsentiert wurden.  
+Evidenzbasierte Empfehlungen: Angabe von Evidenzlevel (Qualitätsstufe der Evidenz) 
+sowie Empfehlungsgrad (Einbeziehung der klinischen Bewertung) und Konsensstärke.  
+Grundlage: Adaptation der Quell-Leitlinien oder De-novo-Recherche 
+Konsensbasierte Empfehlungen: Ein kleinerer Anteil der Empfehlungen wurde nicht 
+evidenzbasiert durch Konsens beantwortet: Angabe von EK  (Expertenkonsens) und 
+Konsensstärke, kein Evidenzlevel, kein  ausgewiesener Empfehlungsgrad (A/B/0) siehe 
+auch Kapitel 15.3.4).  
+15.3.1. Evidenzlevel nach Oxford (Version 2009) 
+Tabelle 15: Schema der Evidenzgraduierung nach Oxford (Version 2009) 
+Level Therapie/Prävention, Ätiologie/Nebenwirkungen 
+1a Systematischer Review (SR) (mit Homogenität von randomisiert -kontrollierten 
+Studien (RCTs)  
+1b Einzelne RCT (mit engem Konfidenzintervall) 
+1c Alle oder keiner 
+2a SR (mit Homogenität) von Kohortenstudien 
+2b Einzelne Kohorten-Studie (eingeschlossen RCT mit schlechter Qualität; z. B. < 80 % 
+Nachbeobachtungsrate) 
+2c Ergebnisforschung; Ökologische Studien 
+3a SR (mit Homogenität) von Fall-Kontroll-Studien 
+3b Einzelne Fall-Kontroll-Studie 
+4 Fall-Serie (und qualitative schlechte Kohorten- und Fall-Kontroll-Studien) 
+5 Expertenmeinung ohne kritische Analyse oder basiert auf physiologischer oder 
+experimenteller Forschung oder „Grundprinzipien“ 
+15.3.2. Schema der Empfehlungsgraduierung 
+Die Methodik  des Leitlinienprogramms Onkologie  sieht eine Vergabe von 
+Empfehlungsgraden durch die L eitlinienautoren im Rahmen eines formalen 
+Konsensusverfahrens vor. Dementsprechend wurde n durch die AWMF moderierte , 
+nominale Gruppenprozesse bzw. strukturierte Konsensu skonferenzen durchgeführt 
+[322]. Im Rahmen dieser Prozesse wurden die Empfehlungen von den stimmberechtigten 
+Mandatsträgern (siehe Kapitel 15.2.2) formal abgestimmt.  
+In der Leitlinie werden zu allen evidenzbasierten Statements und Empfehlungen das 
+Evidenzlevel (siehe Tabelle 15) der zugrundeliegenden Studien sowie bei Empfehlungen 
+15.3 Methodische Erläuterungen  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+72 
+zusätzlich die Stärke der Empfehlung (Empfehlungsgrad) ausgewiesen. Hinsichtlich der 
+Stärke der Empfehlung werden in dieser Leitlinie drei Empfehlungsgrade unterschieden 
+(siehe Tabelle 16), die sich auch in der Formulierung der Empfehlun gen jeweils 
+widerspiegeln. 
+Tabelle 16: Schema der Empfehlungsgraduierung 
+Empfehlungsgrad Beschreibung Ausdrucksweise 
+A Starke Empfehlung soll 
+B Empfehlung sollte 
+0 Empfehlung offen kann 
+ 
+Die Entscheidungskriterien für die Festlegung der Empfehlungsgrade werden im 
+Leitlinienreport zu dieser Leitlinie erläutert.   
+15.3.3. Statements 
+Als Statements werden Darlegungen oder Erläuterungen von spezifischen Sachverhalten 
+oder Fragestellungen ohne unmittelbare Handlungsaufforderung bezeichnet. Sie werden 
+entsprechend der Vorgehensweise bei den Empfehlungen im Rahmen eines formalen 
+Konsensusverfahrens verabschiedet und können entweder auf Studienergebnissen oder 
+auf Expertenmeinungen beruhen. 
+15.3.4. Expertenkonsens (EK) 
+Statements/Empfehlungen, für die eine Bearbei tung auf der Grundlage von 
+Expertenkonsens der Leitliniengruppe beschlossen wurde, sind als „Expertenkonsens“ 
+ausgewiesen (EK). Für die Graduierung von Empfehlungen, die auf einem 
+Expertenkonsens basieren, wurden keine Symbole bzw. Buchstaben verwendet. Die 
+Stärke dieser Empfehlungen ergibt sich aus der verwendeten Formulierung 
+(soll/sollte/kann) entsprechend der Abstufung in Tabelle 16.
+16. Literatur  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+73 
+16. Literatur 
+ 
+1. Kaatsch, P., et al., Krebs in Deutschland 2011/2012. 2015, Robert-Koch-Institut: Berlin. 
+2. Kaatsch, P., et al., Beiträge zur Gesundheitsberichterstattung des Bundes - Krebs in 
+Deutschland 2007/2008. 8., Auflage ed. 2012: Robert Koch-Institut. 136. 
+3. Breitbart, E.W., et al., Systematic skin cancer screening in Northern Germany. J Am Acad 
+Dermatol, 2012. 66(2): p. 201-11. 
+4. Elwood, J.M., Screening for melanoma and options for its evaluation [see comment. Journal of 
+medical screening, 1994. 1(1): p. 22-38. 
+5. Gershenwald, J.E., et al., Melanoma of the Skin, in AJCC Cancer Staging Manual. 2016, Springer 
+International Publishing. p. 563-585. 
+6. American Joint Committee on Cancer. Implementation of AJCC 8th Edition Cancer Staging 
+System. 2017  [cited 2017 02.Jun.2017]. 
+7. Australian Cancer Network Melanoma Guidelines Revision Working Party, Clinical practice 
+guidelines for the management of melanoma in Australia and New Zealand. 2008. 
+8. Benati, E., et al., Clinical and dermoscopic clues to differentiate pigmented nail bands: an 
+International Dermoscopy Society study. J Eur Acad Dermatol Venereol, 2017. 31(4): p. 732-
+736. 
+9. Blum, A., et al., Dermoscopy of pigmented lesions of the mucosa and the mucocutaneous 
+junction: results of a multicenter study by the International Dermoscopy Society (IDS). Arch 
+Dermatol, 2011. 147(10): p. 1181-7. 
+10. Braun, R.P., et al., Dermoscopy of acral melanoma: a multicenter study on behalf of the 
+international dermoscopy society. Dermatology, 2013. 227(4): p. 373-80. 
+11. Australian Cancer Network Melanoma Guidelines Revision Working, P., Clinical Practice 
+Guidelines for the Management of Melanoma in Australia and New Zealand. The Cancer 
+Council Australia and Australian Cancer Network, Sydney and New Zealand Guidelines Group, 
+2008. 
+12. Stevenson, A.D., et al., Systematic review of diagnostic accuracy of reflectance confocal 
+microscopy for melanoma diagnosis in patients with clinically equivocal skin lesions. Dermatol 
+Pract Concept, 2013. 3(4): p. 19-27. 
+13. Rahman, A., et al., Systematic Review and Meta-Analysis of the Accuracy of Confocal 
+Microscopy in the Diagnosis of Skin Cancer. J Cancer Res Therap Oncol, 2015. 1(1): p. 1-8. 
+14. Xiong, Y.D., et al., A meta-analysis of reflectance confocal microscopy for the diagnosis of 
+malignant skin tumours. J Eur Acad Dermatol Venereol, 2016. 30(8): p. 1295-302. 
+15. Sladden, M.J., et al., Surgical excision margins for primary cutaneous melanoma. Cochrane 
+Database Syst Rev, 2009(4): p. CD004835. 
+16. Kenady, D.E., B.W. Brown, and C.M. McBride, Excision of underlying fascia with a primary 
+malignant melanoma: effect on recurrence and survival rates. Surgery, 1982. 92(4): p. 615-8. 
+17. Farshad, A., et al., A retrospective study of 150 patients with lentigo maligna and lentigo 
+maligna melanoma and the efficacy of radiotherapy using Grenz or soft X-rays. British Journal 
+of Dermatology, 2002. 146(6): p. 1042-1046. 
+18. Harwood, A.R., Conventional fractionated radiotherapy for 51 patients with lentigo maligna 
+and lentigo maligna melanoma. Int J Radiat Oncol Biol Phys, 1983. 9(7): p. 1019-21. 
+19. Schmid-Wendtner, M.H., et al., Fractionated radiotherapy of lentigo maligna and lentigo 
+maligna melanoma in 64 patients. J Am Acad Dermatol, 2000. 43(3): p. 477-82. 
+20. Ang, K.K., et al., Postoperative radiotherapy for cutaneous melanoma of the head and neck 
+region. Int J Radiat Oncol Biol Phys, 1994. 30(4): p. 795-8. 
+21. Stevens, G., et al., Locally advanced melanoma: results of postoperative hypofractionated 
+radiation therapy. Cancer, 2000. 88(1): p. 88-94. 
+22. Storper, I.S., et al., The role of radiation therapy in the treatment of head and neck cutaneous 
+melanoma. Am J Otolaryngol, 1993. 14(6): p. 426-31. 
+23. Foote, M.C., et al., Desmoplastic melanoma: the role of radiotherapy in improving local control. 
+ANZ J Surg, 2008. 78(4): p. 273-6. 
+24. Vongtama, R., et al., Efficacy of radiation therapy in the local control of desmoplastic 
+malignant melanoma. Head Neck, 2003. 25(6): p. 423-8. 
+25. Wasif, N., R.J. Gray, and B.A. Pockaj, Desmoplastic melanoma - the step-child in the melanoma 
+family? J Surg Oncol, 2011. 103(2): p. 158-62. 
+26. Rule, W.G., et al., Results of NCCTG N0275 (Alliance) - a phase II trial evaluating resection 
+followed by adjuvant radiation therapy for patients with desmoplastic melanoma. Cancer Med, 
+2016. 5(8): p. 1890-6. 
+16. Literatur  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+74 
+27. Sawyer, A., et al., Does staging computered tomography change management in thick 
+malignant melanoma? J Plast Reconstr Aesthet Surg, 2009. 62(4): p. 453-6. 
+28. Vereecken, P., et al., Evaluation of extensive initial staging procedure in intermediate/high-risk 
+melanoma patients. J Eur Acad Dermatol Venereol, 2005. 19(1): p. 66-73. 
+29. Yancovitz, M., et al., Role of radiologic imaging at the time of initial diagnosis of stage T1b-T3b 
+melanoma. Cancer, 2007. 110(5): p. 1107-14. 
+30. Fogarty, G.B. and C. Tartaguia, The utility of magnetic resonance imaging in the detection of 
+brain metastases in the staging of cutaneous melanoma. Clin Oncol (R Coll Radiol), 2006. 
+18(4): p. 360-2. 
+31. Schlamann, M., et al., [Cerebral MRI in neurological asymptomatic patients with malignant 
+melanoma]. Rofo, 2008. 180(2): p. 143-7. 
+32. Hafner, J., et al., Baseline staging in cutaneous malignant melanoma. Br J Dermatol, 2004. 
+150(4): p. 677-86. 
+33. Hofmann, U., et al., Primary staging and follow-up in melanoma patients--monocenter 
+evaluation of methods, costs and patient survival. Br J Cancer, 2002. 87(2): p. 151-7. 
+34. Terhune, M.H., N. Swanson, and T.M. Johnson, Use of chest radiography in the initial 
+evaluation of patients with localized melanoma. Archives of Dermatology, 1998. 134(5): p. 
+569-572. 
+35. Tsao, H., et al., Early detection of asymptomatic pulmonary melanoma metastases by routine 
+chest radiographs is not associated with improved survival. Arch Dermatol, 2004. 140(1): p. 
+67-70. 
+36. Wang, T.S., et al., Evaluation of staging chest radiographs and serum lactate dehydrogenase 
+for localized melanoma. J Am Acad Dermatol, 2004. 51(3): p. 399-405. 
+37. Bafounta, M.L., et al., Ultrasonography or palpation for detection of melanoma nodal invasion: 
+a meta-analysis. Lancet Oncol, 2004. 5(11): p. 673-80. 
+38. Ardizzoni, A., et al., Stage I-II melanoma: the value of metastatic work-up. Oncology, 1987. 
+44(2): p. 87-9. 
+39. Garbe, C., et al., Prospective evaluation of a follow-up schedule in cutaneous melanoma 
+patients: recommendations for an effective follow-up strategy. J Clin Oncol, 2003. 21(3): p. 
+520-9. 
+40. Goerz, G., et al., [Malignant melanoma: which examinations are useful in staging and follow-
+up?]. Dtsch Med Wochenschr, 1986. 111(33): p. 1230-3. 
+41. Mocellin, S., G. Zavagno, and D. Nitti, The prognostic value of serum S100B in patients with 
+cutaneous melanoma: a meta-analysis. Int J Cancer, 2008. 123(10): p. 2370-6. 
+42. Bosserhoff, A.K., et al., Melanoma-inhibiting activity, a novel serum marker for progression of 
+malignant melanoma. Cancer Res, 1997. 57(15): p. 3149-53. 
+43. Garbe, C., et al., Diagnostic value and prognostic significance of protein S-100beta, melanoma-
+inhibitory activity, and tyrosinase/MART-1 reverse transcription-polymerase chain reaction in 
+the follow-up of high-risk melanoma patients. Cancer, 2003. 97(7): p. 1737-45. 
+44. Hofmann, M.A., et al., Diagnostic value of melanoma inhibitory activity serum marker in the 
+follow-up of patients with stage I or II cutaneous melanoma. Melanoma Res, 2009. 19(1): p. 17-
+23. 
+45. Krahn, G., et al., S100 beta is a more reliable tumor marker in peripheral blood for patients 
+with newly occurred melanoma metastases compared with MIA, albumin and lactate-
+dehydrogenase. Anticancer Research, 2001. 21(2B): p. 1311-1316. 
+46. Veit-Haibach, P., et al., Diagnostic accuracy of contrast-enhanced FDG-PET/CT in primary 
+staging of cutaneous malignant melanoma. Eur J Nucl Med Mol Imaging, 2009. 36(6): p. 910-8. 
+47. Xing, Y., et al., Contemporary diagnostic imaging modalities for the staging and surveillance of 
+melanoma patients: a meta-analysis. J Natl Cancer Inst, 2011. 103(2): p. 129-42. 
+48. Kersey, P.A., et al., The value of staging and serial follow-up investigations in patients with 
+completely resected, primary, cutaneous malignant melanoma. Br J Surg, 1985. 72(8): p. 614-
+7. 
+49. Khansur, T., J. Sanders, and S.K. Das, Evaluation of staging workup in malignant melanoma. 
+Arch Surg, 1989. 124(7): p. 847-9. 
+50. Zartman, G.M., M.R. Thomas, and W.A. Robinson, Metastatic disease in patients with newly 
+diagnosed malignant melanoma. J Surg Oncol, 1987. 35(3): p. 163-4. 
+51. Kunte, C., et al., Prognostic factors associated with sentinel lymph node positivity and effect of 
+sentinel status on survival: an analysis of 1049 patients with cutaneous melanoma. Melanoma 
+Res, 2010. 20(4): p. 330-7. 
+52. Mays, M.P., et al., Should all patients with melanoma between 1 and 2 mm Breslow thickness 
+undergo sentinel lymph node biopsy? Cancer, 2010. 116(6): p. 1535-44. 
+53. McMasters, K.M., et al., Factors that predict the presence of sentinel lymph node metastasis in 
+patients with melanoma. Surgery, 2001. 130(2): p. 151-6. 
+16. Literatur  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+75 
+54. Morton, D.L., et al., Sentinel-node biopsy or nodal observation in melanoma. N Engl J Med, 
+2006. 355(13): p. 1307-17. 
+55. Testori, A., et al., Clinical considerations on sentinel node biopsy in melanoma from an Italian 
+multicentric study on 1,313 patients (SOLISM-IMI). Ann Surg Oncol, 2009. 16(7): p. 2018-27. 
+56. Valsecchi, M.E., et al., Lymphatic mapping and sentinel lymph node biopsy in patients with 
+melanoma: a meta-analysis. J Clin Oncol, 2011. 29(11): p. 1479-87. 
+57. Warycha, M., et al., Metaanalysis of sentinel lymph node positivity in thin melanoma (≤1 mm). 
+Journal of the American Academy of Dermatology, 2009. 60(3): p. AB10. 
+58. Balch, C.M., et al., Final version of 2009 AJCC melanoma staging and classification. J Clin 
+Oncol, 2009. 27(36): p. 6199-206. 
+59. Balch, C.M., et al., Multivariate analysis of prognostic factors among 2,313 patients with stage 
+III melanoma: comparison of nodal micrometastases versus macrometastases. J Clin Oncol, 
+2010. 28(14): p. 2452-9. 
+60. Meier, A., et al., Comparison of classification systems in melanoma sentinel lymph nodes--an 
+analysis of 697 patients from a single center. Cancer, 2010. 116(13): p. 3178-88. 
+61. van der Ploeg, I.M., et al., Comparison of three micromorphometric pathology classifications of 
+melanoma metastases in the sentinel node. Ann Surg, 2009. 250(2): p. 301-4. 
+62. Kruijff, S., et al., S-100B concentrations predict disease-free survival in stage III melanoma 
+patients. Ann Surg Oncol, 2009. 16(12): p. 3455-62. 
+63. Nowecki, Z.I., et al., Molecular and biochemical testing in stage III melanoma: multimarker 
+reverse transcriptase-polymerase chain reaction assay of lymph fluid after lymph node 
+dissection and preoperative serum lactate dehydrogenase level. Br J Dermatol, 2008. 159(3): p. 
+597-605. 
+64. Tas, F., et al., Clinical value of protein S100 and melanoma-inhibitory activity (MIA) in 
+malignant melanoma. Am J Clin Oncol, 2004. 27(3): p. 225-8. 
+65. van der Ploeg, I.M., et al., Is completion lymph node dissection needed in case of minimal 
+melanoma metastasis in the sentinel node? Ann Surg, 2009. 249(6): p. 1003-7. 
+66. Nagaraja, V. and G.D. Eslick, Is complete lymph node dissection after a positive sentinel lymph 
+node biopsy for cutaneous melanoma always necessary? A meta-analysis. Eur J Surg Oncol, 
+2013. 39(7): p. 669-80. 
+67. Satzger, I., et al., Is there a therapeutic benefit of complete lymph node dissection in melanoma 
+patients with low tumor burden in the sentinel node? Melanoma Res, 2014. 24(5): p. 454-61. 
+68. Van Der Ploeg, A.P., et al., Outcome following sentinel node biopsy plus wide local excision 
+versus wide local excision only for primary cutaneous melanoma: analysis of 5840 patients 
+treated at a single institution. Ann Surg, 2014. 260(1): p. 149-57. 
+69. van der Ploeg, A.P., et al., Prognosis in patients with sentinel node-positive melanoma without 
+immediate completion lymph node dissection. Br J Surg, 2012. 99(10): p. 1396-405. 
+70. van der Ploeg, A.P., et al., Prognosis in patients with sentinel node-positive melanoma is 
+accurately defined by the combined Rotterdam tumor load and Dewar topography criteria. J 
+Clin Oncol, 2011. 29(16): p. 2206-14. 
+71. Starz, H., et al., A micromorphometry-based concept for routine classification of sentinel lymph 
+node metastases and its clinical relevance for patients with melanoma. Cancer, 2001. 91(11): 
+p. 2110-21. 
+72. Neuss, H., et al., Postoperative surgical complications after radical axillary lymph node 
+dissection in melanoma disease result in increased pain. Int Surg, 2010. 95(2): p. 166-71. 
+73. Byers, R.M., Treatment of the neck in melanoma. Otolaryngol Clin North Am, 1998. 31(5): p. 
+833-9. 
+74. Medina, J.E., et al., Current management of cutaneous malignant melanoma of the head and 
+neck. Acta Otolaryngol, 2002. 122(8): p. 900-6. 
+75. O'Brien, C.J., et al., Experience with 998 cutaneous melanomas of the head and neck over 30 
+years. Am J Surg, 1991. 162(4): p. 310-4. 
+76. O'Brien, C.J., M.P. Gianoutsos, and M.J. Morgan, Neck dissection for cutaneous malignant 
+melanoma. World J Surg, 1992. 16(2): p. 222-6. 
+77. Schmalbach, C.E., T.M. Johnson, and C.R. Bradford, The management of head and neck 
+melanoma. Curr Probl Surg, 2006. 43(11): p. 781-835. 
+78. Wiener, M., R.F. Uren, and J.F. Thompson, Lymphatic drainage patterns from primary 
+cutaneous tumours of the forehead: refining the recommendations for selective neck 
+dissection. J Plast Reconstr Aesthet Surg, 2014. 67(8): p. 1038-44. 
+79. Reynolds, H.M., et al., Three-dimensional visualization of skin lymphatic drainage patterns of 
+the head and neck. Head Neck, 2009. 31(10): p. 1316-25. 
+80. Robbins, K.T., et al., Standardizing neck dissection terminology. Official report of the 
+Academy's Committee for Head and Neck Surgery and Oncology. Arch Otolaryngol Head Neck 
+Surg, 1991. 117(6): p. 601-5. 
+16. Literatur  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+76 
+81. Robbins, K.T., et al., Neck dissection classification update: revisions proposed by the American 
+Head and Neck Society and the American Academy of Otolaryngology-Head and Neck Surgery. 
+Arch Otolaryngol Head Neck Surg, 2002. 128(7): p. 751-8. 
+82. Mack, L.A. and J.G. McKinnon, Controversies in the management of metastatic melanoma to 
+regional lymphatic basins. J Surg Oncol, 2004. 86(4): p. 189-99. 
+83. Supriya, M., et al., Managing regional metastasis in patients with cutaneous head and neck 
+melanoma - is selective neck dissection appropriate? Am J Otolaryngol, 2014. 35(5): p. 610-6. 
+84. Geltzeiler, M., et al., Regional control of head and neck melanoma with selective neck 
+dissection. JAMA Otolaryngol Head Neck Surg, 2014. 140(11): p. 1014-8. 
+85. Robbins, K., et al., Consensus statement on the classification and terminology of neck 
+dissection. Archives of Otolaryngology–Head & Neck Surgery, 2008. 134(5): p. 536-538. 
+86. O'Brien, C.J., et al., Prediction of potential metastatic sites in cutaneous head and neck 
+melanoma using lymphoscintigraphy. Am J Surg, 1995. 170(5): p. 461-6. 
+87. Karakousis, C.P., et al., Axillary node dissection in malignant melanoma: results and 
+complications. Surgery, 1990. 108(1): p. 10-7. 
+88. Fujiwara, M., et al., Mid-arm lymph nodes dissection for melanoma. J Plast Reconstr Aesthet 
+Surg, 2010. 63(9): p. 1561-4. 
+89. Hochwald, S.N., et al., Epitrochlear lymph node dissection. Ann Surg Oncol, 2011. 18(2): p. 
+505. 
+90. Lawton, G., H. Rasque, and S. Ariyan, Preservation of muscle fascia to decrease lymphedema 
+after complete axillary and ilioinguinofemoral lymphadenectomy for melanoma. J Am Coll 
+Surg, 2002. 195(3): p. 339-51. 
+91. Coit, D.G. and M.F. Brennan, Extent of lymph node dissection in melanoma of the trunk or 
+lower extremity. Arch Surg, 1989. 124(2): p. 162-6. 
+92. Strobbe, L.J., et al., Positive iliac and obturator nodes in melanoma: survival and prognostic 
+factors. Ann Surg Oncol, 1999. 6(3): p. 255-62. 
+93. Agrawal, S., et al., The benefits of adjuvant radiation therapy after therapeutic 
+lymphadenectomy for clinically advanced, high-risk, lymph node-metastatic melanoma. Cancer, 
+2009. 115(24): p. 5836-44. 
+94. Bibault, J.E., et al., Adjuvant radiation therapy in metastatic lymph nodes from melanoma. 
+Radiat Oncol, 2011. 6(Web Page): p. 12. 
+95. Creagan, E.T., et al., Adjuvant radiation therapy for regional nodal metastases from malignant 
+melanoma: a randomized, prospective study. Cancer, 1978. 42(5): p. 2206-10. 
+96. Gojkovic-Horvat, A., et al., Adjuvant radiotherapy for palpable melanoma metastases to the 
+groin: when to irradiate? Int J Radiat Oncol Biol Phys, 2012. 83(1): p. 310-6. 
+97. Hamming-Vrieze, O., et al., Regional control of melanoma neck node metastasis after selective 
+neck dissection with or without adjuvant radiotherapy. Arch Otolaryngol Head Neck Surg, 
+2009. 135(8): p. 795-800. 
+98. Moncrieff, M.D., et al., Adjuvant postoperative radiotherapy to the cervical lymph nodes in 
+cutaneous melanoma: is there any benefit for high-risk patients? Ann Surg Oncol, 2008. 
+15(11): p. 3022-7. 
+99. O'Brien, C.J., et al., Adjuvant radiotherapy following neck dissection and parotidectomy for 
+metastatic malignant melanoma. Head Neck, 1997. 19(7): p. 589-94. 
+100. Shen, P., L.A. Wanek, and D.L. Morton, Is adjuvant radiotherapy necessary after positive lymph 
+node dissection in head and neck melanomas? Annals of surgical oncology, 2000. 7(8): p. 554-
+9; discussion 560-1. 
+101. Strojan, P., et al., Melanoma metastases to the neck nodes: role of adjuvant irradiation. Int J 
+Radiat Oncol Biol Phys, 2010. 77(4): p. 1039-45. 
+102. Barbour, S., et al., Patterns of Recurrence in Patients with Stage IIIB/C Cutaneous Melanoma of 
+the Head and Neck Following Surgery With and Without Adjuvant Radiation Therapy: Is Isolated 
+Regional Recurrence Salvageable? Ann Surg Oncol, 2015. 22(12): p. 4052-9. 
+103. Danish, H.H., et al., The influence of postoperative lymph node radiation therapy on overall 
+survival of patients with stage III melanoma, a National Cancer Database analysis. Melanoma 
+Res, 2016. 26(6): p. 595-603. 
+104. Henderson, M.A., et al., Adjuvant lymph-node field radiotherapy versus observation only in 
+patients with melanoma at high risk of further lymph-node field relapse after 
+lymphadenectomy (ANZMTG 01.02/TROG 02.01): 6-year follow-up of a phase 3, randomised 
+controlled trial. Lancet Oncol, 2015. 16(9): p. 1049-1060. 
+105. Mendenhall, W.M., et al., Surgery and adjuvant radiotherapy for cutaneous melanoma 
+considered high-risk for local-regional recurrence. Am J Otolaryngol, 2013. 34(4): p. 320-2. 
+106. Pinkham, M.B., et al., Stage III melanoma in the axilla: patterns of regional recurrence after 
+surgery with and without adjuvant radiation therapy. Int J Radiat Oncol Biol Phys, 2013. 86(4): 
+p. 702-8. 
+16. Literatur  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+77 
+107. Grob, J.J., et al., Randomised trial of interferon alpha-2a as adjuvant therapy in resected 
+primary melanoma thicker than 1.5 mm without clinically detectable node metastases. French 
+Cooperative Group on Melanoma. Lancet, 1998. 351(9120): p. 1905-10. 
+108. Pehamberger, H., et al., Adjuvant interferon alfa-2a treatment in resected primary stage II 
+cutaneous melanoma. Austrian Malignant Melanoma Cooperative Group. J Clin Oncol, 1998. 
+16(4): p. 1425-9. 
+109. Garbe, C., et al., Systematic review of medical treatment in melanoma: current status and 
+future prospects. Oncologist, 2011. 16(1): p. 5-24. 
+110. Lens, M.B. and M. Dawes, Interferon alfa therapy for malignant melanoma: a systematic 
+review of randomized controlled trials. J Clin Oncol, 2002. 20(7): p. 1818-25. 
+111. Mocellin, S., et al., Interferon alpha adjuvant therapy in patients with high-risk melanoma: a 
+systematic review and meta-analysis. J Natl Cancer Inst, 2010. 102(7): p. 493-501. 
+112. Pirard, D., et al., Interferon alpha as adjuvant postsurgical treatment of melanoma: a meta-
+analysis. Dermatology, 2004. 208(1): p. 43-8. 
+113. Verma, S., et al., Systematic review of systemic adjuvant therapy for patients at high risk for 
+recurrent melanoma. Cancer, 2006. 106(7): p. 1431-42. 
+114. Wheatley, K., et al., Does adjuvant interferon-alpha for high-risk melanoma provide a 
+worthwhile benefit? A meta-analysis of the randomised trials. Cancer treatment reviews, 2003. 
+29(4): p. 241-252. 
+115. Ives, N.J., et al., Adjuvant interferon-alpha for the treatment of high-risk melanoma: An 
+individual patient data meta-analysis. Eur J Cancer, 2017. 82: p. 171-183. 
+116. Eggermont, A.M., et al., Prolonged Survival in Stage III Melanoma with Ipilimumab Adjuvant 
+Therapy. N Engl J Med, 2016. 375(19): p. 1845-1855. 
+117. Eggermont, A.M.M., et al., Adjuvant Pembrolizumab versus Placebo in Resected Stage III 
+Melanoma. N Engl J Med, 2018. 378(19): p. 1789-1801. 
+118. Weber, J., et al., Adjuvant Nivolumab versus Ipilimumab in Resected Stage III or IV Melanoma. N 
+Engl J Med, 2017. 377(19): p. 1824-1835. 
+119. Long, G.V., et al., Adjuvant Dabrafenib plus Trametinib in Stage III BRAF-Mutated Melanoma. N 
+Engl J Med, 2017. 377(19): p. 1813-1823. 
+120. Albarranweick, M., Retrospektive Fall-Kontroll-Studie zum Stellenwert der adjuvanten Therapie 
+des malignen Melanoms mit Iscador P.c.Hg. 1998, University Freiburg: Freiburg. 
+121. Augustin, M., et al., Safety and efficacy of the long-term adjuvant treatment of primary 
+intermediate- to high-risk malignant melanoma (UICC/AJCC stage II and III) with a 
+standardized fermented European mistletoe (Viscum album L.) extract. Results from a 
+multicenter, comparative, epidemiological cohort study in Germany and Switzerland. 
+Arzneimittelforschung, 2005. 55(1): p. 38-49. 
+122. Grossarth-Maticek, R. and R. Ziegler, Efficacy and safety of the long-term treatment of 
+melanoma with a mistletoe preparation (Iscador). Schweizerische Zeitschrift fur 
+GanzheitsMedizin, 2007. 
+123. Kleeberg, U.R., et al., Final results of the EORTC 18871/DKG 80-1 randomised phase III trial. 
+rIFN-alpha2b versus rIFN-gamma versus ISCADOR M versus observation after surgery in 
+melanoma patients with either high-risk primary (thickness >3 mm) or regional lymph node 
+metastasis. Eur J Cancer, 2004. 40(3): p. 390-402. 
+124. Lens, M., A. Testori, and P.F. Ferucci, Ipilimumab targeting CD28-CTLA-4 axis: new hope in the 
+treatment of melanoma. Curr Top Med Chem, 2012. 12(1): p. 61-6. 
+125. Coens, C., et al., Health-related quality of life with adjuvant ipilimumab versus placebo after 
+complete resection of high-risk stage III melanoma (EORTC 18071): secondary outcomes of a 
+multinational, randomised, double-blind, phase 3 trial. Lancet Oncol, 2017. 18(3): p. 393-403. 
+126. Cole, B.F., et al., Quality-of-life-adjusted survival analysis of interferon alfa-2b adjuvant 
+treatment of high-risk resected cutaneous melanoma: an Eastern Cooperative Oncology Group 
+study. J Clin Oncol, 1996. 14(10): p. 2666-73. 
+127. Dixon, S., et al., Quality of life and cost-effectiveness of interferon-alpha in malignant 
+melanoma: results from randomised trial. Br J Cancer, 2006. 94(4): p. 492-8. 
+128. Egger, M.E., et al., Melanoma Patient-Reported Quality of Life Outcomes Following Sentinel 
+Lymph Node Biopsy, Completion Lymphadenectomy, and Adjuvant Interferon: Results from the 
+Sunbelt Melanoma Trial. Ann Surg Oncol, 2016. 23(3): p. 1019-25. 
+129. Gjorup, C.A., et al., Health-related quality of life in melanoma patients: Impact of melanoma-
+related limb lymphoedema. Eur J Cancer, 2017. 85: p. 122-132. 
+130. Kilbridge, K.L., et al., Quality-of-life-adjusted survival analysis of high-dose adjuvant interferon 
+alpha-2b for high-risk melanoma patients using intergroup clinical trial data. J Clin Oncol, 
+2002. 20(5): p. 1311-8. 
+131. Mueller, T. and W. Voigt, Fermented wheat germ extract--nutritional supplement or anticancer 
+drug? Nutr J, 2011. 10(6): p. 89. 
+16. Literatur  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+78 
+132. Rataj, D., et al., Quality-of-life evaluation in an interferon therapy after radical surgery in 
+cutaneous melanoma patients. Cancer Nurs, 2005. 28(3): p. 172-8. 
+133. Reuter, K., et al., Health-related quality of life, fatigue, and depression under low-dose IFN-
+alpha therapy in melanoma patients. J Immunother, 2014. 37(9): p. 461-7. 
+134. Trask, P.C., et al., Longitudinal course of depression, fatigue, and quality of life in patients with 
+high risk melanoma receiving adjuvant interferon. Psychooncology, 2004. 13(8): p. 526-36. 
+135. Ziefle, S., et al., Health-related quality of life before and during adjuvant interferon-alpha 
+treatment for patients with malignant melanoma (DeCOG-trial). J Immunother, 2011. 34(4): p. 
+403-8. 
+136. Chadha, M., et al., Role of brachytherapy in malignant melanoma: a preliminary report. J Surg 
+Oncol, 1990. 43(4): p. 223-7. 
+137. Overgaard, J., et al., Some Factors of Importance in the Radiation Treatment of Malignant-
+Melanoma. Radiotherapy and Oncology, 1986. 5(3): p. 183-192. 
+138. Overgaard, J., et al., Hyperthermia as an adjuvant to radiation therapy of recurrent or 
+metastatic malignant melanoma. A multicentre randomized trial by the European Society for 
+Hyperthermic Oncology. Int J Hyperthermia, 2009. 25(Web Page): p. 323-334. 
+139. Overgaard, J. and M. Overgaard, Hyperthermia as an adjuvant to radiotherapy in the treatment 
+of malignant melanoma. International journal of hyperthermia : the official journal of European 
+Society for Hyperthermic Oncology, North American Hyperthermia Group, 1987. 3(6): p. 483-
+501. 
+140. Seegenschmiedt, M.H., et al., [Long term results following radiation therapy of locally 
+recurrent and metastatic malignant melanoma]. Hautarzt, 1999. 50(8): p. 572-9. 
+141. Spratt, D.E., et al., Efficacy of skin-directed therapy for cutaneous metastases from advanced 
+cancer: a meta-analysis. J Clin Oncol, 2014. 32(28): p. 3144-55. 
+142. Sisti, A., G. Sisti, and C.M. Oranges, Topical treatment of melanoma skin metastases with 
+imiquimod: a review. Dermatol Online J, 2015. 21(2). 
+143. Mali, B., et al., Antitumor effectiveness of electrochemotherapy: a systematic review and meta-
+analysis. Eur J Surg Oncol, 2013. 39(1): p. 4-16. 
+144. Byrne, C.M., et al., Treatment of metastatic melanoma using electroporation therapy with 
+bleomycin (electrochemotherapy). Melanoma Research, 2005. 15(1): p. 45-51. 
+145. Damian, D.L., et al., Topical diphencyprone immunotherapy for cutaneous metastatic 
+melanoma. Australas J Dermatol, 2009. 50(4): p. 266-71. 
+146. Dehesa, L.A., et al., [Experience in the treatment of cutaneous in-transit melanoma metastases 
+and satellitosis with intralesional interleukin-2]. Actas Dermosifiliogr, 2009. 100(7): p. 571-85. 
+147. Gaudy, C., et al., Randomized controlled study of electrochemotherapy in the local treatment of 
+skin metastases of melanoma. J Cutan Med Surg, 2006. 10(3): p. 115-21. 
+148. Green, D.S., et al., Phase I/II study of topical imiquimod and intralesional interleukin-2 in the 
+treatment of accessible metastases in malignant melanoma. Br J Dermatol, 2007. 156(2): p. 
+337-45. 
+149. Radny, P., et al., Phase II trial of intralesional therapy with interleukin-2 in soft-tissue 
+melanoma metastases. British Journal of Cancer, 2003. 89(9): p. 1620-1626. 
+150. Rols, M.P., et al., Electrochemotherapy of cutaneous metastases in malignant melanoma. 
+Melanoma Res, 2000. 10(5): p. 468-74. 
+151. Sersa, G., et al., Electrochemotherapy with cisplatin: clinical experience in malignant melanoma 
+patients. Clin Cancer Res, 2000. 6(3): p. 863-7. 
+152. Weide, B., et al., High response rate after intratumoral treatment with interleukin-2: results 
+from a phase 2 study in 51 patients with metastasized melanoma. Cancer, 2010. 116(17): p. 
+4139-46. 
+153. Andtbacka, R.H., et al., Talimogene Laherparepvec Improves Durable Response Rate in Patients 
+With Advanced Melanoma. J Clin Oncol, 2015. 33(25): p. 2780-8. 
+154. Dietlein, M., et al., Positron emission tomography using 18F-fluorodeoxyglucose in advanced 
+stages of malignant melanoma: a comparison of ultrasonographic and radiological methods of 
+diagnosis. Nuclear medicine communications, 1999. 20(3): p. 255-261. 
+155. Kuan, A.K., F.I. Jackson, and J. Hanson, Multimodality detection of metastatic melanoma. J R 
+Soc Med, 1988. 81(10): p. 579-82. 
+156. Stas, M., et al., 18-FDG PET scan in the staging of recurrent melanoma: additional value and 
+therapeutic impact. Melanoma Res, 2002. 12(5): p. 479-90. 
+157. Paschen, A., et al., Differential clinical significance of individual NKG2D ligands in melanoma: 
+soluble ULBP2 as an indicator of poor prognosis superior to S100B. Clin Cancer Res, 2009. 
+15(16): p. 5208-15. 
+158. Agarwala, S.S., et al., LDH correlation with survival in advanced melanoma from two large, 
+randomised trials (Oblimersen GM301 and EORTC 18951). Eur J Cancer, 2009. 45(10): p. 1807-
+14. 
+16. Literatur  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+79 
+159. Deichmann, M., et al., S100-Beta, melanoma-inhibiting activity, and lactate dehydrogenase 
+discriminate progressive from nonprogressive American Joint Committee on Cancer stage IV 
+melanoma. J Clin Oncol, 1999. 17(6): p. 1891-6. 
+160. Brand, C.U., et al., Prolonged survival of 2 years or longer for patients with disseminated 
+melanoma. An analysis of related prognostic factors. Cancer, 1997. 79(12): p. 2345-53. 
+161. Leo, F., et al., Lung metastases from melanoma: when is surgical treatment warranted? Br J 
+Cancer, 2000. 83(5): p. 569-72. 
+162. Sanki, A., R.A. Scolyer, and J.F. Thompson, Surgery for melanoma metastases of the 
+gastrointestinal tract: indications and results. Eur J Surg Oncol, 2009. 35(3): p. 313-9. 
+163. Long, G.V., et al., Dabrafenib and trametinib versus dabrafenib and placebo for Val600 BRAF-
+mutant melanoma: a multicentre, double-blind, phase 3 randomised controlled trial. Lancet, 
+2015. 386(9992): p. 444-51. 
+164. Robert, C., et al., Improved overall survival in melanoma with combined dabrafenib and 
+trametinib. N Engl J Med, 2015. 372(1): p. 30-9. 
+165. Larkin, J., et al., Combined vemurafenib and cobimetinib in BRAF-mutated melanoma. N Engl J 
+Med, 2014. 371(20): p. 1867-76. 
+166. Hodi, F.S., et al., Improved survival with ipilimumab in patients with metastatic melanoma. N 
+Engl J Med, 2010. 363(8): p. 711-23. 
+167. Robert, C., et al., Ipilimumab plus dacarbazine for previously untreated metastatic melanoma. 
+N Engl J Med, 2011. 364(26): p. 2517-26. 
+168. Larkin, J., et al., Combined Nivolumab and Ipilimumab or Monotherapy in Untreated Melanoma. 
+N Engl J Med, 2015. 373(1): p. 23-34. 
+169. Robert, C., et al., Nivolumab in previously untreated melanoma without BRAF mutation. N Engl 
+J Med, 2015. 372(4): p. 320-30. 
+170. Robert, C., et al., Pembrolizumab versus Ipilimumab in Advanced Melanoma. N Engl J Med, 
+2015. 372(26): p. 2521-32. 
+171. Avril, M.F., et al., Fotemustine compared with dacarbazine in patients with disseminated 
+malignant melanoma: a phase III study. J Clin Oncol, 2004. 22(6): p. 1118-25. 
+172. Bedikian, A.Y., et al., Bcl-2 antisense (oblimersen sodium) plus dacarbazine in patients with 
+advanced melanoma: the Oblimersen Melanoma Study Group. J Clin Oncol, 2006. 24(29): p. 
+4738-45. 
+173. Bedikian, A.Y., et al., Phase 3 study of docosahexaenoic acid-paclitaxel versus dacarbazine in 
+patients with metastatic malignant melanoma. Ann Oncol, 2011. 22(4): p. 787-93. 
+174. Chapman, P.B., et al., Improved survival with vemurafenib in melanoma with BRAF V600E 
+mutation. N Engl J Med, 2011. 364(26): p. 2507-16. 
+175. Chauvergne, J., et al., [Chemotherapy in advanced malignant melanoma. Results of a controlled 
+trial comparing a combination of dacarbazine (DTIC) and detorubicin with dacarbazine alone]. 
+Sem Hop, 1982. 58(46): p. 2697-701. 
+176. Falkson, C.I., G. Falkson, and H.C. Falkson, Improved results with the addition of interferon 
+alfa-2b to dacarbazine in the treatment of patients with metastatic malignant melanoma. J 
+Clin Oncol, 1991. 9(8): p. 1403-8. 
+177. Falkson, C.I., et al., Phase III trial of dacarbazine versus dacarbazine with interferon alpha-2b 
+versus dacarbazine with tamoxifen versus dacarbazine with interferon alpha-2b and tamoxifen 
+in patients with metastatic malignant melanoma: an Eastern Cooperative Oncology Group 
+study. J Clin Oncol, 1998. 16(5): p. 1743-51. 
+178. Kefford, R.F., et al., A randomized, double-blind, placebo-controlled study of high-dose 
+bosentan in patients with stage IV metastatic melanoma receiving first-line dacarbazine 
+chemotherapy. Mol Cancer, 2010. 9: p. 69. 
+179. McDermott, D.F., et al., Double-blind randomized phase II study of the combination of sorafenib 
+and dacarbazine in patients with advanced melanoma: a report from the 11715 Study Group. J 
+Clin Oncol, 2008. 26(13): p. 2178-85. 
+180. Middleton, M.R., et al., Randomized phase III study of temozolomide versus dacarbazine in the 
+treatment of patients with advanced metastatic malignant melanoma. J Clin Oncol, 2000. 
+18(1): p. 158-66. 
+181. O'Day, S., et al., A randomised, phase II study of intetumumab, an anti-alphav-integrin mAb, 
+alone and with dacarbazine in stage IV melanoma. Br J Cancer, 2011. 105(3): p. 346-52. 
+182. Patel, P.M., et al., Extended schedule, escalated dose temozolomide versus dacarbazine in stage 
+IV melanoma: final results of a randomised phase III study (EORTC 18032). Eur J Cancer, 2011. 
+47(10): p. 1476-83. 
+183. Ringborg, U., et al., Dacarbazine versus dacarbazine-vindesine in disseminated malignant 
+melanoma: a randomized phase II study. Med Oncol Tumor Pharmacother, 1989. 6(4): p. 285-
+9. 
+16. Literatur  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+80 
+184. Schadendorf, D., et al., Dacarbazine (DTIC) versus vaccination with autologous peptide-pulsed 
+dendritic cells (DC) in first-line treatment of patients with metastatic melanoma: a randomized 
+phase III trial of the DC study group of the DeCOG. Ann Oncol, 2006. 17(4): p. 563-70. 
+185. Thomson, D.B., et al., Interferon-alpha 2a does not improve response or survival when 
+combined with dacarbazine in metastatic malignant melanoma: results of a multi-institutional 
+Australian randomized trial. Melanoma Res, 1993. 3(2): p. 133-138. 
+186. Young, A.M., et al., Prospective randomized comparison of dacarbazine (DTIC) versus DTIC 
+plus interferon-alpha (IFN-alpha) in metastatic melanoma. Clin Oncol (R Coll Radiol), 2001. 
+13(6): p. 458-65. 
+187. Weber, J.S., et al., Safety and clinical activity of ipilimumab in melanoma patients with brain 
+metastases: retrospective analysis of data from a phase 2 trial. Melanoma Res, 2011. 21(6): p. 
+530-4. 
+188. Bedikian, A.Y., et al., Dacarbazine with or without oblimersen (a Bcl-2 antisense 
+oligonucleotide) in chemotherapy-naive patients with advanced melanoma and low-normal 
+serum lactate dehydrogenase: 'The AGENDA trial'. Melanoma Res, 2014. 24(3): p. 237-43. 
+189. Daponte, A., et al., Phase III randomized study of fotemustine and dacarbazine versus 
+dacarbazine with or without interferon-alpha in advanced malignant melanoma. J Transl Med, 
+2013. 11: p. 38. 
+190. Hauschild, A., et al., Dabrafenib in BRAF-mutated metastatic melanoma: a multicentre, open-
+label, phase 3 randomised controlled trial. Lancet, 2012. 380(9839): p. 358-65. 
+191. Flaherty, K.T., et al., Improved survival with MEK inhibition in BRAF-mutated melanoma. N Engl 
+J Med, 2012. 367(2): p. 107-14. 
+192. El Sayed, S.M., et al., Safety and outcome of treatment of metastatic melanoma using 3-
+bromopyruvate: a concise literature review and case study. Chin J Cancer, 2014. 33(7): p. 356-
+64. 
+193. O'Day, S.J., et al., Final results of phase III SYMMETRY study: randomized, double-blind trial of 
+elesclomol plus paclitaxel versus paclitaxel alone as treatment for chemotherapy-naive patients 
+with advanced melanoma. J Clin Oncol, 2013. 31(9): p. 1211-8. 
+194. Deneve, J.L., et al., Chemosaturation with percutaneous hepatic perfusion for unresectable 
+isolated hepatic metastases from sarcoma. Cardiovasc Intervent Radiol, 2012. 35(6): p. 1480-
+7. 
+195. Topalian, S.L., et al., Safety, activity, and immune correlates of anti-PD-1 antibody in cancer. N 
+Engl J Med, 2012. 366(26): p. 2443-54. 
+196. Verma S., P.T., Hamm C., Bak K., Charette M., Melanoma Disease Site Group, Biochemotherapy 
+for the Treatment of Metastatic Malignant Melanoma. 2007/2011. 
+197. Bender, C.M., et al., Cognitive function and quality of life in interferon therapy for melanoma. 
+Clin Nurs Res, 2000. 9(3): p. 352-63. 
+198. Bottomley, A., et al., Adjuvant therapy with pegylated interferon alfa-2b versus observation in 
+resected stage III melanoma: a phase III randomized controlled trial of health-related quality of 
+life and symptoms by the European Organisation for Research and Treatment of Cancer 
+Melanoma Group. J Clin Oncol, 2009. 27(18): p. 2916-23. 
+199. Brandberg, Y., et al., Health-related quality of life in patients with high-risk melanoma 
+randomised in the Nordic phase 3 trial with adjuvant intermediate-dose interferon alfa-2b. Eur 
+J Cancer, 2012. 48(13): p. 2012-9. 
+200. Cashin, R.P., et al., Advanced cutaneous malignant melanoma: a systematic review of economic 
+and quality-of-life studies. Value Health, 2008. 11(2): p. 259-71. 
+201. Cohen, L., et al., Quality of life in patients with malignant melanoma participating in a phase I 
+trial of an autologous tumour-derived vaccine. Melanoma Res, 2002. 12(5): p. 505-11. 
+202. Garbe, C., et al., Adjuvant low-dose interferon {alpha}2a with or without dacarbazine compared 
+with surgery alone: a prospective-randomized phase III DeCOG trial in melanoma patients with 
+regional lymph node metastasis. Ann Oncol, 2008. 19(6): p. 1195-201. 
+203. Hofmann, M.A., et al., Prospective evaluation of supportive care with or without CVD 
+chemotherapy as a second-line treatment in advanced melanoma by patient's choice: a 
+multicentre Dermatologic Cooperative Oncology Group trial. Melanoma Res, 2011. 21(6): p. 
+516-23. 
+204. Kiebert, G.M., D.L. Jonas, and M.R. Middleton, Health-related quality of life in patients with 
+advanced metastatic melanoma: results of a randomized phase III study comparing 
+temozolomide with dacarbazine. Cancer Invest, 2003. 21(6): p. 821-9. 
+205. Robinson, D.W., Jr., et al., Health-related quality of life among patients with metastatic 
+melanoma: results from an international phase 2 multicenter study. Melanoma Res, 2012. 
+22(1): p. 54-62. 
+16. Literatur  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+81 
+206. Sigurdardottir, V., C. Bolund, and M. Sullivan, Quality of life evaluation by the EORTC 
+questionnaire technique in patients with generalized malignant melanoma on chemotherapy. 
+Acta Oncol, 1996. 35(2): p. 149-58. 
+207. Schadendorf, D., et al., Functional and symptom impact of trametinib versus chemotherapy in 
+BRAF V600E advanced or metastatic melanoma: quality-of-life analyses of the METRIC study. 
+Ann Oncol, 2014. 25(3): p. 700-6. 
+208. Schadendorf, D., et al., Health-related quality of life impact in a randomised phase III study of 
+the combination of dabrafenib and trametinib versus dabrafenib monotherapy in patients with 
+BRAF V600 metastatic melanoma. Eur J Cancer, 2015. 51(7): p. 833-40. 
+209. Grob, J.J., et al., Patient perception of the benefit of a BRAF inhibitor in metastatic melanoma: 
+quality-of-life analyses of the BREAK-3 study comparing dabrafenib with dacarbazine. Ann 
+Oncol, 2014. 25(7): p. 1428-36. 
+210. Hatswell, A.J., et al., Patient-reported utilities in advanced or metastatic melanoma, including 
+analysis of utilities by time to death. Health Qual Life Outcomes, 2014. 12: p. 140. 
+211. Grob, J.J., et al., Comparison of dabrafenib and trametinib combination therapy with 
+vemurafenib monotherapy on health-related quality of life in patients with unresectable or 
+metastatic cutaneous BRAF Val600-mutation-positive melanoma (COMBI-v): results of a phase 
+3, open-label, randomised trial. Lancet Oncol, 2015. 16(13): p. 1389-98. 
+212. Long, G.V., et al., Effect of nivolumab on health-related quality of life in patients with 
+treatment-naive advanced melanoma: results from the phase III CheckMate 066 study. Ann 
+Oncol, 2016. 27(10): p. 1940-6. 
+213. Schadendorf, D., et al., Health-related quality of life in the randomised KEYNOTE-002 study of 
+pembrolizumab versus chemotherapy in patients with ipilimumab-refractory melanoma. Eur J 
+Cancer, 2016. 67: p. 46-54. 
+214. Sause, W.T., et al., Fraction size in external beam radiation therapy in the treatment of 
+melanoma. Int J Radiat Oncol Biol Phys, 1991. 20(3): p. 429-32. 
+215. Herbert, S.H., et al., The Effect of Palliative Radiation-Therapy on Epidural Compression Due to 
+Metastatic Malignant-Melanoma. Cancer, 1991. 67(10): p. 2472-2476. 
+216. Engin, K., et al., Hyperthermia and radiation in advanced malignant melanoma. Int J Radiat 
+Oncol Biol Phys, 1993. 25(1): p. 87-94. 
+217. Katz, H.R., The results of different fractionation schemes in the palliative irradiation of 
+metastatic melanoma. Int J Radiat Oncol Biol Phys, 1981. 7(7): p. 907-11. 
+218. Konefal, J.B., B. Emami, and M.V. Pilepich, Malignant melanoma: analysis of dose fractionation 
+in radiation therapy. Radiology, 1987. 164(3): p. 607-10. 
+219. Lobo, P.A., et al., Radiotherapy in the management of malignant melanoma. Int J Radiat Oncol 
+Biol Phys, 1981. 7(1): p. 21-6. 
+220. Pyrhonen, S.O. and M.J. Kajanti, The Use of Large Fractions in Radiotherapy for Malignant-
+Melanoma. Radiotherapy and Oncology, 1992. 24(3): p. 195-197. 
+221. Richtig, E., et al., Organ- and treatment-specific local response rates to systemic and local 
+treatment modalities in stage IV melanoma. Br J Dermatol, 2005. 153(5): p. 925-31. 
+222. Rounsaville, M.C., et al., Radiotherapy in the management of cutaneous melanoma: effect of 
+time, dose, and fractionation. Front Radiat Ther Oncol, 1988. 22: p. 62-78. 
+223. Seegenschmiedt, M.H., et al., Palliative radiotherapy for recurrent and metastatic malignant 
+melanoma: prognostic factors for tumor response and long-term outcome: a 20-year 
+experience. Int J Radiat Oncol Biol Phys, 1999. 44(3): p. 607-18. 
+224. Strauss, A., et al., Radiation-Therapy of Malignant Melanomas - an Evaluation of Clinically Used 
+Fractionation Schemes. Cancer, 1981. 47(6): p. 1262-1266. 
+225. Doss, L.L. and N. Memula, The radioresponsiveness of melanoma. Int J Radiat Oncol Biol Phys, 
+1982. 8(7): p. 1131-4. 
+226. Rate, W.R., L.J. Solin, and A.T. Turrisi, Palliative radiotherapy for metastatic malignant 
+melanoma: brain metastases, bone metastases, and spinal cord compression. Int J Radiat Oncol 
+Biol Phys, 1988. 15(4): p. 859-64. 
+227. Kirova, Y.M., et al., Radiotherapy as palliative treatment for metastatic melanoma. Melanoma 
+Research, 1999. 9(6): p. 611-613. 
+228. Konefal, J.B., B. Emami, and M.V. Pilepich, Analysis of dose fractionation in the palliation of 
+metastases from malignant melanoma. Cancer, 1988. 61(2): p. 243-6. 
+229. Caralt, M., et al., Outcome of patients following hepatic resection for metastatic cutaneous and 
+ocular melanoma. J Hepatobiliary Pancreat Sci, 2011. 18(2): p. 268-75. 
+230. Frenkel, S., et al., Long-term survival of uveal melanoma patients after surgery for liver 
+metastases. Br J Ophthalmol, 2009. 93(8): p. 1042-6. 
+231. Herman, P., et al., Selected patients with metastatic melanoma may benefit from liver 
+resection. World J Surg, 2007. 31(1): p. 171-4. 
+16. Literatur  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+82 
+232. Mariani, P., et al., Surgical management of liver metastases from uveal melanoma: 16 years' 
+experience at the Institut Curie. Eur J Surg Oncol, 2009. 35(11): p. 1192-7. 
+233. Pawlik, T.M., et al., Hepatic resection for metastatic melanoma: distinct patterns of recurrence 
+and prognosis for ocular versus cutaneous disease. Ann Surg Oncol, 2006. 13(5): p. 712-20. 
+234. Rose, D.M., et al., Surgical resection for metastatic melanoma to the liver: the John Wayne 
+Cancer Institute and Sydney Melanoma Unit experience. Arch Surg, 2001. 136(8): p. 950-5. 
+235. Salmon, R.J., et al., Treatment of liver metastases from uveal melanoma by combined surgery-
+chemotherapy. Eur J Surg Oncol, 1998. 24(2): p. 127-30. 
+236. Woon, W.W., et al., Liver resection and cryotherapy for metastatic melanoma. Int Surg, 2008. 
+93(5): p. 274-7. 
+237. Hughes, M.S., et al., Results of a Randomized Controlled Multicenter Phase III Trial of 
+Percutaneous Hepatic Perfusion Compared with Best Available Care for Patients with Melanoma 
+Liver Metastases. Ann Surg Oncol, 2016. 23(4): p. 1309-19. 
+238. Mornex, F., et al., A prospective randomized multicentre phase III trial of fotemustine plus 
+whole brain irradiation versus fotemustine alone in cerebral metastases of malignant 
+melanoma. Melanoma Res, 2003. 13(1): p. 97-103. 
+239. Eigentler, T.K., et al., Number of metastases, serum lactate dehydrogenase level, and type of 
+treatment are prognostic factors in patients with brain metastases of malignant melanoma. 
+Cancer, 2011. 117(8): p. 1697-703. 
+240. Fife, K.M., et al., Determinants of outcome in melanoma patients with cerebral metastases. J 
+Clin Oncol, 2004. 22(7): p. 1293-300. 
+241. Raizer, J.J., et al., Brain and leptomeningeal metastases from cutaneous melanoma: survival 
+outcomes based on clinical features. Neuro Oncol, 2008. 10(2): p. 199-207. 
+242. Wronski, M. and E. Arbit, Surgical treatment of brain metastases from melanoma: a 
+retrospective study of 91 patients. J Neurosurg, 2000. 93(1): p. 9-18. 
+243. Agarwala, S.S., et al., Temozolomide for the treatment of brain metastases associated with 
+metastatic melanoma: a phase II study. J Clin Oncol, 2004. 22(11): p. 2101-7. 
+244. Amaravadi, R.K., et al., Phase II Trial of Temozolomide and Sorafenib in Advanced Melanoma 
+Patients with or without Brain Metastases. Clin Cancer Res, 2009. 15(24): p. 7711-7718. 
+245. Bafaloukos, D., et al., The effect of temozolomide-based chemotherapy in patients with cerebral 
+metastases from melanoma. Melanoma Res, 2004. 14(4): p. 289-94. 
+246. Chang, J., et al., A phase II study of the sequential administration of dacarbazine and 
+fotemustine in the treatment of cerebral metastases from malignant melanoma. Eur J Cancer, 
+1994. 30A(14): p. 2093-5. 
+247. Dummer, R., et al., Vemurafenib in patients with BRAF(V600) mutation-positive melanoma with 
+symptomatic brain metastases: final results of an open-label pilot study. Eur J Cancer, 2014. 
+50(3): p. 611-21. 
+248. Goyal, S., et al., Clinical Management of Multiple Melanoma Brain Metastases: A Systematic 
+Review. JAMA Oncol, 2015. 1(5): p. 668-76. 
+249. Hwu, W.J., et al., Temozolomide plus thalidomide in patients with brain metastases from 
+melanoma: a phase II study. Cancer, 2005. 103(12): p. 2590-7. 
+250. Larkin, J.M., et al., A phase I/II study of lomustine and temozolomide in patients with cerebral 
+metastases from malignant melanoma. Br J Cancer, 2007. 96(1): p. 44-8. 
+251. Long, G.V., et al., Dabrafenib in patients with Val600Glu or Val600Lys BRAF-mutant melanoma 
+metastatic to the brain (BREAK-MB): a multicentre, open-label, phase 2 trial. Lancet Oncol, 
+2012. 13(11): p. 1087-95. 
+252. Margolin, K., et al., Ipilimumab in patients with melanoma and brain metastases: an open-
+label, phase 2 trial. Lancet Oncol, 2012. 13(5): p. 459-65. 
+253. Schadendorf, D., et al., Dose-intensified bi-weekly temozolomide in patients with asymptomatic 
+brain metastases from malignant melanoma: a phase II DeCOG/ADO study. Ann Oncol, 2006. 
+17(10): p. 1592-7. 
+254. Vestermark, L.W., et al., A phase II study of thalidomide in patients with brain metastases from 
+malignant melanoma. Acta Oncol, 2008. 47(8): p. 1526-30. 
+255. Jacquillat, C., et al., Final report of the French multicenter phase II study of the nitrosourea 
+fotemustine in 153 evaluable patients with disseminated malignant melanoma including 
+patients with cerebral metastases. Cancer, 1990. 66(9): p. 1873-8. 
+256. Spagnolo, F., et al., Survival of patients with metastatic melanoma and brain metastases in the 
+era of MAP-kinase inhibitors and immunologic checkpoint blockade antibodies: A systematic 
+review. Cancer Treat Rev, 2016. 45: p. 38-45. 
+257. Dicker, T.J., et al., A rational approach to melanoma follow-up in patients with primary 
+cutaneous melanoma. Scottish Melanoma Group. Br J Dermatol, 1999. 140(2): p. 249-54. 
+258. Hohnheiser, A.M., et al., Malignant melanoma of the skin: long-term follow-up and time to first 
+recurrence. World J Surg, 2011. 35(3): p. 580-9. 
+16. Literatur  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+83 
+259. Leiter, U., et al., Hazard rates for recurrent and secondary cutaneous melanoma: an analysis 
+of 33,384 patients in the German Central Malignant Melanoma Registry. J Am Acad Dermatol, 
+2012. 66(1): p. 37-45. 
+260. Poo-Hwu, W.J., et al., Follow-up recommendations for patients with American Joint Committee 
+on Cancer Stages I-III malignant melanoma. Cancer, 1999. 86(11): p. 2252-8. 
+261. Rueth, N.M., et al., Conditional survival after surgical treatment of melanoma: an analysis of 
+the Surveillance, Epidemiology, and End Results database. Ann Surg Oncol, 2010. 17(6): p. 
+1662-8. 
+262. Trotter, S.C., et al., A Global Review of Melanoma Follow-up Guidelines. J Clin Aesthet Dermatol, 
+2013. 6(9): p. 18-26. 
+263. Moloney, F.J., et al., Detection of primary melanoma in individuals at extreme high risk: a 
+prospective 5-year follow-up study. JAMA Dermatol, 2014. 150(8): p. 819-27. 
+264. Ferrone, C.R., et al., Clinicopathological features of and risk factors for multiple primary 
+melanomas. JAMA, 2005. 294(13): p. 1647-54. 
+265. Rychetnik, L., et al., Follow-up of early stage melanoma: specialist clinician perspectives on the 
+functions of follow-up and implications for extending follow-up intervals. J Surg Oncol, 2013. 
+107(5): p. 463-8. 
+266. Mitchell, J., et al., The experience of melanoma follow-up care: an online survey of patients in 
+australia. J Skin Cancer, 2014. 2014: p. 429149. 
+267. Negrier, S., et al., [Guidelines for clinical practice: Standards, Options and Recommendations 
+2005 for the management of adult patients exhibiting an M0 cutaneous melanoma, full report. 
+National Federation of Cancer Campaign Centers. French Dermatology Society. Update of the 
+1995 Consensus Conference and the 1998 Standards, Options, and Recommendations]. Ann 
+Dermatol Venereol, 2005. 132(12 Pt 2): p. 10S3-10S85. 
+268. Petrella T, V.S., Spithoff K, Quirt I, McCready D, Melanoma Disease Site Group,, Systemic 
+Adjuvant Therapy for Patients at High Risk for Recurrent Melanoma: Updated Guideline 
+Recommendations 2009. 2009. 
+269. Coit, D.G., et al., NCCN Guidelines Insights: Melanoma, Version 3.2016. J Natl Compr Canc 
+Netw, 2016. 14(8): p. 945-58. 
+270. Basseres, N., et al., Cost-effectiveness of surveillance of stage I melanoma. A retrospective 
+appraisal based on a 10-year experience in a dermatology department in France. Dermatology, 
+1995. 191(3): p. 199-203. 
+271. Hengge, U.R., et al., Cost-effectiveness of reduced follow-up in malignant melanoma. J Dtsch 
+Dermatol Ges, 2007. 5(10): p. 898-907. 
+272. Leiter, U., et al., Follow-up of cutaneous melanoma: Stage-dependent hazard rates of 
+recurrence and coupled melanoma. Journal Der Deutschen Dermatologischen Gesellschaft, 
+2009. 7: p. 166-167. 
+273. Podlipnik, S., et al., Performance of diagnostic tests in an intensive follow-up protocol for 
+patients with American Joint Committee on Cancer (AJCC) stage IIB, IIC, and III localized 
+primary melanoma: A prospective cohort study. J Am Acad Dermatol, 2016. 75(3): p. 516-524. 
+274. Voit, C., et al., Efficacy of ultrasound B-scan compared with physical examination in follow-up 
+of melanoma patients. Cancer, 2001. 91(12): p. 2409-16. 
+275. Aukema, T.S., et al., Utility of FDG PET/CT and brain MRI in melanoma patients with increased 
+serum S-100B level during follow-up. Ann Surg Oncol, 2010. 17(6): p. 1657-61. 
+276. Brown, R.E., et al., Surveillance after surgical treatment of melanoma: futility of routine chest 
+radiography. Surgery, 2010. 148(4): p. 711-6; discussion 716-7. 
+277. Morton, R.L., J.C. Craig, and J.F. Thompson, The role of surveillance chest X-rays in the follow-
+up of high-risk melanoma patients. Ann Surg Oncol, 2009. 16(3): p. 571-7. 
+278. Kaufmann, P.M. and W. Crone-Munzebrock, Tumor follow-up using sonography and computed 
+tomography in the abdominal region of patients with malignant melanoma]. Aktuelle 
+Radiologie, 1992. 2(2): p. 81-85. 
+279. Rinne, D., et al., Primary staging and follow-up of high risk melanoma patients with whole-
+body 18F-fluorodeoxyglucose positron emission tomography: results of a prospective study of 
+100 patients. Cancer, 1998. 82(9): p. 1664-71. 
+280. DeRose, E.R., et al., Utility of 3-year torso computed tomography and head imaging in 
+asymptomatic patients with high-risk melanoma. Melanoma Res, 2011. 21(4): p. 364-9. 
+281. Hausmann, D., et al., Comparison of the diagnostic accuracy of whole-body MRI and whole-
+body CT in stage III/IV malignant melanoma. J Dtsch Dermatol Ges, 2011. 9(3): p. 212-22. 
+282. Romano, E., et al., Site and timing of first relapse in stage III melanoma patients: implications 
+for follow-up guidelines. J Clin Oncol, 2010. 28(18): p. 3042-7. 
+283. Strobel, K., et al., High-risk melanoma: accuracy of FDG PET/CT with added CT morphologic 
+information for detection of metastases. Radiology, 2007. 244(2): p. 566-74. 
+16. Literatur  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+84 
+284. Gore, M.R. and A.M. Zanation, Survival in Sinonasal Melanoma: A Meta-analysis. J Neurol Surg 
+B Skull Base, 2012. 73(3): p. 157-62. 
+285. Ciarrocchi, A., et al., Extensive surgery and lymphadenectomy do not improve survival in 
+primary melanoma of the anorectum: results from analysis of a large database (SEER). 
+Colorectal Dis, 2016. 
+286. Lund, V.J., et al., European position paper on endoscopic management of tumours of the nose, 
+paranasal sinuses and skull base. Rhinol Suppl, 2010(22): p. 1-143. 
+287. Lopez, F., et al., Update on primary head and neck mucosal melanoma. Head Neck, 2014. 
+288. Fadaki, N., et al., Is head and neck melanoma different from trunk and extremity melanomas 
+with respect to sentinel lymph node status and clinical outcome? Ann Surg Oncol, 2013. 20(9): 
+p. 3089-97. 
+289. Yen, C.I., et al., Anorectal melanoma: review of 22 consecutive cases. Hepatogastroenterology, 
+2013. 60(121): p. 89-93. 
+290. Ferraioli, D., et al., Genital melanoma: prognosis factors and treatment modality. Arch Gynecol 
+Obstet, 2016. 294(5): p. 1037-1045. 
+291. van Geel, A.N., et al., Prognosis of primary mucosal penile melanoma: a series of 19 Dutch 
+patients and 47 patients from the literature. Urology, 2007. 70(1): p. 143-7. 
+292. Sanchez-Ortiz, R., et al., Melanoma of the penis, scrotum and male urethra: a 40-year single 
+institution experience. J Urol, 2005. 173(6): p. 1958-65. 
+293. Moreno, M.A., et al., Mucosal melanoma of the nose and paranasal sinuses, a contemporary 
+experience from the M. D. Anderson Cancer Center. Cancer, 2010. 116(9): p. 2215-23. 
+294. Meleti, M., et al., Head and neck mucosal melanoma: experience with 42 patients, with 
+emphasis on the role of postoperative radiotherapy. Head Neck, 2008. 30(12): p. 1543-51. 
+295. Benlyazid, A., et al., Postoperative radiotherapy in head and neck mucosal melanoma: a 
+GETTEC study. Arch Otolaryngol Head Neck Surg, 2010. 136(12): p. 1219-25. 
+296. Vandenhende, C., et al., Sinonasal mucosal melanoma: retrospective survival study of 25 
+patients. J Laryngol Otol, 2012. 126(2): p. 147-51. 
+297. Temam, S., et al., Postoperative radiotherapy for primary mucosal melanoma of the head and 
+neck. Cancer, 2005. 103(2): p. 313-9. 
+298. Krengli, M., et al., Radiotherapy in the treatment of mucosal melanoma of the upper 
+aerodigestive tract: analysis of 74 cases. A Rare Cancer Network study. Int J Radiat Oncol Biol 
+Phys, 2006. 65(3): p. 751-9. 
+299. Nakashima, J.P., et al., Postoperative adjuvant radiation therapy in the treatment of primary 
+head and neck mucosal melanomas. ORL J Otorhinolaryngol Relat Spec, 2008. 70(6): p. 344-51. 
+300. Owens, J.M., D.B. Roberts, and J.N. Myers, The role of postoperative adjuvant radiation therapy 
+in the treatment of mucosal melanomas of the head and neck region. Arch Otolaryngol Head 
+Neck Surg, 2003. 129(8): p. 864-8. 
+301. Saigal, K., et al., Mucosal melanomas of the head and neck: the role of postoperative radiation 
+therapy. ISRN Oncol, 2012. 2012: p. 785131. 
+302. Wushou, A., et al., Postoperative adjuvant radiotherapy improves loco-regional recurrence of 
+head and neck mucosal melanoma. J Craniomaxillofac Surg, 2015. 43(4): p. 553-8. 
+303. Li, W., et al., Evaluation of the prognostic impact of postoperative adjuvant radiotherapy on 
+head and neck mucosal melanoma: a meta-analysis. BMC Cancer, 2015. 15: p. 758. 
+304. D'Angelo, S.P., et al., Efficacy and Safety of Nivolumab Alone or in Combination With 
+Ipilimumab in Patients With Mucosal Melanoma: A Pooled Analysis. J Clin Oncol, 2017. 35(2): p. 
+226-235. 
+305. Del Vecchio, M., et al., Efficacy and safety of ipilimumab 3mg/kg in patients with pretreated, 
+metastatic, mucosal melanoma. Eur J Cancer, 2014. 50(1): p. 121-7. 
+306. Postow, M.A., et al., Ipilimumab for patients with advanced mucosal melanoma. Oncologist, 
+2013. 18(6): p. 726-32. 
+307. Shoushtari, A.N., et al., The efficacy of anti-PD-1 agents in acral and mucosal melanoma. 
+Cancer, 2016. 122(21): p. 3354-3362. 
+308. Zimmer, L., et al., Open-label, multicenter, single-arm phase II DeCOG-study of ipilimumab in 
+pretreated patients with different subtypes of metastatic melanoma. J Transl Med, 2015. 13: p. 
+351. 
+309. Ugurel, S., et al., Lack of clinical efficacy of imatinib in metastatic melanoma. Br J Cancer, 
+2005. 92(8): p. 1398-405. 
+310. Wyman, K., et al., Multicenter Phase II trial of high-dose imatinib mesylate in metastatic 
+melanoma: significant toxicity with no clinical efficacy. Cancer, 2006. 106(9): p. 2005-11. 
+311. Hodi, F.S., et al., Major response to imatinib mesylate in KIT-mutated melanoma. J Clin Oncol, 
+2008. 26(12): p. 2046-51. 
+312. Kim, K.B., et al., Phase II trial of imatinib mesylate in patients with metastatic melanoma. Br J 
+Cancer, 2008. 99(5): p. 734-40. 
+16. Literatur  
+© Leitlinienprogramm Onkologie | S3 Leitlinie Melanom-Kurzversion | Version 3.3 | Juli 2020 
+85 
+313. Lutzky, J., J. Bauer, and B.C. Bastian, Dose-dependent, complete response to imatinib of a 
+metastatic mucosal melanoma with a K642E KIT mutation. Pigment Cell Melanoma Res, 2008. 
+21(4): p. 492-3. 
+314. Quintas-Cardama, A., et al., Complete response of stage IV anal mucosal melanoma expressing 
+KIT Val560Asp to the multikinase inhibitor sorafenib. Nat Clin Pract Oncol, 2008. 5(12): p. 737-
+40. 
+315. Woodman, S.E., et al., Activity of dasatinib against L576P KIT mutant melanoma: molecular, 
+cellular, and clinical correlates. Mol Cancer Ther, 2009. 8(8): p. 2079-85. 
+316. Handolias, D., et al., Clinical responses observed with imatinib or sorafenib in melanoma 
+patients expressing mutations in KIT. Br J Cancer, 2010. 102(8): p. 1219-23. 
+317. Carvajal, R.D., et al., KIT as a therapeutic target in metastatic melanoma. JAMA, 2011. 
+305(22): p. 2327-34. 
+318. Guo, J., et al., Phase II, open-label, single-arm trial of imatinib mesylate in patients with 
+metastatic melanoma harboring c-Kit mutation or amplification. J Clin Oncol, 2011. 29(21): p. 
+2904-9. 
+319. Hodi, F.S., et al., Imatinib for melanomas harboring mutationally activated or amplified KIT 
+arising on mucosal, acral, and chronically sun-damaged skin. J Clin Oncol, 2013. 31(26): p. 
+3182-90. 
+320. Carvajal, R.D., et al., Phase II Study of Nilotinib in Melanoma Harboring KIT Alterations 
+Following Progression to Prior KIT Inhibition. Clin Cancer Res, 2015. 21(10): p. 2289-96. 
+321. Lee, S.J., et al., Phase II Trial of Nilotinib in Patients With Metastatic Malignant Melanoma 
+Harboring KIT Gene Aberration: A Multicenter Trial of Korean Cancer Study Group (UN10-06). 
+Oncologist, 2015. 20(11): p. 1312-9. 
+322. Arbeitsgemeinschaft der Wissenschaftlichen Medizinischen Fachgesellschaften - Ständige 
+Kommission, L. AWMF-Regelwerk "Leitlinien". 1. Auflage 2012  [cited 09.12.2013; Available 
+from: http://www.awmf.org/leitlinien/awmf-regelwerk/awmf-regelwerk.html.
