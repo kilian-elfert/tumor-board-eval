@@ -1,27 +1,42 @@
-<h2 class="card-title">&Uuml;bersicht</h2>
+<div class="bmap-header">
+  <h2 class="card-title">&Uuml;bersicht</h2>
+  <div class="bmap-header-badges">
+    {% if patient.disease_status %}
+    <span class="bmap-disease-status">{{ patient.disease_status }}</span>
+    {% endif %}
+  </div>
+</div>
 
 <div class="body-map-echelon">
 
   {# -- Left sidebar: Primaertumor & Metastasen -- #}
   <div class="bmap-sidebar bmap-left">
     <div class="bmap-category">
-      <h3 class="bmap-heading"><span class="bmap-dot dot-primary"></span>Prim&auml;rtumor</h3>
+      <h3 class="bmap-heading"><span class="bmap-dot dot-primary"></span>Prim&auml;rtumor <span class="bmap-ed-date">ED {{ patient.diagnosis_date }}</span></h3>
       <ul class="bmap-list" id="bmap-primary-list"></ul>
       <div class="bmap-diagnosis-info">
         <table class="bmap-dx-table">
-          <tr><td class="bmap-dx-label">Diagnose</td><td>{{ patient.primary_diagnosis }}</td></tr>
-          <tr><td class="bmap-dx-label">Lokalisation</td><td>{{ patient.primary_location }}</td></tr>
-          <tr><td class="bmap-dx-label">Datum</td><td>{{ patient.diagnosis_date }}</td></tr>
-          <tr><td class="bmap-dx-label">Tumordicke</td><td>{{ patient.tumor_thickness }}</td></tr>
-          <tr><td class="bmap-dx-label">Ulzeration</td><td>{{ patient.ulceration }}</td></tr>
-          <tr><td class="bmap-dx-label">Histologie</td><td>{{ patient.histology }}</td></tr>
-          <tr><td class="bmap-dx-label">Staging</td><td>{{ patient.initial_staging.t }} {{ patient.initial_staging.n }} {{ patient.initial_staging.m }} &mdash; UICC {{ patient.initial_staging.uicc }}</td></tr>
+          <tr><td class="bmap-dx-label">Diagnose</td><td>{{ patient.primary_diagnosis|ka }}</td></tr>
+          <tr><td class="bmap-dx-label">Lokalisation</td><td>{{ patient.primary_location|ka }}</td></tr>
+          <tr><td class="bmap-dx-label">Tumordicke</td><td>{{ patient.tumor_thickness|ka }}</td></tr>
+          <tr><td class="bmap-dx-label">Ulzeration</td><td>{{ patient.ulceration|ka }}</td></tr>
+          <tr><td class="bmap-dx-label">Histologie</td><td>{{ patient.histology|ka }}</td></tr>
+          <tr><td class="bmap-dx-label">Resektionsstatus</td><td>{{ patient.resection_status|ka }}</td></tr>
+          <tr><td class="bmap-dx-label">Sicherheitsabstand</td><td>{{ patient.safety_margin|ka }}</td></tr>
+          <tr><td class="bmap-dx-label">SLNE</td><td>{{ patient.slne|ka }}</td></tr>
+          <tr><td class="bmap-dx-label">Staging</td><td>{% if patient.initial_staging.t %}{{ patient.initial_staging.t }} {{ patient.initial_staging.n }} {{ patient.initial_staging.m }} &mdash; UICC {{ patient.initial_staging.uicc }}{% else %}Keine Angabe{% endif %}</td></tr>
         </table>
       </div>
     </div>
     <div class="bmap-category">
-      <h3 class="bmap-heading"><span class="bmap-dot dot-meta"></span>Metastasen</h3>
-      <ul class="bmap-list" id="bmap-meta-list"></ul>
+      <h3 class="bmap-heading"><span class="bmap-dot dot-meta"></span>Metastasen
+        {% set ns = namespace(ed='') %}
+        {% for m in patient.metastases_detail if m.date %}{% if not ns.ed %}{% set ns.ed = m.date %}{% endif %}{% endfor %}
+        {% if ns.ed %}
+        <span class="bmap-ed-date">ED {{ ns.ed }}</span>
+        {% endif %}
+      </h3>
+      <ol class="bmap-timeline" id="bmap-meta-list"></ol>
     </div>
   </div>
 
@@ -53,10 +68,13 @@
       <div class="body-point" data-region="pelvis"              style="left:50%;top:43%"><div class="point"></div></div>
       <div class="body-point" data-region="groin_right"         style="left:45%;top:45%"><div class="point"></div></div>
       <div class="body-point" data-region="groin_left"          style="left:55%;top:45%"><div class="point"></div></div>
-      <div class="body-point" data-region="axilla_left"         style="left:63%;top:21%"><div class="point"></div></div>
-      <div class="body-point" data-region="axilla_right"        style="left:37%;top:21%"><div class="point"></div></div>
-      <div class="body-point" data-region="left_forearm"        style="left:68%;top:40%"><div class="point"></div></div>
-      <div class="body-point" data-region="right_forearm"       style="left:32%;top:40%"><div class="point"></div></div>
+      <div class="body-point" data-region="thigh_left"          style="left:56%;top:53%"><div class="point"></div></div>
+      <div class="body-point" data-region="thigh_right"         style="left:44%;top:53%"><div class="point"></div></div>
+      <div class="body-point" data-region="lower_leg_right"    style="left:44%;top:83%"><div class="point"></div></div>
+      <div class="body-point" data-region="axilla_left"         style="left:63%;top:26%"><div class="point"></div></div>
+      <div class="body-point" data-region="axilla_right"        style="left:37%;top:26%"><div class="point"></div></div>
+      <div class="body-point" data-region="left_forearm"        style="left:80%;top:44%"><div class="point"></div></div>
+      <div class="body-point" data-region="right_forearm"       style="left:23%;top:44%"><div class="point"></div></div>
 
       {% else %}
       <img src="{{ url_for('static', filename='body_map_echelon.png') }}"
@@ -82,8 +100,11 @@
       <div class="body-point" data-region="pelvis"              style="left:50%;top:44%"><div class="point"></div></div>
       <div class="body-point" data-region="groin_right"         style="left:45%;top:47%"><div class="point"></div></div>
       <div class="body-point" data-region="groin_left"          style="left:55%;top:47%"><div class="point"></div></div>
-      <div class="body-point" data-region="axilla_left"         style="left:67%;top:18%"><div class="point"></div></div>
-      <div class="body-point" data-region="axilla_right"        style="left:33%;top:18%"><div class="point"></div></div>
+      <div class="body-point" data-region="thigh_left"          style="left:56%;top:55%"><div class="point"></div></div>
+      <div class="body-point" data-region="thigh_right"         style="left:44%;top:55%"><div class="point"></div></div>
+      <div class="body-point" data-region="lower_leg_right"    style="left:44%;top:85%"><div class="point"></div></div>
+      <div class="body-point" data-region="axilla_left"         style="left:67%;top:22%"><div class="point"></div></div>
+      <div class="body-point" data-region="axilla_right"        style="left:33%;top:22%"><div class="point"></div></div>
       <div class="body-point" data-region="left_forearm"        style="left:84%;top:35%"><div class="point"></div></div>
       <div class="body-point" data-region="right_forearm"       style="left:16%;top:35%"><div class="point"></div></div>
       {% endif %}
@@ -94,7 +115,7 @@
   <div class="bmap-sidebar bmap-right">
     <div class="bmap-category">
       <h3 class="bmap-heading"><span class="bmap-dot dot-imaged"></span>Bildgebung</h3>
-      <ul class="bmap-list" id="bmap-imaged-list"></ul>
+      <ol class="bmap-timeline" id="bmap-imaged-list"></ol>
     </div>
     {% if patient.comorbidities %}
     <div class="bmap-category bmap-comorbidities">
@@ -112,8 +133,9 @@
 
 {# -- Full-width cards below body map -- #}
 <div class="bmap-staging-center">
-  <h4 class="bmap-staging-title">Aktuelles Staging</h4>
-  <div class="bmap-staging-line"><span class="bmap-dx-label">T</span> {{ patient.staging.t }} <span class="bmap-dx-label">N</span> {{ patient.staging.n }} <span class="bmap-dx-label">M</span> {{ patient.staging.m }} <span class="bmap-staging-sep">|</span> <span class="bmap-dx-label">UICC</span> {{ patient.staging.uicc }} <span class="bmap-staging-class">{{ patient.staging.classification }}</span></div>
+  <h4 class="bmap-staging-title{% if patient.staging.date %} bmap-staging-has-date{% endif %}">Aktuelles Staging</h4>
+  {% if patient.staging.date %}<p class="bmap-staging-date">Stand: {{ patient.staging.date }}</p>{% endif %}
+  {% if patient.staging.t %}<div class="bmap-staging-line"><span class="bmap-dx-label">T</span> {{ patient.staging.t }} <span class="bmap-dx-label">N</span> {{ patient.staging.n }} <span class="bmap-dx-label">M</span> {{ patient.staging.m }} <span class="bmap-staging-sep">|</span> <span class="bmap-dx-label">UICC</span> {{ patient.staging.uicc }} <span class="bmap-staging-class">{{ patient.staging.classification }}</span></div>{% else %}<div class="bmap-staging-line">Keine Angabe</div>{% endif %}
 </div>
 <div class="bmap-staging-center">
   <h4 class="bmap-staging-title">Molekularpathologie</h4>
@@ -125,8 +147,13 @@
     </span>
     {% endfor %}
     <span class="mutation-chip {% if patient.pdl1 not in ['Nicht bestimmt', '0 (negativ)'] and 'negativ' not in patient.pdl1|lower %}mutation-positive{% endif %}">
-      <strong>PD-L1:</strong> {{ patient.pdl1 if patient.pdl1 else 'Nicht bestimmt' }}
+      <strong>PD-L1:</strong> {% if patient.pdl1 %}{% if patient.pdl1 | replace(',', '.') | replace('%', '') | trim | float(none) is not none %}{{ patient.pdl1 | trim | replace('%', '') }}%{% else %}{{ patient.pdl1 }}{% endif %}{% else %}Nicht bestimmt{% endif %}
     </span>
+    {% if patient.hla_a %}
+    <span class="mutation-chip {% if 'positiv' in patient.hla_a|lower %}mutation-positive{% endif %}">
+      <strong>HLA-A:</strong> {{ patient.hla_a }}
+    </span>
+    {% endif %}
     {% else %}
     <span class="mutation-chip">Keine molekularpathologischen Befunde vorhanden</span>
     {% endif %}

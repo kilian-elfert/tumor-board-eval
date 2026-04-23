@@ -63,7 +63,9 @@
     {# Card header #}
     <div class="eval-card-header">
       <div class="eval-card-header-buttons">
-        {% if step.key == 'problem_correctness' %}
+        <a href="{{ url_for('case_dashboard', case_id=case_id) }}" class="btn-protocol">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Patientenakte
+        </a>        {% if step.key == 'problem_correctness' %}
         <button type="button" class="btn-protocol" onclick="openGuideline()">
           <img src="{{ url_for('static', filename='pdf-icon.png') }}" width="20" height="23" style="flex-shrink:0;filter:hue-rotate(200deg) saturate(1.4)" aria-hidden="true">Kurzversion der S3-Leitlinie
         </button>
@@ -134,7 +136,8 @@
           <div class="instr-opt"><span class="instr-opt-label instr-opt--blue">●</span> Information ist in der Zusammenfassung enthalten</div>
           <div class="instr-opt"><span class="instr-opt-label instr-opt--gray">●</span> Information ist nicht enthalten</div>
         </div>
-        <div class="instr-hint"><strong>Hinweis:</strong> Klick-Reihenfolge je Knoten: <em>enthalten → nicht enthalten → zurücksetzen</em>.</div>
+        <div class="instr-hint"><strong>Hinweis:</strong> Klick-Reihenfolge je Knoten: <em>enthalten → nicht enthalten → zurücksetzen</em>.<br>
+        Wenn eine Information mehrere Einzelangaben umfasst (z.&nbsp;B. mehrere Therapien, Symptome oder Diagnosedaten von Metastasen) und <strong>nicht alle</strong> davon in der Zusammenfassung genannt werden, markieren Sie die Information als <em>nicht enthalten</em>.</div>
 
         {% elif step.key == 'summary_falseinfo' %}
         <div class="instr-goal"><strong>Aufgabe:</strong> Identifizieren Sie inhaltlich falsche oder irreführende Informationen in der Zusammenfassung.</div>
@@ -1617,19 +1620,20 @@
                     document.querySelectorAll('#fc_widget .fc-node:not(.fc-node--none)').forEach(function(n){
                       n.classList.remove('fc-node--on');
                       var c = document.getElementById(n.dataset.cb);
-                      if(c) c.checked = false;
+                      if(c){ c.checked = false; c.dispatchEvent(new Event('change', {bubbles:true})); }
                     });
                   } else {
                     var noneNode = document.querySelector('#fc_widget .fc-node--none');
                     if(noneNode){
                       noneNode.classList.remove('fc-node--on');
                       var nc = document.getElementById(noneNode.dataset.cb);
-                      if(nc) nc.checked = false;
+                      if(nc){ nc.checked = false; nc.dispatchEvent(new Event('change', {bubbles:true})); }
                     }
                   }
 
                   var on = node.classList.toggle('fc-node--on');
                   cb.checked = on;
+                  cb.dispatchEvent(new Event('change', {bubbles:true}));
                   syncBranchLines();
                   syncSubPanels();
                 });

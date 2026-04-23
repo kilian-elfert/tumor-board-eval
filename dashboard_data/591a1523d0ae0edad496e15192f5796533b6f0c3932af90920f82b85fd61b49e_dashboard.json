@@ -1,0 +1,912 @@
+{
+  "name": "Heiden",
+  "dob": "18.03.1954",
+  "age": 69,
+  "sex": "M",
+  "location": "59192, Bergkamen",
+  "pat_id": "23369229",
+  "comorbidities": [
+    "Eingefäß-KHK",
+    "Hypertensive Herzerkrankung",
+    "Sigmadivertikulose",
+    "Banscheibenvorfall L4/5 2008",
+    "Hodenseminom rechts (Ablatio testis+Radiatio 2007)",
+    "Ex-Nikotinabusus (16py)"
+  ],
+  "ecog": "0 – Normale, uneingeschränkte Aktivität wie vor der Erkrankung",
+  "karnofsky": "",
+  "primary_diagnosis": "Malignes Melanom Skapula rechts",
+  "primary_location": "Haut Schulter",
+  "diagnosis_date": "19.11.1997",
+  "tumor_thickness": "0,35 mm",
+  "ulceration": "Nein",
+  "mitoses": "",
+  "histology": "Malignes Melanom",
+  "resection_status": "R0",
+  "safety_margin": "",
+  "slne": "",
+  "initial_staging": {
+    "t": "pT1a",
+    "n": "cN0",
+    "m": "cM0",
+    "uicc": "IA",
+    "classification": "AJCC 2017"
+  },
+  "staging": {
+    "t": "pT1a",
+    "n": "cN0",
+    "m": "cM1c",
+    "uicc": "IV",
+    "classification": "AJCC 2017",
+    "date": "04.01.2024"
+  },
+  "mutations": {
+    "BRAF": "Wildtyp",
+    "NRAS": "Wildtyp",
+    "KIT": "Wildtyp",
+    "GNAQ": "Wildtyp",
+    "GNA11": "Wildtyp",
+    "NF1": "Wildtyp",
+    "HRAS": "Wildtyp",
+    "RAC1": "Wildtyp",
+    "TERT": "Wildtyp",
+    "hTERT": "1,295,250 G>A",
+    "CDKN2A": "Wildtyp",
+    "CDK4": "Wildtyp",
+    "PTEN": "Wildtyp",
+    "TP53": "Wildtyp",
+    "MAP2K1": "Wildtyp",
+    "MAP2K2": "Wildtyp",
+    "PIK3R1": "Wildtyp",
+    "PIK3CA": "Wildtyp",
+    "MITF": "Wildtyp",
+    "ARID2": "Wildtyp",
+    "ARID1A": "Wildtyp",
+    "SMARCA4": "Wildtyp",
+    "EZH2": "Wildtyp",
+    "IDH1": "Wildtyp",
+    "CTNNB1": "Wildtyp",
+    "FBXW7": "Wildtyp",
+    "WT1": "Wildtyp",
+    "BAP1": "Wildtyp",
+    "SF3B1": "Wildtyp",
+    "KRAS": "Wildtyp",
+    "CCND1": "Wildtyp",
+    "CYSLTR2": "Wildtyp",
+    "NTRK1": "Wildtyp",
+    "NTRK2": "Wildtyp",
+    "NTRK3": "Wildtyp",
+    "PLCB4": "Wildtyp",
+    "PPP6C": "Wildtyp",
+    "ARID1B": "Wildtyp"
+  },
+  "pdl1": "25% (positiv)",
+  "hla_a": "Nicht bestimmt",
+  "primary_tumor_body": [
+    "chest_right"
+  ],
+  "primary_tumor_status": "inactive",
+  "primary_inactive_reason": "R0 reseziert",
+  "metastases_body": [
+    "lung",
+    "thigh_left",
+    "thorax"
+  ],
+  "metastases_detail": [
+    {
+      "region": "lung",
+      "date": "27.09.2022",
+      "label": "Lungenmetastase Unterlappen rechts",
+      "status": "inactive",
+      "inactive_reason": "Resektion 25.10.2022"
+    },
+    {
+      "region": "thigh_left",
+      "date": "12.10.2022",
+      "label": "Ossäre Metastase Schenkelhals links",
+      "status": "active",
+      "inactive_reason": ""
+    },
+    {
+      "region": "thorax",
+      "date": "26.02.2024",
+      "label": "Mediastinale Lymphknoten",
+      "status": "active",
+      "inactive_reason": ""
+    }
+  ],
+  "imaged_regions": [
+    "whole_body"
+  ],
+  "timeline": [
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "24.11.2022",
+      "event": "Heute Erstvorstellung im HTZ:\n1. MUP ED 09/2022\n2. Malignes Melanom TD 0,35 mm, R0, ohne Ulzeration, Mitoseerate nicht angegeben, Lokalisation: Skapular rechts, Behandlung durch Kingreen (Hagen), Histologische Begutachtung Primarius durch St. Barbara Hospital Dermatohistolog. Labor, Block-Nr. 18979/97 ED 19.11.1997\nStadium bei ED nach AJCC 2017: pT0 cN cM1b, Stadium IV\nAktuelles Stadium nach AJCC 2017: pT0 cN0 cM1b, Stadium IV\nMolpatho: angefordert\nASS 100mg 1-0-0\nMRT 29.09.22\nKein Anhalt auf Metastasen\nCT Abdomen 27.10.2022\nKeine malignitätssuspekten hepatischen Läsionen, verplumpte Nebennieren bds. nicht pathologisch vergrößerten abd. LK. Miterfasst bekannte RF des linken Lungenunterlappens. Keine ossären Metastasen.\nCT Thorax 24.10.2022 (Praxis Lünen)\nKörperliche Untersuchung:\nProcedere v+d OÄ Zimmer:\n-Ausführliche Beratung des Patienten über die Erkrankung, Prognose und leitliniengerechtes Vorgehen.\n-Therapieoptionen zielgerichtete vs Checkpoint besprochen und ausführlich erläutert\n-Staging-Untersuchungen Bilder mitgebracht; CT T/A angefordert (dixit OÄ Zimmer).\n-Anmeldung für die TK am 16.11.2022\n-Gewebebankaufklärung und ADO-REG unterschrieben\n-Anforderung Molpath läuft bereits über Kliniken Mitte\n-Sentinell BE + Forschungslabor abgenommen\n-Wiedervorstellung zur Befundbesprechung\n-Psychoonkolog. Befragung: Punktwert: psychoonkologische Anbindung nicht gewünscht\n-Erstvorstellungsmappe ausgehändigt\n-RTX Vorgespräch 15.11.2022 Klinikum Essen-Mitteà dann Start RTX Femurhals links.\nMEMO: Bei Stadium IV Patienten immer an Patientenverfügung/Vorsorgevollmacht denken  möglichst beim Zweit- oder Drittgespräch thematisieren; hierzu kann ein Sozialkonsil gestellt werden!",
+      "summary": "Stadium IV (pT0 cN0 cM1b) bei Erstvorstellung.",
+      "category": "Staging",
+      "removed_lines": "",
+      "cleaned_event": "Heute Erstvorstellung im HTZ:\n1. MUP ED 09/2022\n2. Malignes Melanom TD 0,35 mm, R0, ohne Ulzeration, Mitoseerate nicht angegeben, Lokalisation: Skapular rechts, Behandlung durch Kingreen (Hagen), Histologische Begutachtung Primarius durch St. Barbara Hospital Dermatohistolog. Labor, Block-Nr. 18979/97 ED 19.11.1997\nStadium bei ED nach AJCC 2017: pT0 cN cM1b, Stadium IV\nAktuelles Stadium nach AJCC 2017: pT0 cN0 cM1b, Stadium IV\nMolpatho: angefordert\nASS 100mg 1-0-0\nMRT 29.09.22\nKein Anhalt auf Metastasen\nCT Abdomen 27.10.2022\nKeine malignitätssuspekten hepatischen Läsionen, verplumpte Nebennieren bds. nicht pathologisch vergrößerten abd. LK. Miterfasst bekannte RF des linken Lungenunterlappens. Keine ossären Metastasen.\nCT Thorax 24.10.2022 (Praxis Lünen)\nKörperliche Untersuchung:\nProcedere v+d OÄ Zimmer:\n-Ausführliche Beratung des Patienten über die Erkrankung, Prognose und leitliniengerechtes Vorgehen.\n-Therapieoptionen zielgerichtete vs Checkpoint besprochen und ausführlich erläutert\n-Staging-Untersuchungen Bilder mitgebracht; CT T/A angefordert (dixit OÄ Zimmer).\n-Anmeldung für die TK am 16.11.2022\n-Gewebebankaufklärung und ADO-REG unterschrieben\n-Anforderung Molpath läuft bereits über Kliniken Mitte\n-Sentinell BE + Forschungslabor abgenommen\n-Wiedervorstellung zur Befundbesprechung\n-Psychoonkolog. Befragung: Punktwert: psychoonkologische Anbindung nicht gewünscht\n-Erstvorstellungsmappe ausgehändigt\n-RTX Vorgespräch 15.11.2022 Klinikum Essen-Mitteà dann Start RTX Femurhals links.\nMEMO: Bei Stadium IV Patienten immer an Patientenverfügung/Vorsorgevollmacht denken  möglichst beim Zweit- oder Drittgespräch thematisieren; hierzu kann ein Sozialkonsil gestellt werden!"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "24.11.2022",
+      "event": "CT: Thorax mit i.v. KM, 2-D-Rekonstruktion vom 23.11.2022:\nCT: Leber-Doppelspirale, 2-D-Rekonstruktion vom 23.11.2022:\n1.\tKonstantes hiläres Weichteilplus links hilär.\n2.\tKonstantes geringes Weichteilplus angrenzend an das Nahtmaterial im linken Unterlappen a.e. postoperativ, weitere Verlaufskontrolle zum Ausschluss eines Tumorresiduums empfohlen.",
+      "summary": "CT Thorax zeigt konstantes hiläres Weichteilplus links, postoperativ, Kontrolle empfohlen.",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "CT: Thorax mit i.v. KM, 2-D-Rekonstruktion vom 23.11.2022:\nCT: Leber-Doppelspirale, 2-D-Rekonstruktion vom 23.11.2022:\n1.\tKonstantes hiläres Weichteilplus links hilär.\n2.\tKonstantes geringes Weichteilplus angrenzend an das Nahtmaterial im linken Unterlappen a.e. postoperativ, weitere Verlaufskontrolle zum Ausschluss eines Tumorresiduums empfohlen."
+    },
+    {
+      "type": "Besonderes - TK-Beschluss",
+      "date": "01.12.2022",
+      "event": "ED Stad. IV",
+      "summary": "TK‑Beschluss: Stadium IV.",
+      "category": "Tumorkonferenz",
+      "removed_lines": "",
+      "cleaned_event": "ED Stad. IV"
+    },
+    {
+      "type": "",
+      "date": "01.12.2022",
+      "event": "Einschluss ADO-REG/TRIM",
+      "summary": "Patient in ADO‑REG/TRIM eingeschlossen.",
+      "category": "Sonstiges",
+      "removed_lines": "",
+      "cleaned_event": "Einschluss ADO-REG/TRIM"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "02.12.2022",
+      "event": "MolPath Analyse aus Lungengewebe nicht möglch,\nAnforderung nun aus Knochenmetastase\nFK",
+      "summary": "MolPath aus Lungengewebe nicht möglich, Anforderung aus Knochenmetastase.",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "MolPath Analyse aus Lungengewebe nicht möglch,\nAnforderung nun aus Knochenmetastase\nFK"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "02.12.2022",
+      "event": "Heute WV im HTZ:\nASS 100mg 1-0-0\nIm kurzfristigen Verlauf größenkonstante Metastase des linken Unterlappens.\n1. Neuer mäßiger seriöser Pleuraerguss links.\n2. Neu abgernzbares Nahtmaterial mit umgebenden narbig- atelektatischen Veränderungen nei z.n. Lungenteilresektion im linken Unterlappen.\nProc RS OA Zimmer:\n- ausfürhliche Bepsrehcung des TK Beschlusses\n- klare empfehlung zur Immuntehrapie mit Ipi/Nivo (Aufklärung erfolgt und dem Patienten kopiert)\n- Einleitugn Denosumab (Aufklärung erfolgt, voruntersuchung beim Zahnarzt opB)\n- RTX läuftnoch eine Woche (RTX Vorgespräch 15.11.2022 Klinikum Essen-Mitteà dann Start RTX Femurhals links)\n- BE Checkpoint initial mit Calzium und Phosphat (Denosumab Latte)\n- Palnug Ipi/Nivo durch Infusionsplanung\n- beim checkpointtermin bitte auch Denosumab und Calcium rezeptieren\n- KAriodonko angemeldet, muss nicht abgewaret werden bei jährlicher kardiologischer Vorstellung (zuletztvor 1Monat opB -> Patbringt bei WV den Arztbrief mit)\nFK für Spalte 2",
+      "summary": "Empfehlung: Start Ipi/Nivo‑Immuntherapie und Denosumab.",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "Heute WV im HTZ:\nASS 100mg 1-0-0\nIm kurzfristigen Verlauf größenkonstante Metastase des linken Unterlappens.\n1. Neuer mäßiger seriöser Pleuraerguss links.\n2. Neu abgernzbares Nahtmaterial mit umgebenden narbig- atelektatischen Veränderungen nei z.n. Lungenteilresektion im linken Unterlappen.\nProc RS OA Zimmer:\n- ausfürhliche Bepsrehcung des TK Beschlusses\n- klare empfehlung zur Immuntehrapie mit Ipi/Nivo (Aufklärung erfolgt und dem Patienten kopiert)\n- Einleitugn Denosumab (Aufklärung erfolgt, voruntersuchung beim Zahnarzt opB)\n- RTX läuftnoch eine Woche (RTX Vorgespräch 15.11.2022 Klinikum Essen-Mitteà dann Start RTX Femurhals links)\n- BE Checkpoint initial mit Calzium und Phosphat (Denosumab Latte)\n- Palnug Ipi/Nivo durch Infusionsplanung\n- beim checkpointtermin bitte auch Denosumab und Calcium rezeptieren\n- KAriodonko angemeldet, muss nicht abgewaret werden bei jährlicher kardiologischer Vorstellung (zuletztvor 1Monat opB -> Patbringt bei WV den Arztbrief mit)\nFK für Spalte 2"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "15.12.2022",
+      "event": "-25.10.22 stationär Klinikum Essen-Mitte: VATS links, Keilresektion Unterlappen nach Pleurolyse, systematische Lamyphadenektomie (0/25 LK)\nMedikation:\nCandesartan 16mg 1-0-0 Esomeprazol 20mg 1-0-0\nEsomeprazol 20mg 1-0-0\nGlucoseposiziver pulmobaler Tumor im linken Unterlappen dorsal mit Pleurakontakt. Glukosepos. Ossäre Metastasen im Linken Schenkelhals. Der übrige Ganzkörper zeigte keinen weiteren glucosepositiven Tumor oder metastasensuspekten Herd.\nIm kurzfristigen Verlauf größenkonstante Metastase des linken Unterlappens.\n1. Neuer mäßiger seriöser Pleuraerguss links.\n2. Neu abgernzbares Nahtmaterial mit umgebenden narbig- atelektatischen Veränderungen nei z.n. Lungenteilresektion im linken Unterlappen.\nNarben reizlos ohne Hinweis auf ein Lokalrezidiv, keine suspekten Pigmentmale, kein Anhalt für epitheliale Tumoren. LK Status palpatorisch unauffällig. Schleimhäute, soweit einsehbar, außer am harten Gaumen rechtsseitig ca. 0,3cm hyperpigmentierte Makulaà Verlaufskontroll!!\nGKU 15.12.22: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- RTX läuftnoch eine Woche (RTX Vorgespräch 15.11.2022 Klinikum Essen-Mitteà dann Start RTX Femurhals links)--> beendet seit 08.12.2022\n- erste Infusion Ipi/Nivo am 19.12. geplant",
+      "summary": "VATS‑Lungensektion und systematische Lymphknotenektomie durchgeführt.",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "-25.10.22 stationär Klinikum Essen-Mitte: VATS links, Keilresektion Unterlappen nach Pleurolyse, systematische Lamyphadenektomie (0/25 LK)\nMedikation:\nCandesartan 16mg 1-0-0 Esomeprazol 20mg 1-0-0\nEsomeprazol 20mg 1-0-0\nGlucoseposiziver pulmobaler Tumor im linken Unterlappen dorsal mit Pleurakontakt. Glukosepos. Ossäre Metastasen im Linken Schenkelhals. Der übrige Ganzkörper zeigte keinen weiteren glucosepositiven Tumor oder metastasensuspekten Herd.\nIm kurzfristigen Verlauf größenkonstante Metastase des linken Unterlappens.\n1. Neuer mäßiger seriöser Pleuraerguss links.\n2. Neu abgernzbares Nahtmaterial mit umgebenden narbig- atelektatischen Veränderungen nei z.n. Lungenteilresektion im linken Unterlappen.\nNarben reizlos ohne Hinweis auf ein Lokalrezidiv, keine suspekten Pigmentmale, kein Anhalt für epitheliale Tumoren. LK Status palpatorisch unauffällig. Schleimhäute, soweit einsehbar, außer am harten Gaumen rechtsseitig ca. 0,3cm hyperpigmentierte Makulaà Verlaufskontroll!!\nGKU 15.12.22: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- RTX läuftnoch eine Woche (RTX Vorgespräch 15.11.2022 Klinikum Essen-Mitteà dann Start RTX Femurhals links)--> beendet seit 08.12.2022\n- erste Infusion Ipi/Nivo am 19.12. geplant"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "19.12.2022",
+      "event": "1. Gabe Ipi/Nivo",
+      "summary": "Erste Infusion Ipi/Nivo verabreicht.",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "1. Gabe Ipi/Nivo"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "09.01.2023",
+      "event": "2. Gabe Ipi/Nivo",
+      "summary": "Zweite Infusion Ipi/Nivo verabreicht.",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "2. Gabe Ipi/Nivo"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "18.01.2023",
+      "event": "Molpatho 18.01.23 (F254/22)\nBRAF wt\nTERT Promotor mutiert",
+      "summary": "Molpathologie: BRAF wildtype, TERT‑Promotor mutiert.",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "Molpatho 18.01.23 (F254/22)\nBRAF wt\nTERT Promotor mutiert"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "19.01.2023",
+      "event": "Externes Labor vom 16.01.23\nLeukos norm\nrelative und abs. Lymphozytopenie: Abs.: 960 abs/µl\nübriges Labor opB\nkein Cortisol bestimmt\nUrin opB laut handschrift. Eintrag\nSch",
+      "summary": "Lymphozytopenie (Abs. 960/µl); Leukozyten normal",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "Externes Labor vom 16.01.23\nLeukos norm\nrelative und abs. Lymphozytopenie: Abs.: 960 abs/µl\nübriges Labor opB\nkein Cortisol bestimmt\nUrin opB laut handschrift. Eintrag\nSch"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "30.01.2023",
+      "event": "3. Gabe Ipi/Nivo",
+      "summary": "3. Gabe Ipilimumab/Nivolumab",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "3. Gabe Ipi/Nivo"
+    },
+    {
+      "type": "BERICHTE - Konsil",
+      "date": "30.01.2023",
+      "event": "Bericht der Sektion klinische Kardioonkologie :                                    Berichtender:  Dr. med. Raluca ileana Mincu\nBefund: EKG: SR, 85 bpm, AVB I°, keine ERBS.\nEcho: LV nicht dilatiert, nicht hypertrophiert, gute systolische LV Funktion (2DEF 55%), diastolische Dysfunktion I°, keine bedeutsamen Klappenvitien, keine Rechtsherzbelstungszeichen, kein Perikarderguß. Aneurysma Ao Bulbus\nLabor: Trop und NtproBNP N\nBeurteilung: 50% RIVA vor D1 Stenose (HKU 2015). Er berichtet über eine STatin Unverträgligkeit (Muskel- und Megenschmerzen).\nVorschläge: Fortführung der Therapie mit Candesartan, ASS, Esomeprazol. Aus kardiologischer Sicht keine KI zur Ipi/Nivo. VK in 6 Wo.",
+      "summary": "Kardioonkologie: keine KI für Ipi/Nivo, Candesartan/ASS/Esomeprazol weiter",
+      "category": "Konsil",
+      "removed_lines": "",
+      "cleaned_event": "Bericht der Sektion klinische Kardioonkologie :                                    Berichtender:  Dr. med. Raluca ileana Mincu\nBefund: EKG: SR, 85 bpm, AVB I°, keine ERBS.\nEcho: LV nicht dilatiert, nicht hypertrophiert, gute systolische LV Funktion (2DEF 55%), diastolische Dysfunktion I°, keine bedeutsamen Klappenvitien, keine Rechtsherzbelstungszeichen, kein Perikarderguß. Aneurysma Ao Bulbus\nLabor: Trop und NtproBNP N\nBeurteilung: 50% RIVA vor D1 Stenose (HKU 2015). Er berichtet über eine STatin Unverträgligkeit (Muskel- und Megenschmerzen).\nVorschläge: Fortführung der Therapie mit Candesartan, ASS, Esomeprazol. Aus kardiologischer Sicht keine KI zur Ipi/Nivo. VK in 6 Wo."
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "01.02.2023",
+      "event": "Molpatho 23.01.2023\nuntersuchtes Material H/2022/29498\nPDL1 positiv (25% Tumorzellen mit Membranfärbung)",
+      "summary": "PD-L1 positiv (25% Tumorzellen)",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "Molpatho 23.01.2023\nuntersuchtes Material H/2022/29498\nPDL1 positiv (25% Tumorzellen mit Membranfärbung)"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "01.02.2023",
+      "event": "Kardio Onko VK in 6 Wochen angefordert.",
+      "summary": "Kardioonkologie-Nachsorge in 6 Wochen angefordert",
+      "category": "Konsil",
+      "removed_lines": "",
+      "cleaned_event": "Kardio Onko VK in 6 Wochen angefordert."
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "21.02.2023",
+      "event": "4. Gabe Ipi/Nivo\nTherapie mit Ipi/Nivo, Indikationsstellung und Ausschluss von Kontraindikationen durch das Hauttumorzentrum erfolgt.",
+      "summary": "4. Gabe Ipilimumab/Nivolumab, Indikation bestätigt",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "4. Gabe Ipi/Nivo\nTherapie mit Ipi/Nivo, Indikationsstellung und Ausschluss von Kontraindikationen durch das Hauttumorzentrum erfolgt."
+    },
+    {
+      "type": "",
+      "date": "27.02.2023",
+      "event": "Checkpoint vor Infusion erfolgt\nN.P.",
+      "summary": "Checkpoint vor Infusion durchgeführt",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "Checkpoint vor Infusion erfolgt\nN.P."
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "02.03.2023",
+      "event": "Telefonat mit Pat.:\n- Pat. hat Schwerbehindertenausweis beantragt letztes Jahr\n- Pat. benötigt Arztbrief, bitte erstellen\nGCL",
+      "summary": "Patient bat um Arztbrief; Schwerbehindertenausweis beantragt",
+      "category": "Sonstiges",
+      "removed_lines": "",
+      "cleaned_event": "Telefonat mit Pat.:\n- Pat. hat Schwerbehindertenausweis beantragt letztes Jahr\n- Pat. benötigt Arztbrief, bitte erstellen\nGCL"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "08.03.2023",
+      "event": "ext Labor 06.03.2023\nopB",
+      "summary": "Externes Labor vom 06.03.2023 erhalten",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "ext Labor 06.03.2023\nopB"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "13.03.2023",
+      "event": "Notfallmäßige Vorstellung (v+d OÄ Zimmer)\nA: Pat berichtet von seit 6 Tagen progrediente Muskelschmerzen, er habe mittlerweile Probleme die Arme über die 90° zu heben. Er habe vor ca. 1 Woche mit Rosuvastatin p.o. begonnen und darunter die Muskelschmerzen entwickelt, deshalb das Medikament dann vor 5 Tagen abgesetzt. Ohne Besserung der Symptomatik.\nSonst keine Beschwerden insb. keine Palpitationen. Können auch 1h täglich mit dem Hund spazieren gehen.\nKU: Arme können >90° angehoben werden. Händedruck ist re>links stärker. Aufstehen aus der Sitzposition nur mit Abstützen oder \"Schwung\" möglich. Herztöne rein, rhythmisch.\nV.a. irMyositis nach 4. Gabe Ipi/Nivo DD Statin-assoziiert Rhabdomyolyse\nheute BE Checkpoint+CK+CK-MB+Myoglobin+Troponin\n-->je nach Blutwerten stationäre Aufnahme zur i.v. Steroidgabe\nNachtrag nach Laborcheck: Muskel- und Herzenzyme blande. Leichtes CRP von 1,2, normwertige Leukos.\nProc: Schonung, bei Symptomprogress erneute BE Kontrolle. Rosuvastatin bis auf Weiteres abgesetzt.",
+      "summary": "Verdacht ir-Myositis nach 4. Ipi/Nivo, CK leicht erhöht, Steroidgabe geplant",
+      "category": "Nebenwirkung",
+      "removed_lines": "",
+      "cleaned_event": "Notfallmäßige Vorstellung (v+d OÄ Zimmer)\nA: Pat berichtet von seit 6 Tagen progrediente Muskelschmerzen, er habe mittlerweile Probleme die Arme über die 90° zu heben. Er habe vor ca. 1 Woche mit Rosuvastatin p.o. begonnen und darunter die Muskelschmerzen entwickelt, deshalb das Medikament dann vor 5 Tagen abgesetzt. Ohne Besserung der Symptomatik.\nSonst keine Beschwerden insb. keine Palpitationen. Können auch 1h täglich mit dem Hund spazieren gehen.\nKU: Arme können >90° angehoben werden. Händedruck ist re>links stärker. Aufstehen aus der Sitzposition nur mit Abstützen oder \"Schwung\" möglich. Herztöne rein, rhythmisch.\nV.a. irMyositis nach 4. Gabe Ipi/Nivo DD Statin-assoziiert Rhabdomyolyse\nheute BE Checkpoint+CK+CK-MB+Myoglobin+Troponin\n-->je nach Blutwerten stationäre Aufnahme zur i.v. Steroidgabe\nNachtrag nach Laborcheck: Muskel- und Herzenzyme blande. Leichtes CRP von 1,2, normwertige Leukos.\nProc: Schonung, bei Symptomprogress erneute BE Kontrolle. Rosuvastatin bis auf Weiteres abgesetzt."
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "22.03.2023",
+      "event": "09.01.2023\t2. Gabe Ipi/Nivo geplant\n26.01.2023 2. Denosumab\nGlucoseposiziver pulmobaler Tumor im rechten Unterlappen dorsal mit Pleurakontakt. Glukosepos. Ossäre Metastasen im linken Schenkelhals. Der übrige Ganzkörper zeigte keinen weiteren glucosepositiven Tumor oder metastasensuspekten Herd.\nGKU 26.01.2023: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs. Gibt an vor 2 Tagen VHF kurzzeitig bemerkt zu haben (über Smart-Watch) sei jedoch von selbst wieder weggangen. Hat näch Woche kardiolog. Termin.\n- Fortführung Denosumab (Aufklärung erfolgt, voruntersuchung beim Zahnarzt opB)--> rezeptiert, 1. Spritze wird bei Infusion gegeben.\n- RTX Klinikum Essen-Mitte dann Start RTX Femurhals links beendet seit 08.12.2022\n- erste Infusion Ipi/Nivo am 19.12. geplant\n--> MEMO: Lungenmetastase rechts und ossäre Metastase Femur rechts; Tumordoku wurde angepasst (50.01.2023)!",
+      "summary": "2. Ipi/Nivo‑ und Denosumab‑Dosen geplant; PET: Tumor rechts mit Pleura‑Kontakt, Metastase links Femurhals.",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "09.01.2023\t2. Gabe Ipi/Nivo geplant\n26.01.2023 2. Denosumab\nGlucoseposiziver pulmobaler Tumor im rechten Unterlappen dorsal mit Pleurakontakt. Glukosepos. Ossäre Metastasen im linken Schenkelhals. Der übrige Ganzkörper zeigte keinen weiteren glucosepositiven Tumor oder metastasensuspekten Herd.\nGKU 26.01.2023: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs. Gibt an vor 2 Tagen VHF kurzzeitig bemerkt zu haben (über Smart-Watch) sei jedoch von selbst wieder weggangen. Hat näch Woche kardiolog. Termin.\n- Fortführung Denosumab (Aufklärung erfolgt, voruntersuchung beim Zahnarzt opB)--> rezeptiert, 1. Spritze wird bei Infusion gegeben.\n- RTX Klinikum Essen-Mitte dann Start RTX Femurhals links beendet seit 08.12.2022\n- erste Infusion Ipi/Nivo am 19.12. geplant\n--> MEMO: Lungenmetastase rechts und ossäre Metastase Femur rechts; Tumordoku wurde angepasst (50.01.2023)!"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "22.03.2023",
+      "event": "Hausarzt: Blozek (Bechtgarden)\n19.12.2022\t1. Gabe Ipi/Nivo geplant\n09.01.2023\t2. Gabe Ipi/Nivo geplant\nAllergien\nnein\nBiopsate aus rechten Femurhals: subtotal nekrotisiertes amelanotisches (epitheloides) malignes Melanom.\nGKU 05.01.2023: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- RTX Klinikum Essen-Mitte dann Start RTX Femurhals rechts beendet seit 08.12.2022\n- BE Checkpoint vor Infusion\n- nächste Infusion Ipi/Nivo am 30.01. geplant\n- Kardioonko angemeldet, muss nicht abgewaret werden bei jährlicher kardiologischer Vorstellung (zuletzt vor 1Monat opB -> Patbringt bei WV den Arztbrief mit)\n--> MEMO: Lungenmetastase rechts und ossäre Metastase Femur rechts; Tumordoku wurde angepasst (05.01.2023)!",
+      "summary": "Biopsie des rechten Femurhalses zeigt necrotisches amelano‑maleskales Melanom.",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "Hausarzt: Blozek (Bechtgarden)\n19.12.2022\t1. Gabe Ipi/Nivo geplant\n09.01.2023\t2. Gabe Ipi/Nivo geplant\nAllergien\nnein\nBiopsate aus rechten Femurhals: subtotal nekrotisiertes amelanotisches (epitheloides) malignes Melanom.\nGKU 05.01.2023: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- RTX Klinikum Essen-Mitte dann Start RTX Femurhals rechts beendet seit 08.12.2022\n- BE Checkpoint vor Infusion\n- nächste Infusion Ipi/Nivo am 30.01. geplant\n- Kardioonko angemeldet, muss nicht abgewaret werden bei jährlicher kardiologischer Vorstellung (zuletzt vor 1Monat opB -> Patbringt bei WV den Arztbrief mit)\n--> MEMO: Lungenmetastase rechts und ossäre Metastase Femur rechts; Tumordoku wurde angepasst (05.01.2023)!"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "22.03.2023",
+      "event": "Checkpoint vor Infusion\n-15.11-08.12.22 RTX Femur rechts in Klinik Essen-Mitte\n21.02.2023\t4. Gabe Ipi/Nivo geplant\nMedikatio Update 05.01.23:\nCT Thx vom 24.10.2022\nIm kurzfristigen Verlauf größenkonstante Metastase des rechten Unterlappens.\nKein Nachweis einer thorakale Lymphadenopathie.\nKein Nachweis einer ossären Metastasierung.\nCT Thx. vom 05.11.2022\n1. Neuer mäßiger seriöser Pleuraerguss rechts.\n2. Neu abgernzbares Nahtmaterial mit umgebenden narbig- atelektatischen Veränderungen bei z.n. Lungenteilresektion im rechten Unterlappen.\n3. Kein Nachweis flächiger netzündlicher Infiltrate.\n4. Konstant leicht vermehrte, nicht pathologisch vergrößerte mediastinale Lymphknoten. Bis grenzwetig große Lymphknoten rechts hilär. Konstantes links hiläres Weichteilplus.\nHauttumorkonferenz-Empfehlung vom 30.11.2022\nHistologisch gesicherte pulmonale Metastase, ossäre Metastase Femur R. Postoperative Veränderungen mediastinal und im re UL. Aktuell keine Zielläsion vorhanden, kein Studieneinschluss möglich. Ipi/Nivo als erste Tx-Option, RTX Femur, Denosumab nach Ausschluss von Kontraindikationen. Mol-Path ausstehend, bei BRAF-Mutation über Möglichkeit MAPKi informieren.\nVerlaufsstaging in 3 Monaten.\nKORREKTUR der TUMORDOKUMENTATION BZGL. PRIMARIUS UND DER METASTASELOKALISATIONEN LUNGE UND FEMUR.\nKörperliche Untersuchung 11/2022:\nA: Patient in stabilen AZ. Keine Fieber, keine Beschwerden bei der Miktion bis auf neu Nykturie, Stuhlgang op, keine Kopfschmerzen, keine Abgeschlagenheit, Keine weiteren ICI-typischen NW. Wöchentliche Blutkontrollen erfolgen bei uns.\nGKU 16.02.2023: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- Einleitung Denosumab (Aufklärung erfolgt, voruntersuchung beim Zahnarzt opB)--> rezeptiert, 1. Spritze wird bei Infusion gegeben.\n- RTX Klinikum Essen-Mitte dann Start RTX Femurhals rechts beendet seit 08.12.2022\n- nächste Infusion Ipi/Nivo am 30.01. geplant\n- nächster Kardio-Onko-Termin am 30.03. um 08:30 Uhr, pat fragt ob an dem Tag Infusion laufen kann, aufgrund der Anfahrt von 70 km\n- Staging in 3 Monaten CT T/A+ MRT S+ CT Oberschenkel links wird extern durchgeführt\n--> MEMO: Lungenmetastase rechts und ossäre Metastase Femur rechts; Tumordoku wurde angepasst (50.01.2023)!\nSch für Spalte 2",
+      "summary": "CT Thorax: size‑konstante rechte Unterlappen‑Metastase, keine neuen Lymph‑ oder Knochenmetastasen.",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "Checkpoint vor Infusion\n-15.11-08.12.22 RTX Femur rechts in Klinik Essen-Mitte\n21.02.2023\t4. Gabe Ipi/Nivo geplant\nMedikatio Update 05.01.23:\nCT Thx vom 24.10.2022\nIm kurzfristigen Verlauf größenkonstante Metastase des rechten Unterlappens.\nKein Nachweis einer thorakale Lymphadenopathie.\nKein Nachweis einer ossären Metastasierung.\nCT Thx. vom 05.11.2022\n1. Neuer mäßiger seriöser Pleuraerguss rechts.\n2. Neu abgernzbares Nahtmaterial mit umgebenden narbig- atelektatischen Veränderungen bei z.n. Lungenteilresektion im rechten Unterlappen.\n3. Kein Nachweis flächiger netzündlicher Infiltrate.\n4. Konstant leicht vermehrte, nicht pathologisch vergrößerte mediastinale Lymphknoten. Bis grenzwetig große Lymphknoten rechts hilär. Konstantes links hiläres Weichteilplus.\nHauttumorkonferenz-Empfehlung vom 30.11.2022\nHistologisch gesicherte pulmonale Metastase, ossäre Metastase Femur R. Postoperative Veränderungen mediastinal und im re UL. Aktuell keine Zielläsion vorhanden, kein Studieneinschluss möglich. Ipi/Nivo als erste Tx-Option, RTX Femur, Denosumab nach Ausschluss von Kontraindikationen. Mol-Path ausstehend, bei BRAF-Mutation über Möglichkeit MAPKi informieren.\nVerlaufsstaging in 3 Monaten.\nKORREKTUR der TUMORDOKUMENTATION BZGL. PRIMARIUS UND DER METASTASELOKALISATIONEN LUNGE UND FEMUR.\nKörperliche Untersuchung 11/2022:\nA: Patient in stabilen AZ. Keine Fieber, keine Beschwerden bei der Miktion bis auf neu Nykturie, Stuhlgang op, keine Kopfschmerzen, keine Abgeschlagenheit, Keine weiteren ICI-typischen NW. Wöchentliche Blutkontrollen erfolgen bei uns.\nGKU 16.02.2023: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- Einleitung Denosumab (Aufklärung erfolgt, voruntersuchung beim Zahnarzt opB)--> rezeptiert, 1. Spritze wird bei Infusion gegeben.\n- RTX Klinikum Essen-Mitte dann Start RTX Femurhals rechts beendet seit 08.12.2022\n- nächste Infusion Ipi/Nivo am 30.01. geplant\n- nächster Kardio-Onko-Termin am 30.03. um 08:30 Uhr, pat fragt ob an dem Tag Infusion laufen kann, aufgrund der Anfahrt von 70 km\n- Staging in 3 Monaten CT T/A+ MRT S+ CT Oberschenkel links wird extern durchgeführt\n--> MEMO: Lungenmetastase rechts und ossäre Metastase Femur rechts; Tumordoku wurde angepasst (50.01.2023)!\nSch für Spalte 2"
+    },
+    {
+      "type": "Besonderes - TK-Beschluss",
+      "date": "23.03.2023",
+      "event": "Hauttumorkonferenz-Empfehlung vom 22.03.2023\n*****************************\nKeine Änderung",
+      "summary": "Tumorkonferenz‑Empfehlung bestätigt, es gibt keine Änderungen.",
+      "category": "Tumorkonferenz",
+      "removed_lines": "",
+      "cleaned_event": "Hauttumorkonferenz-Empfehlung vom 22.03.2023\n*****************************\nKeine Änderung"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "23.03.2023",
+      "event": "WV im HTZ zum nTK\n1. Malignes Melanom TD 0,35 mm, R0, ohne Ulzeration, Mitoseerate nicht angegeben, Lokalisation: Skapular rechts, Behandlung durch Kingreen (Hagen), Histologische Begutachtung Primarius durch St. Barbara Hospital Dermatohistolog. Labor, Block-Nr. 18979/97 ED 19.11.1997\n-22.03.2023 TK: konstante Befunde, Nivo Mono fortführen\n03.04.2023\t1. Nivo Mono geplant\nECOG: 0 (0-4), Hauttyp 2 nach Fitzpatrick\n68-jähriger Patient in gutem AZ und normal EZ. Wach, örtlich und zeitlich scharf orientiert. Orientierend kein Hinweis auf ein fokales oder globales neurologisches Defizit. Thorax symmetrisch. Pulmonal auskultatorisch vesikuläres Atemgeräusch, keine Nebengeräusche, keine Rasselgeräusche. Cor rein, rhythmisch, normofrequent ohne peripheres Defizit. Abdomen weich, kein Druckschmerz, keine Resistenzen, auskultatorisch rege Peristaltik.\nA: Patient in stabilen AZ. Keine Fieber, keine Beschwerden bei der Miktion bis auf neu Nykturie, Stuhlgang op, keine Kopfschmerzen, keine Abgeschlagenheit, Keine weiteren ICI-typischen NW.\nHat seit letzter Vorstellung vor 10 Tagen zunehmende Gelenkschmerzen+Armhebeschwäche. Kraftgrad jedoch 5/5. Könne nicht mehr mit Hund täglich laufen gehen sonder nur noch spazieren. Paracetamol 500mg 3xtgl eingenommen bei Schmerzen. Wurde nun auf Novalgin 500mg bis 4xtgl umgestellt.\nGKU 23.03.2023: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- Einleitung Denosumab (Aufklärung erfolgt, voruntersuchung beim Zahnarzt opB), nächste am 03.04.23\n- Rheuma Konsil z.A. irArthritis gestellt",
+      "summary": "Nivolumab‑Monotherapie fortgeführt; erste Dosis am 03.04.2023 geplant.",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "WV im HTZ zum nTK\n1. Malignes Melanom TD 0,35 mm, R0, ohne Ulzeration, Mitoseerate nicht angegeben, Lokalisation: Skapular rechts, Behandlung durch Kingreen (Hagen), Histologische Begutachtung Primarius durch St. Barbara Hospital Dermatohistolog. Labor, Block-Nr. 18979/97 ED 19.11.1997\n-22.03.2023 TK: konstante Befunde, Nivo Mono fortführen\n03.04.2023\t1. Nivo Mono geplant\nECOG: 0 (0-4), Hauttyp 2 nach Fitzpatrick\n68-jähriger Patient in gutem AZ und normal EZ. Wach, örtlich und zeitlich scharf orientiert. Orientierend kein Hinweis auf ein fokales oder globales neurologisches Defizit. Thorax symmetrisch. Pulmonal auskultatorisch vesikuläres Atemgeräusch, keine Nebengeräusche, keine Rasselgeräusche. Cor rein, rhythmisch, normofrequent ohne peripheres Defizit. Abdomen weich, kein Druckschmerz, keine Resistenzen, auskultatorisch rege Peristaltik.\nA: Patient in stabilen AZ. Keine Fieber, keine Beschwerden bei der Miktion bis auf neu Nykturie, Stuhlgang op, keine Kopfschmerzen, keine Abgeschlagenheit, Keine weiteren ICI-typischen NW.\nHat seit letzter Vorstellung vor 10 Tagen zunehmende Gelenkschmerzen+Armhebeschwäche. Kraftgrad jedoch 5/5. Könne nicht mehr mit Hund täglich laufen gehen sonder nur noch spazieren. Paracetamol 500mg 3xtgl eingenommen bei Schmerzen. Wurde nun auf Novalgin 500mg bis 4xtgl umgestellt.\nGKU 23.03.2023: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- Einleitung Denosumab (Aufklärung erfolgt, voruntersuchung beim Zahnarzt opB), nächste am 03.04.23\n- Rheuma Konsil z.A. irArthritis gestellt"
+    },
+    {
+      "type": "BERICHTE - Konsil",
+      "date": "30.03.2023",
+      "event": "Bericht der Sektion klinische Kardioonkologie :                                    Berichtender:  Dr. med. Raluca ileana Mincu",
+      "summary": "Kardioonkologie‑Konsilbericht erstellt.",
+      "category": "Konsil",
+      "removed_lines": "",
+      "cleaned_event": "Bericht der Sektion klinische Kardioonkologie :                                    Berichtender:  Dr. med. Raluca ileana Mincu"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "30.03.2023",
+      "event": "Kardio onko in 3 Mo angefordert",
+      "summary": "Kardioonkologie‑Konsil in 3 Monaten angefordert.",
+      "category": "Konsil",
+      "removed_lines": "",
+      "cleaned_event": "Kardio onko in 3 Mo angefordert"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "30.03.2023",
+      "event": "03.04.2023\t1. Nivo Mono geplant\nweitere Gaben über HA 16.01.23 2. Gabe geplant\nA: Patient in stabilen AZ. Keine Fieber, keine Beschwerden bei der Miktion bis auf neu Nykturie, Stuhlgang op, keine Kopfschmerzen, keine Abgeschlagenheit, Keine weiteren ICI-typischen NW.\nHat seit letzter Vorstellung vor 10 Tagen zunehmende Gelenkschmerzen+Armhebeschwäche. Kraftgrad Arme 3/5. Aufstehen aus dem Stuhl nur mit Schwung möglich. keine Probleme mit Augenmuskeln/Lid vollkommen zu öffnen. Gelenkschmerzen aktuell 7/10 NRS, nehme 3x1g Novalgin+3x200mg Ibu hierunter Schmerzen ok.\nGKU 30.03.2023: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\nProc:dixit OÄ Livingstone\n- Einleitung Denosumab (Aufklärung erfolgt, voruntersuchung beim Zahnarzt opB), nächste am 03.04.23\n- 1. Gabe Nivo Mono für 03.04. geplant, ggf. stornieren nach RS Rheuma\n- Rheuma Konsil z.A. irArthritis -->heute Termin\n- NeuroKonsil z.A. Neuritis gestellt--> nach Erhalt der Diagnose durch Rheumatologie, wurde Konsil wieder storniert.",
+      "summary": "1. Nivolumab‑Dosis 03.04.2023 geplant; Rheuma‑Konsil wegen ir‑Arthritis.",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "03.04.2023\t1. Nivo Mono geplant\nweitere Gaben über HA 16.01.23 2. Gabe geplant\nA: Patient in stabilen AZ. Keine Fieber, keine Beschwerden bei der Miktion bis auf neu Nykturie, Stuhlgang op, keine Kopfschmerzen, keine Abgeschlagenheit, Keine weiteren ICI-typischen NW.\nHat seit letzter Vorstellung vor 10 Tagen zunehmende Gelenkschmerzen+Armhebeschwäche. Kraftgrad Arme 3/5. Aufstehen aus dem Stuhl nur mit Schwung möglich. keine Probleme mit Augenmuskeln/Lid vollkommen zu öffnen. Gelenkschmerzen aktuell 7/10 NRS, nehme 3x1g Novalgin+3x200mg Ibu hierunter Schmerzen ok.\nGKU 30.03.2023: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\nProc:dixit OÄ Livingstone\n- Einleitung Denosumab (Aufklärung erfolgt, voruntersuchung beim Zahnarzt opB), nächste am 03.04.23\n- 1. Gabe Nivo Mono für 03.04. geplant, ggf. stornieren nach RS Rheuma\n- Rheuma Konsil z.A. irArthritis -->heute Termin\n- NeuroKonsil z.A. Neuritis gestellt--> nach Erhalt der Diagnose durch Rheumatologie, wurde Konsil wieder storniert."
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "03.04.2023",
+      "event": "1. GabeNivolumab 480mg",
+      "summary": "Erste Nivolumab‑Infusion (480 mg) durchgeführt.",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "1. GabeNivolumab 480mg"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "27.04.2023",
+      "event": "02.05.2023\t1. Nivo Mono geplant\nMedikatio Update 23.03.23:\nGelenk/Muskelschmerzen unter Prednisolon 17,5mg (Ausschleichschema siehe Rheuma Konsil) deutlich rückläufig. Nehme keine Schmerzmittel mehr, keine Bewegungseinschränkungen. Nur noch leicht \"eingerostete\" Schultergelenk bei Bewegungsbeginn.\nGKU 27.04.2023: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- Einleitung Denosumab (Aufklärung erfolgt, voruntersuchung beim Zahnarzt opB), nächste am 27.04.23\n- RTX Uhlenbrock Lünen dann Start RTX Femurhals links beendet seit 08.12.2022--> Bilder angefordert\n- Predniolon im Ausschleichschema: aktuell 17,5mg p.o.",
+      "summary": "Nivolumab‑Monotherapie 02.05.2023 geplant; Prednisolon 17,5 mg wird ausgeschlichen.",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "02.05.2023\t1. Nivo Mono geplant\nMedikatio Update 23.03.23:\nGelenk/Muskelschmerzen unter Prednisolon 17,5mg (Ausschleichschema siehe Rheuma Konsil) deutlich rückläufig. Nehme keine Schmerzmittel mehr, keine Bewegungseinschränkungen. Nur noch leicht \"eingerostete\" Schultergelenk bei Bewegungsbeginn.\nGKU 27.04.2023: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- Einleitung Denosumab (Aufklärung erfolgt, voruntersuchung beim Zahnarzt opB), nächste am 27.04.23\n- RTX Uhlenbrock Lünen dann Start RTX Femurhals links beendet seit 08.12.2022--> Bilder angefordert\n- Predniolon im Ausschleichschema: aktuell 17,5mg p.o."
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "03.05.2023",
+      "event": "2. GabeNivolumab 480mg\nFKr",
+      "summary": "2. Gabe Nivolumab 480 mg verabreicht.",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "2. GabeNivolumab 480mg\nFKr"
+    },
+    {
+      "type": "BERICHTE - Diätberatung",
+      "date": "24.05.2023",
+      "event": "Pat. zum vereinbarten Termin nicht erscheinen, Termin wurde nicht abgesagt",
+      "summary": "Patient erschien nicht zum vereinbarten Termin, Absage fehlt.",
+      "category": "Sonstiges",
+      "removed_lines": "",
+      "cleaned_event": "Pat. zum vereinbarten Termin nicht erscheinen, Termin wurde nicht abgesagt"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "25.05.2023",
+      "event": "30.05.2023\t2. Nivo Mono geplant\nGelenk/Muskelschmerzen unter Prednisolon 12,5mg (Ausschleichschema siehe Rheuma Konsil) deutlich rückläufig. Nehme keine Schmerzmittel mehr, keine Bewegungseinschränkungen. Nur noch leicht \"eingerostete\" Schultergelenk bei Bewegungsbeginn. Physiotherapie verordnet.\nGKU 25.05.2023: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- Einleitung Denosumab (Aufklärung erfolgt, voruntersuchung beim Zahnarzt opB), nächste am heute 25.05.23\n- Predniolon im Ausschleichschema: aktuell 12,5mg p.o.",
+      "summary": "Zweite Nivolumab geplant, Denosumab ab 25.05.23 begonnen, Prednisolon 12,5 mg getapert.",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "30.05.2023\t2. Nivo Mono geplant\nGelenk/Muskelschmerzen unter Prednisolon 12,5mg (Ausschleichschema siehe Rheuma Konsil) deutlich rückläufig. Nehme keine Schmerzmittel mehr, keine Bewegungseinschränkungen. Nur noch leicht \"eingerostete\" Schultergelenk bei Bewegungsbeginn. Physiotherapie verordnet.\nGKU 25.05.2023: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- Einleitung Denosumab (Aufklärung erfolgt, voruntersuchung beim Zahnarzt opB), nächste am heute 25.05.23\n- Predniolon im Ausschleichschema: aktuell 12,5mg p.o."
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "30.05.2023",
+      "event": "3. GabeNivolumab 480mg",
+      "summary": "Dritte Gabe Nivolumab 480 mg verabreicht.",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "3. GabeNivolumab 480mg"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "06.07.2023",
+      "event": "Zum intermodalen, partiellen Vergleich liegt eine auswärtige MRT-Voruntersuchung vom 06.03.2023 vor.\nBefund:\nKeine malignomsuspekten Verdichtungen des Weichteilgewebes. Keine pathologisch vergrößerten Lymphknoten. Deutliche Varikosen der oberflächlichen Beinvenen beidseits (links>rechts).\nDie intermodal vorbekannte metastasensuspekte Läsion im linken Schenkelhals ist weiterhin als fettig imponierende Minderklazifikation abzugrenzen (3/17). Keine pathologische Fraktur. Darüber hinaus miterfasste osäre Strukturen unauffällig ohne Nachweis einer malignomsuspekten Läsion. Kleine Fabella rechts. Mehrere kleine Skleroseinseln (ex. in der rechten Tibia 4/633). Geringe Gefäßsklerosierung, exemplarisch der AFS rechts. Bezüglich des miterfassten Unterbauches verweisen wir auf den Befund des CT Abdomen vom 04.07.2023.",
+      "summary": "MRT vom 06.03.2023 zeigte keine malignomsuspekten Befunde, lediglich Varikosen.",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "Zum intermodalen, partiellen Vergleich liegt eine auswärtige MRT-Voruntersuchung vom 06.03.2023 vor.\nBefund:\nKeine malignomsuspekten Verdichtungen des Weichteilgewebes. Keine pathologisch vergrößerten Lymphknoten. Deutliche Varikosen der oberflächlichen Beinvenen beidseits (links>rechts).\nDie intermodal vorbekannte metastasensuspekte Läsion im linken Schenkelhals ist weiterhin als fettig imponierende Minderklazifikation abzugrenzen (3/17). Keine pathologische Fraktur. Darüber hinaus miterfasste osäre Strukturen unauffällig ohne Nachweis einer malignomsuspekten Läsion. Kleine Fabella rechts. Mehrere kleine Skleroseinseln (ex. in der rechten Tibia 4/633). Geringe Gefäßsklerosierung, exemplarisch der AFS rechts. Bezüglich des miterfassten Unterbauches verweisen wir auf den Befund des CT Abdomen vom 04.07.2023."
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "06.07.2023",
+      "event": "Kardio Onko für in 3 Mo. angefordert.\nSch für Spalte 3",
+      "summary": "Kardio‑Onkologie‑Konsil in 3 Monaten angefordert.",
+      "category": "Konsil",
+      "removed_lines": "",
+      "cleaned_event": "Kardio Onko für in 3 Mo. angefordert.\nSch für Spalte 3"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "14.07.2023",
+      "event": "WV im HTZ zum Checkpoint vor Inf\nCT T/A mit KM 01.03.2023 Uhlenbrock Lünen\nDie vormals abgrenzbare RF im li UL ist nicht mehr nachweisbar. Hierkräftige, teils strangartige, epinephrenisch teilskonsoliderende, mutmaßlich a.e. narbig-postop Veränderung. Vorbestehende vereinzelte noduläre Veränderungen im re UL. Ein kleiner, ätiolog. Somit letzlich unklarer Nodulus (siehe IMA Nr. 32) erscheint her etwas kräftiger. Kurzfristige Verlaufskontrolle.\nKeine stonstigen Kosnolidierunge, Stauungszeichen oder Pleuroergüsse. Im Verlauf etwas kräftigere, größenmäßig jedoch noch unspezifische bihiläre LK. Weite rhin kleinere, unspezifische mediastinale LK.\nSteatosis hepatis. Sonst weiterhin unauffällige Organe. Keine größeren Mengen freier Flüssigkeit oder Lymphome. Kein Anhalt für das Vorliegen eines sontigen ausreichend raumfordernden oder entzündlichen abdominealen Focus. Sigmadivertikulose. Kleine Inguinalhernie links mit Prolaps von Fettgewebe.\nSkelett: teils ausgeprägte WS-Degeneration. Keine größeren suspekten ossären Herdbefunde oder frakturen.\nMRT S mit KM 06.03.2023 Uhlenbrock Lünen\nIm periventrikulären/ subkortikalen Marklager beider Großhirnhemisphären einzelne winzige, fleckige T2-hypertensive Signalalterationen. An den Stammganglien bds. Wohl etwas akzentuierte Virchow-Räume. Keine größeren territorialen Läsionen bei im Wesentlichen regelrechter Mark-Rinden-Differenzierung beider Groß- und Kleinhinrhemisphären. Unauffällige Darstellung von Kleinhirn und Hiernstamm, Sella und suprasellärer Region. Keine Diffusionsstörunge. Nach KM kein pathologisches Enahncement intrakraniel.\nBeurteilung: Geringe Mikroangiopathie. Sonst im Wesentlichen altersentsprechend unauffälliger Befund. Kein Nachweis raumfordernder Filiae.\nMRT linker OS 06.03.2023\nAm prox. OS li intertrochantär knapp 2,6cm messende, irregulär berandete, insb. Peripher kräfti T2-hypertense Läsion innerhalb der Spongiosa, welche nach KM-Gabe peripherkräftig KM aufnimmt. Die Läsion ist ätiologisch letzendlich unklar/ als suspekt einzustufen, retrospektiv lässt sich im CT T/A an gleicher Stelle eine allenfalls diskrete Auflockerung der Spongiosa erkennen. In Zusammenschau der Modalitäten somit V.a. Osteolyse.\nDie übrigen ossären Verhältnisse und Weichteilsstrukturen bzw. Muskel-und Sehnenverläufe im Wesentlichen unauffällig.\nKörperliche Untersuchung 23.03.2023\nGelenk/Muskelschmerzen unter Prednisolon 12,5mg (Ausschleichschema siehe Rheuma Konsil) deutlich rückläufig. Nehme keine Schmerzmittel mehr, keine Bewegungseinschränkungen. Folgeverordnung Physiotherapie verordnet.\nnur noch v.a. Schulter, OS bds.\naktuell Predni 6-0-3mg, Reduktion über Rheuma Essen, Folgetermin in 6 Wochen.\nGKU 22.06.2023: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- Einleitung Denosumab (Aufklärung erfolgt, voruntersuchung beim Zahnarzt opB), nächste am heute 25.05.23\n- 1. Gabe Nivo Mono für 02.05. geplant, RS Rheuma (siehe Konsil) kann gegeben werden bei ir-Polymyalgia rheumatica\n- Predniolon im Ausschleichschema: aktuell 12,5mg p.o.\n- nächster Kardio-Onko-Termin am 30.03.",
+      "summary": "CT und MRT zeigen Rückgang der früheren Rechts‑UL Läsion, keine neuen metastatischen Befunde.",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "WV im HTZ zum Checkpoint vor Inf\nCT T/A mit KM 01.03.2023 Uhlenbrock Lünen\nDie vormals abgrenzbare RF im li UL ist nicht mehr nachweisbar. Hierkräftige, teils strangartige, epinephrenisch teilskonsoliderende, mutmaßlich a.e. narbig-postop Veränderung. Vorbestehende vereinzelte noduläre Veränderungen im re UL. Ein kleiner, ätiolog. Somit letzlich unklarer Nodulus (siehe IMA Nr. 32) erscheint her etwas kräftiger. Kurzfristige Verlaufskontrolle.\nKeine stonstigen Kosnolidierunge, Stauungszeichen oder Pleuroergüsse. Im Verlauf etwas kräftigere, größenmäßig jedoch noch unspezifische bihiläre LK. Weite rhin kleinere, unspezifische mediastinale LK.\nSteatosis hepatis. Sonst weiterhin unauffällige Organe. Keine größeren Mengen freier Flüssigkeit oder Lymphome. Kein Anhalt für das Vorliegen eines sontigen ausreichend raumfordernden oder entzündlichen abdominealen Focus. Sigmadivertikulose. Kleine Inguinalhernie links mit Prolaps von Fettgewebe.\nSkelett: teils ausgeprägte WS-Degeneration. Keine größeren suspekten ossären Herdbefunde oder frakturen.\nMRT S mit KM 06.03.2023 Uhlenbrock Lünen\nIm periventrikulären/ subkortikalen Marklager beider Großhirnhemisphären einzelne winzige, fleckige T2-hypertensive Signalalterationen. An den Stammganglien bds. Wohl etwas akzentuierte Virchow-Räume. Keine größeren territorialen Läsionen bei im Wesentlichen regelrechter Mark-Rinden-Differenzierung beider Groß- und Kleinhinrhemisphären. Unauffällige Darstellung von Kleinhirn und Hiernstamm, Sella und suprasellärer Region. Keine Diffusionsstörunge. Nach KM kein pathologisches Enahncement intrakraniel.\nBeurteilung: Geringe Mikroangiopathie. Sonst im Wesentlichen altersentsprechend unauffälliger Befund. Kein Nachweis raumfordernder Filiae.\nMRT linker OS 06.03.2023\nAm prox. OS li intertrochantär knapp 2,6cm messende, irregulär berandete, insb. Peripher kräfti T2-hypertense Läsion innerhalb der Spongiosa, welche nach KM-Gabe peripherkräftig KM aufnimmt. Die Läsion ist ätiologisch letzendlich unklar/ als suspekt einzustufen, retrospektiv lässt sich im CT T/A an gleicher Stelle eine allenfalls diskrete Auflockerung der Spongiosa erkennen. In Zusammenschau der Modalitäten somit V.a. Osteolyse.\nDie übrigen ossären Verhältnisse und Weichteilsstrukturen bzw. Muskel-und Sehnenverläufe im Wesentlichen unauffällig.\nKörperliche Untersuchung 23.03.2023\nGelenk/Muskelschmerzen unter Prednisolon 12,5mg (Ausschleichschema siehe Rheuma Konsil) deutlich rückläufig. Nehme keine Schmerzmittel mehr, keine Bewegungseinschränkungen. Folgeverordnung Physiotherapie verordnet.\nnur noch v.a. Schulter, OS bds.\naktuell Predni 6-0-3mg, Reduktion über Rheuma Essen, Folgetermin in 6 Wochen.\nGKU 22.06.2023: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- Einleitung Denosumab (Aufklärung erfolgt, voruntersuchung beim Zahnarzt opB), nächste am heute 25.05.23\n- 1. Gabe Nivo Mono für 02.05. geplant, RS Rheuma (siehe Konsil) kann gegeben werden bei ir-Polymyalgia rheumatica\n- Predniolon im Ausschleichschema: aktuell 12,5mg p.o.\n- nächster Kardio-Onko-Termin am 30.03."
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "14.07.2023",
+      "event": "WV im HTZ zum nTK\n24.07.2023\t4. Nivo Mono geplant\nGelenk/Muskelschmerzen unter Prednisolon 9mg deutlich rückläufig. Nehme keine Schmerzmittel mehr, nur noch leichte Bewegungseinschränkungen in Schultern bds. Physiotherapie helfe ihm sehr.\naktuell Predni Schema 6-0-3mg, Reduktion über Rheuma Essen, Folgetermin in 6 Wochen.\nHat nun Leistenhernie links bemerkt die im Beschwerden bereits, jedoch Stuhlgang normal, nur intermittierende \"Beule\" inguinal links. Vorstellung bei AC heitmatortnah geplant.\nGKU 22.06.2023: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- Predniolon im Ausschleichschema: aktuell 9mg p.o.",
+      "summary": "Vierte Nivolumab geplant; Gelenkschmerzen rückläufig, Leistenhernie links festgestellt.",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "WV im HTZ zum nTK\n24.07.2023\t4. Nivo Mono geplant\nGelenk/Muskelschmerzen unter Prednisolon 9mg deutlich rückläufig. Nehme keine Schmerzmittel mehr, nur noch leichte Bewegungseinschränkungen in Schultern bds. Physiotherapie helfe ihm sehr.\naktuell Predni Schema 6-0-3mg, Reduktion über Rheuma Essen, Folgetermin in 6 Wochen.\nHat nun Leistenhernie links bemerkt die im Beschwerden bereits, jedoch Stuhlgang normal, nur intermittierende \"Beule\" inguinal links. Vorstellung bei AC heitmatortnah geplant.\nGKU 22.06.2023: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- Predniolon im Ausschleichschema: aktuell 9mg p.o."
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "20.07.2023",
+      "event": "24.07.2023\t4. Nivo Mono geplant\nGelenk/Muskelschmerzen unter Prednisolon 9mg deutlich rückläufig. Nehme keine Schmerzmittel mehr, nur noch leichte Bewegungseinschränkungen in Schultern bds. Physiotherapie helfe ihm sehr.\naktuell Predni Schema 6-0-3mg, Reduktion über Rheuma Essen, Folgetermin in 6 Wochen.\nHat nun Leistenhernie links bemerkt die im Beschwerden bereits, jedoch Stuhlgang normal, nur intermittierende \"Beule\" inguinal links. Vorstellung bei AC heitmatortnah am 27.07. zum Vorgespräch.\nGKU 20.07.2023: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- Predniolon im Ausschleichschema: aktuell 9mg p.o.\n- Staging in 3 Monaten CT T/A+ MRT S+ CT Oberschenkel links angemeldet",
+      "summary": "Staging in 3 Monaten (CT Thorax/Abdomen, MRT Schädel, CT Oberschenkel links) angemeldet.",
+      "category": "Staging",
+      "removed_lines": "",
+      "cleaned_event": "24.07.2023\t4. Nivo Mono geplant\nGelenk/Muskelschmerzen unter Prednisolon 9mg deutlich rückläufig. Nehme keine Schmerzmittel mehr, nur noch leichte Bewegungseinschränkungen in Schultern bds. Physiotherapie helfe ihm sehr.\naktuell Predni Schema 6-0-3mg, Reduktion über Rheuma Essen, Folgetermin in 6 Wochen.\nHat nun Leistenhernie links bemerkt die im Beschwerden bereits, jedoch Stuhlgang normal, nur intermittierende \"Beule\" inguinal links. Vorstellung bei AC heitmatortnah am 27.07. zum Vorgespräch.\nGKU 20.07.2023: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- Predniolon im Ausschleichschema: aktuell 9mg p.o.\n- Staging in 3 Monaten CT T/A+ MRT S+ CT Oberschenkel links angemeldet"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "20.07.2023",
+      "event": "Laborcheck\nnü Cortisol 264\nRS OÄ Livingstone: vor Infusion am 24.07. erneute BE Kontrolle (nü Cortisol, TSH, fT3, fT4, Elyte).\nInfusion kann jedoch freigegeben werden.",
+      "summary": "Cortisol 264 µg/l; Laborkontrolle vor Infusion am 24.07.2023, Infusion freigegeben.",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "Laborcheck\nnü Cortisol 264\nRS OÄ Livingstone: vor Infusion am 24.07. erneute BE Kontrolle (nü Cortisol, TSH, fT3, fT4, Elyte).\nInfusion kann jedoch freigegeben werden."
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "24.07.2023",
+      "event": "4. GabeNivolumab 480mg",
+      "summary": "4. Nivolumab‑Infusion (480 mg) verabreicht",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "4. GabeNivolumab 480mg"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "24.07.2023",
+      "event": "Laborcheck\nnü Cortisol weitere fallen: aktuell 244.\nPat klinisch asympt.\nnimmt bereits (im Reduktionsschema) aktuell 9mg Prednisolon p.o. ein bei PMR.",
+      "summary": "Cortisol 244 U/L, Patient asymptomatisch, Prednison 9 mg",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "Laborcheck\nnü Cortisol weitere fallen: aktuell 244.\nPat klinisch asympt.\nnimmt bereits (im Reduktionsschema) aktuell 9mg Prednisolon p.o. ein bei PMR."
+    },
+    {
+      "type": "BERICHTE - Konsil",
+      "date": "03.08.2023",
+      "event": "Bericht der Sektion klinische Kardioonkologie :                                    Berichtender:  PD Dr. med. Raluca Ileana Mincu\nBefund: EKG: SR, 74 bpm, keine ERBS, Zeiten in der Norm.\nEcho: LV nicht dilatiert, nicht hypertrophiert, gute systolische LV Funktion (3DEF 60%, 2DEF 59%,  GLS -19%), keine diastolische Dysfunktion, keine bedeutsamen Klappenvitien, keine Rechtsherzbelstungszeichen, kein Perikarderguß.\nVorschläge: VK in 3 Mo.Bitte Trop und NTproBNP bestimmen.",
+      "summary": "Kardioonkologie‑Konsil: EKG/Echo unauffällig, weitere Troponin‑ und NT‑proBNP‑Bestimmung empfohlen",
+      "category": "Konsil",
+      "removed_lines": "",
+      "cleaned_event": "Bericht der Sektion klinische Kardioonkologie :                                    Berichtender:  PD Dr. med. Raluca Ileana Mincu\nBefund: EKG: SR, 74 bpm, keine ERBS, Zeiten in der Norm.\nEcho: LV nicht dilatiert, nicht hypertrophiert, gute systolische LV Funktion (3DEF 60%, 2DEF 59%,  GLS -19%), keine diastolische Dysfunktion, keine bedeutsamen Klappenvitien, keine Rechtsherzbelstungszeichen, kein Perikarderguß.\nVorschläge: VK in 3 Mo.Bitte Trop und NTproBNP bestimmen."
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "17.08.2023",
+      "event": "21.08.2023\t5. Nivo Mono geplant\nMedikatio Update 25.05.23:\nNovlagin 500mg bis 4x1tgl bei Schmerzen\nPrednisolon 12,5mg 1-0-0 (Reduktionschema vorhanden)\nSchmerzen seien unter Reduktion des Kortisons jedoch wieder etwas mehr.\naktuell Predni Schema 6mg, Reduktion über Rheuma Essen, Folgetermin in 10/23 vereinbart.\nGKU 17.08.2023: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- Predniolon im Ausschleichschema: aktuell 6mg p.o., weiter Reduktion laut Rheuma. Rheuma VK 16.10.2023 geplant, dort Diskussion, ob Alternative zu Predni bei Wiederaufkommen von Gelenkschmerzen im Reduktionsschema\n- Staging in 3 Monaten CT T/A+ MRT S+ CT Oberschenkel links terminiert",
+      "summary": "5. Nivolumab‑Infusion (Monotherapie) geplant, Prednison auf 6 mg reduziert",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "21.08.2023\t5. Nivo Mono geplant\nMedikatio Update 25.05.23:\nNovlagin 500mg bis 4x1tgl bei Schmerzen\nPrednisolon 12,5mg 1-0-0 (Reduktionschema vorhanden)\nSchmerzen seien unter Reduktion des Kortisons jedoch wieder etwas mehr.\naktuell Predni Schema 6mg, Reduktion über Rheuma Essen, Folgetermin in 10/23 vereinbart.\nGKU 17.08.2023: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- Predniolon im Ausschleichschema: aktuell 6mg p.o., weiter Reduktion laut Rheuma. Rheuma VK 16.10.2023 geplant, dort Diskussion, ob Alternative zu Predni bei Wiederaufkommen von Gelenkschmerzen im Reduktionsschema\n- Staging in 3 Monaten CT T/A+ MRT S+ CT Oberschenkel links terminiert"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "21.08.2023",
+      "event": "5. GabeNivolumab 480mg",
+      "summary": "5. Nivolumab‑Infusion (480 mg) verabreicht",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "5. GabeNivolumab 480mg"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "14.09.2023",
+      "event": "18.09.2023\t6. Nivo Mono geplant\nSchmerzen seien unter Reduktion des Kortisons jedoch wieder etwas mehr (Schulter und Hände bds). Nehme dann bB Ibu 400mg 1xzur Nacht dann seien die Schmerzen weg.\naktuell Predni Schema 4mg, Reduktion über Rheuma Essen, Folgetermin in 10/23 vereinbart.\nGKU 14.09.2023: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- Predniolon im Ausschleichschema: aktuell 4mg p.o., weiter Reduktion laut Rheuma. Rheuma VK 16.10.2023 geplant, dort Diskussion, ob Alternative zu Predni bei Wiederaufkommen von Gelenkschmerzen im Reduktionsschema\n- Staging in 3 Monaten CT T/A+ MRT S+ CT Oberschenkel links terminiert",
+      "summary": "6. Nivolumab‑Infusion (Monotherapie) geplant, Prednison 4 mg",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "18.09.2023\t6. Nivo Mono geplant\nSchmerzen seien unter Reduktion des Kortisons jedoch wieder etwas mehr (Schulter und Hände bds). Nehme dann bB Ibu 400mg 1xzur Nacht dann seien die Schmerzen weg.\naktuell Predni Schema 4mg, Reduktion über Rheuma Essen, Folgetermin in 10/23 vereinbart.\nGKU 14.09.2023: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- Predniolon im Ausschleichschema: aktuell 4mg p.o., weiter Reduktion laut Rheuma. Rheuma VK 16.10.2023 geplant, dort Diskussion, ob Alternative zu Predni bei Wiederaufkommen von Gelenkschmerzen im Reduktionsschema\n- Staging in 3 Monaten CT T/A+ MRT S+ CT Oberschenkel links terminiert"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "18.09.2023",
+      "event": "6. GabeNivolumab 480mg",
+      "summary": "6. Nivolumab‑Infusion (480 mg) verabreicht",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "6. GabeNivolumab 480mg"
+    },
+    {
+      "type": "",
+      "date": "12.10.2023",
+      "event": "BE für Checkpoint vor Inf. + CK + CK-MB + Myoglobin + Trop + F Labor erfolgt MB",
+      "summary": "Labordiagnostik vor Checkpoint‑Infusion: CK, CK‑MB, Myoglobin, Troponin",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "BE für Checkpoint vor Inf. + CK + CK-MB + Myoglobin + Trop + F Labor erfolgt MB"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "12.10.2023",
+      "event": "WV im HTZ zum Checkpoint vor Infusion:\n16.10.2023\t7. Nivo Mono geplant\nir-Polymyalgia rheumatica 03/2023\n30.03.2023 Bericht der Sektion klinische Kardioonkologie :                                    Berichtender:  Dr. med. Raluca ileana Mincu\nBefund: EKG: SR, 82 bpm, keine ERBS, Zeiten in der Norm.\nEcho: LV nicht dilatiert, nicht hypertrophiert, gute systolische LV Funktion (2DEF 59%, GLS -17%), keine diastolische Dysfunktion, keine bedeutsamen Klappenvitien, keine Rechtsherzbelstungszeichen, kein Perikarderguß.\nir Arthritis aktuell?\nVorschläge: Fortführung der aktuellen Therapie. Vk in 3 Mo.\nMRT des Schädels vom 04.07.2023:\nKeine zerebralen Filiae.\nCT: Thorax mit i.v. KM, 2-D-Rekonstruktion vom 04.07.2023:\nCT: Leber-Doppelspirale, 2-D-Rekonstruktion vom 04.07.2023:\n1.\tKonstantes Weichteilplus links hilär sowie konstantes geringes Weichteilplus angrenzend an das Nahtmaterial im linken Unterlappen a.e. postoperativ/narbig.\n2.\tDie auswärtig MRT-morphologisch vorbeschriebene Raumforderung im linken Schenkelhals ist im CT unverändert als fetthaltige unscharf berandetec Osteolyse abgrenzbar ohne Anhalt für ein Rezidiv/Progress nach RTx.\nCT: beider unterer Extremitäten mit KM-Gabe, 2-D-Rekonstruktion vom 06.07.2023:\n1.\tDie vorbeschriebene Knochenmetastase im linken Schenkelhals ist weiterhin als fetthaltige Minderkalzifizierung abgrenzbar ohne Anhalt für ein Rezidiv/Progress nach RTx.\n2.\tDarüber hinaus Nachweis einer metastasensuspekten Läsion.\nKörperliche Untersuchung 14.07.2023\nNarben reizlos ohne Hinweis auf ein Lokalrezidiv, keine suspekten Pigmentmale, kein Anhalt für epitheliale Tumoren. LK Status palpatorisch unauffällig. Schleimhäute, soweit einsehbar, außer am harten Gaumen rechtsseitig ca. 0,3cm hyperpigmentierte Makula -->Verlaufskontrolle!!\nSchmerzen seien unter Reduktion des Kortisons jedoch wieder etwas mehr (Schulter und Hände bds). Nehme dann bB Ibu 400mg 1xzur Nacht dann seien die Schmerzen weg.\naktuell Predni Schema 5mg, Reduktion über Rheuma Essen, Folgetermin in 10/23 vereinbart.\nGKU 12.10.2023: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- BE Checkpoint vor Infusion + F-Labor+ CK-MB, Myoglobin, Trop\n- Fortführung Nivo Mono Infusionen\n- Predniolon im Ausschleichschema: aktuell 5mg p.o., weiter Reduktion laut Rheuma. Rheuma VK 16.10.2023 geplant, dort Diskussion, ob Alternative zu Predni bei Wiederaufkommen von Gelenkschmerzen im Reduktionsschema\n- Staging Ende Oktober 23 CT T/A+ MRT S+ CT Oberschenkel links terminiert\nOK Spalte 2",
+      "summary": "7. Nivolumab‑Infusion (Monotherapie) geplant, stabile Bildgebung, ir‑Polymyalgia rheumatica",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "WV im HTZ zum Checkpoint vor Infusion:\n16.10.2023\t7. Nivo Mono geplant\nir-Polymyalgia rheumatica 03/2023\n30.03.2023 Bericht der Sektion klinische Kardioonkologie :                                    Berichtender:  Dr. med. Raluca ileana Mincu\nBefund: EKG: SR, 82 bpm, keine ERBS, Zeiten in der Norm.\nEcho: LV nicht dilatiert, nicht hypertrophiert, gute systolische LV Funktion (2DEF 59%, GLS -17%), keine diastolische Dysfunktion, keine bedeutsamen Klappenvitien, keine Rechtsherzbelstungszeichen, kein Perikarderguß.\nir Arthritis aktuell?\nVorschläge: Fortführung der aktuellen Therapie. Vk in 3 Mo.\nMRT des Schädels vom 04.07.2023:\nKeine zerebralen Filiae.\nCT: Thorax mit i.v. KM, 2-D-Rekonstruktion vom 04.07.2023:\nCT: Leber-Doppelspirale, 2-D-Rekonstruktion vom 04.07.2023:\n1.\tKonstantes Weichteilplus links hilär sowie konstantes geringes Weichteilplus angrenzend an das Nahtmaterial im linken Unterlappen a.e. postoperativ/narbig.\n2.\tDie auswärtig MRT-morphologisch vorbeschriebene Raumforderung im linken Schenkelhals ist im CT unverändert als fetthaltige unscharf berandetec Osteolyse abgrenzbar ohne Anhalt für ein Rezidiv/Progress nach RTx.\nCT: beider unterer Extremitäten mit KM-Gabe, 2-D-Rekonstruktion vom 06.07.2023:\n1.\tDie vorbeschriebene Knochenmetastase im linken Schenkelhals ist weiterhin als fetthaltige Minderkalzifizierung abgrenzbar ohne Anhalt für ein Rezidiv/Progress nach RTx.\n2.\tDarüber hinaus Nachweis einer metastasensuspekten Läsion.\nKörperliche Untersuchung 14.07.2023\nNarben reizlos ohne Hinweis auf ein Lokalrezidiv, keine suspekten Pigmentmale, kein Anhalt für epitheliale Tumoren. LK Status palpatorisch unauffällig. Schleimhäute, soweit einsehbar, außer am harten Gaumen rechtsseitig ca. 0,3cm hyperpigmentierte Makula -->Verlaufskontrolle!!\nSchmerzen seien unter Reduktion des Kortisons jedoch wieder etwas mehr (Schulter und Hände bds). Nehme dann bB Ibu 400mg 1xzur Nacht dann seien die Schmerzen weg.\naktuell Predni Schema 5mg, Reduktion über Rheuma Essen, Folgetermin in 10/23 vereinbart.\nGKU 12.10.2023: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- BE Checkpoint vor Infusion + F-Labor+ CK-MB, Myoglobin, Trop\n- Fortführung Nivo Mono Infusionen\n- Predniolon im Ausschleichschema: aktuell 5mg p.o., weiter Reduktion laut Rheuma. Rheuma VK 16.10.2023 geplant, dort Diskussion, ob Alternative zu Predni bei Wiederaufkommen von Gelenkschmerzen im Reduktionsschema\n- Staging Ende Oktober 23 CT T/A+ MRT S+ CT Oberschenkel links terminiert\nOK Spalte 2"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "16.10.2023",
+      "event": "7. GabeNivolumab 480mg\nJAS",
+      "summary": "7. Nivolumab‑Infusion (480 mg) verabreicht",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "7. GabeNivolumab 480mg\nJAS"
+    },
+    {
+      "type": "BERICHTE - Konsil",
+      "date": "16.10.2023",
+      "event": "Bericht der Sektion klinische Kardioonkologie :                                    Berichtender:  PD Dr. med. Raluca Ileana Mincu",
+      "summary": "Konsilbericht der klinischen Kardioonkologie erstellt.",
+      "category": "Konsil",
+      "removed_lines": "",
+      "cleaned_event": "Bericht der Sektion klinische Kardioonkologie :                                    Berichtender:  PD Dr. med. Raluca Ileana Mincu"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "16.10.2023",
+      "event": "kardioOnko in 3 Mon angefordert\nHZ",
+      "summary": "Kardioonkologie‑Konsil in 3 Monaten angefordert.",
+      "category": "Konsil",
+      "removed_lines": "",
+      "cleaned_event": "kardioOnko in 3 Mon angefordert\nHZ"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "03.11.2023",
+      "event": "WV im HTZ zum nTK:\n13.11.2023 \t8. Nivo Mono geplant\naktuell Predni Schema 6mg, Reduktion über Rheuma Essen, Folgetermin in 11/23 vereinbart, nach EInleitung MTX 10mg s.c.\nIst seit ein paar Tagen Schnupfen+Husten.\nGKU 12.10.2023: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- Predniolon im Ausschleichschema: aktuell 6mg p.o., weiter Reduktion laut Rheuma. Rheuma Konsil erfolgt vor 2 Wochen-> Start in 1 Woche MTX 10mg s.c. 1xwöchentlich",
+      "summary": "8. Nivolumab‑Infusion geplant, Prednisolon 6 mg, MTX‑Start vorgesehen.",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "WV im HTZ zum nTK:\n13.11.2023 \t8. Nivo Mono geplant\naktuell Predni Schema 6mg, Reduktion über Rheuma Essen, Folgetermin in 11/23 vereinbart, nach EInleitung MTX 10mg s.c.\nIst seit ein paar Tagen Schnupfen+Husten.\nGKU 12.10.2023: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- Predniolon im Ausschleichschema: aktuell 6mg p.o., weiter Reduktion laut Rheuma. Rheuma Konsil erfolgt vor 2 Wochen-> Start in 1 Woche MTX 10mg s.c. 1xwöchentlich"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "09.11.2023",
+      "event": "13.11.2023 \t8. Nivo Mono geplant\naktuell Predni Schema 6mg, Reduktion über Rheuma Essen, Folgetermin in 11/23 vereinbart, nach EInleitung MTX 10mg s.c.\nPat hatte bis gestern Covid, ist aber nun negativ und symptomfrei. Infusion erst in 4 Tagen geplant, bis dahin Infekt gut abgeklungen.\nGKU 09.11.2023: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- Predniolon im Ausschleichschema: aktuell 6mg p.o., weiter Reduktion laut Rheuma. Rheuma Konsil erfolgt vor 2 Wochen-> Start in 1 Woche MTX 10mg s.c. 1xwöchentlich",
+      "summary": "COVID negativ, 8. Nivolumab‑Infusion in 4 Tagen geplant.",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "13.11.2023 \t8. Nivo Mono geplant\naktuell Predni Schema 6mg, Reduktion über Rheuma Essen, Folgetermin in 11/23 vereinbart, nach EInleitung MTX 10mg s.c.\nPat hatte bis gestern Covid, ist aber nun negativ und symptomfrei. Infusion erst in 4 Tagen geplant, bis dahin Infekt gut abgeklungen.\nGKU 09.11.2023: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- Predniolon im Ausschleichschema: aktuell 6mg p.o., weiter Reduktion laut Rheuma. Rheuma Konsil erfolgt vor 2 Wochen-> Start in 1 Woche MTX 10mg s.c. 1xwöchentlich"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "13.11.2023",
+      "event": "8. GabeNivolumab 480mg\nMME",
+      "summary": "8. Gabe Nivolumab 480 mg verabreicht.",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "8. GabeNivolumab 480mg\nMME"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "07.12.2023",
+      "event": "11.12.2023\t9. Nivo Mono geplant\naktuell Predni Schema 4mg, Reduktion über Rheuma Essen, in 1 Woche EInleitung MTX 10mg s.c.. Hat bisher nicht gestartet weil er noch PostCovid Erkältungssymptome hatte. Fühle sich nun aber wieder fit.\nGKU 07.12.2023: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- Predniolon im Ausschleichschema: aktuell 4mg p.o., weiter Reduktion laut Rheuma. Rheuma Konsil erfolgt vor 2 Wochen-> Start in 1 Woche MTX 10mg s.c. 1xwöchentlich",
+      "summary": "9. Nivolumab‑Infusion für 11.12 geplant, Prednisolon 4 mg.",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "11.12.2023\t9. Nivo Mono geplant\naktuell Predni Schema 4mg, Reduktion über Rheuma Essen, in 1 Woche EInleitung MTX 10mg s.c.. Hat bisher nicht gestartet weil er noch PostCovid Erkältungssymptome hatte. Fühle sich nun aber wieder fit.\nGKU 07.12.2023: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- Predniolon im Ausschleichschema: aktuell 4mg p.o., weiter Reduktion laut Rheuma. Rheuma Konsil erfolgt vor 2 Wochen-> Start in 1 Woche MTX 10mg s.c. 1xwöchentlich"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "11.12.2023",
+      "event": "9. GabeNivolumab 480mg\nDM",
+      "summary": "9. Gabe Nivolumab 480 mg verabreicht.",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "9. GabeNivolumab 480mg\nDM"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "04.01.2024",
+      "event": "08.01.2024\t10. Nivo Mono geplant\nSchmerzen seien unter Reduktion des Kortisons jedoch wieder etwas mehr (Schulter und Hände bds).\naktuell Predni Schema 4mg, Reduktion über Rheuma Essen, in 1 Woche EInleitung MTX 10mg s.c.. Hat bisher nicht gestartet weil er noch PostCovid Erkältungssymptome hatte. Fühle sich nun aber wieder fit.\nGKU 04.01.2024: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- Predniolon im Ausschleichschema: aktuell 4mg p.o., weiter Reduktion laut Rheuma. Rheuma Konsil erfolgt vor 2 Wochen-> Start in 1 Woche MTX 10mg s.c. 1xwöchentlich\n- nächster Kardio-Onko-Termin in 3 Mon angefordert\n- in 3 Mon PET CT+ MRT S inkl nTK angemeldet dann TK mit Frage nach Therapiepause",
+      "summary": "10. Nivolumab‑Infusion geplant, Schmerzen trotz Kortikoid‑Reduktion.",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "08.01.2024\t10. Nivo Mono geplant\nSchmerzen seien unter Reduktion des Kortisons jedoch wieder etwas mehr (Schulter und Hände bds).\naktuell Predni Schema 4mg, Reduktion über Rheuma Essen, in 1 Woche EInleitung MTX 10mg s.c.. Hat bisher nicht gestartet weil er noch PostCovid Erkältungssymptome hatte. Fühle sich nun aber wieder fit.\nGKU 04.01.2024: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- Predniolon im Ausschleichschema: aktuell 4mg p.o., weiter Reduktion laut Rheuma. Rheuma Konsil erfolgt vor 2 Wochen-> Start in 1 Woche MTX 10mg s.c. 1xwöchentlich\n- nächster Kardio-Onko-Termin in 3 Mon angefordert\n- in 3 Mon PET CT+ MRT S inkl nTK angemeldet dann TK mit Frage nach Therapiepause"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "04.01.2024",
+      "event": "04.01.2024\t10. Nivo Mono geplant\nPrednisolon 4mg 1-0-0 (Reduktionschema vorhanden)\nBericht der Sektion klinische Kardioonkologie 16.10.23: PD Dr. med. Raluca Ileana Mincu\nKU: RR 121/71 mmHg, HF 64 bpm, keine Beinödeme\nLabor: Trop N\nBeurteilung: Guter kardialer Status\nVorschläge: Vk in 3 Mo.\nSchmerzen seien unter Reduktion des Kortisons weiterhin vorhanden v.a. im Bereich der Schultern, im Tagesverlauf jedoch gut regredient\naktuell Predni Schema 5mg weiter, nächste Woche Termin Rheuma Essen, dann Frage nach Reduktion. MTX wird gut vertragen, ggf. Erhöhung über Rheuma?\nGKU 04.01.2024: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- Prednisolon im Ausschleichschema: aktuell 5mg p.o., weiter Reduktion laut Rheuma. Rheuma Konsil erfolgt vor 2 Wochen-> Start in 1 Woche MTX 10mg s.c. 1xwöchentlich\n- Physio Folgerezept\n- nächster Kardio-Onko-Termin nächste Woche\n- in 02/24 PET CT+ MRT S inkl nTK angemeldet dann TK mit Frage nach Therapiepause\n- Staging CT T/A+ MRT S+ CT Oberschenkel links für in 6 Monaten angefordert",
+      "summary": "Staging‑CT Thorax/Abdomen, MRT Schädel und CT Oberschenkel in 6 Monaten angefordert.",
+      "category": "Staging",
+      "removed_lines": "",
+      "cleaned_event": "04.01.2024\t10. Nivo Mono geplant\nPrednisolon 4mg 1-0-0 (Reduktionschema vorhanden)\nBericht der Sektion klinische Kardioonkologie 16.10.23: PD Dr. med. Raluca Ileana Mincu\nKU: RR 121/71 mmHg, HF 64 bpm, keine Beinödeme\nLabor: Trop N\nBeurteilung: Guter kardialer Status\nVorschläge: Vk in 3 Mo.\nSchmerzen seien unter Reduktion des Kortisons weiterhin vorhanden v.a. im Bereich der Schultern, im Tagesverlauf jedoch gut regredient\naktuell Predni Schema 5mg weiter, nächste Woche Termin Rheuma Essen, dann Frage nach Reduktion. MTX wird gut vertragen, ggf. Erhöhung über Rheuma?\nGKU 04.01.2024: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\n- Prednisolon im Ausschleichschema: aktuell 5mg p.o., weiter Reduktion laut Rheuma. Rheuma Konsil erfolgt vor 2 Wochen-> Start in 1 Woche MTX 10mg s.c. 1xwöchentlich\n- Physio Folgerezept\n- nächster Kardio-Onko-Termin nächste Woche\n- in 02/24 PET CT+ MRT S inkl nTK angemeldet dann TK mit Frage nach Therapiepause\n- Staging CT T/A+ MRT S+ CT Oberschenkel links für in 6 Monaten angefordert"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "08.01.2024",
+      "event": "10. GabeNivolumab 480mg",
+      "summary": "10. Gabe Nivolumab 480 mg verabreicht.",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "10. GabeNivolumab 480mg"
+    },
+    {
+      "type": "BERICHTE - Konsil",
+      "date": "08.01.2024",
+      "event": "Bericht der Sektion klinische Kardioonkologie :                                    Berichtender:  Wibke Tonscheidt\n========================\nBefund: EA: Keine kardialen Beschwerden\nKU: RR 124/63 mmHg, HF 69 bpm, keine Beinödeme\nEKG: SR, 60 bpm, keine ERBS, AVB I°.\nEcho: gute LVEF (2D:64%), AI II°, keine RHB, keinPerikarderguss, bekanntes Aortenbulbusaneurysma\nLabor: Trop und NTproBNP N\nBeurteilung: gute LV und RV Funktion\nRR unter Candesartan 16 mg gut eingestellt\nVorschläge: WV in 3 Monaten\nregelmäßige Kontrolle des RRs",
+      "summary": "Keine kardialen Beschwerden, gute LV/RV‑Funktion, LVEF 64 %, RR unter Candesartan gut.",
+      "category": "Konsil",
+      "removed_lines": "",
+      "cleaned_event": "Bericht der Sektion klinische Kardioonkologie :                                    Berichtender:  Wibke Tonscheidt\n========================\nBefund: EA: Keine kardialen Beschwerden\nKU: RR 124/63 mmHg, HF 69 bpm, keine Beinödeme\nEKG: SR, 60 bpm, keine ERBS, AVB I°.\nEcho: gute LVEF (2D:64%), AI II°, keine RHB, keinPerikarderguss, bekanntes Aortenbulbusaneurysma\nLabor: Trop und NTproBNP N\nBeurteilung: gute LV und RV Funktion\nRR unter Candesartan 16 mg gut eingestellt\nVorschläge: WV in 3 Monaten\nregelmäßige Kontrolle des RRs"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "01.02.2024",
+      "event": "WV im HTZ zum Checkpoint:\nMalignes Melanom TD 0,35 mm, R0, ohne Ulzeration, Mitoseerate nicht angegeben, Lokalisation: Skapular rechts, Behandlung durch Kingreen (Hagen), Histologische Begutachtung Primarius durch St. Barbara Hospital Dermatohistolog. Labor, Block-Nr. 18979/97 ED 19.11.1997\nStadium bei ED nach AJCC 2017: pT1a cN0 cM0, Stadium IA\nHausarzt: Wloczek (Bergkamen)\nHautarzt: Dr. Happe (Lünen)\nNotfallkontakt: Ehefrau 02306-80726\nSozialanamnese: Fachpfleger für Anästhesie und Intensivmedizin in Hagen; 2 Söhne.\nMelanomanamnese: 1995 MM Skapulär rechts, seitdem kein Hautkrebs.\nVater Blasen-CA (68LJ), Mutter Kolon-CA (75LJ)\nVerlauf:\n-1997 Malignes Melanom Skapula rechts, TD 0,35mm, R0+Sicherheitsabstand\n-27.09.2022 5cm Lungenmetastase Unterlappen rechts, transthorakale CT-gesteuerte Punktion\n-12.10.2022 histolog. gesicherte ossäre Metastase Schenkelhals links\n-25.10.22 stationär Klinikum Essen-Mitte: VATS rechts, Keilresektion Unterlappen nach Pleurolyse, systematische Lamyphadenektomie (0/25 LK)\n-15.11-08.12.22 RTX Femur links in Uhlenbrock Lünen\n-22.03.2023 TK: konstante Befunde, ICI fortführen\n-14.07.2023 konstante Befunde im Staging\nAktuelles Stadium nach AJCC 2017: pT1a cN0 cM1c, Stadium IV\nMolpatho: extern aus der Lungenmtastase: BRAF wt\nPD-L1: angefordert\nInfusionen:\n19.12.2022\t1. Gabe Ipi/Nivo\n09.01.2023\t2. Gabe Ipi/Nivo\n30.01.2023\t3. Gabe Ipi/Nivo\n21.02.2023\t4. Gabe Ipi/Nivo\n03.04.2023\t1. Nivo Mono storniert bei V.a. irArthritis\n02.05.2023\t1. Nivo Mono\n30.05.2023\t2. Nivo Mono\n26.06.2023\t3. Nivo Mono\n24.07.2023\t4. Nivo Mono\n21.08.2023\t5. Nivo Mono\n18.09.2023\t6. Nivo Mono\n16.10.2023\t7. Nivo Mono\n13.11.2023 \t8. Nivo Mono\n11.12.2023\t9. Nivo Mono\n04.01.2024\t10. Nivo Mono\n04.02.2024\t11. Nivo Mono geplant\n19.12.2022 1. Denosumab\nweitere Gaben über HA\nNebenwirkungen unter Systemtherapie:\nir-Polymyalgia rheumatica 03/2023. MTX 10mg s.c. Start 11/23\nWeitere Diagnosen\nEingefäß-KHK\nHypertensive Herzerkrankung\nSigmadivertikulose\nBanscheibenvorfall L4/5 2008\nHodenseminom rechts (Ablatio testis+Radiatio 2007)\nEx-Nikotinabusus (16py)\nAlkoholkonsum:\nDrogenkonsum:\nDefibrillator, Cochlea-Implantat, Neurostimulator oder Eventrecorder? Nein\nAllergien: nein\nMedikatio Update 09/23:\nCandesartan 16mg 1-0-0\nASS 100mg 1-0-0 (seit Anfanf 12/22 pausiert bei magenschmerzen durch HA)\nEsomeprazol 40mg 1-0-0\nIbu 400mg bB bei Schmerzen\nDekristol 1000 IE 1-0-0\nPrednisolon 3mg 1-0-0 (Reduktionschema vorhanden)\nWichtige Befunde:\n30.09.2022 PET-CT\nGlucoseposiziver pulmobaler Tumor im rechten Unterlappen dorsal mit Pleurakontakt. Glukosepos. Ossäre Metastasen im links Schenkelhals. Der übrige Ganzkörper zeigte keinen weiteren glucosepositiven Tumor oder metastasensuspekten Herd.\nAktuelles Staging:\nMRT des Schädels vom 30.10.2023:\nCT: Leber-Doppelspirale, 2-D-Rekonstruktion vom 30.10.2023:\nCT: Thorax mit i.v. KM, 2-D-Rekonstruktion vom 30.10.2023:\nCT: beider unterer Extremitäten mit KM-Gabe, 2-D-Rekonstruktion vom 30.10.2023:\n1.\tKonstantes geringes Weichteilplus angrenzend an das Nahtmaterial im linken Unterlappen a.e. postoperativ/narbig.\n2.\tDie auswärtig MRT-morphologisch vorbeschriebene Raumforderung im linken Schenkelhals ist im CT unverändert als fetthaltige, unscharf berandete Osteolyse abgrenzbar ohne Anhalt für ein Rezidiv/Progress nach RTX.\n3.\tKein Nachweis einer neuen thorakoabdominellen Tumormanifestation.\nPatholog. Befund 29.09.2022 (H/2022/28080) (Pathologie Essen-Mitte)\nAm ehesten pulmonal metastasiertes epitheloides malignes Melanom.\nPatholog. Befund 14.10.2022 (H/2022/29498) (Pathologie Essen-Mitte)\nBiopsate aus linken Femurhals: subtotal nekrotisiertes amelanotisches (epitheloides) malignes Melanom.\nTK Beschluss 22.03.2023:\nPulmonal stabile Befunde, Verlaufskontrolle, im Femur rechts keine Läsion erkennbar, auch kein Hinweis für alte Läsion. Nur im Femur links zeigt sich eine Läsion, Anforderung des Bestrahlungsbriefes bzgl. Bestrahlung Femur, laut Orginal-Histobefund Klinikum Essen-Mitte wurde links der proximale Femur biopsiert mit Nachweis MM-Filia. Anforderung der PET_CT von September 2022 (auch hier ist die Läsion im linken Femur beschrieben). Mit allen Befunden Vorstellung in TK zur Demo und Abgleich mit der aktuell bestehenden Läsion im Femur prox. links (gleiche Läsion?). Fortsetzung Immuntherapie\nRS OÄ Spieker (Rheuma Essen-Werden 0201-174-46014)\nED Polymyalgia rheumatica a.e. therapieassoziiert\nEinleitung von 20mg Prednisolon im Ausschleichschema (Reduktion um 2,5mg/Woche bis 10mg, dann 1mg alle 14d)\nkeine KI zur Fortführung der ICI Therapie.\nRS OÄ Livingstone: Nivo Mono am 03.04. kann freigegeben werden.\nje nach Symptomentwicklung und Tumorstabilität, Therapiepausierung im Verlauf erwägen.\nKörperliche Untersuchung 03.11.2023\nGröße: 186cm\nGewicht: 85kg\nECOG: 0 , Hauttyp 2 nach Fitzpatrick\n69-jähriger Patient in gutem AZ und normal EZ. Wach, örtlich und zeitlich scharf orientiert. Orientierend kein Hinweis auf ein fokales oder globales neurologisches Defizit. Thorax symmetrisch. Pulmonal auskultatorisch vesikuläres Atemgeräusch, keine Nebengeräusche, keine Rasselgeräusche. Cor rein, rhythmisch, normofrequent ohne peripheres Defizit. Abdomen weich, kein Druckschmerz, keine Resistenzen, auskultatorisch rege Peristaltik.\nNarben reizlos ohne Hinweis auf ein Lokalrezidiv, keine suspekten Pigmentmale, kein Anhalt für epitheliale Tumoren. LK Status palpatorisch unauffällig. Schleimhäute, soweit einsehbar, außer am harten Gaumen rechtsseitig ca. 0,3cm hyperpigmentierte Makula -->in VK idem.\nA: Patient in stabilen AZ. Keine Fieber, keine Beschwerden bei der Miktion bis auf neu Nykturie, Stuhlgang op, keine Kopfschmerzen, keine Abgeschlagenheit.\nNehme keine Schmerzmittel mehr, nur noch leichte Bewegungseinschränkungen in Schultern bds. Physiotherapie helfe ihm sehr.\nSchmerzen seien unter Reduktion des Kortisons weiterhin vorhanden v.a. im Bereich der Schultern, im Tagesverlauf jedoch gut regredient\naktuell Predni Schema 3mg weiter reduzieren. MTX 10mg s.c. wird gut vertragen, hat nun seit letzter Wochen Magenschmerzen. keine Stuhlprobleme.  V.a. nachts nüchtern Magenschmerz. Hat seit 3 Tagen deshalb ASS abgesetzt, Pat hingewiesen, dass Blutverdünner nicht selbstständig abgsetzt werden sollte. RS mit HA!\nLeistenhernie links wurde in 08/23 operiert.\nGKU 01.02.2024: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\nProc:\n- Forführung Denosumab\n- BE Checkpoint vor Infusion + F-Labor\n- Fortführung Nivo Mono Infusionen (Termine bestehen)\n- Prednisolon im Ausschleichschema: aktuell 3mg p.o., weiter Reduktion laut Rheuma. Reduktion alle 2-3 Wo um 1mg.\n- Termin zur Knochendichtemessung unter MTX und Z.n. ossären Metastasen angemeldet\n- Physio Folgerezept\n- nächster Kardio-Onko-in 3 Mon angefordert. letzter 01/24\n- in 02/24 PET CT+ MRT S inkl nTK angemeldet dann TK mit Frage nach Therapiepause\n- Staging CT T/A+ MRT S+ CT Oberschenkel links für 05/24 terminiert\nHZ Spalte 2",
+      "summary": "PD‑L1‑Status wird angefordert.",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "WV im HTZ zum Checkpoint:\nMalignes Melanom TD 0,35 mm, R0, ohne Ulzeration, Mitoseerate nicht angegeben, Lokalisation: Skapular rechts, Behandlung durch Kingreen (Hagen), Histologische Begutachtung Primarius durch St. Barbara Hospital Dermatohistolog. Labor, Block-Nr. 18979/97 ED 19.11.1997\nStadium bei ED nach AJCC 2017: pT1a cN0 cM0, Stadium IA\nHausarzt: Wloczek (Bergkamen)\nHautarzt: Dr. Happe (Lünen)\nNotfallkontakt: Ehefrau 02306-80726\nSozialanamnese: Fachpfleger für Anästhesie und Intensivmedizin in Hagen; 2 Söhne.\nMelanomanamnese: 1995 MM Skapulär rechts, seitdem kein Hautkrebs.\nVater Blasen-CA (68LJ), Mutter Kolon-CA (75LJ)\nVerlauf:\n-1997 Malignes Melanom Skapula rechts, TD 0,35mm, R0+Sicherheitsabstand\n-27.09.2022 5cm Lungenmetastase Unterlappen rechts, transthorakale CT-gesteuerte Punktion\n-12.10.2022 histolog. gesicherte ossäre Metastase Schenkelhals links\n-25.10.22 stationär Klinikum Essen-Mitte: VATS rechts, Keilresektion Unterlappen nach Pleurolyse, systematische Lamyphadenektomie (0/25 LK)\n-15.11-08.12.22 RTX Femur links in Uhlenbrock Lünen\n-22.03.2023 TK: konstante Befunde, ICI fortführen\n-14.07.2023 konstante Befunde im Staging\nAktuelles Stadium nach AJCC 2017: pT1a cN0 cM1c, Stadium IV\nMolpatho: extern aus der Lungenmtastase: BRAF wt\nPD-L1: angefordert\nInfusionen:\n19.12.2022\t1. Gabe Ipi/Nivo\n09.01.2023\t2. Gabe Ipi/Nivo\n30.01.2023\t3. Gabe Ipi/Nivo\n21.02.2023\t4. Gabe Ipi/Nivo\n03.04.2023\t1. Nivo Mono storniert bei V.a. irArthritis\n02.05.2023\t1. Nivo Mono\n30.05.2023\t2. Nivo Mono\n26.06.2023\t3. Nivo Mono\n24.07.2023\t4. Nivo Mono\n21.08.2023\t5. Nivo Mono\n18.09.2023\t6. Nivo Mono\n16.10.2023\t7. Nivo Mono\n13.11.2023 \t8. Nivo Mono\n11.12.2023\t9. Nivo Mono\n04.01.2024\t10. Nivo Mono\n04.02.2024\t11. Nivo Mono geplant\n19.12.2022 1. Denosumab\nweitere Gaben über HA\nNebenwirkungen unter Systemtherapie:\nir-Polymyalgia rheumatica 03/2023. MTX 10mg s.c. Start 11/23\nWeitere Diagnosen\nEingefäß-KHK\nHypertensive Herzerkrankung\nSigmadivertikulose\nBanscheibenvorfall L4/5 2008\nHodenseminom rechts (Ablatio testis+Radiatio 2007)\nEx-Nikotinabusus (16py)\nAlkoholkonsum:\nDrogenkonsum:\nDefibrillator, Cochlea-Implantat, Neurostimulator oder Eventrecorder? Nein\nAllergien: nein\nMedikatio Update 09/23:\nCandesartan 16mg 1-0-0\nASS 100mg 1-0-0 (seit Anfanf 12/22 pausiert bei magenschmerzen durch HA)\nEsomeprazol 40mg 1-0-0\nIbu 400mg bB bei Schmerzen\nDekristol 1000 IE 1-0-0\nPrednisolon 3mg 1-0-0 (Reduktionschema vorhanden)\nWichtige Befunde:\n30.09.2022 PET-CT\nGlucoseposiziver pulmobaler Tumor im rechten Unterlappen dorsal mit Pleurakontakt. Glukosepos. Ossäre Metastasen im links Schenkelhals. Der übrige Ganzkörper zeigte keinen weiteren glucosepositiven Tumor oder metastasensuspekten Herd.\nAktuelles Staging:\nMRT des Schädels vom 30.10.2023:\nCT: Leber-Doppelspirale, 2-D-Rekonstruktion vom 30.10.2023:\nCT: Thorax mit i.v. KM, 2-D-Rekonstruktion vom 30.10.2023:\nCT: beider unterer Extremitäten mit KM-Gabe, 2-D-Rekonstruktion vom 30.10.2023:\n1.\tKonstantes geringes Weichteilplus angrenzend an das Nahtmaterial im linken Unterlappen a.e. postoperativ/narbig.\n2.\tDie auswärtig MRT-morphologisch vorbeschriebene Raumforderung im linken Schenkelhals ist im CT unverändert als fetthaltige, unscharf berandete Osteolyse abgrenzbar ohne Anhalt für ein Rezidiv/Progress nach RTX.\n3.\tKein Nachweis einer neuen thorakoabdominellen Tumormanifestation.\nPatholog. Befund 29.09.2022 (H/2022/28080) (Pathologie Essen-Mitte)\nAm ehesten pulmonal metastasiertes epitheloides malignes Melanom.\nPatholog. Befund 14.10.2022 (H/2022/29498) (Pathologie Essen-Mitte)\nBiopsate aus linken Femurhals: subtotal nekrotisiertes amelanotisches (epitheloides) malignes Melanom.\nTK Beschluss 22.03.2023:\nPulmonal stabile Befunde, Verlaufskontrolle, im Femur rechts keine Läsion erkennbar, auch kein Hinweis für alte Läsion. Nur im Femur links zeigt sich eine Läsion, Anforderung des Bestrahlungsbriefes bzgl. Bestrahlung Femur, laut Orginal-Histobefund Klinikum Essen-Mitte wurde links der proximale Femur biopsiert mit Nachweis MM-Filia. Anforderung der PET_CT von September 2022 (auch hier ist die Läsion im linken Femur beschrieben). Mit allen Befunden Vorstellung in TK zur Demo und Abgleich mit der aktuell bestehenden Läsion im Femur prox. links (gleiche Läsion?). Fortsetzung Immuntherapie\nRS OÄ Spieker (Rheuma Essen-Werden 0201-174-46014)\nED Polymyalgia rheumatica a.e. therapieassoziiert\nEinleitung von 20mg Prednisolon im Ausschleichschema (Reduktion um 2,5mg/Woche bis 10mg, dann 1mg alle 14d)\nkeine KI zur Fortführung der ICI Therapie.\nRS OÄ Livingstone: Nivo Mono am 03.04. kann freigegeben werden.\nje nach Symptomentwicklung und Tumorstabilität, Therapiepausierung im Verlauf erwägen.\nKörperliche Untersuchung 03.11.2023\nGröße: 186cm\nGewicht: 85kg\nECOG: 0 , Hauttyp 2 nach Fitzpatrick\n69-jähriger Patient in gutem AZ und normal EZ. Wach, örtlich und zeitlich scharf orientiert. Orientierend kein Hinweis auf ein fokales oder globales neurologisches Defizit. Thorax symmetrisch. Pulmonal auskultatorisch vesikuläres Atemgeräusch, keine Nebengeräusche, keine Rasselgeräusche. Cor rein, rhythmisch, normofrequent ohne peripheres Defizit. Abdomen weich, kein Druckschmerz, keine Resistenzen, auskultatorisch rege Peristaltik.\nNarben reizlos ohne Hinweis auf ein Lokalrezidiv, keine suspekten Pigmentmale, kein Anhalt für epitheliale Tumoren. LK Status palpatorisch unauffällig. Schleimhäute, soweit einsehbar, außer am harten Gaumen rechtsseitig ca. 0,3cm hyperpigmentierte Makula -->in VK idem.\nA: Patient in stabilen AZ. Keine Fieber, keine Beschwerden bei der Miktion bis auf neu Nykturie, Stuhlgang op, keine Kopfschmerzen, keine Abgeschlagenheit.\nNehme keine Schmerzmittel mehr, nur noch leichte Bewegungseinschränkungen in Schultern bds. Physiotherapie helfe ihm sehr.\nSchmerzen seien unter Reduktion des Kortisons weiterhin vorhanden v.a. im Bereich der Schultern, im Tagesverlauf jedoch gut regredient\naktuell Predni Schema 3mg weiter reduzieren. MTX 10mg s.c. wird gut vertragen, hat nun seit letzter Wochen Magenschmerzen. keine Stuhlprobleme.  V.a. nachts nüchtern Magenschmerz. Hat seit 3 Tagen deshalb ASS abgesetzt, Pat hingewiesen, dass Blutverdünner nicht selbstständig abgsetzt werden sollte. RS mit HA!\nLeistenhernie links wurde in 08/23 operiert.\nGKU 01.02.2024: reine, rhythmische Herztöne, keien Herzgeräusche; Vesikuläres AG, keine RGs.\nProc:\n- Forführung Denosumab\n- BE Checkpoint vor Infusion + F-Labor\n- Fortführung Nivo Mono Infusionen (Termine bestehen)\n- Prednisolon im Ausschleichschema: aktuell 3mg p.o., weiter Reduktion laut Rheuma. Reduktion alle 2-3 Wo um 1mg.\n- Termin zur Knochendichtemessung unter MTX und Z.n. ossären Metastasen angemeldet\n- Physio Folgerezept\n- nächster Kardio-Onko-in 3 Mon angefordert. letzter 01/24\n- in 02/24 PET CT+ MRT S inkl nTK angemeldet dann TK mit Frage nach Therapiepause\n- Staging CT T/A+ MRT S+ CT Oberschenkel links für 05/24 terminiert\nHZ Spalte 2"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "05.02.2024",
+      "event": "Infusionseinheit\n11. GabeNivolumab 480mg\nTherapie mit Nivolumab 480mg (nach 4x Ipi/Nivo), Indikationsstellung und Ausschluss von Kontraindikationen durch das Hauttumorzentrum erfolgt.\nAnlage eines peripheren Venenzugangs.\nGabe von Ipi/Nivo unter regelmäßiger klinischer Kontrolle. Die Patient wurde während der Infusion kontinuierlich mittels Dinamap überwacht.\nInfusion wurde subjektiv gut vertragen und verlief komplikationslos.\nWiedervorstellungstermin zur nächsten Blutentnahme.\nRE",
+      "summary": "11. Nivolumab‑Gabe (480 mg) gut vertragen, komplikationslos.",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "Infusionseinheit\n11. GabeNivolumab 480mg\nTherapie mit Nivolumab 480mg (nach 4x Ipi/Nivo), Indikationsstellung und Ausschluss von Kontraindikationen durch das Hauttumorzentrum erfolgt.\nAnlage eines peripheren Venenzugangs.\nGabe von Ipi/Nivo unter regelmäßiger klinischer Kontrolle. Die Patient wurde während der Infusion kontinuierlich mittels Dinamap überwacht.\nInfusion wurde subjektiv gut vertragen und verlief komplikationslos.\nWiedervorstellungstermin zur nächsten Blutentnahme.\nRE"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "21.02.2024",
+      "event": "19.02.2024 PET/CT\n1.\tGrößenprogrediente, weiterhin kleine mediastinale Lymphknoten mit fokaler geringer Glukoseutilisation, a. e. reaktiv. VK empfohlen.\n2.\tSonst keine neuen malignomsuspekten Läsionen.\n-->TK 28.02.24",
+      "summary": "PET/CT: vergrößerte mediastinale Lymphknoten, geringe Glukoseaufnahme, wahrscheinlich reaktiv; keine neuen Läsionen.",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "19.02.2024 PET/CT\n1.\tGrößenprogrediente, weiterhin kleine mediastinale Lymphknoten mit fokaler geringer Glukoseutilisation, a. e. reaktiv. VK empfohlen.\n2.\tSonst keine neuen malignomsuspekten Läsionen.\n-->TK 28.02.24"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "27.02.2024",
+      "event": "MRT des Schädels vom 26.02.2024:\nZum Vergleich liegen mehrere Voruntersuchungen vor, zuletzt eine MRT des Schädels vom 30.10.2023.\nBefund:\nGeringe fleckige, a.e. mikroangiopathisch bedingte FLAIR-Hyperintensitäten im supratentoriellen Marklager. Keine zerebrale Raumforderung oder pathologische KM-Anreicherung. Kompensierte Liquorzirkulation. Keine malignitätssuspekten ossären Läsionen im MRT. Regelrecht belüftete NNH und Felsenbeine.\nBeurteilung:\nWeiter kein Nachweis zerebraler Filiae.",
+      "summary": "Kern‑MRT: kleine FLAIR‑Hyperintensitäten, keine Raumforderung, kein Malignitätsnachweis.",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "MRT des Schädels vom 26.02.2024:\nZum Vergleich liegen mehrere Voruntersuchungen vor, zuletzt eine MRT des Schädels vom 30.10.2023.\nBefund:\nGeringe fleckige, a.e. mikroangiopathisch bedingte FLAIR-Hyperintensitäten im supratentoriellen Marklager. Keine zerebrale Raumforderung oder pathologische KM-Anreicherung. Kompensierte Liquorzirkulation. Keine malignitätssuspekten ossären Läsionen im MRT. Regelrecht belüftete NNH und Felsenbeine.\nBeurteilung:\nWeiter kein Nachweis zerebraler Filiae."
+    }
+  ],
+  "lab_values": [
+    {
+      "date": "01.02.2024",
+      "marker": "S100",
+      "value": "0.06",
+      "unit": "µg/l",
+      "ref": ""
+    },
+    {
+      "date": "01.02.2024",
+      "marker": "LDH",
+      "value": "188.0",
+      "unit": "U/l",
+      "ref": "100.0-247.0 U/l"
+    },
+    {
+      "date": "01.02.2024",
+      "marker": "Hemoglobin",
+      "value": "15.0",
+      "unit": "g/dl",
+      "ref": "13.7-17.2 g/dl"
+    },
+    {
+      "date": "01.02.2024",
+      "marker": "Leukocytes",
+      "value": "7.04",
+      "unit": "/nl",
+      "ref": "3.6-9.2 /nl"
+    },
+    {
+      "date": "01.02.2024",
+      "marker": "AST",
+      "value": "23.0",
+      "unit": "U/l",
+      "ref": ""
+    },
+    {
+      "date": "01.02.2024",
+      "marker": "ALT",
+      "value": "25.0",
+      "unit": "U/l",
+      "ref": ""
+    },
+    {
+      "date": "01.02.2024",
+      "marker": "GGT",
+      "value": "28.0",
+      "unit": "U/l",
+      "ref": ""
+    },
+    {
+      "date": "01.02.2024",
+      "marker": "CRP",
+      "value": "0.3998",
+      "unit": "mg/dl",
+      "ref": ""
+    },
+    {
+      "date": "01.02.2024",
+      "marker": "Creatinine",
+      "value": "0.92",
+      "unit": "mg/dl",
+      "ref": "0.9-1.3 mg/dl"
+    },
+    {
+      "date": "01.02.2024",
+      "marker": "eGFR",
+      "value": "60.0002",
+      "unit": "ml/min/1,73qm",
+      "ref": ""
+    },
+    {
+      "date": "01.02.2024",
+      "marker": "Sodium",
+      "value": "139.0",
+      "unit": "mmol/l",
+      "ref": "136.0-145.0 mmol/l"
+    },
+    {
+      "date": "01.02.2024",
+      "marker": "Potassium",
+      "value": "4.3",
+      "unit": "mmol/l",
+      "ref": "3.5-5.1 mmol/l"
+    },
+    {
+      "date": "01.02.2024",
+      "marker": "Cortisol",
+      "value": "345.0",
+      "unit": "nmol/l",
+      "ref": ""
+    },
+    {
+      "date": "01.02.2024",
+      "marker": "TSH",
+      "value": "2.0",
+      "unit": "mU/l",
+      "ref": "0.3-3.0 mU/l"
+    },
+    {
+      "date": "01.02.2024",
+      "marker": "fT4",
+      "value": "16.5",
+      "unit": "pmol/l",
+      "ref": "11.5-22.7 pmol/l"
+    },
+    {
+      "date": "08.01.2024",
+      "marker": "NT-proBNP",
+      "value": "63.0",
+      "unit": "",
+      "ref": ""
+    },
+    {
+      "date": "01.02.2024",
+      "marker": "CK",
+      "value": "91.0",
+      "unit": "U/l",
+      "ref": "46.0-171.0 U/l"
+    },
+    {
+      "date": "12.10.2023",
+      "marker": "CK-MB",
+      "value": "entfällt",
+      "unit": "",
+      "ref": ""
+    }
+  ],
+  "imaging": [
+    {
+      "date": "30.10.2023",
+      "type": "CT",
+      "modality": "CT",
+      "finding": "Klinische Angaben: MM St. IV, Nivo Mono, aktuell konstante Befunde zur Verlaufskontrolle.\n\nFragestellung: Staging\n\nCT: Leber-Doppelspirale, 2-D-Rekonstruktion vom 30.10.2023:\nCT: Thorax mit i.v. KM, 2-D-Rekonstruktion vom 30.10.2023:\nCT: beider unterer Extremitäten mit KM-Gabe, 2-D-Rekonstruktion vom 30.10.2023:\n\n\nBefund:\nZum Vergleich mehrere Voruntersuchungen vorliegend, u.a. CT der Beine vom 06.07.2023, CT-Thorax/Abdomen vom 04.07.2023 und auswärtige MRT-Untersuchung des Beckens und der Oberschenkel vom 06.03.2023.  \n\nThorax:\nNach Lungenteilresektion konstante Verdichtungen im linken Unterlappen mit einliegendem Nahtmaterial. Kein Nachweis neuer malignomsuspekter Rundherde. Pleurakuppenschwielen beidseits. Keine pathologisch vergrößerten Lymphknoten.\n\nAbdomen:\nKeine neue malignomsuspekte Organläsion. Keine pathologisch vergrößerten Lymphknoten. Reizlose Colon- und Sigmadivertikulose. Aortenelongation und kalzifizierende Arterioskerose. Cholezystolithiasis. Kleine Nebenmilz. Neue narbige Veränderungen links inguinal.\n\nBeine:\nKeine malignomsuspekten Verdichtungen des Weichteils. Keine pathologisch vergrößerten Lymphknoten. Deutliche Varikosen der oberflächlichen Beinvenen beidseits (links>rechts). Die aus der MRT vom 06.03.2023 vorbekannte, metastasensuspekte Läsion im linken Schenkelhals ist weiterhin als fettig imponierende Minderklazifikation mit geringer randständiger Mehrsklerosierung abzugrenzen (6/75). Keine pathologische Fraktur. Kleine Fabella rechts. Geringe Gefäßsklerosierung.\n\nSkelett:\nKein neuer malignomsuspekter Befund. Ältere Fraktur 1. Rippe links mit Pseudarthrose. Konstante, kleine Osteolyse im rechten Os ilium (ima 7/238). Deutliche degenerative Veränderungen der Wirbelsäule. Rechtskonvexe thorakale Skoliose.\n\nBeurteilung:\n\n1.\tKonstantes geringes Weichteilplus angrenzend an das Nahtmaterial im linken Unterlappen a.e. postoperativ/narbig.\n2.\tDie auswärtig MRT-morphologisch vorbeschriebene Raumforderung im linken Schenkelhals ist im CT unverändert als fetthaltige, unscharf berandete Osteolyse abgrenzbar ohne Anhalt für ein Rezidiv/Progress nach RTX.\n3.\tKein Nachweis einer neuen thorakoabdominellen Tumormanifestation.",
+      "assessment": "",
+      "has_pdf": false,
+      "pdf_filename": "",
+      "img_dir": "591a1523d0ae0edad496e15192f5796533b6f0c3932af90920f82b85fd61b49e_ct",
+      "body_region": "whole_body",
+      "region": "Ganzkörper",
+      "summary": "Keine neuen malignen Befunde. Postoperative Verdichtungen im linken Unterlappen mit Nahtmaterial, unveränderte metastatische Läsion im linken Schenkelhals (6 mm). Kleine Osteolyse rechts ilium, Varikosen, keine vergrößerten Lymphknoten."
+    },
+    {
+      "date": "25.02.2024",
+      "type": "PET-CT",
+      "modality": "PET-CT",
+      "finding": "Diese Untersuchung ist bei der Maßnahme PET-CT des gleichen Tages befundet",
+      "assessment": "",
+      "has_pdf": false,
+      "pdf_filename": "",
+      "img_dir": "591a1523d0ae0edad496e15192f5796533b6f0c3932af90920f82b85fd61b49e_pet_ct",
+      "body_region": "whole_body",
+      "region": "Ganzkörper",
+      "summary": "Keine Befundangaben vorhanden."
+    },
+    {
+      "date": "21.02.2024",
+      "type": "PET-CT",
+      "modality": "PET-CT",
+      "finding": "besten Dank für die freundliche Zuweisung Ihres o.g. Patienten, bei dem wir nach Überprüfung der rechtfertigenden Indikation am 19.02.2024 eine\nPET/CT – Untersuchung\nmit körpergewichtsadaptiert 263 MBq 2-[18F]FDG und unter Verwendung von 90 ml jodhaltigem KM durchgeführt haben. Es erfolgten Aufnahmen von der Schädelbasis bis zu den Knien 105 min p. i. Der Serumglukosespiegel zum Injektionszeitpunkt betrug 117 mg/dl.\n\nKlinische Angaben: Malignes Melanom St. IV. Aktuell tumorfrei. Staging. \n\nEs liegen diverse Voruntersuchungen zum Vergleich vor, zuletzt ein CT-Thorax/ Abdomen und Untere Extremität vom 30.10.2023\n\nBefund:\n\nSchädelbasis/ Hals:\nZahnersatz mit Aufhärtungsartefakten. Symmetrische Halsweichteile. Keine malignomsuspekten Läsionen. Keine pathologischen Traceranreicherungen. \n\nThorax:\nProgrediente, formal weiterhin nicht pathologisch vergrößerte mediastinale Lymphknoten mit geringer Traceranreicherung (ex. ima 8/196 7 vs. 5 mm SUVmax 4,7). Keine pathologische Traceranreicherung. Nach Lungenteilresektion konstante Verdichtungen im linken Unterlappen mit einliegendem Nahtmaterial. Kein Nachweis neuer malignomsuspekter Rundherde. Pleurakuppenschwielen beidseits. Keine pathologisch vergrößerten Lymphknoten.\n\nAbdomen:\nUnauffällige Darstellung der Abdominalorgane. Keine suspekten Lymphknoten. Keine pathologischen Traceranreicherungen. Aortenelongation und kalzifizierende Arterioskerose. Cholezystolithiasis. Kleine Nebenmilz. Konstante narbige Veränderungen links inguinal. Reizlose Colon- und Sigmadivertikulose.\n\n\nSkelett: \nKonstante weiterhin als fettig imponierende Minderklazifikation mit geringer randständiger Mehrsklerosierung abzugrenzende Läsion im linken Schenkelhals und ohne Traceranreicherung (ima 8/100). Ältere Fraktur 1. Rippe links mit Pseudarthrose. Konstante, kleine Osteolyse im rechten Os ilium ohne Traceranreicherung (ima 8/127). Deutliche degenerative Veränderungen der Wirbelsäule. Rechtskonvexe thorakale Skoliose.\n\nBeurteilung:\n\n1.\tGrößenprogrediente, weiterhin kleine mediastinale Lymphknoten mit fokaler geringer Glukoseutilisation, a. e. reaktiv. VK empfohlen.\n2.\tSonst keine neuen malignomsuspekten Läsionen.\n\nBefunderstellung unter Mitwirkung von Y. Kullik, Prof. S. Kinner, Dr. F. Barbato\n\nMit freundlichen kollegialen Grüßen",
+      "assessment": "",
+      "has_pdf": false,
+      "pdf_filename": "",
+      "img_dir": "591a1523d0ae0edad496e15192f5796533b6f0c3932af90920f82b85fd61b49e_pet_ct",
+      "body_region": "whole_body",
+      "region": "Ganzkörper",
+      "summary": "Keine neuen malignen Läsionen. Leicht vergrößerte mediastinale Lymphknoten (8 mm, SUVmax 4,7) ohne klare Pathologie. Stabiler metastatischer Befund im linken Schenkelhals (6 mm) und kleine Osteolyse rechts ilium, sonst unauffällig."
+    }
+  ],
+  "therapies": {
+    "surgery": [
+      {
+        "date": "25.10.2022",
+        "text": "VATS rechts, Keilresektion Unterlappen und systematische Lymphadenektomie (0/25 LK)"
+      },
+      {
+        "date": "25.10.2022",
+        "text": "Biopsie des linken proximalen Femurs (Nachweis MM-Filia)"
+      }
+    ],
+    "radiation": [
+      {
+        "date": "15.11.2022",
+        "text": "Radiotherapie Femur links (15.11.2022–08.12.2022)"
+      }
+    ],
+    "systemic": [
+      {
+        "date": "19.12.2022",
+        "text": "Ipilimumab 3 mg/kg + Nivolumab 1 mg/kg (4 Gaben bis 21.02.2023)"
+      },
+      {
+        "date": "03.04.2023",
+        "text": "Nivolumab monotherapie 480 mg (laufend, geplante Gabe 11. am 04.02.2024)"
+      }
+    ],
+    "current": [
+      {
+        "date": "seit 04.02.2024",
+        "text": "Fortführung Immuntherapie mit Nivolumab monotherapie"
+      }
+    ]
+  },
+  "disease_status": "SD"
+}

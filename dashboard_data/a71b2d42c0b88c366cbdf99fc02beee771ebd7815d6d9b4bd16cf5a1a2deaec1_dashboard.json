@@ -1,0 +1,673 @@
+{
+  "name": "Suntajs",
+  "dob": "02.03.1937",
+  "age": 87,
+  "sex": "W",
+  "location": "46236 Bottrop",
+  "pat_id": "23157462",
+  "comorbidities": [
+    "Rheuma",
+    "arterielle Hypertonie",
+    "Z.n. Bypass-Op",
+    "Z.n. Aortenaneurysma",
+    "Z.n. Aortenklappenersatz",
+    "Z.n. Nierenadenomexzision",
+    "Z.n. Basalzelkarzinom am Auge (insgesamt 3x)",
+    "Z.n. Basalzellkarzinom linkes Augenlid (08/2019)",
+    "Katarakt",
+    "Z.n. Knie-TEP Implantation",
+    "Hypothyreose (Z.n. Strumaoperation, Verletzung N. Laryngeus recurrens)",
+    "Koronare Herzerkrankung"
+  ],
+  "ecog": "0 – Normale, uneingeschränkte Aktivität wie vor der Erkrankung",
+  "karnofsky": "",
+  "primary_diagnosis": "Bösartiges Melanom Unterschenkel rechts",
+  "primary_location": "Unterschenkel rechts",
+  "diagnosis_date": "13.12.2019",
+  "tumor_thickness": "4,8 mm",
+  "ulceration": "Ja",
+  "mitoses": "",
+  "histology": "Haut Unterschenkel Nicht klassifiziert",
+  "resection_status": "R0",
+  "safety_margin": "2,0 cm",
+  "slne": "0/1 (negativ)",
+  "initial_staging": {
+    "t": "pT4a",
+    "n": "N0",
+    "m": "M0",
+    "uicc": "IIB",
+    "classification": "AJCC 2017"
+  },
+  "staging": {
+    "t": "T4b",
+    "n": "N0",
+    "m": "M1d",
+    "uicc": "IV",
+    "classification": "AJCC 2017",
+    "date": "01.2025"
+  },
+  "mutations": {
+    "BRAF": "Wildtyp",
+    "NRAS": "Q61K",
+    "KIT": "Wildtyp",
+    "GNAQ": "Wildtyp",
+    "GNA11": "Wildtyp",
+    "NF1": "Wildtyp",
+    "HRAS": "Wildtyp",
+    "RAC1": "Wildtyp",
+    "TERT": "Wildtyp",
+    "hTERT": "1,295,228 G>A",
+    "CDKN2A": "Wildtyp",
+    "CDK4": "Wildtyp",
+    "PTEN": "Wildtyp",
+    "TP53": "Wildtyp",
+    "MAP2K1": "Wildtyp",
+    "MAP2K2": "Wildtyp",
+    "PIK3R1": "Wildtyp",
+    "PIK3CA": "Wildtyp",
+    "MITF": "Wildtyp",
+    "ARID2": "Wildtyp",
+    "ARID1A": "Wildtyp",
+    "SMARCA4": "Wildtyp",
+    "EZH2": "Wildtyp",
+    "IDH1": "Wildtyp",
+    "CTNNB1": "Wildtyp",
+    "FBXW7": "Wildtyp",
+    "WT1": "Wildtyp",
+    "BAP1": "Wildtyp",
+    "SF3B1": "Wildtyp",
+    "KRAS": "Wildtyp"
+  },
+  "pdl1": "Nicht bestimmt",
+  "hla_a": "Nicht bestimmt",
+  "primary_tumor_body": [
+    "lower_leg_right"
+  ],
+  "primary_tumor_status": "inactive",
+  "primary_inactive_reason": "R0 resection",
+  "metastases_body": [
+    "head",
+    "lung"
+  ],
+  "metastases_detail": [
+    {
+      "region": "head",
+      "date": "",
+      "label": "cerebrale Metastase rechts parietal",
+      "status": "active",
+      "inactive_reason": ""
+    },
+    {
+      "region": "lung",
+      "date": "",
+      "label": "pulmonale Metastasen (zwei Herde linker Unterlappen)",
+      "status": "active",
+      "inactive_reason": ""
+    }
+  ],
+  "imaged_regions": [],
+  "timeline": [
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "09.01.2020",
+      "event": "Heute Erstvorstellung im HTZ:\nAktuelles Stadium nach AJCC 2017: min. pT4a, cN0, cM0 St. IIB\nPat hat Liste nicht dabei, wird nachgereicht\nOmeprazol\nL-Thyrox 75\nBisoprolol\nVesikur 5\nMetex\nECOG: 0 (0-4), Hauttyp X nach Fitzpatrick\n82-jährige Patientin in gutem AZ und adipösem EZ. Wach, örtlich und zeitlich scharf  orientiert. Orientierend kein Hinweis auf ein fokales oder globales neurologisches Defizit.\nAm rechten Unterschenkel dunkler, ca. 1,5 cm durchmessender Nodus mit Hyperkeratosen und Kruten belegt,  dorsal an der linken Schulter V.a. BCC, ansonsten keine suspekten Pigmentmale, kein Anhalt für epitheliale Tumoren. An beiden Brüsten leicht rötliche Verfärbung. Inguinal Tinea. In-transit-Strecke inspektorisch und palpatorisch frei. LK Status palpatorisch unauffällig. Schleimhäute, soweit einsehbar, ohne pathologischen Befund.\n-\tAusführliche Beratung der Patientin über die Erkrankung, Prognose und leitliniengerechtes Vorgehen.\n-\tTherapieoptionen heute R0 Schaffung und nach Erhalt der Histologie Nachex und SLNE stationär besprochen und ausführlich erläutert\n-\tGewebebankaufklärung und ADO-REG unterschrieben/abgelehnt\n-\tAnforderung Molpath und auch Portoübernahme unterschrieben\n-\tBE: Sentinel\n-\tMEMO: Bei WV ggf. auch telefonisch: Planung SLNE + SA + PE bei V.a. BCC linke Skapula vs. Staging\n-\tErstvorstellungsmappe ausgehändigt\n-\tHeute Aufklärung Ex und Offen des Unterschenkels, gleich Termin OP",
+      "summary": "Stadium IIB (pT4a cN0 cM0) bei Erstvorstellung, Sentinel‑Biopsie geplant.",
+      "category": "Staging",
+      "removed_lines": "",
+      "cleaned_event": "Heute Erstvorstellung im HTZ:\nAktuelles Stadium nach AJCC 2017: min. pT4a, cN0, cM0 St. IIB\nPat hat Liste nicht dabei, wird nachgereicht\nOmeprazol\nL-Thyrox 75\nBisoprolol\nVesikur 5\nMetex\nECOG: 0 (0-4), Hauttyp X nach Fitzpatrick\n82-jährige Patientin in gutem AZ und adipösem EZ. Wach, örtlich und zeitlich scharf  orientiert. Orientierend kein Hinweis auf ein fokales oder globales neurologisches Defizit.\nAm rechten Unterschenkel dunkler, ca. 1,5 cm durchmessender Nodus mit Hyperkeratosen und Kruten belegt,  dorsal an der linken Schulter V.a. BCC, ansonsten keine suspekten Pigmentmale, kein Anhalt für epitheliale Tumoren. An beiden Brüsten leicht rötliche Verfärbung. Inguinal Tinea. In-transit-Strecke inspektorisch und palpatorisch frei. LK Status palpatorisch unauffällig. Schleimhäute, soweit einsehbar, ohne pathologischen Befund.\n-\tAusführliche Beratung der Patientin über die Erkrankung, Prognose und leitliniengerechtes Vorgehen.\n-\tTherapieoptionen heute R0 Schaffung und nach Erhalt der Histologie Nachex und SLNE stationär besprochen und ausführlich erläutert\n-\tGewebebankaufklärung und ADO-REG unterschrieben/abgelehnt\n-\tAnforderung Molpath und auch Portoübernahme unterschrieben\n-\tBE: Sentinel\n-\tMEMO: Bei WV ggf. auch telefonisch: Planung SLNE + SA + PE bei V.a. BCC linke Skapula vs. Staging\n-\tErstvorstellungsmappe ausgehändigt\n-\tHeute Aufklärung Ex und Offen des Unterschenkels, gleich Termin OP"
+    },
+    {
+      "type": "",
+      "date": "09.01.2020",
+      "event": "BE für Sentinel erfolgt MD",
+      "summary": "Sentinel‑Lymphknotenbiopsie durchgeführt.",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "BE für Sentinel erfolgt MD"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "20.01.2020",
+      "event": "ICD-0-3 Erste Revision, M 8721/3, T C44.7\n-> WV im HTZ am Mittwoch, dann auch OP-Termin geblockt zur erneuten Nachex\nzeitnahes Staging wurde per Email angemeldet, danach TK, dann WV und Besprechung SLNE",
+      "summary": "OP‑Termin für erneute Nachexzision und Sentinel‑Biopsie festgelegt.",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "ICD-0-3 Erste Revision, M 8721/3, T C44.7\n-> WV im HTZ am Mittwoch, dann auch OP-Termin geblockt zur erneuten Nachex\nzeitnahes Staging wurde per Email angemeldet, danach TK, dann WV und Besprechung SLNE"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "22.01.2020",
+      "event": "Heute Aufklärung vor OP (Nachexzision) erfolgt\nPat bringt aktuelle Medikamentenliste mit:\nProc:\n- Staging für Patientin angemeldet\n- je nach Staging Planung SLNE (CAVE: Mykose in der Leiste aktuell regredient) +SA",
+      "summary": "Aufklärung vor geplanter Nachexzision abgeschlossen.",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "Heute Aufklärung vor OP (Nachexzision) erfolgt\nPat bringt aktuelle Medikamentenliste mit:\nProc:\n- Staging für Patientin angemeldet\n- je nach Staging Planung SLNE (CAVE: Mykose in der Leiste aktuell regredient) +SA"
+    },
+    {
+      "type": "",
+      "date": "27.01.2020",
+      "event": "Telefonat mit der Pat.:\nTermin zum n TK am 04.02. mitgeteilt",
+      "summary": "CT‑Termin am 04.02. vereinbart.",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "Telefonat mit der Pat.:\nTermin zum n TK am 04.02. mitgeteilt"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "04.02.2020",
+      "event": "WV im HTZ Nach TK/ zur Planung Nachex+SA und SLNB bei:\n04.02.2020 WV im HTZ zur Planung SA und SLNB\nAktuelles Stadium nach AJCC 2017: min. pT4a, cN0, cM0 St. IIB\nA: guter AZ, kein Fieber/SF, HA hat bei leichter Rötung an der Wunde AB verschrieben, Fraglich Cefuroxim 500mg 1-0-1, morgen letzte Einnahme.\nECOG: 0 (0-4), Hauttyp X nach Fitzpatrick\n82-jährige Patientin in gutem AZ und adipösem EZ. Wach, örtlich und zeitlich scharf  orientiert. Orientierend kein Hinweis auf ein fokales oder globales neurologisches Defizit.\nAm rechten Unterschenkel dunkler, ca. 1,5 cm durchmessender Nodus mit Hyperkeratosen und Kruten belegt,  dorsal an der linken Schulter V.a. BCC, ansonsten keine suspekten Pigmentmale, kein Anhalt für epitheliale Tumoren. An beiden Brüsten leicht rötliche Verfärbung. Inguinal Tinea. In-transit-Strecke inspektorisch und palpatorisch frei. LK Status palpatorisch unauffällig. Schleimhäute, soweit einsehbar, ohne pathologischen Befund.\nKU: Wunde US re reizlos, k.A für Superinfektion\n- ausführl. Gespräch über Staging Ergebnisse, Patientin ist erleichtert, Ko in 3 Mo besprochen\n- leitliniengerecht jetzt Nachex mit SA und SLNB empfohlen, Pat. wünscht dies auch\n- Nuk und Histoschein, Termin für SLNB mit SA über CM angefordert inkl EKG und Anästhesie\n- BE Sentinel mit S100\n- Foto der Wunde\n- Staging für in 3 Mo besteht\n- RS OA Stoffels bzgl MTX: am besten 1 Wo vor OP absetzen. Patientin schildert, dass dies gut möglich ist, Polyarthritis sei derzeit ruhig.\n- Pat. wird durch Station in TK Liste vorgemerkt\n- WV poststationär.\nCA",
+      "summary": "Nachexzision mit Sentinel‑Biopsie und SLNB empfohlen.",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "WV im HTZ Nach TK/ zur Planung Nachex+SA und SLNB bei:\n04.02.2020 WV im HTZ zur Planung SA und SLNB\nAktuelles Stadium nach AJCC 2017: min. pT4a, cN0, cM0 St. IIB\nA: guter AZ, kein Fieber/SF, HA hat bei leichter Rötung an der Wunde AB verschrieben, Fraglich Cefuroxim 500mg 1-0-1, morgen letzte Einnahme.\nECOG: 0 (0-4), Hauttyp X nach Fitzpatrick\n82-jährige Patientin in gutem AZ und adipösem EZ. Wach, örtlich und zeitlich scharf  orientiert. Orientierend kein Hinweis auf ein fokales oder globales neurologisches Defizit.\nAm rechten Unterschenkel dunkler, ca. 1,5 cm durchmessender Nodus mit Hyperkeratosen und Kruten belegt,  dorsal an der linken Schulter V.a. BCC, ansonsten keine suspekten Pigmentmale, kein Anhalt für epitheliale Tumoren. An beiden Brüsten leicht rötliche Verfärbung. Inguinal Tinea. In-transit-Strecke inspektorisch und palpatorisch frei. LK Status palpatorisch unauffällig. Schleimhäute, soweit einsehbar, ohne pathologischen Befund.\nKU: Wunde US re reizlos, k.A für Superinfektion\n- ausführl. Gespräch über Staging Ergebnisse, Patientin ist erleichtert, Ko in 3 Mo besprochen\n- leitliniengerecht jetzt Nachex mit SA und SLNB empfohlen, Pat. wünscht dies auch\n- Nuk und Histoschein, Termin für SLNB mit SA über CM angefordert inkl EKG und Anästhesie\n- BE Sentinel mit S100\n- Foto der Wunde\n- Staging für in 3 Mo besteht\n- RS OA Stoffels bzgl MTX: am besten 1 Wo vor OP absetzen. Patientin schildert, dass dies gut möglich ist, Polyarthritis sei derzeit ruhig.\n- Pat. wird durch Station in TK Liste vorgemerkt\n- WV poststationär.\nCA"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "05.02.2020",
+      "event": "AvD Nachdienst:\nDie Pat wünscht eine Schlaftablette. Zuhause nehme sie auch regelmäßig ein. Aufgrund des Alters 1/2 Tbl Zopiclon. Keine WW mit der übrigen medikation. Keine Allergien laut Aufnahmebogen\nEG",
+      "summary": "Halbe Tablette Zopiclon wegen Schlafstörung verordnet.",
+      "category": "Sonstiges",
+      "removed_lines": "",
+      "cleaned_event": "AvD Nachdienst:\nDie Pat wünscht eine Schlaftablette. Zuhause nehme sie auch regelmäßig ein. Aufgrund des Alters 1/2 Tbl Zopiclon. Keine WW mit der übrigen medikation. Keine Allergien laut Aufnahmebogen\nEG"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "06.02.2020",
+      "event": "Visite:\nGEspräch über das Procedere\nWunde reizlos, Redon serös-blutig, Hämatom distal der Wunde entlag der Schwerkraft = nicht palpabel, diffus\nKeine Schmerzen\nLF (KB)",
+      "summary": "Wundkontrolle: reizlose Wunde, serös‑blutiger Redon, kein Schmerz.",
+      "category": "Nachsorge",
+      "removed_lines": "",
+      "cleaned_event": "Visite:\nGEspräch über das Procedere\nWunde reizlos, Redon serös-blutig, Hämatom distal der Wunde entlag der Schwerkraft = nicht palpabel, diffus\nKeine Schmerzen\nLF (KB)"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "07.02.2020",
+      "event": "E Gespräch geführt\nWeiteres Proc erläutert\nKeine offenen Fragen\nE Brief, Rezepte und Pflegedientverordnung ausgehändigt\nTaxischein angeboten, Pat möchte von Bekannten abgeholt werden\nLF",
+      "summary": "Patientenaufklärung nach OP, Unterlagen und Transport organisiert.",
+      "category": "Nachsorge",
+      "removed_lines": "",
+      "cleaned_event": "E Gespräch geführt\nWeiteres Proc erläutert\nKeine offenen Fragen\nE Brief, Rezepte und Pflegedientverordnung ausgehändigt\nTaxischein angeboten, Pat möchte von Bekannten abgeholt werden\nLF"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "13.02.2020",
+      "event": "BRAF wt\nNRAS Q61K\nKIT wt",
+      "summary": "Molekularpathologie: NRAS Q61K‑Mutation, BRAF und KIT wildtype.",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "BRAF wt\nNRAS Q61K\nKIT wt"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "21.02.2020",
+      "event": "Vorstellung in Studienambulanz am 02.03. möglich",
+      "summary": "Vorstellung in Studienambulanz am 02.03. möglich.",
+      "category": "Sonstiges",
+      "removed_lines": "",
+      "cleaned_event": "Vorstellung in Studienambulanz am 02.03. möglich"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "28.02.2020",
+      "event": "WV im HTZ Nach TK:\nHeute Erstvorstellung: Histologie: Malignes Melanom TD min. 4,8 mm, keine Ulzeration (RS mit befundendem Pathologen erfolgt; Histobefund: keine eindeutige Ulzeration), Lokalisation: rechter Unterschenkel, R1-Situation, Behandlung durch Dr. Krämer, Bottrop, Histologische Begutachtung Primarius durch Dermatopathologie Friedrichshafen, Block-Nr. D774380-19 ED 13.12.2019\nA: Aktuell subjektives Wohlbefinden, keine B-Symptomatik. Patientin ist froh, dass SLN nicht befallen gewesen ist\nheute nicht gewünscht, da zuletzt vor 1 Monat durchgeführt\n- ausführliche Besprechung des TK-Beschlusses und der Optionen adjuvante Therapie über Studie oder reguläre Nachsorge, Pat entscheidet sich für reguläre Nachsorge\n- nächstes Staging in 3 Monaten bereits terminiert\n- Pat kann heute sich direkt einmal in der Studienambulanz vorstellen -> bei Matull abgesagt\n- Pat kann sich heute netterweise spontan in der Wundambulanz vorstellen zur Besprechung Spalthaut-Tx",
+      "summary": "Patient wählt reguläre Nachsorge, nächstes Staging in 3 Monaten geplant.",
+      "category": "Nachsorge",
+      "removed_lines": "",
+      "cleaned_event": "WV im HTZ Nach TK:\nHeute Erstvorstellung: Histologie: Malignes Melanom TD min. 4,8 mm, keine Ulzeration (RS mit befundendem Pathologen erfolgt; Histobefund: keine eindeutige Ulzeration), Lokalisation: rechter Unterschenkel, R1-Situation, Behandlung durch Dr. Krämer, Bottrop, Histologische Begutachtung Primarius durch Dermatopathologie Friedrichshafen, Block-Nr. D774380-19 ED 13.12.2019\nA: Aktuell subjektives Wohlbefinden, keine B-Symptomatik. Patientin ist froh, dass SLN nicht befallen gewesen ist\nheute nicht gewünscht, da zuletzt vor 1 Monat durchgeführt\n- ausführliche Besprechung des TK-Beschlusses und der Optionen adjuvante Therapie über Studie oder reguläre Nachsorge, Pat entscheidet sich für reguläre Nachsorge\n- nächstes Staging in 3 Monaten bereits terminiert\n- Pat kann heute sich direkt einmal in der Studienambulanz vorstellen -> bei Matull abgesagt\n- Pat kann sich heute netterweise spontan in der Wundambulanz vorstellen zur Besprechung Spalthaut-Tx"
+    },
+    {
+      "type": "",
+      "date": "28.02.2020",
+      "event": "Erstvorstellung Wundambulanz:\nMalignes Melanom rechter Unterschenkel ED 13.12.2019, TD min. 4,8 mm, keine Ulzeration (RS mit befundendem Pathologen erfolgt; Histobefund: keine eindeutige Ulzeration), Lokalisation: rechter Unterschenkel, R1-Situation\n04.12.2019 externe Probenentnahme aus einem malignem Melanom am rechten Unterschenkel\n22.01.2020 in domo Exzision des MM am rechten Unterschenkel zu R0\nAktuelles Stadium: pT4b, cN0, cM0 Stadium IIC nach AJCC 2017\n02/2020: Nachexzision mit 2 cm Sicherheitsabstand, Defektdeckung mittels Spalthauttransplantation im Verlauf, Entnahme des Sentinels inguinal rechts\nVAS: 0/10\nWund QoL: 36 Punkte\nHB:\nUnterschenkel rechts ca. 4 cm durchmessende, fibrinös belegte Ulzeration, Wundrand und Wundumgebung reilos. Gute Granulation nahezu überall auf Hautniveau, am Rand Wundtiefe noch ca. 1 mm.\nProz.:\n- tgl. VW via amb. PD mit NEU Granudacyn Gel + Adaptic nach Reinigung mit Serasept Lösung\n- über Spalthaut-Tx aufgeklärt, Pat. wünscht aktuell eher sek. Wundheilung -> im Verlauf ggf. erneut anbieten\n- Verlaufskontrolle in 3-4 Wochen\n- Anbindung an HTZ besteht\nSSch",
+      "summary": "Wundambulanz: tägliche Wundpflege, Spalthaut‑Tx erläutert, Patient bevorzugt sekundäre Heilung.",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "Erstvorstellung Wundambulanz:\nMalignes Melanom rechter Unterschenkel ED 13.12.2019, TD min. 4,8 mm, keine Ulzeration (RS mit befundendem Pathologen erfolgt; Histobefund: keine eindeutige Ulzeration), Lokalisation: rechter Unterschenkel, R1-Situation\n04.12.2019 externe Probenentnahme aus einem malignem Melanom am rechten Unterschenkel\n22.01.2020 in domo Exzision des MM am rechten Unterschenkel zu R0\nAktuelles Stadium: pT4b, cN0, cM0 Stadium IIC nach AJCC 2017\n02/2020: Nachexzision mit 2 cm Sicherheitsabstand, Defektdeckung mittels Spalthauttransplantation im Verlauf, Entnahme des Sentinels inguinal rechts\nVAS: 0/10\nWund QoL: 36 Punkte\nHB:\nUnterschenkel rechts ca. 4 cm durchmessende, fibrinös belegte Ulzeration, Wundrand und Wundumgebung reilos. Gute Granulation nahezu überall auf Hautniveau, am Rand Wundtiefe noch ca. 1 mm.\nProz.:\n- tgl. VW via amb. PD mit NEU Granudacyn Gel + Adaptic nach Reinigung mit Serasept Lösung\n- über Spalthaut-Tx aufgeklärt, Pat. wünscht aktuell eher sek. Wundheilung -> im Verlauf ggf. erneut anbieten\n- Verlaufskontrolle in 3-4 Wochen\n- Anbindung an HTZ besteht\nSSch"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "20.07.2020",
+      "event": "CT T/A\nZu 01/2020:\n1.\tKonstanter gefäßassoziierter Nodulus im medialen Mittellappen. Weitere kleine neu ab-grenzbaren nodulären Verdichtungen subpleural in beiden Unterlappen, dd: granulomatös, Verlaufskontrolle zur erneuten Evaluation empfohlen.\n2.\tAnsonsten kein metastasensuspekter Befund thorakoabdominell.\nJA",
+      "summary": "CT Thorax/Abdomen: kleiner nodulärer Befund, kein metastatischer Befund.",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "CT T/A\nZu 01/2020:\n1.\tKonstanter gefäßassoziierter Nodulus im medialen Mittellappen. Weitere kleine neu ab-grenzbaren nodulären Verdichtungen subpleural in beiden Unterlappen, dd: granulomatös, Verlaufskontrolle zur erneuten Evaluation empfohlen.\n2.\tAnsonsten kein metastasensuspekter Befund thorakoabdominell.\nJA"
+    },
+    {
+      "type": "",
+      "date": "24.07.2020",
+      "event": "Bitte aktuelle Aufklärung Gewebe und DB unterschreiben lassen KWe",
+      "summary": "Aufklärung zu Gewebe und Datenbank soll unterschrieben werden.",
+      "category": "Sonstiges",
+      "removed_lines": "",
+      "cleaned_event": "Bitte aktuelle Aufklärung Gewebe und DB unterschreiben lassen KWe"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "31.07.2020",
+      "event": "Hauttumorkonferenz-Empfehlung vom 29.01.2020\nWinziges KM-Enhancement L temporal, Kontrolle in 3 Monaten. Kleiner Nodulus medialer Mittellappen von 5 mm, a.e. LK. Ebenfalls Kontrolle in 3 Monaten. Nachex und SA sowie SLNB.\nHauttumorkonferenz-Empfehlung vom 19.02.2020\nEinschluss in adjuvante MK3475-716-Studie prüfen, alternativ Nachsorge nach Leitlinie\nA: Aktuell subjektives Wohlbefinden, keine B-Symptomatik. Patientin ist froh, dass SLN nicht befallen gewesen ist\nAktuell klinisch kein Hinweis für melanozytäre oder epitheliale maligne Hauttumoren.\nWunde am Unterschenkel aktuell leicht erosiv nach Trauma mit umgebenden Erythem.\nZwischen den Schulterblättern große ausgeräumte Pore. An der rechten Flanke hypoplastische HV , lt Pat a.e. im Rahmen des BH-Abdrucks keine PE gewünscht (bitte Beobachten!!!).\nSH soweit einsehbar frei. LK palparotisch unauffällig.\n- ausführliche Besprechung des TK-Beschlusses\n- nächstes Staging in 6 Monaten bereits terminiert\n- MRS nächste Woche, dann nur RS wenn Auffälligkeiten\n- Rezept für Fixomull, Octenisept und topisches Steroid für die Wundumgebung",
+      "summary": "Hauttumorkonferenz empfiehlt 3‑Monats‑Kontrolle und Prüfung der Studienaufnahme.",
+      "category": "Tumorkonferenz",
+      "removed_lines": "",
+      "cleaned_event": "Hauttumorkonferenz-Empfehlung vom 29.01.2020\nWinziges KM-Enhancement L temporal, Kontrolle in 3 Monaten. Kleiner Nodulus medialer Mittellappen von 5 mm, a.e. LK. Ebenfalls Kontrolle in 3 Monaten. Nachex und SA sowie SLNB.\nHauttumorkonferenz-Empfehlung vom 19.02.2020\nEinschluss in adjuvante MK3475-716-Studie prüfen, alternativ Nachsorge nach Leitlinie\nA: Aktuell subjektives Wohlbefinden, keine B-Symptomatik. Patientin ist froh, dass SLN nicht befallen gewesen ist\nAktuell klinisch kein Hinweis für melanozytäre oder epitheliale maligne Hauttumoren.\nWunde am Unterschenkel aktuell leicht erosiv nach Trauma mit umgebenden Erythem.\nZwischen den Schulterblättern große ausgeräumte Pore. An der rechten Flanke hypoplastische HV , lt Pat a.e. im Rahmen des BH-Abdrucks keine PE gewünscht (bitte Beobachten!!!).\nSH soweit einsehbar frei. LK palparotisch unauffällig.\n- ausführliche Besprechung des TK-Beschlusses\n- nächstes Staging in 6 Monaten bereits terminiert\n- MRS nächste Woche, dann nur RS wenn Auffälligkeiten\n- Rezept für Fixomull, Octenisept und topisches Steroid für die Wundumgebung"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "31.07.2020",
+      "event": "BE S100 und LDH erfolgt MD",
+      "summary": "S100‑ und LDH‑Blutwerte wurden bestimmt.",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "BE S100 und LDH erfolgt MD"
+    },
+    {
+      "type": "",
+      "date": "02.11.2020",
+      "event": "Anruf von Pat:\nAufgrund von Corona möchte sie am 06.11.20 zur GKU und zum Sono nicht kommen. Nimmt Termine im Januar wieder wahr.",
+      "summary": "Patientin sagt Termin am 06.11. wegen Corona ab, neuer Termin im Januar.",
+      "category": "Sonstiges",
+      "removed_lines": "",
+      "cleaned_event": "Anruf von Pat:\nAufgrund von Corona möchte sie am 06.11.20 zur GKU und zum Sono nicht kommen. Nimmt Termine im Januar wieder wahr."
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "11.01.2021",
+      "event": "BE für TSH und Krea erfolgt MD",
+      "summary": "TSH‑ und Kreatinin‑Blutwerte wurden bestimmt.",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "BE für TSH und Krea erfolgt MD"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "15.01.2021",
+      "event": "MRT des Schädels vom 11.01.2021:\n1. Kein Nachweis von zerebralen Metastasen.\n2. Konstante mäßige mikroangiopathische Veränderungen\nCT: Thorax mit i.v. KM, 2-D-Rekonstruktion vom 11.01.2021:\nCT: Leber-Doppelspirale, 2-D-Rekonstruktion vom 11.01.2021:\n2. Konstante Verdichtung im dorsalen Recessus rechts mit fettäquivalenten Dichtewerten und konstant seit 1/2021, dd Lipom.\nZusatzbefund vom 12.01.2021:\nDie Läsion im rechten dorsalen Recessus ist konstant seit 1/2020",
+      "summary": "MRT: keine zerebralen Metastasen; CT: konstante lipomähnliche Läsion, kein Fortschritt.",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "MRT des Schädels vom 11.01.2021:\n1. Kein Nachweis von zerebralen Metastasen.\n2. Konstante mäßige mikroangiopathische Veränderungen\nCT: Thorax mit i.v. KM, 2-D-Rekonstruktion vom 11.01.2021:\nCT: Leber-Doppelspirale, 2-D-Rekonstruktion vom 11.01.2021:\n2. Konstante Verdichtung im dorsalen Recessus rechts mit fettäquivalenten Dichtewerten und konstant seit 1/2021, dd Lipom.\nZusatzbefund vom 12.01.2021:\nDie Läsion im rechten dorsalen Recessus ist konstant seit 1/2020"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "15.01.2021",
+      "event": "LK Sono 15.01.20\nBefund: Im Bereich der Untersuchungsregionen kein Anhalt für malignomsuspekte LK bzw Filiae.\nBeurteilung: Aktuell kein Hinweis für LK-Filiae.\nEmpfehlung: weiter mit geplantem Vorgehen, cave: Intertrigo inguinal re --> Rü OP, ob SLNB morgen\ndurchgeführt werden kann\nMRT des Schädels vom 27.01.2020:\nKontrollbedürftiges winziges KM-Enhancement an der kortikomedullären Grenze links temporal, aufgrund der winzigen Größe ist keine weitere Dignitätseinschätzung möglich. Keine weitere metastasensuspekte Läsion.\nCT: Leber-Doppelspirale, 2-D-Rekonstruktion vom 27.01.2020:\nCT: Thorax mit i.v. KM, 2-D-Rekonstruktion vom 27.01.2020:\nGefäßassoziierter Nodulus im medialen Mittellappen. Verlaufskontrolle notwendig. Ansonsten kein metastasensuspekter Befund thorakoabdominell\nHauttumorkonferenz-Empfehlung vom 22.07.2020\nBei normwertigen S100 und radiologisch keinem zwingendem Malignitätsverdacht, Kontrolle iR der Nachsorge in 6 Monaten im Stadium IIC vorbehaltlich des noch ausstehenden MRT-S Befunds.\nMRT des Schädels vom 11.01.2021:\n1. Kein Nachweis von zerebralen Metastasen.\n2. Konstante mäßige mikroangiopathische Veränderungen\nCT: Thorax mit i.v. KM, 2-D-Rekonstruktion vom 11.01.2021:\nCT: Leber-Doppelspirale, 2-D-Rekonstruktion vom 11.01.2021:\n2. Konstante Verdichtung im dorsalen Recessus rechts mit fettäquivalenten Dichtewerten und konstant seit 1/2021, dd Lipom.\nZusatzbefund vom 12.01.2021:\nDie Läsion im rechten dorsalen Recessus ist konstant seit 1/2020\nA: Aktuell subjektives Wohlbefinden, keine B-Symptomatik. keine neuen HV bemerkt\nKörperliche Untersuchung:\nAktuell klinisch kein Hinweis für melanozytäre oder epitheliale maligne Hauttumoren.\nWunde am Unterschenkel aktuell leicht erosiv nach Trauma mit umgebenden Erythem.\nZwischen den Schulterblättern große ausgeräumte Pore. An der rechten Flanke hypoplastische HV , lt Pat a.e. im Rahmen des BH-Abdrucks\nSH soweit einsehbar frei. LK palparotisch unauffällig.\nKostante erythematöse HV an beiden Mammae\n- ausführliche Besprechung des TK-Beschlusses\n- nächstes Staging in 6 Monaten angemeldet\n- WV in 3 Monaten zur GKU und LK Sonoempfohlen, Pat lehnt eine Vorstellung in domo ab aufgrund der hohen Fahrtkosten, Pat geht in 3 Monaten zum HA trotzt ausführlicher Aufklärung, dass wir eine WV bei unsempfehlen, da dann auch ds LK Sono stattfindet\nFK",
+      "summary": "MRI 11.01.: keine Hirnmetastasen, konstante Mikroangiopathie; CT: stabile dorsale Recessus‑Läsion (Lipom)",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "LK Sono 15.01.20\nBefund: Im Bereich der Untersuchungsregionen kein Anhalt für malignomsuspekte LK bzw Filiae.\nBeurteilung: Aktuell kein Hinweis für LK-Filiae.\nEmpfehlung: weiter mit geplantem Vorgehen, cave: Intertrigo inguinal re --> Rü OP, ob SLNB morgen\ndurchgeführt werden kann\nMRT des Schädels vom 27.01.2020:\nKontrollbedürftiges winziges KM-Enhancement an der kortikomedullären Grenze links temporal, aufgrund der winzigen Größe ist keine weitere Dignitätseinschätzung möglich. Keine weitere metastasensuspekte Läsion.\nCT: Leber-Doppelspirale, 2-D-Rekonstruktion vom 27.01.2020:\nCT: Thorax mit i.v. KM, 2-D-Rekonstruktion vom 27.01.2020:\nGefäßassoziierter Nodulus im medialen Mittellappen. Verlaufskontrolle notwendig. Ansonsten kein metastasensuspekter Befund thorakoabdominell\nHauttumorkonferenz-Empfehlung vom 22.07.2020\nBei normwertigen S100 und radiologisch keinem zwingendem Malignitätsverdacht, Kontrolle iR der Nachsorge in 6 Monaten im Stadium IIC vorbehaltlich des noch ausstehenden MRT-S Befunds.\nMRT des Schädels vom 11.01.2021:\n1. Kein Nachweis von zerebralen Metastasen.\n2. Konstante mäßige mikroangiopathische Veränderungen\nCT: Thorax mit i.v. KM, 2-D-Rekonstruktion vom 11.01.2021:\nCT: Leber-Doppelspirale, 2-D-Rekonstruktion vom 11.01.2021:\n2. Konstante Verdichtung im dorsalen Recessus rechts mit fettäquivalenten Dichtewerten und konstant seit 1/2021, dd Lipom.\nZusatzbefund vom 12.01.2021:\nDie Läsion im rechten dorsalen Recessus ist konstant seit 1/2020\nA: Aktuell subjektives Wohlbefinden, keine B-Symptomatik. keine neuen HV bemerkt\nKörperliche Untersuchung:\nAktuell klinisch kein Hinweis für melanozytäre oder epitheliale maligne Hauttumoren.\nWunde am Unterschenkel aktuell leicht erosiv nach Trauma mit umgebenden Erythem.\nZwischen den Schulterblättern große ausgeräumte Pore. An der rechten Flanke hypoplastische HV , lt Pat a.e. im Rahmen des BH-Abdrucks\nSH soweit einsehbar frei. LK palparotisch unauffällig.\nKostante erythematöse HV an beiden Mammae\n- ausführliche Besprechung des TK-Beschlusses\n- nächstes Staging in 6 Monaten angemeldet\n- WV in 3 Monaten zur GKU und LK Sonoempfohlen, Pat lehnt eine Vorstellung in domo ab aufgrund der hohen Fahrtkosten, Pat geht in 3 Monaten zum HA trotzt ausführlicher Aufklärung, dass wir eine WV bei unsempfehlen, da dann auch ds LK Sono stattfindet\nFK"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "15.01.2021",
+      "event": "Sonographie vom 15.01.2021\nPrimärtumorregion und Intransitstrecke unauffällig. Popliteal rechts unauffälliger Untersuchungsbefund. Inguinal rechts zeigen sich zwei als rekativ zu wertende LK mit zentraler Vaskularisation, positivem Hiluszeichen und etwas verbreitertem echoarmem Randsaum (2,1x1,0x1,5cm und 0,8x0,7x1,1cm).\nVidit+dixit Prof. Rösch:\nKein Anhalt für LK-Filiae.",
+      "summary": "Sonographie: zwei inguinale LNs mit Vaskularisation, aber kein Hinweis auf metastatische Filiae",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "Sonographie vom 15.01.2021\nPrimärtumorregion und Intransitstrecke unauffällig. Popliteal rechts unauffälliger Untersuchungsbefund. Inguinal rechts zeigen sich zwei als rekativ zu wertende LK mit zentraler Vaskularisation, positivem Hiluszeichen und etwas verbreitertem echoarmem Randsaum (2,1x1,0x1,5cm und 0,8x0,7x1,1cm).\nVidit+dixit Prof. Rösch:\nKein Anhalt für LK-Filiae."
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "09.07.2021",
+      "event": "Nach TK Termin besteht 15.07.2021. TK Anmerkung für nächste Woche Mittwoch angemeldet. Übergabe an HTZ erfolgte.\nRS mit OÄ Zimmer erfolgte und Demo radiologischer Befund. Kein akuter Handlungsbedarf. TK abwarten.\nGCL",
+      "summary": "Kein akuter Handlungsbedarf, Tumorkonferenz‑Ergebnis ausstehend",
+      "category": "Sonstiges",
+      "removed_lines": "",
+      "cleaned_event": "Nach TK Termin besteht 15.07.2021. TK Anmerkung für nächste Woche Mittwoch angemeldet. Übergabe an HTZ erfolgte.\nRS mit OÄ Zimmer erfolgte und Demo radiologischer Befund. Kein akuter Handlungsbedarf. TK abwarten.\nGCL"
+    },
+    {
+      "type": "Besonderes - TK-Beschluss",
+      "date": "15.07.2021",
+      "event": "********************************************",
+      "summary": "TK‑Beschluss dokumentiert, Inhalt nicht angegeben",
+      "category": "Sonstiges",
+      "removed_lines": "",
+      "cleaned_event": "********************************************"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "15.07.2021",
+      "event": "Wiedervorstellung nach TK\n******************************************** Läsion li parietal und links frontal größenkonstant, rechts parietal progredient, thorakoabominell kein Tumornachweis, daher PET CT zur weiteren Diagnostik zeitnah durchführen. Vorstellung mit Befund in TK\nKörperliche Untersuchung 15.07.2021:\nNarbenplatte am Unterschenkel rechts ohne Anhalt für Malignität. Kein Hinweis für Intransit oder Satellitenmetastase. Aktuell klinisch kein Hinweis für melanozytäre oder epitheliale maligne Hauttumoren.\nZwischen den Schulterblättern große ausgeräumte Pore.\nSH soweit einsehbar frei. LK palpatorisch unauffällig.\nA: Aktuell subjektives Wohlbefinden, keine B-Symptomatik. keine neuen HV bemerkt\n- ausführliche Besprechung der aktuellen Befunde und des TK Beschlusses. Patientin erhält diese in Kopie.\n- Zeitnahes PET CT angemeldet, dann TK und Nachbesprechung.\n- nächstes Staging in 6 Monaten angemeldet\n- BE S100 und LDH\n- WV in 3 Monaten zur GKU und LK Sono empfohlen, dies lehnt die Patientin weiterhin ab. Erneute Aufklärung über Sinnhaftigkeit der Nachsorge geführt. Möchte sich dies zum nächsten mal überlegen.\nJA für Spalte 2",
+      "summary": "Rechtsparietale Läsion progressiv, PET‑CT geplant, Staging in 6 Monaten vorgesehen",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "Wiedervorstellung nach TK\n******************************************** Läsion li parietal und links frontal größenkonstant, rechts parietal progredient, thorakoabominell kein Tumornachweis, daher PET CT zur weiteren Diagnostik zeitnah durchführen. Vorstellung mit Befund in TK\nKörperliche Untersuchung 15.07.2021:\nNarbenplatte am Unterschenkel rechts ohne Anhalt für Malignität. Kein Hinweis für Intransit oder Satellitenmetastase. Aktuell klinisch kein Hinweis für melanozytäre oder epitheliale maligne Hauttumoren.\nZwischen den Schulterblättern große ausgeräumte Pore.\nSH soweit einsehbar frei. LK palpatorisch unauffällig.\nA: Aktuell subjektives Wohlbefinden, keine B-Symptomatik. keine neuen HV bemerkt\n- ausführliche Besprechung der aktuellen Befunde und des TK Beschlusses. Patientin erhält diese in Kopie.\n- Zeitnahes PET CT angemeldet, dann TK und Nachbesprechung.\n- nächstes Staging in 6 Monaten angemeldet\n- BE S100 und LDH\n- WV in 3 Monaten zur GKU und LK Sono empfohlen, dies lehnt die Patientin weiterhin ab. Erneute Aufklärung über Sinnhaftigkeit der Nachsorge geführt. Möchte sich dies zum nächsten mal überlegen.\nJA für Spalte 2"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "19.07.2021",
+      "event": "Rücksprache mit Nuklearmedizin.\nBitte bei PET CT Schädel mituntersuchen, da auffällige Läsion sich parietal befindet. Danke,",
+      "summary": "PET‑CT soll wegen auffälliger parietaler Läsion den Schädel umfassen",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "Rücksprache mit Nuklearmedizin.\nBitte bei PET CT Schädel mituntersuchen, da auffällige Läsion sich parietal befindet. Danke,"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "10.08.2021",
+      "event": "Heute keine TK-Anmeldung möglich, da PET CT noch ausstehend (für heute geplant).\nPat. auf TK-Liste für den 18.08.21 gesetzt.\nHat Termin im HTZ am 19.08.21.\nSK für SKr",
+      "summary": "PET‑CT ausstehend, TK‑Termin auf 18.08.21 verlegt",
+      "category": "Sonstiges",
+      "removed_lines": "",
+      "cleaned_event": "Heute keine TK-Anmeldung möglich, da PET CT noch ausstehend (für heute geplant).\nPat. auf TK-Liste für den 18.08.21 gesetzt.\nHat Termin im HTZ am 19.08.21.\nSK für SKr"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "17.08.2021",
+      "event": "Besten Dank für die freundliche Zuweisung Ihrer o.g. Patientin, bei der wir am 10.08.2021 eine\nPET -Untersuchung\nmit 351 MBq des 18F markierten Glukoseanalogons [18F] 2-FDG durchgeführt haben. Die Untersuchung erfolgte in PET/CT (low dose) Technik. Die CT wurde lediglich zur Schwächungskorrektur durchgeführt und ist nicht als diagnostisch anzusehen. Es erfolgten Aufnahmen vom Schädel bis zu den proximalen Oberschenkeln 73 min. p.i.. Der Serumblutzuckerspiegel betrug 110 mg/dl.\nKlinische Vorbefunde: Malignes Melanom St. IIC im Rahmen der Nachsorge.\nRe-Staging.\nEs liegen mehrere Voraufnahmen, zuletzt eine MRT Schädel sowie eine CT Thorax/Abdomen vom 09.07.2021 zum Vergleich vor\nSchädel:\nKeine fokal pathologischen Tracermehranreicherungen. Keine malignomsuspekten zerebralen Läsionen. Soweit abgrenzbar keine Blutung, kein Ödem.\nHals:\nKeine fokal pathologischen Tracermehranreicherungen. Soweit abgrenzbar keine malignomsuspekten zervikalen Läsionen, keine Lymphadenopathie.\nThorax:\nKeine fokal pathologischen Tracermehranreicherung. Soweit abgrenzbar keine malignomsuspekten thorakalen Läsionen. Größenkonstanter gefäßassoziierter Nodulus im medialen Mittellappen sowie größenkonstante Verdichtung im dorsalen Recessus rechts ohne Tracermehranreicherung.\nAbdomen:\nKeine fokal pathologischen Tracermehranreicherungen. Soweit abgrenzbar keine malignomsuspekten abdominellen Läsionen, keine Lymphadenopathie. Umschriebene Tracermehranreicherung des Jejunums (ima 6/152, SUVmax 7,6), a.e. funktionell.\nSkelett:\nKeine fokal pathologischen Tracermehranreicherungen. Soweit abgrenzbar keine malignomsuspekten ossären Läsionen. Die vorbeschriebenen Läsionen der Ossa parietales beidseits sind morphologisch in der low-dose CT nicht abgrenzbar und weisen keine Tracermehranreicherung auf.",
+      "summary": "PET‑CT 10.08.: keine metastatischen Befunde, stabile Läsionen, fokale Jejunums‑Traceraufnahme",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "Besten Dank für die freundliche Zuweisung Ihrer o.g. Patientin, bei der wir am 10.08.2021 eine\nPET -Untersuchung\nmit 351 MBq des 18F markierten Glukoseanalogons [18F] 2-FDG durchgeführt haben. Die Untersuchung erfolgte in PET/CT (low dose) Technik. Die CT wurde lediglich zur Schwächungskorrektur durchgeführt und ist nicht als diagnostisch anzusehen. Es erfolgten Aufnahmen vom Schädel bis zu den proximalen Oberschenkeln 73 min. p.i.. Der Serumblutzuckerspiegel betrug 110 mg/dl.\nKlinische Vorbefunde: Malignes Melanom St. IIC im Rahmen der Nachsorge.\nRe-Staging.\nEs liegen mehrere Voraufnahmen, zuletzt eine MRT Schädel sowie eine CT Thorax/Abdomen vom 09.07.2021 zum Vergleich vor\nSchädel:\nKeine fokal pathologischen Tracermehranreicherungen. Keine malignomsuspekten zerebralen Läsionen. Soweit abgrenzbar keine Blutung, kein Ödem.\nHals:\nKeine fokal pathologischen Tracermehranreicherungen. Soweit abgrenzbar keine malignomsuspekten zervikalen Läsionen, keine Lymphadenopathie.\nThorax:\nKeine fokal pathologischen Tracermehranreicherung. Soweit abgrenzbar keine malignomsuspekten thorakalen Läsionen. Größenkonstanter gefäßassoziierter Nodulus im medialen Mittellappen sowie größenkonstante Verdichtung im dorsalen Recessus rechts ohne Tracermehranreicherung.\nAbdomen:\nKeine fokal pathologischen Tracermehranreicherungen. Soweit abgrenzbar keine malignomsuspekten abdominellen Läsionen, keine Lymphadenopathie. Umschriebene Tracermehranreicherung des Jejunums (ima 6/152, SUVmax 7,6), a.e. funktionell.\nSkelett:\nKeine fokal pathologischen Tracermehranreicherungen. Soweit abgrenzbar keine malignomsuspekten ossären Läsionen. Die vorbeschriebenen Läsionen der Ossa parietales beidseits sind morphologisch in der low-dose CT nicht abgrenzbar und weisen keine Tracermehranreicherung auf."
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "17.08.2021",
+      "event": "Keine TK-Anmeldung. Staging in 6 Monaten nach regulärer Nachsorge, dixit OÄ PD Dr Zimmer.",
+      "summary": "Staging in 6 Monaten geplant, keine TK‑Anmeldung",
+      "category": "Nachsorge",
+      "removed_lines": "",
+      "cleaned_event": "Keine TK-Anmeldung. Staging in 6 Monaten nach regulärer Nachsorge, dixit OÄ PD Dr Zimmer."
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "19.08.2021",
+      "event": "Wiedervorstellung im 2. Nachsorgejahr\n******************************************** Läsion li parietal und links frontal größenkonstant, rechts parietal progredient, thorakoabominell kein Tumornachweis, daher PET CT zur weiteren Diagnostik zeitnah durchführen. Vorstellung mit Befund in TK\n10.08.2021 PET -Untersuchung\nmit 351 MBq des 18F markierten Glukoseanalogons [18F] 2-FDG durchgeführt haben. Die Untersuchung erfolgte in PET/CT (low dose) Technik. Es erfolgten Aufnahmen vom Schädel bis zu den proximalen Oberschenkeln 73 min. p.i.. Der Serumblutzuckerspiegel betrug 110 mg/dl.\n?\tKeine TK-Anmeldung. Staging in 6 Monaten nach regulärer Nachsorge, dixit OÄ PD Dr Zimmer.\nKörperliche Untersuchung 15.07.2021:\nNarbenplatte am Unterschenkel rechts ohne Anhalt für Malignität. Kein Hinweis für Intransit oder Satellitenmetastase. Aktuell klinisch kein Hinweis für melanozytäre oder epitheliale maligne Hauttumoren.\nZwischen den Schulterblättern große ausgeräumte Pore.\nAnsonsten multiple seborrhoische Keratosen. Gesicht nicht beurteilbar bei stark deckendem Make Up.\nSH soweit einsehbar frei. LK palpatorisch unauffällig.\nA: Aktuell subjektives Wohlbefinden, keine B-Symptomatik. keine neuen HV bemerkt. Sehr frph über PET-CT Befund. Pat kommt mit Begleitperson, da sehr schwerhörig\n- ausführliche Besprechung des aktuellen Befundes vom PET-CT, diesen ausgedruckt mitgegeben\n- nächstes Staging in 6 Monaten angefordert mit nTk und LK-Sono\n- BE S100 und LDH bereits am 15.07 erfolgt\n- WV 10/21 zur GKU und LK Sono\nLF",
+      "summary": "PET‑CT im 2. Nachsorgejahr: rechtsparietale Läsion progredient, sonst kein Tumornachweis",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "Wiedervorstellung im 2. Nachsorgejahr\n******************************************** Läsion li parietal und links frontal größenkonstant, rechts parietal progredient, thorakoabominell kein Tumornachweis, daher PET CT zur weiteren Diagnostik zeitnah durchführen. Vorstellung mit Befund in TK\n10.08.2021 PET -Untersuchung\nmit 351 MBq des 18F markierten Glukoseanalogons [18F] 2-FDG durchgeführt haben. Die Untersuchung erfolgte in PET/CT (low dose) Technik. Es erfolgten Aufnahmen vom Schädel bis zu den proximalen Oberschenkeln 73 min. p.i.. Der Serumblutzuckerspiegel betrug 110 mg/dl.\n?\tKeine TK-Anmeldung. Staging in 6 Monaten nach regulärer Nachsorge, dixit OÄ PD Dr Zimmer.\nKörperliche Untersuchung 15.07.2021:\nNarbenplatte am Unterschenkel rechts ohne Anhalt für Malignität. Kein Hinweis für Intransit oder Satellitenmetastase. Aktuell klinisch kein Hinweis für melanozytäre oder epitheliale maligne Hauttumoren.\nZwischen den Schulterblättern große ausgeräumte Pore.\nAnsonsten multiple seborrhoische Keratosen. Gesicht nicht beurteilbar bei stark deckendem Make Up.\nSH soweit einsehbar frei. LK palpatorisch unauffällig.\nA: Aktuell subjektives Wohlbefinden, keine B-Symptomatik. keine neuen HV bemerkt. Sehr frph über PET-CT Befund. Pat kommt mit Begleitperson, da sehr schwerhörig\n- ausführliche Besprechung des aktuellen Befundes vom PET-CT, diesen ausgedruckt mitgegeben\n- nächstes Staging in 6 Monaten angefordert mit nTk und LK-Sono\n- BE S100 und LDH bereits am 15.07 erfolgt\n- WV 10/21 zur GKU und LK Sono\nLF"
+    },
+    {
+      "type": "",
+      "date": "18.10.2021",
+      "event": "Anruf von der Pat.:\nSagt Termin zur Nachsorge + Sono am 21.10.2021 bei uns ab (Pat. meinte, dies wäre ein zusätzlicher Termin gewesen)\nKommt im Rahmen der Nachsorge im nächsten Jahr wieder zu uns.\nKG",
+      "summary": "Patientin sagt Nachsorgetermin + Sono am 21.10.2021 ab, kommt nächstes Jahr wieder.",
+      "category": "Sonstiges",
+      "removed_lines": "",
+      "cleaned_event": "Anruf von der Pat.:\nSagt Termin zur Nachsorge + Sono am 21.10.2021 bei uns ab (Pat. meinte, dies wäre ein zusätzlicher Termin gewesen)\nKommt im Rahmen der Nachsorge im nächsten Jahr wieder zu uns.\nKG"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "18.01.2022",
+      "event": "1.\tKonstante metastasensuspekte Läsion rechts parietal bis an die Dura heranreichend, aktuell mit gering regredienter KM-Anreicherung, Verlaufskontrolle empfohlen.\n2.\tKein Nachweis intrazerebraler oder neuer Metastasen.",
+      "summary": "Konstante parietale Metastase, leicht regressiv, keine neuen intrazerebralen Metastasen.",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "1.\tKonstante metastasensuspekte Läsion rechts parietal bis an die Dura heranreichend, aktuell mit gering regredienter KM-Anreicherung, Verlaufskontrolle empfohlen.\n2.\tKein Nachweis intrazerebraler oder neuer Metastasen."
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "21.01.2022",
+      "event": "Wiedervorstellung im 3. Nachsorgejahr\nMRT des Schädels vom 17.01.2022:\n1.\tKonstante metastasensuspekte Läsion rechts parietal bis an die Dura heranreichend, aktuell mit gering regredienter KM-Anreicherung, Verlaufskontrolle empfohlen.\n2.\tKein Nachweis intrazerebraler oder neuer Metastasen.\nCT: Thorax mit i.v. KM, 2-D-Rekonstruktion vom 17.01.2022:\nCT: Leber-Doppelspirale, 2-D-Rekonstruktion vom 17.01.2022:\nBeurteilung: Kein Nachweis einer neuen thorakoabdominellen Tumormanifestation.\nMRT des Schädels vom 09.07.2021:\n1.\tV.a. neue ossäre Metastasen, rechts parietal bis an die Dura heranreichend.\n2.\tWeiterhin kein Nachweis intraaxialer Raumforderungen.\n10.08.2021 PET -Untersuchung\nMetabolisch kein Nachweis einer Tumormanifestation. Die MR-morphologisch vorbeschriebenen Läsionen der Ossa parietales beidseits sind in der low-dose CT nicht abgrenzbar und weisen keinen gesteigerten Glukosestoffwechsel auf, DD auflösungsbedingt, ggf. MRT Verlaufskontrolle empfohlen.\n?\tKeine TK-Anmeldung. Staging in 6 Monaten nach regulärer Nachsorge, dixit OÄ PD Dr Zimmer.\nAnamnese: AZ gut, Pat. äußert keine Beschwerden auf gezielte Nachfrage.\nKörperliche Untersuchung 21.01.2022:\n84-jährige Patientin in gutem AZ und normalem EZ. Wach, örtlich und zeitlich scharf orientiert. Orientierend kein Hinweis auf ein fokales oder globales neurologisches Defizit. Thorax symmetrisch. Pulmonal auskultatorisch vesikuläres Atemgeräusch, keine Nebengeräusche, keine Rasselgeräusche. Cor rein, rhythmisch, normofrequent ohne peripheres Defizit. Abdomen weich, kein Druckschmerz, keine Resistenzen, auskultatorisch rege Peristaltik.\nNarbe am US rechts reizlos ohne Hinweis auf ein Lokalrezidiv. In-transit-Strecke inspektorisch und palpatorisch frei. Narbe inguinal rechts reizlos ohne Anhalt für suspekte LK. Zwischen den Schulterblättern große ausgeräumte Pore. Ansonsten multiple seborrhoische Keratosen. Gesicht nicht beurteilbar bei erneut stark deckendem Make Up. SH soweit einsehbar frei. LK palpatorisch unauffällig.Kein Anhalt für epitheliale oder melanozytäre Tumor. Lymphknotenstationen palpatorisch unauffällig. Schleimhäute, soweit einsehbar, ohne pathologischen Befund\nA: Aktuell subjektives Wohlbefinden, keine B-Symptomatik. keine neuen HV bemerkt. Sehr froh über PET-CT Befund.\n- nächstes Staging in 6 Monaten angefordert mit nTK und LK-Sono\n- LK-Sonographie für 8.2. terminiert\n- GKU + LK Sono + BE in 3 Mon. wünscht Pat. beim Hautarzt, diese werden uns zugefaxt.\nLV für Spalte 1",
+      "summary": "Keine neuen Tumormanifestationen im Thorax/Abdomen, stabile Hirnläsionen; Staging in 6 Monaten geplant.",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "Wiedervorstellung im 3. Nachsorgejahr\nMRT des Schädels vom 17.01.2022:\n1.\tKonstante metastasensuspekte Läsion rechts parietal bis an die Dura heranreichend, aktuell mit gering regredienter KM-Anreicherung, Verlaufskontrolle empfohlen.\n2.\tKein Nachweis intrazerebraler oder neuer Metastasen.\nCT: Thorax mit i.v. KM, 2-D-Rekonstruktion vom 17.01.2022:\nCT: Leber-Doppelspirale, 2-D-Rekonstruktion vom 17.01.2022:\nBeurteilung: Kein Nachweis einer neuen thorakoabdominellen Tumormanifestation.\nMRT des Schädels vom 09.07.2021:\n1.\tV.a. neue ossäre Metastasen, rechts parietal bis an die Dura heranreichend.\n2.\tWeiterhin kein Nachweis intraaxialer Raumforderungen.\n10.08.2021 PET -Untersuchung\nMetabolisch kein Nachweis einer Tumormanifestation. Die MR-morphologisch vorbeschriebenen Läsionen der Ossa parietales beidseits sind in der low-dose CT nicht abgrenzbar und weisen keinen gesteigerten Glukosestoffwechsel auf, DD auflösungsbedingt, ggf. MRT Verlaufskontrolle empfohlen.\n?\tKeine TK-Anmeldung. Staging in 6 Monaten nach regulärer Nachsorge, dixit OÄ PD Dr Zimmer.\nAnamnese: AZ gut, Pat. äußert keine Beschwerden auf gezielte Nachfrage.\nKörperliche Untersuchung 21.01.2022:\n84-jährige Patientin in gutem AZ und normalem EZ. Wach, örtlich und zeitlich scharf orientiert. Orientierend kein Hinweis auf ein fokales oder globales neurologisches Defizit. Thorax symmetrisch. Pulmonal auskultatorisch vesikuläres Atemgeräusch, keine Nebengeräusche, keine Rasselgeräusche. Cor rein, rhythmisch, normofrequent ohne peripheres Defizit. Abdomen weich, kein Druckschmerz, keine Resistenzen, auskultatorisch rege Peristaltik.\nNarbe am US rechts reizlos ohne Hinweis auf ein Lokalrezidiv. In-transit-Strecke inspektorisch und palpatorisch frei. Narbe inguinal rechts reizlos ohne Anhalt für suspekte LK. Zwischen den Schulterblättern große ausgeräumte Pore. Ansonsten multiple seborrhoische Keratosen. Gesicht nicht beurteilbar bei erneut stark deckendem Make Up. SH soweit einsehbar frei. LK palpatorisch unauffällig.Kein Anhalt für epitheliale oder melanozytäre Tumor. Lymphknotenstationen palpatorisch unauffällig. Schleimhäute, soweit einsehbar, ohne pathologischen Befund\nA: Aktuell subjektives Wohlbefinden, keine B-Symptomatik. keine neuen HV bemerkt. Sehr froh über PET-CT Befund.\n- nächstes Staging in 6 Monaten angefordert mit nTK und LK-Sono\n- LK-Sonographie für 8.2. terminiert\n- GKU + LK Sono + BE in 3 Mon. wünscht Pat. beim Hautarzt, diese werden uns zugefaxt.\nLV für Spalte 1"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "26.07.2022",
+      "event": "MRT des Schädels vom 25.07.2022:\n1.\tKonstante metastasensuspekte Läsion rechts parietal bis an die Dura heranreichend mit weiter regredienter KM-Anreicherung.\n2.\tKein Nachweis neuer/intrazerebraler Metastasen.\nKeine TK Anmeldung bei konstantem Befund\nSKr",
+      "summary": "Konstante Hirnläsion mit weiter regressiver KM-Anreicherung, keine neuen Metastasen.",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "MRT des Schädels vom 25.07.2022:\n1.\tKonstante metastasensuspekte Läsion rechts parietal bis an die Dura heranreichend mit weiter regredienter KM-Anreicherung.\n2.\tKein Nachweis neuer/intrazerebraler Metastasen.\nKeine TK Anmeldung bei konstantem Befund\nSKr"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "05.08.2022",
+      "event": "Wiedervorstellung im 3. Nachsorgejahr\nOberarm links:\nHistiozytom. Der Tumor ist zur Tiefe hin schnittrandbildend.\nMRT des Schädels vom 25.07.2022:\n1.\tKonstante metastasensuspekte Läsion rechts parietal bis an die Dura heranreichend mit weiter regredienter KM-Anreicherung.\n2.\tKein Nachweis neuer/intrazerebraler Metastasen.\nCT: Thorax mit i.v. KM, 2-D-Rekonstruktion vom 09.07.2021:\n1.    Konstanter gefäßassoziierter Nodulus im medialen Mittellappen.\n2.    Langfristig konstante Verdichtung im dorsalen Recessus rechts mit fettäquivalenten Dichtewerten a.e. kleine Zwerchfellhernie.\n3.    Ansonsten kein metastasensuspekter Befund thorakoabdominell.\nLK Sono 05.08.2022\nBefund: Im Bereich des Schildknorpels zeigt sich eine neue rundliche, echoarme bis zu 0,84cm\nmessende bis in die Peripherie vaskularisierte Raumforderung.\nIn den weiteren untersuchten Bereichen regelrechte Lymphknoten darstellbar mit SI > 2.\npositivem Hiluszeichen und zentraler Vaskularisation.\nPrimariusregion und Intransitstrecke unauffällig.\nNebenbefundlich: Schilddrüsenrest rechts\nBeurteilung: v+d OÄ PD Sondermann:\nNeue Raumforderung cervical mittig auf Höhe des Schildknorpels unklarer Dignität\nIn den weiteren untersuchten Bereichen ansonsten aktuell kein Hinweis für Malignität.\nEmpfehlung: Erbitten HNO-ärztliche Mitbeurteilung.\nAnamnese: AZ gut, Pat. äußert keine Beschwerden auf gezielte Nachfrage.Sie habe keine neuen HV bemerkt. Pat möchte die GKU + LK sono alle 3 Mon. bei ihrem hausarzt amchen da sie immer mit dem taxi hier hin kommen muss und dies für sie sehr teuer ist.\nKörperliche Untersuchung 05.08.2022\n85-jährige Patientin in gutem AZ und normalem EZ. Wach, örtlich und zeitlich scharf orientiert. Orientierend kein Hinweis auf ein fokales oder globales neurologisches Defizit. Thorax symmetrisch. Pulmonal auskultatorisch vesikuläres Atemgeräusch, keine Nebengeräusche, keine Rasselgeräusche. Cor rein, rhythmisch, normofrequent ohne peripheres Defizit. Abdomen weich, kein Druckschmerz, keine Resistenzen, auskultatorisch rege Peristaltik.\nNarbe am US rechts reizlos ohne Hinweis auf ein Lokalrezidiv. In-transit-Strecke inspektorisch und palpatorisch frei. Narbe inguinal rechts reizlos ohne Anhalt für suspekte LK. Zwischen den Schulterblättern große ausgeräumte Pore. Ansonsten multiple seborrhoische Keratosen. Gesicht nicht beurteilbar bei erneut stark deckendem Make Up. SH soweit einsehbar frei. LK palpatorisch unauffällig.Kein Anhalt für epitheliale oder melanozytäre Tumor. Lymphknotenstationen palpatorisch unauffällig. Schleimhäute, soweit einsehbar, ohne pathologischen Befund\n- nächstes Staging in 6 Monaten angefordert mit nTK und LK-Sono, letztes Staging im 3 NSJ\n- GKU + LK Sono in 3 Mon in domo wird von der Pat abgelehnt, dieses würde sie bei ihrem HA machen da es für sie sehr teuer ist hier hin zu kommen. befund wird gefaxt\n- Abklärung Neue Raumforderung cervical mittig auf Höhe des Schildknorpels unklarer Dignität, Empeflung HNO Abklärung, Pat macht diese bei ihremHNO Arzt extern, bringt Befund mit\nVP für Spalte 1",
+      "summary": "Neues 0,84 cm echoarmes Schilddrüsenräumchen, Unklarheit, HNO‑Beurteilung empfohlen.",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "Wiedervorstellung im 3. Nachsorgejahr\nOberarm links:\nHistiozytom. Der Tumor ist zur Tiefe hin schnittrandbildend.\nMRT des Schädels vom 25.07.2022:\n1.\tKonstante metastasensuspekte Läsion rechts parietal bis an die Dura heranreichend mit weiter regredienter KM-Anreicherung.\n2.\tKein Nachweis neuer/intrazerebraler Metastasen.\nCT: Thorax mit i.v. KM, 2-D-Rekonstruktion vom 09.07.2021:\n1.    Konstanter gefäßassoziierter Nodulus im medialen Mittellappen.\n2.    Langfristig konstante Verdichtung im dorsalen Recessus rechts mit fettäquivalenten Dichtewerten a.e. kleine Zwerchfellhernie.\n3.    Ansonsten kein metastasensuspekter Befund thorakoabdominell.\nLK Sono 05.08.2022\nBefund: Im Bereich des Schildknorpels zeigt sich eine neue rundliche, echoarme bis zu 0,84cm\nmessende bis in die Peripherie vaskularisierte Raumforderung.\nIn den weiteren untersuchten Bereichen regelrechte Lymphknoten darstellbar mit SI > 2.\npositivem Hiluszeichen und zentraler Vaskularisation.\nPrimariusregion und Intransitstrecke unauffällig.\nNebenbefundlich: Schilddrüsenrest rechts\nBeurteilung: v+d OÄ PD Sondermann:\nNeue Raumforderung cervical mittig auf Höhe des Schildknorpels unklarer Dignität\nIn den weiteren untersuchten Bereichen ansonsten aktuell kein Hinweis für Malignität.\nEmpfehlung: Erbitten HNO-ärztliche Mitbeurteilung.\nAnamnese: AZ gut, Pat. äußert keine Beschwerden auf gezielte Nachfrage.Sie habe keine neuen HV bemerkt. Pat möchte die GKU + LK sono alle 3 Mon. bei ihrem hausarzt amchen da sie immer mit dem taxi hier hin kommen muss und dies für sie sehr teuer ist.\nKörperliche Untersuchung 05.08.2022\n85-jährige Patientin in gutem AZ und normalem EZ. Wach, örtlich und zeitlich scharf orientiert. Orientierend kein Hinweis auf ein fokales oder globales neurologisches Defizit. Thorax symmetrisch. Pulmonal auskultatorisch vesikuläres Atemgeräusch, keine Nebengeräusche, keine Rasselgeräusche. Cor rein, rhythmisch, normofrequent ohne peripheres Defizit. Abdomen weich, kein Druckschmerz, keine Resistenzen, auskultatorisch rege Peristaltik.\nNarbe am US rechts reizlos ohne Hinweis auf ein Lokalrezidiv. In-transit-Strecke inspektorisch und palpatorisch frei. Narbe inguinal rechts reizlos ohne Anhalt für suspekte LK. Zwischen den Schulterblättern große ausgeräumte Pore. Ansonsten multiple seborrhoische Keratosen. Gesicht nicht beurteilbar bei erneut stark deckendem Make Up. SH soweit einsehbar frei. LK palpatorisch unauffällig.Kein Anhalt für epitheliale oder melanozytäre Tumor. Lymphknotenstationen palpatorisch unauffällig. Schleimhäute, soweit einsehbar, ohne pathologischen Befund\n- nächstes Staging in 6 Monaten angefordert mit nTK und LK-Sono, letztes Staging im 3 NSJ\n- GKU + LK Sono in 3 Mon in domo wird von der Pat abgelehnt, dieses würde sie bei ihrem HA machen da es für sie sehr teuer ist hier hin zu kommen. befund wird gefaxt\n- Abklärung Neue Raumforderung cervical mittig auf Höhe des Schildknorpels unklarer Dignität, Empeflung HNO Abklärung, Pat macht diese bei ihremHNO Arzt extern, bringt Befund mit\nVP für Spalte 1"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "15.02.2023",
+      "event": "Konstante, kontrastmittelanreichernde Läsion der Schädelkalotte rechts parietal (ima 10/113 10x6mm, idem) mit Infiltration der angrenzenden Dura, weiterhin ohne Beteiligung des benachbarten Kortex. Kein Nachweis einer zerebralen Raumforderung oder pathologischen Kontrastmittelanreicherung. Konstante, fleckige T2w/FLAIR-Hyperintensitäten des supratentoriellen Marklagers periventrikulär und juxtakortikal, a.e. mikroangiopathisch. Keine akute Liquorzirkulationsstörung.\nCT: Leber-Doppelspirale, 2-D-Rekonstruktion vom 14.02.2023:\nZum Vergleich liegen mehrere Voruntersuchungen vor, zuletzt eine CT Thorax/Abdomen vom 25.07.2022.\nThorax:\nKeine malignomsuspekten pulmonalen Rundherde. Regredienter Nodulus im Mittellappen (ima 5/147: 5x4mm, zuvor 7x5mm) sowie verkalkte Mikronoduli bipulmonal, a.e. postentzündlich. Keine entzündlichen Infiltrate. Bipulmonale Dystelektasen, betont in Mittellappen und Lingula. Kein Pleuraerguss. A.e. kleine Zwerchfellhernie rechts dorsal. Kein Nachweis pathologisch vergrößerter Lymphknoten. Aorten- und Koronarsklerose und Z.n. ACB-OP und fraglich AKE.\nAbdomen:\nKeine malignomsuspekten Organläsionen. Kein Aszites. Kein Nachweis pathologisch vergrößerter Lymphknoten bei konstant verkalktem Lymphknoten pelvin (ima 6/63). Fokale Mehrverfettung der Leber in loco typico. Milzzyste. Nebenmilzen. A.e. adenomatös verplumpte Nebenniere links. Ektasie des NBKS beidseits. Sigmadivertikulose. Infrarenal betonte Arteriosklerose sowie Elongation von Aorta und Beckenstrombahn.\nSkelett:\nKein Nachweis malignitätssuspekter ossärer Läsionen bei fortgeschrittenen degenerativen Veränderungen des miterfassten Achsenskeletts mit teils spangenbildender Spondylosis deformans und multisegmentaler Osteochondrose. Antelisthese von LWK 2+3 gg.1, LWK 4/5 ggü. SWK 1 bei Spondylolyse. Z.n. medianer Sternotomie mit einliegenden Cerclagen.\nWeiterhin kein Nachweis einer thorakoabdominellen Tumormanifestation.",
+      "summary": "Regressiver Mittellappen‑Nodulus (5 × 4 mm, zuvor 7 × 5 mm), sonst stabile Befunde.",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "Konstante, kontrastmittelanreichernde Läsion der Schädelkalotte rechts parietal (ima 10/113 10x6mm, idem) mit Infiltration der angrenzenden Dura, weiterhin ohne Beteiligung des benachbarten Kortex. Kein Nachweis einer zerebralen Raumforderung oder pathologischen Kontrastmittelanreicherung. Konstante, fleckige T2w/FLAIR-Hyperintensitäten des supratentoriellen Marklagers periventrikulär und juxtakortikal, a.e. mikroangiopathisch. Keine akute Liquorzirkulationsstörung.\nCT: Leber-Doppelspirale, 2-D-Rekonstruktion vom 14.02.2023:\nZum Vergleich liegen mehrere Voruntersuchungen vor, zuletzt eine CT Thorax/Abdomen vom 25.07.2022.\nThorax:\nKeine malignomsuspekten pulmonalen Rundherde. Regredienter Nodulus im Mittellappen (ima 5/147: 5x4mm, zuvor 7x5mm) sowie verkalkte Mikronoduli bipulmonal, a.e. postentzündlich. Keine entzündlichen Infiltrate. Bipulmonale Dystelektasen, betont in Mittellappen und Lingula. Kein Pleuraerguss. A.e. kleine Zwerchfellhernie rechts dorsal. Kein Nachweis pathologisch vergrößerter Lymphknoten. Aorten- und Koronarsklerose und Z.n. ACB-OP und fraglich AKE.\nAbdomen:\nKeine malignomsuspekten Organläsionen. Kein Aszites. Kein Nachweis pathologisch vergrößerter Lymphknoten bei konstant verkalktem Lymphknoten pelvin (ima 6/63). Fokale Mehrverfettung der Leber in loco typico. Milzzyste. Nebenmilzen. A.e. adenomatös verplumpte Nebenniere links. Ektasie des NBKS beidseits. Sigmadivertikulose. Infrarenal betonte Arteriosklerose sowie Elongation von Aorta und Beckenstrombahn.\nSkelett:\nKein Nachweis malignitätssuspekter ossärer Läsionen bei fortgeschrittenen degenerativen Veränderungen des miterfassten Achsenskeletts mit teils spangenbildender Spondylosis deformans und multisegmentaler Osteochondrose. Antelisthese von LWK 2+3 gg.1, LWK 4/5 ggü. SWK 1 bei Spondylolyse. Z.n. medianer Sternotomie mit einliegenden Cerclagen.\nWeiterhin kein Nachweis einer thorakoabdominellen Tumormanifestation."
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "24.02.2023",
+      "event": "Wiedervorstellung im 4. Nachsorgejahr\nOberarm links: Histiozytom. Der Tumor ist zur Tiefe hin schnittrandbildend.\nCT: Leber-Doppelspirale, 2-D-Rekonstruktion vom 14.02.2023\nBefund: Weiterhin kein Nachweis einer thorakoabdominellen Tumormanifestation.\nLK-Sono vom 24.02.2023:\nBefund: Vorbeschriebene RF cervikal mittig auf Höhe des Schildknorpels zeigt sich eine schwach\necholeere RF größenkonstant.\nJeweils regelrechte Darstellung der Gefäße. Beidseits regelrechte Lymphknoten darstellbar\nmit SI > 2. positivem Hiluszeichen und zentraler Vaskularisation.\nBeurteilung: Aktuell kein Hinweis für Malignität.\nEmpfehlung: Verlaufskontrolle im Rahmen der Nachsorge.\nAnamnese: AZ gut, Pat. äußert keine Beschwerden auf gezielte Nachfrage.Keine B-Symptomatik. Sie habe keine neuen HV bemerkt.\nNachsorgeschema im 4. Jahr mit der PAtientin besprochen. Diese wünscht NAchsroge über NHFA. Einmal jährlich Vorstellung in domo zur GKU + LK-Sono vereinbart.\nKörperliche Untersuchung 24.202.20253\n85-jährige Patientin in gutem AZ und normalem EZ. Wach, örtlich und zeitlich scharf orientiert. Orientierend kein Hinweis auf ein fokales oder globales neurologisches Defizit. Thorax symmetrisch. Pulmonal auskultatorisch vesikuläres Atemgeräusch, keine Nebengeräusche, keine Rasselgeräusche. Cor rein, rhythmisch, normofrequent ohne peripheres Defizit. Abdomen weich, kein Druckschmerz, keine Resistenzen, auskultatorisch rege Peristaltik.\nNarbe am US rechts reizlos ohne Hinweis auf ein Lokalrezidiv. In-transit-Strecke inspektorisch und palpatorisch frei. Narbe inguinal rechts in gesamte Länge mit bläuchlicher Verfärbung, auflichtmikropskopisch kein Pigmentnetz sichtbar,  ansonsten reizlos ohne Anhalt für suspekte LK. Fotodoku erfolgt, nun sonographischer Untersuchung. Narbe am rechten US prätibial reizlos. Zwischen den Schulterblättern große ausgeräumte Pore. Ansonsten multiple seborrhoische Keratosen. Gesicht nicht beurteilbar bei erneut stark deckendem Make Up. SH soweit einsehbar frei. LK palpatorisch unauffällig.Kein Anhalt für epitheliale oder melanozytäre Tumor. Lymphknotenstationen palpatorisch unauffällig. Schleimhäute, soweit einsehbar, ohne pathologischen Befund. Fußnägel lackiert, daher nicht beurteilbar.\n- ausführliche Besprechung des aktuellen Stagingbefunde, diese ausgedruckt mitgegeben\n- ausführliche Erläuterung des Nachsorgeschemas und alle 6 Monate LK-Sono, dieses muss ambulant erfolgen, Pat. will max 1x pro Jahr ins HTZ kommen (Fahrt und Aufwand für Sie zu belastend).\n- GKU  in 3 Monaten beim NHFA und in 9 Monaten\n- GKU + LK-Sono in 6 Monaten beim NHFA\n- GKU + LK-Sono in 12 Monaten im HTZ terminiert\n- Abklärung Neue Raumforderung cervical mittig auf Höhe des Schildknorpels unklarer Dignität, Empfehlung HNO Abklärung --> Anamnestisch HNO-Vorstellung erfolgt ohne patholog. Befund, schriftlicher Befund liegt nicht vor\nSch für Spalte 1",
+      "summary": "Ultraschall zeigt unveränderte Schilddrüsen‑RF, kein Hinweis auf Malignität.",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "Wiedervorstellung im 4. Nachsorgejahr\nOberarm links: Histiozytom. Der Tumor ist zur Tiefe hin schnittrandbildend.\nCT: Leber-Doppelspirale, 2-D-Rekonstruktion vom 14.02.2023\nBefund: Weiterhin kein Nachweis einer thorakoabdominellen Tumormanifestation.\nLK-Sono vom 24.02.2023:\nBefund: Vorbeschriebene RF cervikal mittig auf Höhe des Schildknorpels zeigt sich eine schwach\necholeere RF größenkonstant.\nJeweils regelrechte Darstellung der Gefäße. Beidseits regelrechte Lymphknoten darstellbar\nmit SI > 2. positivem Hiluszeichen und zentraler Vaskularisation.\nBeurteilung: Aktuell kein Hinweis für Malignität.\nEmpfehlung: Verlaufskontrolle im Rahmen der Nachsorge.\nAnamnese: AZ gut, Pat. äußert keine Beschwerden auf gezielte Nachfrage.Keine B-Symptomatik. Sie habe keine neuen HV bemerkt.\nNachsorgeschema im 4. Jahr mit der PAtientin besprochen. Diese wünscht NAchsroge über NHFA. Einmal jährlich Vorstellung in domo zur GKU + LK-Sono vereinbart.\nKörperliche Untersuchung 24.202.20253\n85-jährige Patientin in gutem AZ und normalem EZ. Wach, örtlich und zeitlich scharf orientiert. Orientierend kein Hinweis auf ein fokales oder globales neurologisches Defizit. Thorax symmetrisch. Pulmonal auskultatorisch vesikuläres Atemgeräusch, keine Nebengeräusche, keine Rasselgeräusche. Cor rein, rhythmisch, normofrequent ohne peripheres Defizit. Abdomen weich, kein Druckschmerz, keine Resistenzen, auskultatorisch rege Peristaltik.\nNarbe am US rechts reizlos ohne Hinweis auf ein Lokalrezidiv. In-transit-Strecke inspektorisch und palpatorisch frei. Narbe inguinal rechts in gesamte Länge mit bläuchlicher Verfärbung, auflichtmikropskopisch kein Pigmentnetz sichtbar,  ansonsten reizlos ohne Anhalt für suspekte LK. Fotodoku erfolgt, nun sonographischer Untersuchung. Narbe am rechten US prätibial reizlos. Zwischen den Schulterblättern große ausgeräumte Pore. Ansonsten multiple seborrhoische Keratosen. Gesicht nicht beurteilbar bei erneut stark deckendem Make Up. SH soweit einsehbar frei. LK palpatorisch unauffällig.Kein Anhalt für epitheliale oder melanozytäre Tumor. Lymphknotenstationen palpatorisch unauffällig. Schleimhäute, soweit einsehbar, ohne pathologischen Befund. Fußnägel lackiert, daher nicht beurteilbar.\n- ausführliche Besprechung des aktuellen Stagingbefunde, diese ausgedruckt mitgegeben\n- ausführliche Erläuterung des Nachsorgeschemas und alle 6 Monate LK-Sono, dieses muss ambulant erfolgen, Pat. will max 1x pro Jahr ins HTZ kommen (Fahrt und Aufwand für Sie zu belastend).\n- GKU  in 3 Monaten beim NHFA und in 9 Monaten\n- GKU + LK-Sono in 6 Monaten beim NHFA\n- GKU + LK-Sono in 12 Monaten im HTZ terminiert\n- Abklärung Neue Raumforderung cervical mittig auf Höhe des Schildknorpels unklarer Dignität, Empfehlung HNO Abklärung --> Anamnestisch HNO-Vorstellung erfolgt ohne patholog. Befund, schriftlicher Befund liegt nicht vor\nSch für Spalte 1"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "20.02.2024",
+      "event": "Wiedervorstellung im 5. Nachsorgejahr MM St. IIC\nHistologie: Malignes Melanom TD min. 4,8 mm, keine Ulzeration (RS mit befundendem Pathologen erfolgt; Histobefund: keine eindeutige Ulzeration), Lokalisation: rechter Unterschenkel, R1-Situation, Behandlung durch Dr. Krämer, Bottrop, Histologische Begutachtung Primarius durch Dermatopathologie Friedrichshafen, Block-Nr. D774380-19 ED 13.12.2019\nStadium bei ED nach AJCC 2017: min. pT4a, cN0, cM0 St. IIB\nHausarzt: Dr. Brackmann, Bottrop\nHautarzt: Dr. Krämer, Bottrop\nNotfallkontakt: Schwester 02041 688548\nSozialanamnese:\nverwitwet alleine lebend (Altenwohnung), Schwester kümmert sich um Patietin; keine Kinder\nMelanomanamnese:\nV.a. Warze am Schienbein, Wachstum, dann Aufbrechen mit Blasenbildung und Blutung,\nShave durch NHFA V.a. BCC\nVerlauf:\n04.12.2019 Probenentnahme aus einem malignem Melanom am rechten Unterschenkel\n09.01.2020 Exzision MM TD 4,8mm mit Ulzeration, R1 Unterschenkel rechts\n22.01.2020 R0 Exzision des MM am US re\n04.02.2020 WV im HTZ zur Planung SA und SLNB (0+/2)\n14.07.2021 TK: Läsion li parietal und links frontal größenkonstant, rechts parietal progredient, thorakoabominell kein Tumornachweis, daher PET CT zur weiteren Diagnostik zeitnah durchführen. Vorstellung mit Befund in TK\n08/2021 PET-CT unauffällig, Nachsorge nach LL\n08.2022 unauffälliges Staging\nAktuelles Stadium nach AJCC 2017: min. pT4b, cN0, cM0 St. IIC\nMolpatho: noch nicht erfolgt\nPD-L1: noch nicht erfolgt\nWeitere Diagnosen\nRheuma\nart. Hypertonie\nZ.n. Bypass-Op\nZ.n. Aortenaneurysma\nZ.n. Aortenklappenersatz\nZ.n. Nierenadenomexzision\nZ.n. Basalzelkarzinom am Auge (insgesamt 3x), hier\nKatarakt\nZ.n.Knie-TEP Implantation\nHypothyreose bei Z.n. Strumaoperation, hier Verletzung des N. Laryngeus recurrens,\nAllergien\nkeine\nMedikation:\nLevothyroxin-Natrium 75ug\t1-0-0\nVesikur 5mg\t1-0-0\nOmeprazol 20 mg\t1-0-0\nMethotrexat 7,5/15\t1x wöchentlich\nBisoprolol/Hydrochlorthiazid 5/12,5\t1-0-0\nColecalciferol 20000\t1x wöchentlich\nNaproxen 250 mg\t1-0-1\nValsartan/Hydrochlorothiazid  160/25 1-0-0\nMakrogol \tbB\nFolsäure 5mg 1x wöchentlich\nBudesonid 0,2 mg\t1-0-1\nwichtige Befunde:\nHistologie 09.01.20 Unterschenkel rechts:\nMalignes Melanom, die Tumordicke am invasiven, zentral im Präparat vorhandenen Anteil\nentspricht dem Vorbefund (4,8 mm). Es besteht eine Ulzeration. Weiterhin findet sich eine\nSchnittrandbildung von 9  12 h der in-situ-Komponente. Diese Beurteilung stützt sich auf folgende\nZusatzuntersuchung: Melan-A.\npT4b, Nx, Mx, R1 nach AJCC 2017\nHistologie 31.01.2020\nUnterschenkel rechts:\nTumorfreies Nachexzidat. Diese Beurteilung stützt sich auf folgende immunhistochemische\nOberarm links: Histiozytom. Der Tumor ist zur Tiefe hin schnittrandbildend.\nHauttumorkonferenz-Empfehlung vom 14.07.2021\n**********************************************************\nLäsion li parietal und links frontal größenkonstant, rechts parietal progredient, thorakoabominell kein Tumornachweis, daher PET CT zur weiteren Diagnostik zeitnah durchführen. Vorstellung mit Befund in TK\nAktuelles Staging:\nMRT des Schädels vom 14.02.2023: Mehrere Voruntersuchungen zum Vergleich vorliegend, zuletzt vom 25.07.22\n1.\tWeiterhin kein Nachweis zerebraler Metastasen.\n2.\tKonstante metastasensuspekte Läsion der Schädelkalotte rechts parietal.\nCT: Thorax mit i.v. KM, 2-D-Rekonstruktion vom 14.02.2023:\nCT: Leber-Doppelspirale, 2-D-Rekonstruktion vom 14.02.2023\nBefund: Weiterhin kein Nachweis einer thorakoabdominellen Tumormanifestation.\nLK-Sono vom 20.02.24\nausstehend\nAnamnese: AZ gut, Pat. äußert keine Beschwerden auf gezielte Nachfrage.Keine B-Symptomatik. Sie habe keine neuen HV bemerkt.\nNachsorgeschema im 5. Jahr mit der Patientin.\nDiese wünscht Nachsorge über NHFA. Einmal jährlich Vorstellung in domo zur GKU  ab dem 6. NSJ.\nKörperliche Untersuchung 20.02.24\nECOG: 0 (0-4), Hauttyp 2 nach Fitzpatrick\n86-jährige Patientin in gutem AZ und normalem EZ. Wach, örtlich und zeitlich scharf orientiert. Orientierend kein Hinweis auf ein fokales oder globales neurologisches Defizit. Thorax symmetrisch. Pulmonal auskultatorisch vesikuläres Atemgeräusch, keine Nebengeräusche, keine Rasselgeräusche. Cor rein, rhythmisch, normofrequent ohne peripheres Defizit. Abdomen weich, kein Druckschmerz, keine Resistenzen, auskultatorisch rege Peristaltik.\nStark deckendes Make up im Gesicht bei Rosacea, daher keine gute Inspektion möglich.\nNarbe am US rechts reizlos ohne Hinweis auf ein Lokalrezidiv. In-transit-Strecke inspektorisch und palpatorisch frei.\nNarbe inguinal rechts in gesamte Länge mit bläuchlicher Verfärbung, auflichtmikropskopisch kein Pigmentnetz sichtbar.\nNarbe am rechten US prätibial reizlos. Zwischen den Schulterblättern große ausgeräumte Pore.\nAnsonsten multiple seborrhoische Keratosen. SH soweit einsehbar frei. LK palpatorisch unauffällig.Kein Anhalt für epitheliale oder melanozytäre Tumor. Lymphknotenstationen palpatorisch unauffällig. Schleimhäute, soweit einsehbar, ohne pathologischen Befund. Fußnägel lackiert, daher nicht beurteilbar.\nProcedere:\n- GKU erfolgt, LK Sono ausstehend\n- WVS in 12 Mon in domo\n- ausführliche Erläuterung des Nachsorgeschemas und alle 6 Monate LK-Sono, dieses muss ambulant erfolgen, Pat. will max 1x pro Jahr ins HTZ kommen (Fahrt und Aufwand für Sie zu belastend).\n- BE S100 und LDH heute\n- GKU  in 3 Monaten beim NHFA und in 9 Monaten\n- GKU + LK-Sono in 6 Monaten beim NHFA\n- Hautpflege bei Rosacea mitgegeben\n- Abklärung Neue Raumforderung cervical mittig auf Höhe des Schildknorpels unklarer Dignität, Empfehlung HNO Abklärung --> Anamnestisch HNO-Vorstellung erfolgt ohne patholog. Befund, schriftlicher Befund liegt nicht vor\nMEMO: 10.08.2021 PET -Untersuchung\nBeurteilung: Metabolisch kein Nachweis einer Tumormanifestation. Die MR-morphologisch vorbeschriebenen Läsionen der Ossa parietales beidseits sind in der low-dose CT nicht abgrenzbar und weisen keinen gesteigerten Glukosestoffwechsel auf, DD auflösungsbedingt, ggf. MRT Verlaufskontrolle empfohlen. à Keine TK-Anmeldung. Staging in 6 Monaten nach regulärer Nachsorge, dixit OÄ PD Dr Zimmer.\nCM für Spalte 1",
+      "summary": "Aktuelles AJCC‑Stadium IIC (pT4b cN0 cM0).",
+      "category": "Staging",
+      "removed_lines": "",
+      "cleaned_event": "Wiedervorstellung im 5. Nachsorgejahr MM St. IIC\nHistologie: Malignes Melanom TD min. 4,8 mm, keine Ulzeration (RS mit befundendem Pathologen erfolgt; Histobefund: keine eindeutige Ulzeration), Lokalisation: rechter Unterschenkel, R1-Situation, Behandlung durch Dr. Krämer, Bottrop, Histologische Begutachtung Primarius durch Dermatopathologie Friedrichshafen, Block-Nr. D774380-19 ED 13.12.2019\nStadium bei ED nach AJCC 2017: min. pT4a, cN0, cM0 St. IIB\nHausarzt: Dr. Brackmann, Bottrop\nHautarzt: Dr. Krämer, Bottrop\nNotfallkontakt: Schwester 02041 688548\nSozialanamnese:\nverwitwet alleine lebend (Altenwohnung), Schwester kümmert sich um Patietin; keine Kinder\nMelanomanamnese:\nV.a. Warze am Schienbein, Wachstum, dann Aufbrechen mit Blasenbildung und Blutung,\nShave durch NHFA V.a. BCC\nVerlauf:\n04.12.2019 Probenentnahme aus einem malignem Melanom am rechten Unterschenkel\n09.01.2020 Exzision MM TD 4,8mm mit Ulzeration, R1 Unterschenkel rechts\n22.01.2020 R0 Exzision des MM am US re\n04.02.2020 WV im HTZ zur Planung SA und SLNB (0+/2)\n14.07.2021 TK: Läsion li parietal und links frontal größenkonstant, rechts parietal progredient, thorakoabominell kein Tumornachweis, daher PET CT zur weiteren Diagnostik zeitnah durchführen. Vorstellung mit Befund in TK\n08/2021 PET-CT unauffällig, Nachsorge nach LL\n08.2022 unauffälliges Staging\nAktuelles Stadium nach AJCC 2017: min. pT4b, cN0, cM0 St. IIC\nMolpatho: noch nicht erfolgt\nPD-L1: noch nicht erfolgt\nWeitere Diagnosen\nRheuma\nart. Hypertonie\nZ.n. Bypass-Op\nZ.n. Aortenaneurysma\nZ.n. Aortenklappenersatz\nZ.n. Nierenadenomexzision\nZ.n. Basalzelkarzinom am Auge (insgesamt 3x), hier\nKatarakt\nZ.n.Knie-TEP Implantation\nHypothyreose bei Z.n. Strumaoperation, hier Verletzung des N. Laryngeus recurrens,\nAllergien\nkeine\nMedikation:\nLevothyroxin-Natrium 75ug\t1-0-0\nVesikur 5mg\t1-0-0\nOmeprazol 20 mg\t1-0-0\nMethotrexat 7,5/15\t1x wöchentlich\nBisoprolol/Hydrochlorthiazid 5/12,5\t1-0-0\nColecalciferol 20000\t1x wöchentlich\nNaproxen 250 mg\t1-0-1\nValsartan/Hydrochlorothiazid  160/25 1-0-0\nMakrogol \tbB\nFolsäure 5mg 1x wöchentlich\nBudesonid 0,2 mg\t1-0-1\nwichtige Befunde:\nHistologie 09.01.20 Unterschenkel rechts:\nMalignes Melanom, die Tumordicke am invasiven, zentral im Präparat vorhandenen Anteil\nentspricht dem Vorbefund (4,8 mm). Es besteht eine Ulzeration. Weiterhin findet sich eine\nSchnittrandbildung von 9  12 h der in-situ-Komponente. Diese Beurteilung stützt sich auf folgende\nZusatzuntersuchung: Melan-A.\npT4b, Nx, Mx, R1 nach AJCC 2017\nHistologie 31.01.2020\nUnterschenkel rechts:\nTumorfreies Nachexzidat. Diese Beurteilung stützt sich auf folgende immunhistochemische\nOberarm links: Histiozytom. Der Tumor ist zur Tiefe hin schnittrandbildend.\nHauttumorkonferenz-Empfehlung vom 14.07.2021\n**********************************************************\nLäsion li parietal und links frontal größenkonstant, rechts parietal progredient, thorakoabominell kein Tumornachweis, daher PET CT zur weiteren Diagnostik zeitnah durchführen. Vorstellung mit Befund in TK\nAktuelles Staging:\nMRT des Schädels vom 14.02.2023: Mehrere Voruntersuchungen zum Vergleich vorliegend, zuletzt vom 25.07.22\n1.\tWeiterhin kein Nachweis zerebraler Metastasen.\n2.\tKonstante metastasensuspekte Läsion der Schädelkalotte rechts parietal.\nCT: Thorax mit i.v. KM, 2-D-Rekonstruktion vom 14.02.2023:\nCT: Leber-Doppelspirale, 2-D-Rekonstruktion vom 14.02.2023\nBefund: Weiterhin kein Nachweis einer thorakoabdominellen Tumormanifestation.\nLK-Sono vom 20.02.24\nausstehend\nAnamnese: AZ gut, Pat. äußert keine Beschwerden auf gezielte Nachfrage.Keine B-Symptomatik. Sie habe keine neuen HV bemerkt.\nNachsorgeschema im 5. Jahr mit der Patientin.\nDiese wünscht Nachsorge über NHFA. Einmal jährlich Vorstellung in domo zur GKU  ab dem 6. NSJ.\nKörperliche Untersuchung 20.02.24\nECOG: 0 (0-4), Hauttyp 2 nach Fitzpatrick\n86-jährige Patientin in gutem AZ und normalem EZ. Wach, örtlich und zeitlich scharf orientiert. Orientierend kein Hinweis auf ein fokales oder globales neurologisches Defizit. Thorax symmetrisch. Pulmonal auskultatorisch vesikuläres Atemgeräusch, keine Nebengeräusche, keine Rasselgeräusche. Cor rein, rhythmisch, normofrequent ohne peripheres Defizit. Abdomen weich, kein Druckschmerz, keine Resistenzen, auskultatorisch rege Peristaltik.\nStark deckendes Make up im Gesicht bei Rosacea, daher keine gute Inspektion möglich.\nNarbe am US rechts reizlos ohne Hinweis auf ein Lokalrezidiv. In-transit-Strecke inspektorisch und palpatorisch frei.\nNarbe inguinal rechts in gesamte Länge mit bläuchlicher Verfärbung, auflichtmikropskopisch kein Pigmentnetz sichtbar.\nNarbe am rechten US prätibial reizlos. Zwischen den Schulterblättern große ausgeräumte Pore.\nAnsonsten multiple seborrhoische Keratosen. SH soweit einsehbar frei. LK palpatorisch unauffällig.Kein Anhalt für epitheliale oder melanozytäre Tumor. Lymphknotenstationen palpatorisch unauffällig. Schleimhäute, soweit einsehbar, ohne pathologischen Befund. Fußnägel lackiert, daher nicht beurteilbar.\nProcedere:\n- GKU erfolgt, LK Sono ausstehend\n- WVS in 12 Mon in domo\n- ausführliche Erläuterung des Nachsorgeschemas und alle 6 Monate LK-Sono, dieses muss ambulant erfolgen, Pat. will max 1x pro Jahr ins HTZ kommen (Fahrt und Aufwand für Sie zu belastend).\n- BE S100 und LDH heute\n- GKU  in 3 Monaten beim NHFA und in 9 Monaten\n- GKU + LK-Sono in 6 Monaten beim NHFA\n- Hautpflege bei Rosacea mitgegeben\n- Abklärung Neue Raumforderung cervical mittig auf Höhe des Schildknorpels unklarer Dignität, Empfehlung HNO Abklärung --> Anamnestisch HNO-Vorstellung erfolgt ohne patholog. Befund, schriftlicher Befund liegt nicht vor\nMEMO: 10.08.2021 PET -Untersuchung\nBeurteilung: Metabolisch kein Nachweis einer Tumormanifestation. Die MR-morphologisch vorbeschriebenen Läsionen der Ossa parietales beidseits sind in der low-dose CT nicht abgrenzbar und weisen keinen gesteigerten Glukosestoffwechsel auf, DD auflösungsbedingt, ggf. MRT Verlaufskontrolle empfohlen. à Keine TK-Anmeldung. Staging in 6 Monaten nach regulärer Nachsorge, dixit OÄ PD Dr Zimmer.\nCM für Spalte 1"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "20.02.2024",
+      "event": "LK Sono vom 20.02.24\nBefund: Jeweils regelrechte Darstellung der Gefäße. Beidseits regelrechte Lymphknoten darstellbar\nmit SI > 2. positivem Hiluszeichen und zentraler Vaskularisation.\nBeurteilung: Aktuell kein Hinweis für Malignität in den untersuchten Bereichen.\nEmpfehlung: Weiteres Procedere wie durch das HTZ festgelegt.",
+      "summary": "Sonografie zeigt reguläre Lymphknoten, kein Malignitätsnachweis.",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "LK Sono vom 20.02.24\nBefund: Jeweils regelrechte Darstellung der Gefäße. Beidseits regelrechte Lymphknoten darstellbar\nmit SI > 2. positivem Hiluszeichen und zentraler Vaskularisation.\nBeurteilung: Aktuell kein Hinweis für Malignität in den untersuchten Bereichen.\nEmpfehlung: Weiteres Procedere wie durch das HTZ festgelegt."
+    },
+    {
+      "type": "",
+      "date": "20.01.2025",
+      "event": "ISAR-Score = 3\n============\nScreening ist positiv bei:  | Hilfebedarf | Hospitalisation | Polypharmazie (10 oder mehr Medikamente)",
+      "summary": "ISAR‑Score 3: Hilfebedarf, Hospitalisation, Polypharmazie.",
+      "category": "Sonstiges",
+      "removed_lines": "",
+      "cleaned_event": "ISAR-Score = 3\n============\nScreening ist positiv bei:  | Hilfebedarf | Hospitalisation | Polypharmazie (10 oder mehr Medikamente)"
+    },
+    {
+      "type": "",
+      "date": "20.01.2025",
+      "event": "RLK allgem. Krankenblatt [Anamnese]:                                    Berichtender:  Frau Maria Charalambous\n========================\nAkute Beschwerden: Aufnahme durch Spätdienst\nHirnmetastase unklare Primarius Z.n. Melanom - UL links V.a. Metastasen DD Lungen CA\nV.a. Hepatische Metastasen\nZ.n. Melanom Resektion\nÜbernahme von AMEOS Oberhausen - zunehmende Gangstörungen seit 9 Tagen, mit Fallneigung nach links, Schmerzen rechten Schulter - normalerweise Rollator mobil\nstarkem perifokalem Ödem und Komperssion re. Seitventrikels - laut Brief auf Kortison Therapie wurde verzichtet.\nintra- und extrakraniellen Gefäßstenose - 72 St. Stroke Unit überwacht , Umstellung der RR Medikation durch Kollegen a.e. Metastasen im CT DD kleinste Blutungen weniger wahrscheinlich\nlaut Pat Luftnot  bei Belastung seit ca. 10 Jahren ohne Änderung der Symptomatik\nPlan: Mittwoch EBUS und Sonographisch gestützte Punktion\nNikotin:\nAllergien:\nPV/VV zugunsten:\nBerufsanamnese:",
+      "summary": "EBUS und sonographisch gestützte Punktion geplant.",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "RLK allgem. Krankenblatt [Anamnese]:                                    Berichtender:  Frau Maria Charalambous\n========================\nAkute Beschwerden: Aufnahme durch Spätdienst\nHirnmetastase unklare Primarius Z.n. Melanom - UL links V.a. Metastasen DD Lungen CA\nV.a. Hepatische Metastasen\nZ.n. Melanom Resektion\nÜbernahme von AMEOS Oberhausen - zunehmende Gangstörungen seit 9 Tagen, mit Fallneigung nach links, Schmerzen rechten Schulter - normalerweise Rollator mobil\nstarkem perifokalem Ödem und Komperssion re. Seitventrikels - laut Brief auf Kortison Therapie wurde verzichtet.\nintra- und extrakraniellen Gefäßstenose - 72 St. Stroke Unit überwacht , Umstellung der RR Medikation durch Kollegen a.e. Metastasen im CT DD kleinste Blutungen weniger wahrscheinlich\nlaut Pat Luftnot  bei Belastung seit ca. 10 Jahren ohne Änderung der Symptomatik\nPlan: Mittwoch EBUS und Sonographisch gestützte Punktion\nNikotin:\nAllergien:\nPV/VV zugunsten:\nBerufsanamnese:"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "22.01.2025",
+      "event": "Visite Wiefhoff. pat geht es gut, heute Starre BSK, davor Endokarditisprophylaxe. gespräch über Vorfälle mit in der Nacht verstorbenen Nachbarpatientin. Pat. wirkt wenig belastet",
+      "summary": "Patientin fühlt sich gut, keine neuen Befunde.",
+      "category": "Nachsorge",
+      "removed_lines": "",
+      "cleaned_event": "Visite Wiefhoff. pat geht es gut, heute Starre BSK, davor Endokarditisprophylaxe. gespräch über Vorfälle mit in der Nacht verstorbenen Nachbarpatientin. Pat. wirkt wenig belastet"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "23.01.2025",
+      "event": "Pat hat heute morgen fraglich fokal gekrampft. vigilanz erhalten, klonische Frelxin aller Extremitäten. Spontan nach nicht ganz 5 min terminiert. habe dies bereits bei ED der hirnmetastase schonmal gehabt. keine postiktale Phase. Norologisch im Anschluss vorbekannter Status bei motrosch reduziertem krafgrad links obere und untere Extremität und leichtes Absinkem im Armvorhalteversuch. Pupillen isocor- prompt lichtreagiebel. Kein Zugenbiss, keine Defäkation, kein urinieruen. Va.a. fokale, strukturelle Epilepsie bei M1c BRA. Hier bei ödem Dexa gesteigert und Konsil an UKE Neurologie bezüglich Diagnosesicherung und Medikationsempfehlung",
+      "summary": "Fokale Epilepsieepisode, Neurologiekonsil angefordert.",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "Pat hat heute morgen fraglich fokal gekrampft. vigilanz erhalten, klonische Frelxin aller Extremitäten. Spontan nach nicht ganz 5 min terminiert. habe dies bereits bei ED der hirnmetastase schonmal gehabt. keine postiktale Phase. Norologisch im Anschluss vorbekannter Status bei motrosch reduziertem krafgrad links obere und untere Extremität und leichtes Absinkem im Armvorhalteversuch. Pupillen isocor- prompt lichtreagiebel. Kein Zugenbiss, keine Defäkation, kein urinieruen. Va.a. fokale, strukturelle Epilepsie bei M1c BRA. Hier bei ödem Dexa gesteigert und Konsil an UKE Neurologie bezüglich Diagnosesicherung und Medikationsempfehlung"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "24.01.2025",
+      "event": "keine weiteren Krampfereignisse. Sozialdienst bei im aktuellen zustand unzureichender Versorgung zu Hause hinzugezogen. Tiumor ist a.e. Melanom. Vorbehandlung des melanoms über Hautklinik Uk Essen werfolgt, dort auch Studienanbindung. Weiter keine Antwort auf neurokonsiel. RR Einstellung optimiert.\nProc: abwartend er endgültigen Histo und dann Hautklinik oder RTX bei M1c BRA und PUL",
+      "summary": "Warten auf endgültige Histologie vor Therapieentscheidung.",
+      "category": "Diagnostik",
+      "removed_lines": "",
+      "cleaned_event": "keine weiteren Krampfereignisse. Sozialdienst bei im aktuellen zustand unzureichender Versorgung zu Hause hinzugezogen. Tiumor ist a.e. Melanom. Vorbehandlung des melanoms über Hautklinik Uk Essen werfolgt, dort auch Studienanbindung. Weiter keine Antwort auf neurokonsiel. RR Einstellung optimiert.\nProc: abwartend er endgültigen Histo und dann Hautklinik oder RTX bei M1c BRA und PUL"
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "27.01.2025",
+      "event": "Az stabil, keine Krampfanfälle am WE mehr, Beweglichkeit und Kraft unter Dexa Hochdosis gebessert. Versuch der verlegung in dermatologie bei ED Melanommetastase",
+      "summary": "Hohe Dosis Dexamethason verbessert Mobilität und Kraft.",
+      "category": "Therapie",
+      "removed_lines": "",
+      "cleaned_event": "Az stabil, keine Krampfanfälle am WE mehr, Beweglichkeit und Kraft unter Dexa Hochdosis gebessert. Versuch der verlegung in dermatologie bei ED Melanommetastase"
+    },
+    {
+      "type": "BERICHTE - Konsil",
+      "date": "27.01.2025",
+      "event": "======= Konsil Strahlenklinik =======\nBefund:\nIm auswärtigen cMRT mit KM-Gabe nur eine sichere Hirnmetatase rechts parietal mit 24 x 20 mm und deutlichem Perifokalödem. Pulmonal histologisch Metastase des bekannten malignen Melanoms nachgewiesen.\nBeurteilung:\nPalliative zerebrale Präzisionsbestrahlung indiziert (je nach Größenverlauf Einzeit vs fraktioniert), was bitte noch in einer der beiden TKs (RLK oder Derma) festzulegen ist.\nVorschläge:\nHerr Naji (85052) wird die Patientin zeitnah in der Derma (Verlegung geplant) strahlentherapeutisch beraten und aufklären sowie Planungstermine einschließlich Navigations-MRT-Schädel vereinbaren.",
+      "summary": "Palliative präzise Hirnstrahlung empfohlen.",
+      "category": "Konsil",
+      "removed_lines": "",
+      "cleaned_event": "======= Konsil Strahlenklinik =======\nBefund:\nIm auswärtigen cMRT mit KM-Gabe nur eine sichere Hirnmetatase rechts parietal mit 24 x 20 mm und deutlichem Perifokalödem. Pulmonal histologisch Metastase des bekannten malignen Melanoms nachgewiesen.\nBeurteilung:\nPalliative zerebrale Präzisionsbestrahlung indiziert (je nach Größenverlauf Einzeit vs fraktioniert), was bitte noch in einer der beiden TKs (RLK oder Derma) festzulegen ist.\nVorschläge:\nHerr Naji (85052) wird die Patientin zeitnah in der Derma (Verlegung geplant) strahlentherapeutisch beraten und aufklären sowie Planungstermine einschließlich Navigations-MRT-Schädel vereinbaren."
+    },
+    {
+      "type": "Berichtseintrag Arzt - ARZT",
+      "date": "29.01.2025",
+      "event": "Pat wartet weiter auf Dermatologische Übernahme, E auf Grund der sozialen Situatiion und neuem Pfelegbedarf nicht möglich, heute TuKo",
+      "summary": "Dermatologische Aufnahme wegen sozialer Lage noch ausstehend.",
+      "category": "Sonstiges",
+      "removed_lines": "",
+      "cleaned_event": "Pat wartet weiter auf Dermatologische Übernahme, E auf Grund der sozialen Situatiion und neuem Pfelegbedarf nicht möglich, heute TuKo"
+    },
+    {
+      "type": "",
+      "date": "04.02.2025",
+      "event": "RLK Dokumentation Sozialarbeit:                                    Berichtender:  Anna Becker\n========================\nPflegegrad: Pflegegrad 2\nSchwerbehinderten: ,\nPatientenvollmacht vorhanden: ja\nPatientenverfügung vorhanden:\nGesetzl. Betreuung: nein\nAHB:\nFrühreha:\nLeistungen: Beratung, Kurzzeitpflege\nVerlaufsdoku: Pat. kann durch die Einschränkungen aktuell nicht nach Hause, wünscht eine Kurzzeitpflege.\nPflegegrad 2 vorhanden, Schwester hat die Vollmacht.\nEine Recare-Suche wurde gestartet, die Wunschheime von Pat. werden nächste Woche kontaktiert.",
+      "summary": "Kurzzeitpflege gewünscht, Recare-Suche gestartet.",
+      "category": "Sonstiges",
+      "removed_lines": "",
+      "cleaned_event": "RLK Dokumentation Sozialarbeit:                                    Berichtender:  Anna Becker\n========================\nPflegegrad: Pflegegrad 2\nSchwerbehinderten: ,\nPatientenvollmacht vorhanden: ja\nPatientenverfügung vorhanden:\nGesetzl. Betreuung: nein\nAHB:\nFrühreha:\nLeistungen: Beratung, Kurzzeitpflege\nVerlaufsdoku: Pat. kann durch die Einschränkungen aktuell nicht nach Hause, wünscht eine Kurzzeitpflege.\nPflegegrad 2 vorhanden, Schwester hat die Vollmacht.\nEine Recare-Suche wurde gestartet, die Wunschheime von Pat. werden nächste Woche kontaktiert."
+    }
+  ],
+  "lab_values": [
+    {
+      "date": "20.02.2024",
+      "marker": "S100",
+      "value": "0.05",
+      "unit": "µg/l",
+      "ref": ""
+    },
+    {
+      "date": "20.01.2025",
+      "marker": "LDH",
+      "value": "345.0",
+      "unit": "U/l",
+      "ref": "120.0-247.0 U/l"
+    },
+    {
+      "date": "27.01.2025",
+      "marker": "Hemoglobin",
+      "value": "13.5",
+      "unit": "g/dl",
+      "ref": "10.9-15.5 g/dl"
+    },
+    {
+      "date": "27.01.2025",
+      "marker": "Leukocytes",
+      "value": "10.6",
+      "unit": "/nl",
+      "ref": "3.6-9.2 /nl"
+    },
+    {
+      "date": "27.01.2025",
+      "marker": "AST",
+      "value": "17.0",
+      "unit": "U/l",
+      "ref": ""
+    },
+    {
+      "date": "27.01.2025",
+      "marker": "ALT",
+      "value": "43.0",
+      "unit": "U/l",
+      "ref": ""
+    },
+    {
+      "date": "27.01.2025",
+      "marker": "GGT",
+      "value": "56.0",
+      "unit": "U/l",
+      "ref": ""
+    },
+    {
+      "date": "27.01.2025",
+      "marker": "CRP",
+      "value": "0.3998",
+      "unit": "mg/dl",
+      "ref": ""
+    },
+    {
+      "date": "27.01.2025",
+      "marker": "Creatinine",
+      "value": "0.94",
+      "unit": "mg/dl",
+      "ref": "0.6-1.1 mg/dl"
+    },
+    {
+      "date": "27.01.2025",
+      "marker": "eGFR",
+      "value": "52.7",
+      "unit": "ml/min/1,73qm",
+      "ref": ""
+    },
+    {
+      "date": "27.01.2025",
+      "marker": "Sodium",
+      "value": "139.0",
+      "unit": "mmol/l",
+      "ref": "136.0-145.0 mmol/l"
+    },
+    {
+      "date": "27.01.2025",
+      "marker": "Potassium",
+      "value": "3.3",
+      "unit": "mmol/l",
+      "ref": "3.5-5.1 mmol/l"
+    },
+    {
+      "date": "20.01.2025",
+      "marker": "TSH",
+      "value": "1.71",
+      "unit": "mU/l",
+      "ref": "0.3-3.0 mU/l"
+    }
+  ],
+  "imaging": [],
+  "therapies": {
+    "surgery": [
+      {
+        "date": "12.2019",
+        "text": "Exzision Primärtumor Unterschenkel"
+      },
+      {
+        "date": "04.12.2019",
+        "text": "Probenentnahme aus einem malignen Melanom am rechten Unterschenkel"
+      },
+      {
+        "date": "09.01.2020",
+        "text": "Exzision MM TD 4,8mm mit Ulzeration, R1 Unterschenkel rechts"
+      },
+      {
+        "date": "22.01.2020",
+        "text": "R0 Exzision des MM am Unterschenkel rechts"
+      },
+      {
+        "date": "29.01.2020",
+        "text": "Nachexzision"
+      },
+      {
+        "date": "13.02.2020",
+        "text": "Nachexzision mit Sicherheitsabstand 2,0 cm"
+      },
+      {
+        "date": "13.02.2020",
+        "text": "SLN-Exzision (SLNE) – 1 SN-LK untersucht, 0 befallen"
+      }
+    ],
+    "radiation": [],
+    "systemic": [],
+    "current": []
+  },
+  "disease_status": "ED Std IV"
+}
