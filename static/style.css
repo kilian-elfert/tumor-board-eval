@@ -1840,6 +1840,9 @@ a.step:hover .step-title { text-decoration: underline; }
   line-height: 1.8;
   color: #374151;
   font-size: 1rem;
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
 }
 
 .intro-body p {
@@ -1919,7 +1922,9 @@ a.step:hover .step-title { text-decoration: underline; }
   line-height: 1.7;
   color: #374151;
   font-size: .92rem;
-  text-align: left;
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
 }
 
 .consent-body h3 {
@@ -2695,30 +2700,96 @@ a.demo-btn {
   cursor: pointer;
 }
 
-/* footnote badges for overlapping highlights */
+/* In the Informationsgehalt (radial tree) and Falschinformationen steps,
+   highlights are visible by default in yellow so reviewers immediately see
+   the candidate text. Clicking the span (tree step) calls rtToggleItem
+   → switches it to "enthalten" (green via .hl-info--yes). For the
+   falseinfo step, clicking the matching checkbox flips it to red via
+   .hl-info--error. The default yellow matches the hover/active yellow
+   used elsewhere so the styling is consistent across steps. */
+.eval-body--tree .hl-info,
+.eval-body--falseinfo .hl-info {
+  background: #fef08a;            /* yellow-200 */
+  box-shadow: 0 0 0 2px #facc15;  /* yellow-400 ring */
+  cursor: pointer;
+}
+
+.eval-body--tree .hl-info:hover,
+.eval-body--tree .hl-info.hl-info--active,
+.eval-body--falseinfo .hl-info:hover,
+.eval-body--falseinfo .hl-info.hl-info--active {
+  background: #fde047;            /* yellow-300 */
+  box-shadow: 0 0 0 2px #eab308;  /* yellow-500 ring */
+}
+
+/* Once accepted ("yes"), green wins over the default yellow. */
+.eval-body--tree .hl-info.hl-info--yes {
+  background: #bbf7d0;
+  box-shadow: 0 0 0 2px #4ade80;
+}
+
+.eval-body--tree .hl-info.hl-info--yes.hl-info--active,
+.eval-body--tree .hl-info.hl-info--yes:hover {
+  background: #86efac;
+  box-shadow: 0 0 0 2px #22c55e;
+}
+
+/* Once flagged as fehlerhaft, red wins over the default yellow. */
+.eval-body--falseinfo .hl-info.hl-info--error {
+  background: #fecaca;
+  box-shadow: 0 0 0 2px #f87171;
+}
+
+.eval-body--falseinfo .hl-info.hl-info--error.hl-info--active,
+.eval-body--falseinfo .hl-info.hl-info--error:hover {
+  background: #fca5a5;
+  box-shadow: 0 0 0 2px #ef4444;
+}
+
+/* Footnote badges for overlapping highlights.
+   Color tracks the underlying highlight: yellow = suggested but not yet
+   accepted; green (.hl-footnote--yes) = the matching info item has been
+   confirmed as "enthalten". Hover keeps a darker tint via .hl-footnote--active. */
 .hl-footnote {
   display: inline-block;
   font-size: .65rem;
   font-weight: 700;
-  color: #fff;
-  background: #6366f1;
+  color: #713f12;            /* yellow-900 */
+  background: #fef08a;       /* yellow-200 — matches default hl-info */
+  border: 1px solid #facc15; /* yellow-400 ring */
   border-radius: 6px;
   padding: 0 4px;
   margin-left: 1px;
   cursor: pointer;
   vertical-align: super;
   line-height: 1.4;
-  transition: background .15s, transform .15s;
+  transition: background .15s, color .15s, border-color .15s, transform .15s;
 }
 
 .hl-footnote:hover {
-  background: #4f46e5;
+  background: #fde047;       /* yellow-300 */
+  border-color: #eab308;     /* yellow-500 */
   transform: scale(1.15);
 }
 
 .hl-footnote--active {
-  background: #eab308;
-  color: #1c1917;
+  background: #fde047;       /* yellow-300 */
+  border-color: #eab308;     /* yellow-500 */
+  color: #422006;
+}
+
+/* Accepted ("enthalten"): green takes over both default and hover state. */
+.hl-footnote--yes {
+  background: #bbf7d0;       /* green-200 — matches hl-info--yes */
+  border-color: #4ade80;     /* green-400 */
+  color: #064e3b;            /* green-900 */
+}
+
+.hl-footnote--yes:hover,
+.hl-footnote--yes.hl-footnote--active {
+  background: #86efac;       /* green-300 */
+  border-color: #22c55e;     /* green-500 */
+  color: #022c22;
 }
 
 /* manual annotation highlights */
@@ -2896,6 +2967,14 @@ a.demo-btn {
   font-size: .75rem;
   text-transform: uppercase;
   letter-spacing: .04em;
+}
+
+/* Spacing between consecutive sections (e.g. Dashboard + TK-Protokoll). */
+.protocol-tooltip-label + .protocol-tooltip-excerpt ~ .protocol-tooltip-label,
+.protocol-tooltip-excerpt + .protocol-tooltip-label {
+  margin-top: .55rem;
+  padding-top: .45rem;
+  border-top: 1px solid rgba(255,255,255,.18);
 }
 
 .protocol-tooltip-excerpt {
@@ -4203,19 +4282,19 @@ a.demo-btn {
   color: #d1d5db;
 }
 
-/* Hint box — blue left border */
+/* Hint box — blue */
 .instr-hint {
-  background: #fffbea;
-  border-left: 3.5px solid #FFBF00;
+  background: #eff6ff;
+  border-left: 3.5px solid #2563eb;
   border-radius: 0 6px 6px 0;
   padding: .45rem .9rem;
   margin-top: .55rem;
-  color: #5a4500;
+  color: #1e3a8a;
   font-size: .78rem;
   line-height: 1.55;
 }
 .instr-hint strong {
-  color: #FFBF00;
+  color: #1d4ed8;
 }
 
 .btn-pause:hover {
@@ -4483,9 +4562,10 @@ a.demo-btn {
 .demo-stage--relpage .rel-btn          { font-size: .6rem; padding: .18rem .35rem; }
 
 /* ── Animation: 10s cycle ──
-   Phase 1 (0-30%):  Cursor clicks "alle ✓" on Group 1 → all 3 items go green
-   Phase 2 (30-60%): Cursor moves to item-level "Nein" in Group 2 → clicks individual items
-   Phase 3 (60-85%): Cursor clicks "alle ✗" on Group 2 → all 3 items go red
+   Phase 1 (0-30%):  Cursor clicks "alle ✓" on Group 1 → all 2 items go green
+   Phase 2 (30-60%): Cursor clicks individual "Nein" on the 2 items in Group 2 → red
+   Phase 3 (60-85%): Cursor clicks "alle ✓" on Group 2 → group action overrides
+                     the individual reds; both items flip to green
    Phase 4 (85-100%): Cursor fades, progress bar full, cycle resets
 ── */
 
@@ -4508,29 +4588,38 @@ a.demo-btn {
   18%,100% { background: #dcfce7; color: #15803d; }
 }
 
-/* group 2: individual Nein clicks at 34% and 48%, then "alle ✗" at 62% */
+/* group 2: individual Nein clicks at 34% and 48%, then "alle ✓" override at 62%
+   flips both items from red to green. */
 .demo-anim-no4 { animation: demoNo4 10s ease infinite; }
 @keyframes demoNo4 {
   0%,30%   { background: #fff; color: #6b7280; border-color: #d1d5db; box-shadow: none; }
-  34%,100% { background: #fee2e2; color: #b91c1c; border-color: #fca5a5; box-shadow: 0 0 0 2px rgba(239,68,68,.10); }
+  34%,58%  { background: #fee2e2; color: #b91c1c; border-color: #fca5a5; box-shadow: 0 0 0 2px rgba(239,68,68,.10); }
+  62%,100% { background: #fff; color: #6b7280; border-color: #d1d5db; box-shadow: none; }
 }
 .demo-anim-no5 { animation: demoNo5 10s ease infinite; }
 @keyframes demoNo5 {
   0%,44%   { background: #fff; color: #6b7280; border-color: #d1d5db; box-shadow: none; }
-  48%,100% { background: #fee2e2; color: #b91c1c; border-color: #fca5a5; box-shadow: 0 0 0 2px rgba(239,68,68,.10); }
+  48%,58%  { background: #fee2e2; color: #b91c1c; border-color: #fca5a5; box-shadow: 0 0 0 2px rgba(239,68,68,.10); }
+  62%,100% { background: #fff; color: #6b7280; border-color: #d1d5db; box-shadow: none; }
 }
-.demo-anim-cat-no { animation: demoCatNo 10s ease infinite; }
-@keyframes demoCatNo {
-  0%,56%   { background: #fef2f2; color: #b91c1c; border-color: #fca5a5; box-shadow: none; }
-  60%,66%  { background: #fee2e2; color: #b91c1c; border-color: #ef4444; box-shadow: 0 0 0 2px rgba(239,68,68,.18); }
-  72%,100% { background: #fef2f2; color: #b91c1c; border-color: #fca5a5; box-shadow: none; }
+.demo-anim-yes4 { animation: demoYesG2 10s ease infinite; }
+.demo-anim-yes5 { animation: demoYesG2 10s ease infinite; }
+@keyframes demoYesG2 {
+  0%,58%   { background: #fff; color: #6b7280; border-color: #d1d5db; box-shadow: none; }
+  62%,100% { background: #dcfce7; color: #15803d; border-color: #86efac; box-shadow: 0 0 0 2px rgba(21,128,61,.10); }
+}
+.demo-anim-cat-yes2 { animation: demoCatYes2 10s ease infinite; }
+@keyframes demoCatYes2 {
+  0%,56%   { background: #f0fdf4; color: #15803d; border-color: #86efac; box-shadow: none; }
+  60%,66%  { background: #dcfce7; color: #15803d; border-color: #22c55e; box-shadow: 0 0 0 2px rgba(21,128,61,.18); }
+  72%,100% { background: #f0fdf4; color: #15803d; border-color: #86efac; box-shadow: none; }
 }
 .demo-anim-badge2 { animation: demoBadge2 10s ease infinite; }
 @keyframes demoBadge2 {
   0%,30%   { }
   34%,44%  { background: #fef2f2; color: #b91c1c; }
-  48%,56%  { background: #fef2f2; color: #b91c1c; }
-  68%,100% { background: #fee2e2; color: #b91c1c; }
+  48%,58%  { background: #fef2f2; color: #b91c1c; }
+  62%,100% { background: #dcfce7; color: #15803d; }
 }
 
 /* progress bar fill + label */
@@ -4937,8 +5026,137 @@ a.demo-btn {
   73%,100% { transform: scale(0); opacity: 0; }
 }
 
+/* ── 2b. MANUAL TEXT-HIGHLIGHT (Informationsgehalt) ──
+   Animates text selection → assign popup → item pick → highlight goes green.
+   14s cycle aligned with the tree demo. */
+.demo-text-selection {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 0;
+  background: #fef08a;       /* same yellow used by .hl-info default */
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px #facc15;
+  animation: demoTextSelectGrow 14s ease infinite;
+}
+@keyframes demoTextSelectGrow {
+  0%,4%    { width: 0;     background: #fef08a; box-shadow: 0 0 0 1px #facc15; }
+  10%,55%  { width: 62%;   background: #fef08a; box-shadow: 0 0 0 1px #facc15; }
+  62%,90%  { width: 62%;   background: #bbf7d0; box-shadow: 0 0 0 1px #16a34a; } /* turns green after pick */
+  95%,100% { width: 0;     background: #fef08a; box-shadow: 0 0 0 1px #facc15; }
+}
 
-/* ── 3. FALSE INFO ────────────────────────────────────────── */
+/* mini assign popup that appears next to the selection */
+.demo-assign-popup {
+  position: absolute;
+  left: 60%;
+  top: 38%;
+  width: 165px;
+  background: #fff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(15,23,42,.18);
+  padding: .35rem .4rem .4rem;
+  font-size: .58rem;
+  z-index: 5;
+  opacity: 0;
+  transform: translateY(-4px) scale(.94);
+  transform-origin: top left;
+}
+.demo-anim-assign-popup {
+  animation: demoAssignPopupShow 14s ease infinite;
+}
+@keyframes demoAssignPopupShow {
+  0%,12%   { opacity: 0; transform: translateY(-4px) scale(.94); }
+  16%,55%  { opacity: 1; transform: translateY(0) scale(1); }
+  60%,100% { opacity: 0; transform: translateY(-4px) scale(.94); }
+}
+.demo-assign-popup-seltext {
+  font-style: italic;
+  color: #475569;
+  font-size: .55rem;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: .25rem;
+  margin-bottom: .3rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.demo-assign-popup-search {
+  display: flex; align-items: center; gap: .25rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: .15rem .3rem;
+  margin-bottom: .3rem;
+}
+.demo-assign-popup-search-icon { color: #94a3b8; font-size: .65rem; }
+.demo-assign-popup-search-placeholder { color: #94a3b8; font-size: .55rem; }
+.demo-assign-popup-list { display: flex; flex-direction: column; gap: .12rem; }
+.demo-assign-popup-item {
+  padding: .2rem .35rem;
+  border-radius: 3px;
+  color: #1e293b;
+  font-size: .58rem;
+  background: transparent;
+  transition: background .2s;
+}
+.demo-anim-assign-pick {
+  animation: demoAssignPick 14s ease infinite;
+}
+@keyframes demoAssignPick {
+  0%,42%   { background: transparent; color: #1e293b; }
+  46%,55%  { background: #dbeafe;     color: #1a4f8a; }   /* hover */
+  58%,60%  { background: #bbf7d0;     color: #15803d; }   /* clicked */
+  64%,100% { background: transparent; color: #1e293b; }
+}
+
+/* second cursor — slides over the text and lands on the popup item */
+.demo-cursor--select {
+  position: absolute;
+  width: 18px; height: 18px;
+  pointer-events: none;
+  z-index: 6;
+  left: 0;
+  top: 0;
+  animation: demoSelectCursorMove 14s ease infinite;
+}
+.demo-cursor--select::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0;
+  width: 0; height: 0;
+  border-left: 9px solid #1a4f8a;
+  border-top:  3px solid transparent;
+  border-bottom: 11px solid transparent;
+  transform: rotate(-30deg);
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,.3));
+}
+@keyframes demoSelectCursorMove {
+  0%,3%    { left: 6%;  top: 28%; opacity: 0; }
+  4%       { opacity: 1; }
+  10%      { left: 60%; top: 28%; opacity: 1; }                      /* finished selecting */
+  14%,40%  { left: 60%; top: 28%; opacity: 1; }                      /* popup opens */
+  48%      { left: 78%; top: 64%; opacity: 1; }                      /* moves to item */
+  58%      { left: 78%; top: 64%; opacity: 1; }                      /* clicks item */
+  64%      { left: 78%; top: 64%; opacity: 0; }
+  100%     { left: 78%; top: 64%; opacity: 0; }
+}
+.demo-cursor--select::after {
+  content: '';
+  position: absolute;
+  left: -8px; top: -8px;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: rgba(26,79,138,.35);
+  animation: demoSelectClickRipple 14s ease infinite;
+}
+@keyframes demoSelectClickRipple {
+  0%,55%   { transform: scale(0); opacity: 0; }
+  58%      { transform: scale(1.4); opacity: .5; }
+  62%,100% { transform: scale(0); opacity: 0; }
+}
 .demo-stage--textwidget .fi-card {
   border: 1.5px solid #e5e7eb; transition: all .4s;
   border-radius: 8px; overflow: hidden;
@@ -5026,6 +5244,105 @@ a.demo-btn {
   55%      { transform: scale(0); opacity: 0; }
   58%      { transform: scale(1.5); opacity: .4; }
   62%,100% { transform: scale(0); opacity: 0; }
+}
+
+/* ── 3b. Falseinfo: in-text highlight click + ground-truth tooltip ─────
+   Synced with the 9s .demo-anim-fi-card cycle:
+     0–4%   default yellow highlight visible
+     4–11%  cursor moves over highlight, tooltip fades in
+     12%    cursor "clicks" → highlight flips to red AND card auto-checks
+     12–100% red highlight stays, tooltip fades out                       */
+.demo-fi-highlight {
+  position: absolute;
+  left: 0; top: 0;
+  height: 100%;
+  width: 62%;
+  border-radius: 2px;
+  background: #fef08a;
+  box-shadow: 0 0 0 1px #facc15;
+  animation: demoFiHighlight 9s ease infinite;
+}
+@keyframes demoFiHighlight {
+  0%,11%   { background: #fef08a; box-shadow: 0 0 0 1px #facc15; }   /* yellow default */
+  14%,100% { background: #fecaca; box-shadow: 0 0 0 1px #ef4444; }   /* red after click */
+}
+
+.demo-fi-tooltip {
+  position: absolute;
+  left: 30%;
+  top: calc(50% - 18px);
+  transform: translateY(-100%);
+  background: #1e293b;
+  color: #f1f5f9;
+  border-radius: 6px;
+  padding: .35rem .55rem;
+  font-size: .55rem;
+  line-height: 1.35;
+  box-shadow: 0 6px 18px rgba(15,23,42,.35);
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 5;
+}
+.demo-anim-fi-tooltip {
+  animation: demoFiTooltipShow 9s ease infinite;
+}
+@keyframes demoFiTooltipShow {
+  0%,4%    { opacity: 0; transform: translateY(-100%) translateY(2px); }
+  7%,11%   { opacity: 1; transform: translateY(-100%) translateY(-2px); }
+  14%,100% { opacity: 0; transform: translateY(-100%) translateY(-2px); }
+}
+.demo-fi-tooltip-label {
+  font-weight: 700;
+  letter-spacing: .03em;
+  font-size: .5rem;
+  color: #cbd5e1;
+  text-transform: uppercase;
+  margin-bottom: .15rem;
+}
+.demo-fi-tooltip-excerpt { color: #f8fafc; }
+
+/* cursor that hovers, then clicks the highlight */
+.demo-cursor--fihl {
+  position: absolute;
+  width: 18px; height: 18px;
+  pointer-events: none;
+  z-index: 6;
+  left: 0; top: 0;
+  animation: demoFiCursorMove 9s ease infinite;
+}
+.demo-cursor--fihl::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0;
+  width: 0; height: 0;
+  border-left: 9px solid #1a4f8a;
+  border-top:  3px solid transparent;
+  border-bottom: 11px solid transparent;
+  transform: rotate(-30deg);
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,.3));
+}
+.demo-cursor--fihl::after {
+  content: '';
+  position: absolute;
+  left: -8px; top: -8px;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: rgba(239,68,68,.4);
+  animation: demoFiCursorRipple 9s ease infinite;
+}
+@keyframes demoFiCursorMove {
+  0%       { left: 4%;  top: 28%; opacity: 0; }
+  3%       { opacity: 1; }
+  7%,11%   { left: 30%; top: 28%; opacity: 1; }   /* hovering on highlight */
+  14%,55%  { left: 30%; top: 28%; opacity: 1; }   /* click position */
+  62%      { left: 30%; top: 28%; opacity: 0; }
+  100%     { left: 30%; top: 28%; opacity: 0; }
+}
+@keyframes demoFiCursorRipple {
+  0%,11%   { transform: scale(0); opacity: 0; }
+  13%      { transform: scale(1.6); opacity: .55; }
+  17%,100% { transform: scale(0); opacity: 0; }
 }
 
 

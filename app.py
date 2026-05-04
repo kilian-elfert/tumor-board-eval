@@ -104,6 +104,7 @@ INFO_ITEMS = [
     "Primärtumor: Lokalisation",
     "Primärtumor: Tumordicke",
     "Primärtumor: Ulzeration",
+    "Primärtumor: Mitotische Aktivität",
     "Primärtumor: Stadium der Erkrankung bei Erstdiagnose",
     "Primärtumor: Mutationsstatus (e.g. BRAF)",
     "Primärtumor: PD-L1 Status",
@@ -139,15 +140,6 @@ INFO_ITEMS = [
 # tab      = True means show tab A / tab B; False = single form (side-by-side or no text)
 # section_type = 'summary' | 'problem' | 'both'
 RATING_STEPS = [
-    {
-        "index": 0,
-        "key":   "case_relevance",
-        "section": "Zusammenfassung",
-        "subtitle": "Relevanz",
-        "has_tabs": False,
-        "section_type": "both",
-        "alert": "Bitte beurteilen Sie für jede Information innerhalb einer Informationskategorie, ob diese Information für die Tumorboardanmeldung dieses Falls klinisch relevant ist. Diese Einschätzung gilt für den gesamten Fall.",
-    },
     {
         "index": 1,
         "key":   "summary_integrity",
@@ -479,8 +471,19 @@ def load_json(path, default=None):
 
 
 def save_json(path, data):
-    with open(path, 'w', encoding='utf-8') as f:
+    """Atomically write JSON to ``path`` (write to a temp file, then rename).
+
+    Concurrent POSTs (e.g. parallel saves from the dashboard relevance bulk
+    toggle) used to race here and could leave the file with two concatenated
+    JSON documents, breaking subsequent ``json.load`` calls.
+    """
+    os.makedirs(os.path.dirname(path) or '.', exist_ok=True)
+    tmp = f'{path}.tmp.{os.getpid()}.{threading.get_ident()}'
+    with open(tmp, 'w', encoding='utf-8') as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
+        f.flush()
+        os.fsync(f.fileno())
+    os.replace(tmp, path)
 
 
 def _read_text_file(path):
@@ -548,6 +551,31 @@ def _case_text_path(base, sub, case_id):
     return p if os.path.isfile(p) else None
 
 
+def _case_pdf_filename(case_id):
+    """Return the basename of the protocol PDF for ``case_id`` in ``DOCUMENTS_DIR``.
+
+    Resolution order:
+      1. ``<case_id>.pdf`` (legacy / un-redacted)
+      2. ``<case_id>_geschwärzt.pdf`` (redacted master copy)
+      3. any ``<case_id>*.pdf`` (e.g. additional suffix variants), picked deterministically
+    Returns the empty string if no match is found.
+    """
+    if not os.path.isdir(DOCUMENTS_DIR):
+        return ''
+    direct = f'{case_id}.pdf'
+    if os.path.isfile(os.path.join(DOCUMENTS_DIR, direct)):
+        return direct
+    redacted = f'{case_id}_geschwärzt.pdf'
+    if os.path.isfile(os.path.join(DOCUMENTS_DIR, redacted)):
+        return redacted
+    prefix = f'{case_id}'
+    matches = sorted(
+        f for f in os.listdir(DOCUMENTS_DIR)
+        if f.lower().endswith('.pdf') and f.startswith(prefix)
+    )
+    return matches[0] if matches else ''
+
+
 def load_texts():
     """Build case list from local texts_human/ and texts_llm/ folders."""
     case_ids = _discover_cases()
@@ -556,8 +584,7 @@ def load_texts():
 
     texts = []
     for case_id in case_ids:
-        pdf_path = os.path.join(DOCUMENTS_DIR, f'{case_id}.pdf')
-        pdf_name = f'{case_id}.pdf' if os.path.isfile(pdf_path) else ''
+        pdf_name = _case_pdf_filename(case_id)
         texts.append({
             'id': case_id,
             'pdf': pdf_name,
@@ -573,6 +600,22 @@ def _responses_path(username):
     """Return the path to a per-user responses file."""
     os.makedirs(RESPONSES_DIR, exist_ok=True)
     return os.path.join(RESPONSES_DIR, f'responses_{username}.json')
+
+
+# Per-user lock so concurrent POSTs (e.g. parallel /api/case-relevance/<id>
+# requests fired by the dashboard rail's bulk-set "alle ✓ / alle ✗") cannot
+# interleave a read-modify-write on the same responses file.
+_RESPONSES_LOCKS_GUARD = threading.Lock()
+_RESPONSES_LOCKS: dict[str, threading.Lock] = {}
+
+
+def _responses_lock(username):
+    with _RESPONSES_LOCKS_GUARD:
+        lock = _RESPONSES_LOCKS.get(username)
+        if lock is None:
+            lock = threading.Lock()
+            _RESPONSES_LOCKS[username] = lock
+        return lock
 
 
 def load_responses(username):
@@ -737,8 +780,7 @@ def is_step_done(user_data, case_id, step_idx):
     key = step['key']
     if step['has_tabs']:
         return (key + '_tab0' in case_ratings and key + '_tab1' in case_ratings)
-    else:
-        return key in case_ratings
+    return key in case_ratings
 
 
 def compute_case_progress(user_data, case_id):
@@ -1123,12 +1165,14 @@ def evaluate_step(case_id, step_idx, tab_idx):
 
     # Apply highlight annotations for falseinfo / integrity steps
     protocol_excerpts = {}
+    ground_truth_excerpts = {}
     if key in ('summary_falseinfo', 'summary_integrity') and text_content and hl_version_key:
         hl_mappings = _load_highlight_mappings()
         case_hl = hl_mappings.get(case_id, {}).get(hl_version_key, {})
         rendered_text = _annotate_highlights(text_content, case_hl)
         if key == 'summary_falseinfo':
             protocol_excerpts = hl_mappings.get(case_id, {}).get('protocol', {})
+            ground_truth_excerpts = _build_ground_truth_excerpts(case_id, protocol_excerpts)
     else:
         rendered_text = _bold_headers(text_content)
 
@@ -1152,6 +1196,7 @@ def evaluate_step(case_id, step_idx, tab_idx):
         enthalten_items=enthalten_items,
         missing_items=missing_items,
         protocol_excerpts=protocol_excerpts,
+        ground_truth_excerpts=ground_truth_excerpts,
         slugify=slugify,
         rating_steps=RATING_STEPS,
         all_prior_done=all_prior_done,
@@ -1404,8 +1449,9 @@ def protocol_pdf():
     case_id = request.args.get('case_id', '')
 
     if case_id:
-        pdf_path = os.path.join(DOCUMENTS_DIR, f'{case_id}.pdf')
-        if os.path.isfile(pdf_path):
+        pdf_name = _case_pdf_filename(case_id)
+        if pdf_name:
+            pdf_path = os.path.join(DOCUMENTS_DIR, pdf_name)
             resp = send_file(pdf_path, mimetype='application/pdf')
             resp.headers['Content-Disposition'] = 'inline'
             return resp
@@ -1442,6 +1488,18 @@ def _resolve_version(step, section_type, assign_sum, assign_prob, case_id, tab_i
 #  ratings.csv  –  one row per evaluator × case × step × version
 # ---------------------------------------------------------------------------
 
+def _duration_seconds(started_at, completed_at):
+    """Return integer seconds between two ISO timestamps, or None."""
+    if not started_at or not completed_at:
+        return None
+    try:
+        s = datetime.fromisoformat(started_at)
+        c = datetime.fromisoformat(completed_at)
+        return int((c - s).total_seconds())
+    except (ValueError, TypeError):
+        return None
+
+
 def _generate_ratings_csv():
     """Long-format ratings CSV optimised for IRR and mixed-effects models."""
     responses = load_all_responses()
@@ -1458,8 +1516,10 @@ def _generate_ratings_csv():
         'integrity_enthalten_count', 'falseinfo_count', 'missinginfo_count',
         'comment', 'saved_at',
         'assignment_summary', 'assignment_problem',
-        'experience_years', 'dermatology_years', 'role',
-        'completed',
+        'experience_years', 'dermatology_years', 'role', 'role_other',
+        'completed', 'started_at', 'completed_at', 'duration_seconds',
+        'final_blinding_seen_through', 'final_blinding_indicators',
+        'final_additional_comments',
     ]
     writer.writerow(header)
 
@@ -1469,7 +1529,11 @@ def _generate_ratings_csv():
         ratings     = data.get('ratings', {})
         case_order  = data.get('case_order', [])
         demo        = data.get('demographics', {})
+        fq          = data.get('final_questions', {}) or {}
         completed   = data.get('completed', False)
+        started_at  = data.get('started_at', '')
+        completed_at = data.get('completed_at', '')
+        duration_s  = _duration_seconds(started_at, completed_at)
 
         case_pos = {cid: pos for pos, cid in enumerate(case_order)}
 
@@ -1535,7 +1599,14 @@ def _generate_ratings_csv():
                         demo.get('experience_years', ''),
                         demo.get('dermatology_years', ''),
                         demo.get('role', ''),
+                        demo.get('role_other', ''),
                         completed,
+                        started_at,
+                        completed_at,
+                        duration_s if duration_s is not None else '',
+                        fq.get('blinding_seen_through', ''),
+                        fq.get('blinding_indicators', ''),
+                        fq.get('additional_comments', ''),
                     ])
 
     output.seek(0)
@@ -1556,7 +1627,8 @@ def _generate_items_csv():
     header = [
         'evaluator', 'case_id', 'version',
         'item_category', 'item_name', 'item_slug',
-        'is_relevant', 'is_present', 'is_false',
+        'is_relevant', 'case_relevance_comment',
+        'is_present', 'is_false',
         'false_severity', 'false_probability', 'false_comment',
         'is_missing_flagged',
         'missing_severity', 'missing_probability', 'missing_comment',
@@ -1572,6 +1644,7 @@ def _generate_items_csv():
 
             # case_relevance (version-independent)
             rel = cr.get('case_relevance', {})
+            rel_comment = rel.get('comment', '')
 
             for item in INFO_ITEMS:
                 slug = slugify(item)
@@ -1608,7 +1681,8 @@ def _generate_items_csv():
                         writer.writerow([
                             username, case_id, version,
                             cat, name, slug,
-                            is_relevant, is_present, is_false,
+                            is_relevant, rel_comment,
+                            is_present, is_false,
                             false_sev, false_prob, false_cmt,
                             is_missing_flagged,
                             missing_sev, missing_prob, missing_cmt,
@@ -1636,13 +1710,18 @@ def _generate_export_json():
         ratings     = data.get('ratings', {})
         case_order  = data.get('case_order', [])
         demo        = data.get('demographics', {})
+        fq          = data.get('final_questions', {}) or {}
         completed   = data.get('completed', False)
+        started_at  = data.get('started_at', '')
+        completed_at = data.get('completed_at', '')
+        duration_s  = _duration_seconds(started_at, completed_at)
 
         case_pos = {cid: pos for pos, cid in enumerate(case_order)}
 
         for case_id in sorted(ratings.keys(), key=lambda x: int(x) if x.isdigit() else x):
             case_ratings = ratings[case_id]
             case_texts   = text_dict.get(case_id, {})
+            case_relevance_comment = (case_ratings.get('case_relevance', {}) or {}).get('comment', '')
 
             for step in RATING_STEPS:
                 key = step['key']
@@ -1719,7 +1798,15 @@ def _generate_export_json():
                         'experience_years':     demo.get('experience_years'),
                         'dermatology_years':    demo.get('dermatology_years'),
                         'role':                 demo.get('role'),
+                        'role_other':           demo.get('role_other'),
                         'completed':            completed,
+                        'started_at':           started_at or None,
+                        'completed_at':         completed_at or None,
+                        'duration_seconds':     duration_s,
+                        'case_relevance_comment':       case_relevance_comment or None,
+                        'final_blinding_seen_through':  fq.get('blinding_seen_through') or None,
+                        'final_blinding_indicators':    fq.get('blinding_indicators') or None,
+                        'final_additional_comments':    fq.get('additional_comments') or None,
                     }
 
                     if key == 'summary_integrity':
@@ -1784,6 +1871,99 @@ def export():
 # ── Patient Dashboard Data ───────────────────────────────────────────────────
 
 
+# Fallback adult reference ranges, applied when a lab entry has no `ref` from
+# the source file. Keys are normalized lowercase marker names; values are
+# either a single (lower, upper, unit) tuple or a dict mapping sex codes
+# ('M' / 'W') to such a tuple for sex-specific ranges. Set lower or upper to
+# None for one-sided ranges. Sources: institutional defaults commonly used in
+# German clinical chemistry. Used only as a display fallback.
+_LAB_FALLBACK_REFS = {
+    # Markers present in the current dashboard data
+    's100':       (None, 0.105, 'µg/l'),
+    'ldh':        (135.0, 250.0, 'U/l'),
+    'hemoglobin': {'M': (13.5, 17.5, 'g/dl'),
+                   'W': (12.0, 16.0, 'g/dl')},
+    'leukocytes': (3.6, 9.2, '/nl'),
+    'ast':        {'M': (None, 50.0, 'U/l'),
+                   'W': (None, 35.0, 'U/l')},
+    'alt':        {'M': (None, 50.0, 'U/l'),
+                   'W': (None, 35.0, 'U/l')},
+    'ggt':        {'M': (None, 60.0, 'U/l'),
+                   'W': (None, 40.0, 'U/l')},
+    'crp':        (None, 0.5, 'mg/dl'),
+    'creatinine': {'M': (0.9, 1.3, 'mg/dl'),
+                   'W': (0.6, 1.1, 'mg/dl')},
+    'egfr':       (60.0, None, 'ml/min/1,73qm'),
+    'sodium':     (136.0, 145.0, 'mmol/l'),
+    'potassium':  (3.5, 5.1, 'mmol/l'),
+    'cortisol':   (171.0, 536.0, 'nmol/l'),
+    'tsh':        (0.3, 3.0, 'mU/l'),
+    'ft4':        (11.5, 22.7, 'pmol/l'),
+    'nt-probnp':  (None, 125.0, 'pg/ml'),
+    'ck':         {'M': (46.0, 171.0, 'U/l'),
+                   'W': (34.0, 135.0, 'U/l')},
+    'ck-mb':      (None, 25.0, 'U/l'),
+}
+
+
+def _resolve_fallback_entry(entry, sex):
+    """Resolve a fallback table entry to (lo, hi, unit) given patient sex.
+
+    If entry is sex-keyed, picks the matching code; falls back to the first
+    available range if the sex is unknown or missing from the entry.
+    """
+    if entry is None:
+        return None
+    if isinstance(entry, dict):
+        if sex and sex in entry:
+            return entry[sex]
+        # No sex info or unrecognized code — use whichever range is defined.
+        return next(iter(entry.values()), None)
+    return entry
+
+
+def _format_fallback_ref(lo, hi, unit):
+    """Render a fallback (lo, hi, unit) tuple as a display string + suffix."""
+    if lo is not None and hi is not None:
+        body = f"{_fmt_num(lo)}-{_fmt_num(hi)}"
+    elif hi is not None:
+        body = f"<{_fmt_num(hi)}"
+    elif lo is not None:
+        body = f">{_fmt_num(lo)}"
+    else:
+        return ''
+    if unit:
+        body = f"{body} {unit}"
+    return f"{body} *"
+
+
+def _fmt_num(n):
+    if float(n).is_integer():
+        return str(int(n))
+    return f"{n:g}".replace('.', ',')
+
+
+def _apply_fallback_refs(lab_values, sex=None):
+    """Fill in `ref` for lab entries lacking a reference range, using the
+    institutional fallback table. Marks fallback values with a trailing ' *'.
+    `sex` ('M' / 'W') selects the appropriate range for sex-keyed entries.
+    """
+    sex_code = (sex or '').strip().upper() or None
+    for lv in lab_values:
+        if (lv.get('ref') or '').strip():
+            continue
+        marker = (lv.get('marker') or '').strip().lower()
+        fb = _resolve_fallback_entry(_LAB_FALLBACK_REFS.get(marker), sex_code)
+        if fb is None:
+            continue
+        lo, hi, unit = fb
+        # Prefer the entry's own unit if present; fallback unit is only used
+        # to make the range self-explanatory when the file omits one too.
+        display_unit = (lv.get('unit') or '').strip() or unit
+        rendered = _format_fallback_ref(lo, hi, display_unit)
+        if rendered:
+            lv['ref'] = rendered
+
 
 def _load_dashboard_json(case_id):
     """Load a pre-processed dashboard JSON for a case from DASHBOARD_DIR."""
@@ -1799,6 +1979,7 @@ def _load_dashboard_json(case_id):
             except (ValueError, AttributeError):
                 return (0, 0, 0)
         if 'lab_values' in data:
+            _apply_fallback_refs(data['lab_values'], data.get('sex'))
             data['lab_values'] = sorted(data['lab_values'], key=_date_sort_key, reverse=True)
         # Sort imaging chronologically, oldest first (ascending)
         if 'imaging' in data:
@@ -1847,6 +2028,319 @@ def _build_patient_data():
 PATIENT_DATA = _build_patient_data()
 
 
+# ── Ground-truth tooltip data ────────────────────────────────────────────────
+
+
+def _fmt_kv_list(items, sep=', '):
+    """Render a list of strings, dropping empties and stripping whitespace."""
+    out = [str(x).strip() for x in items if x is not None and str(x).strip()]
+    return sep.join(out)
+
+
+def _fmt_staging(stg):
+    """Render a staging dict like {'t':..,'n':..,'m':..,'uicc':..,'classification':..,'date':..}."""
+    if not isinstance(stg, dict):
+        return str(stg or '').strip()
+    parts = []
+    tnm = _fmt_kv_list([stg.get('t'), stg.get('n'), stg.get('m')], sep=' ')
+    if tnm:
+        parts.append(tnm)
+    if stg.get('uicc'):
+        parts.append(f"Stadium {stg['uicc']}")
+    if stg.get('classification'):
+        parts.append(f"({stg['classification']})")
+    if stg.get('date'):
+        parts.append(f"– {stg['date']}")
+    return ' '.join(parts)
+
+
+def _fmt_metastasis(m):
+    parts = []
+    label = (m.get('label') or '').strip()
+    region = _de_region((m.get('region') or '').strip())
+    date = (m.get('date') or '').strip()
+    status = _de_status((m.get('status') or '').strip())
+    if date:
+        parts.append(date)
+    if label:
+        parts.append(label)
+    elif region:
+        parts.append(region)
+    if status and status != 'aktiv':
+        parts.append(f"[{status}]")
+    return ' '.join(parts) if parts else ''
+
+
+# Region codes used in the dashboard JSON → German display names.
+_REGION_DE = {
+    'head':         'Kopf',
+    'brain':        'Gehirn',
+    'neck':         'Hals',
+    'thorax':       'Thorax',
+    'chest':        'Thorax',
+    'chest_left':   'Thorax links',
+    'chest_right':  'Thorax rechts',
+    'lung':         'Lunge',
+    'lung_left':    'Lunge links',
+    'lung_right':   'Lunge rechts',
+    'liver':        'Leber',
+    'abdomen':      'Abdomen',
+    'pelvis':       'Becken',
+    'bone':         'Knochen',
+    'skin':         'Haut',
+    'in_transit':   'In-Transit',
+    'lymph_nodes':  'Lymphknoten',
+    'lymph':        'Lymphknoten',
+    'lk':           'Lymphknoten',
+    'thigh':        'Oberschenkel',
+    'thigh_left':   'Oberschenkel links',
+    'thigh_right':  'Oberschenkel rechts',
+    'arm':          'Arm',
+    'arm_left':     'Arm links',
+    'arm_right':    'Arm rechts',
+    'leg':          'Bein',
+    'leg_left':     'Bein links',
+    'leg_right':    'Bein rechts',
+    'back':         'Rücken',
+    'spine':        'Wirbelsäule',
+    'adrenal':      'Nebenniere',
+    'kidney':       'Niere',
+    'spleen':       'Milz',
+    'pancreas':     'Pankreas',
+    'breast':       'Brust',
+    'other':        'Sonstige',
+}
+
+_STATUS_DE = {
+    'active':   'aktiv',
+    'inactive': 'inaktiv',
+    'resected': 'reseziert',
+    'stable':   'stabil',
+    'progressive': 'progredient',
+    'regressive':  'regredient',
+}
+
+
+def _de_region(code):
+    """Translate region codes (lung, head, …) to German display labels."""
+    if not code:
+        return ''
+    return _REGION_DE.get(code.lower(), code)
+
+
+def _de_status(code):
+    """Translate metastasis status codes to German."""
+    if not code:
+        return ''
+    return _STATUS_DE.get(code.lower(), code)
+
+
+def _fmt_therapy(t):
+    parts = []
+    date = (t.get('date') or '').strip()
+    name = (t.get('name') or t.get('label') or t.get('regimen') or '').strip()
+    note = (t.get('note') or t.get('reason') or '').strip()
+    if date:
+        parts.append(date)
+    if name:
+        parts.append(name)
+    if note:
+        parts.append(f"({note})")
+    return ' '.join(parts).strip()
+
+
+def _extract_dashboard_excerpts(d):
+    """Build a slug → list[str] dict of ground-truth values from a dashboard.
+
+    Only INFO_ITEMS slugs that have an obvious mapping into the structured
+    dashboard JSON are populated. Items without a clean mapping are skipped
+    (the protocol excerpts still cover them).
+    """
+    if not isinstance(d, dict):
+        return {}
+
+    out = {}
+
+    def add(slug, value):
+        if value is None:
+            return
+        if isinstance(value, list):
+            value = [v for v in value if v]
+            if not value:
+                return
+            out.setdefault(slug, []).extend(str(v) for v in value)
+        else:
+            s = str(value).strip()
+            if s:
+                out.setdefault(slug, []).append(s)
+
+    # ── Demographie ──
+    dob = (d.get('dob') or '').strip()
+    age = d.get('age')
+    if age or dob:
+        add(slugify('Demographie: Alter'),
+            f"{age} J." + (f" (geb. {dob})" if dob else '') if age else f"geb. {dob}")
+    if d.get('sex'):
+        sx = {'M': 'männlich', 'W': 'weiblich'}.get(str(d['sex']).strip().upper(), str(d['sex']))
+        add(slugify('Demographie: Geschlecht'), sx)
+
+    # ── Allgemeinzustand ──
+    if d.get('comorbidities'):
+        add(slugify('Allgemeinzustand: Komorbiditäten'), d['comorbidities'])
+    fz = []
+    if d.get('ecog'):       fz.append(f"ECOG {d['ecog']}")
+    if d.get('karnofsky'):  fz.append(f"Karnofsky {d['karnofsky']}")
+    if fz:
+        add(slugify('Allgemeinzustand: Funktioneller Zustand (e.g. ECOG, Karnofsky)'),
+            ' · '.join(fz))
+
+    # ── Primärtumor ──
+    add(slugify('Primärtumor: Datum der Erstdiagnose'),    d.get('diagnosis_date'))
+    pdx = _fmt_kv_list([d.get('primary_diagnosis'), d.get('histology')], sep=' — ')
+    add(slugify('Primärtumor: Art des Tumors'), pdx)
+    add(slugify('Primärtumor: Lokalisation'),              d.get('primary_location'))
+    add(slugify('Primärtumor: Tumordicke'),                d.get('tumor_thickness'))
+    add(slugify('Primärtumor: Ulzeration'),                d.get('ulceration'))
+    add(slugify('Primärtumor: Mitotische Aktivität'),      d.get('mitoses'))
+    add(slugify('Primärtumor: Stadium der Erkrankung bei Erstdiagnose'),
+        _fmt_staging(d.get('initial_staging')))
+    muts = d.get('mutations')
+    if isinstance(muts, dict):
+        # Always report the clinically relevant melanoma triad (BRAF / NRAS /
+        # KIT) including wildtype status; list any other notable variants
+        # afterwards. "Nicht bestimmt" entries are skipped entirely.
+        WILDTYPE = ('wildtyp', 'wild type', 'wildtype')
+        UNKNOWN  = ('nicht bestimmt', '')
+        primary_keys = ('BRAF', 'NRAS', 'KIT')
+        primary = []
+        for g in primary_keys:
+            v = (muts.get(g) or '').strip()
+            if v and v.lower() not in UNKNOWN:
+                primary.append(f"{g}: {v}")
+        extras = []
+        for g, v in muts.items():
+            if g in primary_keys: continue
+            sv = (str(v) or '').strip()
+            if not sv or sv.lower() in WILDTYPE + UNKNOWN: continue
+            extras.append(f"{g}: {sv}")
+        rendered = ', '.join(primary + extras)
+        if rendered:
+            add(slugify('Primärtumor: Mutationsstatus (e.g. BRAF)'), rendered)
+    add(slugify('Primärtumor: PD-L1 Status'),              d.get('pdl1'))
+
+    # ── Primärtherapie ──
+    add(slugify('Primärtherapie: Resektionsstatus'),       d.get('resection_status'))
+    add(slugify('Primärtherapie: Sicherheitsabstand'),     d.get('safety_margin'))
+    add(slugify('Primärtherapie: SLNE'),                   d.get('slne'))
+
+    # ── Aktueller Status ──
+    add(slugify('Aktueller Status: Krankheitsstatus (unverändert, progredient, regredient)'),
+        d.get('disease_status'))
+    add(slugify('Aktueller Status: Stadium der Erkrankung'),
+        _fmt_staging(d.get('staging')))
+
+    mets = d.get('metastases_detail') or []
+    if mets:
+        rendered_mets = [_fmt_metastasis(m) for m in mets if isinstance(m, dict)]
+        rendered_mets = [m for m in rendered_mets if m]
+        if rendered_mets:
+            add(slugify('Aktueller Status: Metastasierung'), rendered_mets)
+            locs = list(dict.fromkeys(  # preserve order, dedupe
+                _de_region((m.get('region') or '').strip())
+                for m in mets if isinstance(m, dict)
+            ))
+            locs = [l for l in locs if l]
+            if locs:
+                add(slugify('Aktueller Status: Lokalisation der Metastasierung'),
+                    ', '.join(locs))
+
+    # ── Krankheitsverlauf (date of first LK / Fernmet) ──
+    lk_dates  = sorted({(m.get('date') or '').strip()
+                        for m in mets if isinstance(m, dict)
+                        and (m.get('region') or '').lower() in ('lymph_nodes', 'lymph', 'lk')
+                        and (m.get('date') or '').strip()})
+    far_dates = sorted({(m.get('date') or '').strip()
+                        for m in mets if isinstance(m, dict)
+                        and (m.get('region') or '').lower() not in ('lymph_nodes', 'lymph', 'lk', 'skin', 'in_transit')
+                        and (m.get('date') or '').strip()})
+    if lk_dates:
+        add(slugify('Krankheitsverlauf: Datum Erstdiagnose Lymphknotenmetastasierung (i.e., Stadium III)'),
+            lk_dates[0])
+    if far_dates:
+        add(slugify('Krankheitsverlauf: Datum Erstdiagnose Fernmetastasen (i.e., Stadium IV)'),
+            far_dates[0])
+
+    # ── Aktuelle Befunde ──
+    imgs = d.get('imaging') or []
+    if imgs:
+        rendered_imgs = []
+        for im in imgs:
+            if not isinstance(im, dict): continue
+            line = _fmt_kv_list([im.get('date'), im.get('modality'),
+                                 im.get('region'), im.get('finding')], sep=' · ')
+            if line:
+                rendered_imgs.append(line)
+        if rendered_imgs:
+            add(slugify('Aktuelle Befunde: Bildgebende Verfahren (e.g. CT, MRT, PET-CT, LK-Sono)'),
+                rendered_imgs[-6:])  # cap to most recent 6
+
+    labs = d.get('lab_values') or []
+    if labs:
+        # Prioritise tumour-marker labs (S100, LDH) so they're never cut off
+        # by the display cap, then include other markers in original order.
+        PRIORITY = ('s100', 'ldh')
+        priority_labs = [lv for lv in labs if isinstance(lv, dict)
+                         and (lv.get('marker') or '').strip().lower() in PRIORITY]
+        other_labs    = [lv for lv in labs if isinstance(lv, dict)
+                         and (lv.get('marker') or '').strip().lower() not in PRIORITY]
+        ordered_labs = priority_labs + other_labs
+        rendered_labs = []
+        for lv in ordered_labs:
+            line = _fmt_kv_list([lv.get('date'), lv.get('marker'),
+                                 _fmt_kv_list([lv.get('value'), lv.get('unit')], sep=' '),
+                                 f"(Ref. {lv['ref']})" if (lv.get('ref') or '').strip() else ''], sep=' · ')
+            if line:
+                rendered_labs.append(line)
+        if rendered_labs:
+            add(slugify('Aktuelle Befunde: Laborwerte (e.g. S100, LDH, HLA-A2)'),
+                rendered_labs)
+
+    # ── Therapieverlauf ──
+    th = d.get('therapies') or {}
+    if isinstance(th, dict):
+        for cat_key, slug_label in (
+            ('radiation',           'Therapieverlauf: Strahlentherapie'),
+            ('other_locoregional',  'Therapieverlauf: Andere lokoregionäre Therapien (e.g. IL-2, T-VEC)'),
+            ('systemic',            'Therapieverlauf: Systemtherapie'),
+            ('current',             'Therapieverlauf: Aktuelle Therapie'),
+        ):
+            entries = th.get(cat_key) or []
+            if not isinstance(entries, list): continue
+            rendered = [_fmt_therapy(t) for t in entries if isinstance(t, dict)]
+            rendered = [r for r in rendered if r]
+            if rendered:
+                add(slugify(slug_label), rendered)
+
+    return out
+
+
+def _build_ground_truth_excerpts(case_id, protocol_excerpts=None):
+    """Return slug → list[{label, items}] of ground-truth values from the
+    dashboard JSON only. The ``protocol_excerpts`` argument is accepted for
+    backward compatibility but currently ignored — the tooltip surfaces only
+    structured dashboard fields.
+    """
+    dash = PATIENT_DATA.get(case_id)
+    if not dash:
+        return {}
+    dash_excerpts = _extract_dashboard_excerpts(dash)
+    return {
+        slug: [{'label': 'Dashboard', 'items': items}]
+        for slug, items in dash_excerpts.items()
+        if items
+    }
+
+
 def _read_original_document(case_id):
     """Read the original TXT document for a case from DOCUMENTS_DIR."""
     txt_path = os.path.join(DOCUMENTS_DIR, f'{case_id}.txt')
@@ -1870,6 +2364,15 @@ def case_dashboard(case_id):
 
     if request.method == 'POST':
         user_data = load_responses(username)
+        # Server-side guard: do not let users leave the dashboard for the
+        # first time until every INFO_ITEM has been rated. The rail UI
+        # enforces this client-side, but a hand-crafted POST could bypass it.
+        case_ratings = user_data.get('ratings', {}).get(case_id, {})
+        rel = case_ratings.get('case_relevance', {}) or {}
+        unrated = [item for item in INFO_ITEMS
+                   if rel.get('relevant_' + slugify(item)) not in ('yes', 'no')]
+        if unrated:
+            return redirect(url_for('case_dashboard', case_id=case_id))
         dashboards_seen = user_data.get('dashboards_seen', [])
         first_time = case_id not in dashboards_seen
         if first_time:
@@ -1891,6 +2394,16 @@ def case_dashboard(case_id):
     patient = PATIENT_DATA[case_id]
     original_doc = _read_original_document(case_id)
 
+    # First visit = the user has not yet pressed "Weiter zur Bewertung" for
+    # this case. Subsequent visits (via the protocol button on an eval page)
+    # show a "Zurück zur Bewertung" link in the header instead of the bottom
+    # continue button.
+    case_ratings_pre = user_data.get('ratings', {}).get(case_id, {})
+    relevance_pre = case_ratings_pre.get('case_relevance', {}) or {}
+    first_visit = (case_id not in user_data.get('dashboards_seen', [])
+                   or not any(relevance_pre.get('relevant_' + slugify(item)) in ('yes', 'no')
+                              for item in INFO_ITEMS))
+
     # Compute progress for the header
     done_cases = sum(
         1 for cid in case_order
@@ -1898,13 +2411,21 @@ def case_dashboard(case_id):
     )
     total_cases = len(case_order)
 
+    # Existing relevance ratings for the dashboard rating rail (Option A).
+    case_ratings = user_data.get('ratings', {}).get(case_id, {})
+    relevance_existing = case_ratings.get('case_relevance', {}) or {}
+
     return render_template('case_dashboard.html',
                            case_id=case_id,
                            case_index=case_index,
                            patient=patient,
                            original_doc=original_doc,
                            done_cases=done_cases,
-                           total_cases=total_cases)
+                           total_cases=total_cases,
+                           first_visit=first_visit,
+                           info_items=INFO_ITEMS,
+                           slugify=slugify,
+                           relevance_existing=relevance_existing)
 
 
 @app.route('/api/original-doc/<case_id>')
@@ -1915,6 +2436,49 @@ def api_original_doc(case_id):
         return {'error': 'Not found'}, 404
     doc = _read_original_document(case_id)
     return {'text': doc}
+
+
+@app.route('/api/case-relevance/<case_id>', methods=['POST'])
+@login_required
+def api_case_relevance(case_id):
+    """Persist a single relevance toggle from the dashboard sidebar.
+
+    Body (JSON or form): { slug: <info-item slug>, value: 'yes'|'no'|'' }
+    Returns { ok: true, rated: int, total: int, done: bool }.
+    """
+    if case_id not in PATIENT_DATA:
+        return {'error': 'Not found'}, 404
+
+    payload = request.get_json(silent=True) or request.form
+    slug    = (payload.get('slug') or '').strip()
+    value   = (payload.get('value') or '').strip()
+
+    valid_slugs = {slugify(item) for item in INFO_ITEMS}
+    if slug not in valid_slugs:
+        return {'error': 'Invalid slug'}, 400
+    if value not in ('yes', 'no', ''):
+        return {'error': 'Invalid value'}, 400
+
+    username  = session['username']
+    with _responses_lock(username):
+        user_data = load_responses(username)
+        ratings   = user_data.setdefault('ratings', {})
+        case_r    = ratings.setdefault(case_id, {})
+        rel       = case_r.setdefault('case_relevance', {})
+
+        field = 'relevant_' + slug
+        if value == '':
+            rel.pop(field, None)
+        else:
+            rel[field] = value
+        rel.setdefault('comment', '')
+
+        save_responses(username, user_data)
+
+        rated = sum(1 for item in INFO_ITEMS
+                    if rel.get('relevant_' + slugify(item)) in ('yes', 'no'))
+    total = len(INFO_ITEMS)
+    return {'ok': True, 'rated': rated, 'total': total, 'done': rated == total}
 
 
 @app.route('/api/imaging-pdf/<case_id>')

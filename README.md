@@ -1,4 +1,4 @@
-# Tumor Board Evaluation
+﻿# Tumor Board Evaluation
 
 A Flask web application for a clinical study evaluating LLM-generated tumor board case summaries and problem statements. Medical experts rate AI- vs. human-written texts on completeness, correctness, and clinical relevance across multiple melanoma cases.
 
@@ -13,7 +13,7 @@ After login, evaluators run through a fixed sequence:
 
 For each case the evaluator then steps through:
 
-0. **Patient dashboard** — interactive anatomical body map, basic data, staging,
+0. **Patient dashboard** â€” interactive anatomical body map, basic data, staging,
    molecular pathology, lab values, imaging diagnostics, therapies, and a
    clinical timeline. The original protocol PDF and per-modality imaging
    reports are linked from here.
@@ -26,7 +26,7 @@ For each case the evaluator then steps through:
 3. **Problem statement (Fragestellung).** Evaluate both versions on focus,
    guideline conformity, specificity, post-editing effort, origin guess,
    and preference.
-4. **Final per-case questions** — case complexity rating and an optional
+4. **Final per-case questions** â€” case complexity rating and an optional
    free-text comment.
 
 Which version appears as "A" or "B" is randomised per participant and
@@ -47,7 +47,7 @@ preprocess.py              Builds dashboard JSONs from source TK protocols
 pyproject.toml             Project metadata and dependencies (source of truth)
 requirements.txt           Minimal pip fallback (prefer uv + pyproject.toml)
 users.json                 Hashed credentials for all evaluator accounts
-.env                       Local environment variables — not committed
+.env                       Local environment variables â€” not committed
                            (SECRET_KEY, NTFY_URL, DATA_ROOT, LLM_*)
 
 texts_human/
@@ -103,7 +103,7 @@ static/
 ### External data root
 
 Large case-source artefacts live outside the repo, under
-`$DATA_ROOT/$SOURCES_SUBDIR/` (by default `…/Data/sources/`). Files are named by
+`$DATA_ROOT/$SOURCES_SUBDIR/` (by default `â€¦/Data/sources/`). Files are named by
 `case_id`, a 64-char SHA-256 stem of the source protocol:
 
 ```
@@ -123,7 +123,7 @@ Large case-source artefacts live outside the repo, under
 
 ## Setup
 
-**Requirements:** Python ≥ 3.14, [uv](https://docs.astral.sh/uv/)
+**Requirements:** Python â‰¥ 3.14, [uv](https://docs.astral.sh/uv/)
 
 ```bash
 # Install dependencies
@@ -152,7 +152,7 @@ Loaded from `.env` (via `python-dotenv`) or the process environment:
 
 | Variable | Purpose |
 |----------|---------|
-| `SECRET_KEY` | Flask session signing key. **Set this in production** — the built-in fallback is insecure. |
+| `SECRET_KEY` | Flask session signing key. **Set this in production** â€” the built-in fallback is insecure. |
 | `NTFY_URL`   | Optional [ntfy.sh](https://ntfy.sh) topic URL for push notifications when an evaluator starts a case. No-op if unset. |
 | `LLM_BASE_URL` | Base URL of the OpenAI-compatible LLM endpoint used by `preprocess.py`. Defaults to `http://10.99.0.230:8004/v1`. |
 | `LLM_MODEL` | Model id passed to the LLM endpoint (e.g. `openai/gpt-oss-120b`). |
@@ -195,7 +195,7 @@ SECRET_KEY=your-secret-key uv run app.py
 
 ---
 
-## Generating LLM artefacts
+## Generating dashboard data
 
 ### Patient dashboards (`preprocess.py`)
 
@@ -226,3 +226,110 @@ Declared in `pyproject.toml` (use `uv sync`):
 
 `requirements.txt` is a minimal pip fallback and may lag behind
 `pyproject.toml`; prefer `uv sync`.
+
+
+---
+
+## Sharing the project with a collaborator
+
+Code lives in git; **patient data must never enter git**. Already excluded by
+`.gitignore`: `.env`, `responses/`, `dashboard_data/`, `texts_human/`,
+`texts_llm/`, `original_documents/`, `highlight_mappings.json`, `users.json`,
+`exports/`.
+
+### What goes via git
+
+The full repo (code, templates, static assets, `pyproject.toml`,
+`requirements.txt`, this README, the public S3 guideline text, and
+`.env.example`).
+
+Before pushing:
+
+1. Rotate any secrets that ever sat in `.env` and remove them from history if
+   needed (`git log --all -- .env` / `git filter-repo`).
+2. Confirm no patient files were ever committed:
+   ```powershell
+   git log --all --full-history -- dashboard_data texts_human texts_llm responses users.json highlight_mappings.json
+   ```
+
+
+### Internal file sharing
+
+Two bundles need to be transferred separately:
+
+**Bundle A — app data (belongs *inside* the cloned repo)**
+
+These folders/files live next to `app.py` and are read directly by the Flask
+app. After cloning the repo, place each item at the path on the right (paths
+are relative to the repo root):
+
+| In the file-share bundle  | Place at (relative to repo root) | Required? |
+|---------------------------|----------------------------------|-----------|
+| `dashboard_data/`         | `./dashboard_data/`              | yes       |
+| `texts_human/`            | `./texts_human/`                 | yes       |
+| `texts_llm/`              | `./texts_llm/`                   | yes       |
+| `highlight_mappings.json` | `./highlight_mappings.json`      | optional (without it the Falschinformationen step falls back to bold headers) |
+
+After unpacking, the repo root should look like:
+
+```
+tumor_board_eval/
+├── app.py
+├── dashboard_data/                 ← from file-share
+│   ├── 1119efbd…_dashboard.json
+│   └── …
+├── texts_human/
+│   ├── fragestellung/              ← from file-share
+│   └── zusammenfassung/            ← from file-share
+├── texts_llm/
+│   ├── fragestellung/              ← from file-share
+│   └── zusammenfassung/            ← from file-share
+└── highlight_mappings.json         ← optional, from file-share
+```
+
+**Bundle B — raw source data / CSV (lives *outside* the repo)**
+
+This is the larger sensitive dataset. Pick any local folder (e.g.
+`C:\Users\<yourfolder>\Data`) and unpack the bundle so the layout is:
+
+```
+<DATA_ROOT>/
+├── sampled_cases.csv
+└── sources/
+    ├── <case_id_1>/
+    │   ├── *.pdf
+    │   └── …
+    └── <case_id_2>/
+        └── …
+```
+
+Then set `DATA_ROOT` in `.env` to the **absolute path** of `<DATA_ROOT>` —
+that is the parent of `sources/`, *not* `sources/` itself. Keep the defaults
+`SOURCES_SUBDIR=sources` and `CSV_FILENAME=sampled_cases.csv` unless the
+bundle uses different names.
+
+### Setup steps for the collaborator
+
+```powershell
+git clone <repo-url>
+cd tumor_board_eval
+uv sync
+
+# 1. Configure environment
+Copy-Item .env.example .env
+#   - set SECRET_KEY (e.g. python -c "import secrets; print(secrets.token_urlsafe(48))")
+#   - set DATA_ROOT to the absolute path of the folder that contains
+#     sources/ and sampled_cases.csv (Bundle B)
+
+# 2. Unpack Bundle A into the repo root so dashboard_data/, texts_human/,
+#    texts_llm/ (and optional highlight_mappings.json) sit next to app.py.
+
+# 3. Unpack Bundle B at <DATA_ROOT> so <DATA_ROOT>\sources\ and
+#    <DATA_ROOT>\sampled_cases.csv exist.
+
+# 4. Create local evaluator account(s)
+uv run setup_users.py
+
+# 5. Run
+uv run app.py        # http://localhost:5001
+```

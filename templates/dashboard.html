@@ -7,7 +7,7 @@
   {# ── HEADER ──────────────────────────────────────────────────────────────── #}
   <div class="dash-header">
     <a href="{{ url_for('dashboard_index') }}" class="back-link">&larr; Alle Fälle</a>
-    <h1>Fall {{ case_id }}: {{ patient.name }}</h1>
+    <h1>Fall {{ case_id }}</h1>
     <span class="case-status-pill
       {% if 'Tumorfrei' in patient.disease_status %}status-free
       {% elif 'Remission' in patient.disease_status %}status-remission
@@ -33,11 +33,8 @@
       <div class="info-card">
         <h2 class="card-title">Basisdaten</h2>
         <table class="info-table">
-          <tr><th>Name</th><td>{{ patient.name|ka }}</td></tr>
           <tr><th>Geburtsdatum</th><td>{% if patient.dob %}{{ patient.dob }} ({{ patient.age }} J.){% else %}Keine Angabe{% endif %}</td></tr>
           <tr><th>Geschlecht</th><td>{{ patient.sex|ka }}</td></tr>
-          <tr><th>Wohnort</th><td>{{ patient.location|ka }}</td></tr>
-          <tr><th>Pat-ID</th><td>{{ patient.pat_id|ka }}</td></tr>
           <tr><th>ECOG</th><td>{{ patient.ecog|ka }}</td></tr>
           <tr><th>Karnofsky</th><td>{{ patient.karnofsky|ka }}</td></tr>
         </table>
@@ -48,16 +45,6 @@
           <li>{{ c }}</li>
           {% endfor %}
         </ul>
-
-        <h3 class="card-subtitle">Primärdiagnose</h3>
-        <table class="info-table">
-          <tr><th>Diagnose</th><td>{{ patient.primary_diagnosis|ka }}</td></tr>
-          <tr><th>Lokalisation</th><td>{{ patient.primary_location|ka }}</td></tr>
-          <tr><th>Erstdiagnose</th><td>{{ patient.diagnosis_date|ka }}</td></tr>
-          <tr><th>Tumordicke</th><td>{{ patient.tumor_thickness|ka }}</td></tr>
-          <tr><th>Ulzeration</th><td>{{ patient.ulceration|ka }}</td></tr>
-          <tr><th>Mitosen</th><td>{{ patient.mitoses|ka }}</td></tr>
-        </table>
 
         <h3 class="card-subtitle">Aktuelles Staging</h3>
         <div class="staging-box">

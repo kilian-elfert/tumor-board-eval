@@ -21,6 +21,9 @@ responses/
 # Original documents 
 original_documents/
 
+# Dashboard JSONs
+dashboard_data/
+
 # Texts to be evaluated 
 texts_human/
 texts_llm/
