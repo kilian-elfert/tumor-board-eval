@@ -64,7 +64,7 @@
     <div class="eval-card-header">
       <div class="eval-card-header-buttons">
         <a href="{{ url_for('case_dashboard', case_id=case_id) }}" class="btn-protocol">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Patientenakte
+          <svg width="20" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Patientenakte
         </a>        {% if step.key == 'problem_correctness' %}
         <button type="button" class="btn-protocol" onclick="openGuideline()">
           <img src="{{ url_for('static', filename='pdf-icon.png') }}" width="20" height="23" style="flex-shrink:0;filter:hue-rotate(200deg) saturate(1.4)" aria-hidden="true">Kurzversion der S3-Leitlinie
@@ -109,10 +109,10 @@
         {# ─── per-step instructions ─── #}
 
         {% if step.key == 'case_relevance' %}
-        <div class="instr-goal"><strong>Aufgabe:</strong> Beurteilen Sie für jede Information innerhalb einer Informationskategorie, ob diese Information für die Tumorboardanmeldung dieses Falls klinisch relevant ist.</div>
+        <div class="instr-goal"><strong>Aufgabe:</strong> Beurteilen Sie für jede Information innerhalb einer Informationskategorie, ob diese Information für die Tumorboardanmeldung dieses Falls klinisch relevant ist. Maßgebliche Referenz hierfür ist die <strong>Patientenakte</strong>; das <strong>TK-Protokoll</strong> kann ergänzend herangezogen werden.</div>
         <div class="instr-steps">
           <ol>
-            <li>Lesen Sie das <strong>TK-Protokoll</strong> im linken Bereich aufmerksam durch.</li>
+            <li>Sichten Sie die <strong>Patientenakte</strong> als maßgebliche Quelle und ziehen Sie bei Bedarf das <strong>TK-Protokoll</strong> ergänzend heran.</li>
             <li>Bewerten Sie im rechten Bereich jede Information.</li>
             <li>Nutzen Sie die <strong>Gruppenaktionen</strong> (<em>alle ✓</em> / <em>alle ✗</em>), um alle Informationen in einer Kategorie gleichzeitig zu bewerten.</li>
           </ol>
@@ -128,15 +128,23 @@
         <div class="instr-steps">
           <ol>
             <li>Lesen Sie die <strong>Zusammenfassung</strong> im linken Bereich.</li>
-            <li>Klicken Sie im Diagramm auf die einzelnen <strong>Informationsknoten</strong>.</li>
-            <li>Klicken Sie auf eine <strong>Kategorie</strong> (größerer Kreis), um alle zugehörigen Einträge gemeinsam umzuschalten.</li>
+            <li>Markieren Sie jede Information auf <strong>einem</strong> der folgenden Wege als <em>enthalten</em> oder <em>nicht enthalten</em>:
+              <ul>
+                <li><strong>Im Text:</strong> Klicken Sie auf eine bereits hervorgehobene Textstelle in der Zusammenfassung — die zugehörige Information wird umgeschaltet.</li>
+                <li><strong>Im Diagramm:</strong> Klicken Sie rechts im Baumdiagramm direkt auf einen <strong>Informationsknoten</strong> (kleiner Kreis) oder auf eine <strong>Kategorie</strong> (größerer Kreis), um alle Einträge dieser Kategorie gemeinsam umzuschalten.</li>
+                <li><strong>Per Textauswahl:</strong> Markieren Sie eine beliebige Passage in der Zusammenfassung mit der Maus (linke Maustaste gedrückt halten und ziehen). Es öffnet sich ein Auswahlfenster — wählen Sie die passende Information bzw. Kategorie aus, der die markierte Stelle zugeordnet werden soll. Die Information wird automatisch als <em>enthalten</em> markiert und der Text farblich hervorgehoben.</li>
+              </ul>
+            </li>
           </ol>
         </div>
         <div class="instr-options">
-          <div class="instr-opt"><span class="instr-opt-label instr-opt--blue">●</span> Information ist in der Zusammenfassung enthalten</div>
-          <div class="instr-opt"><span class="instr-opt-label instr-opt--gray">●</span> Information ist nicht enthalten</div>
+          <div class="instr-opt"><span class="instr-opt-label" style="background:#fef08a;color:#713f12;border:1px solid #facc15;">● Gelb</span> Vorschlag: Diese Textstelle wurde automatisch als möglicher Treffer für eine relevante Information erkannt — aber noch nicht von Ihnen bestätigt.</div>
+          <div class="instr-opt"><span class="instr-opt-label" style="background:#bbf7d0;color:#064e3b;border:1px solid #4ade80;">● Grün</span> Bestätigt: Sie haben die Textstelle einer Information zugeordnet und damit als <em>enthalten</em> markiert.</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--blue">●</span> Information ist in der Zusammenfassung enthalten (Knoten im Diagramm)</div>
+          <div class="instr-opt"><span class="instr-opt-label instr-opt--gray">●</span> Information ist nicht enthalten (Knoten im Diagramm)</div>
         </div>
-        <div class="instr-hint"><strong>Hinweis:</strong> Klick-Reihenfolge je Knoten: <em>enthalten → nicht enthalten → zurücksetzen</em>.<br>
+        <div class="instr-hint"><strong>Fußnoten<sup style="font-size:.7em;">[1,2]</sup>:</strong> Kleine hochgestellte Zahlen direkt hinter einer hervorgehobenen Textstelle zeigen an, dass diese Stelle <strong>mehreren Informationen gleichzeitig</strong> zugeordnet ist. Jede Zahl steht für einen Eintrag — bewegen Sie die Maus über eine Zahl, um den zugehörigen Informationsknoten im Diagramm hervorzuheben; ein Klick auf die Zahl entfernt nur diese eine Zuordnung.<br><br>
+        <strong>Hinweis:</strong> Klick-Reihenfolge je Knoten im Diagramm: <em>enthalten → nicht enthalten → zurücksetzen</em>.<br>
         Wenn eine Information mehrere Einzelangaben umfasst (z.&nbsp;B. mehrere Therapien, Symptome oder Diagnosedaten von Metastasen) und <strong>nicht alle</strong> davon in der Zusammenfassung genannt werden, markieren Sie die Information als <em>nicht enthalten</em>.</div>
 
         {% elif step.key == 'summary_falseinfo' %}
@@ -678,13 +686,18 @@
          STEP: summary_falseinfo
          ════════════════════════════════════════════════════════════════════════ #}
       {% elif step.key == 'summary_falseinfo' %}
-      <div class="eval-body">
+      <div class="eval-body eval-body--falseinfo">
         <div class="text-display">
           <div class="text-label">Zusammenfassung – Version {{ 'A' if tab_idx == 0 else 'B' }}</div>
           <div class="text-content">{{ text_content }}</div>
         </div>
         {# Tooltip for protocol ground truth #}
         <div class="protocol-tooltip" id="protocol-tooltip"></div>
+        {% if ground_truth_excerpts %}
+        <script>var _groundTruthExcerpts = {{ ground_truth_excerpts | tojson }};</script>
+        {% else %}
+        <script>var _groundTruthExcerpts = {};</script>
+        {% endif %}
         {% if protocol_excerpts %}
         <script>var _protocolExcerpts = {{ protocol_excerpts | tojson }};</script>
         {% else %}
@@ -1867,6 +1880,18 @@
 
 
 <script>
+/* Authoritative slug → original info-item label map.
+   Built server-side from INFO_ITEMS so the original German capitalisation
+   (e.g. "Aktueller Status: Stadium der Erkrankung") is preserved exactly,
+   without us having to guess which words are nouns. Any client-side label
+   resolution should consult this map first. */
+window.INFO_LABELS = {
+  {% for item in info_items %}{{ slugify(item)|tojson }}: {{ item|tojson }}{% if not loop.last %},{% endif %}
+  {% endfor %}
+};
+</script>
+
+<script>
 /* ── Instruction panel toggle ───────────────────────────────────────────── */
 function toggleInstrPanel() {
   var panel = document.getElementById('instr-panel');
@@ -1983,30 +2008,61 @@ function highlightExcerpts(slug, on) {
       }
     }
   }
-  /* Show/hide protocol ground truth tooltip */
+  /* Show/hide ground-truth tooltip (dashboard data only) */
   var tip = document.getElementById('protocol-tooltip');
   if (!tip) return;
-  if (on && typeof _protocolExcerpts !== 'undefined') {
-    var excerpts = _protocolExcerpts[slug] || [];
-    if (excerpts.length > 0) {
-      tip.innerHTML = '<div class="protocol-tooltip-label">TK-Protokoll:</div>' +
-        excerpts.map(function(e) { return '<div class="protocol-tooltip-excerpt">' + _escHtml(e) + '</div>'; }).join('');
+  if (on) {
+    var sections = (typeof _groundTruthExcerpts !== 'undefined')
+      ? (_groundTruthExcerpts[slug] || null)
+      : null;
+    if (sections && sections.length > 0) {
+      tip.innerHTML = sections.map(function(s) {
+        return '<div class="protocol-tooltip-label">' + _escHtml(s.label) + ':</div>' +
+          (s.items || []).map(function(e) {
+            return '<div class="protocol-tooltip-excerpt">' + _escHtml(e) + '</div>';
+          }).join('');
+      }).join('');
       tip.classList.add('protocol-tooltip--visible');
-      /* Position near the card */
-      var cardRect = card.getBoundingClientRect();
-      tip.style.top = (cardRect.top + window.scrollY - tip.offsetHeight - 8) + 'px';
-      tip.style.left = (cardRect.left + window.scrollX) + 'px';
-      /* Adjust if above viewport */
-      var tipRect = tip.getBoundingClientRect();
-      if (tipRect.top < 0) {
-        tip.style.top = (cardRect.bottom + window.scrollY + 8) + 'px';
-      }
+      _attachProtocolTooltipFollow(tip);
     } else {
       tip.classList.remove('protocol-tooltip--visible');
+      _detachProtocolTooltipFollow();
     }
   } else {
     tip.classList.remove('protocol-tooltip--visible');
+    _detachProtocolTooltipFollow();
   }
+}
+
+/* Make the protocol tooltip follow the mouse cursor while visible.
+   Positioned to the left of the cursor so it doesn't cover the slug
+   label rendered next to the cursor by the browser default tooltip. */
+var _protocolTooltipMoveHandler = null;
+function _attachProtocolTooltipFollow(tip) {
+  if (_protocolTooltipMoveHandler) return;
+  _protocolTooltipMoveHandler = function(e) {
+    var pad = 14;
+    var w = tip.offsetWidth;
+    var h = tip.offsetHeight;
+    var vw = window.innerWidth;
+    var vh = window.innerHeight;
+    /* Prefer left of cursor */
+    var left = e.clientX - w - pad;
+    if (left < 8) left = e.clientX + pad;       /* fallback to right side */
+    if (left + w > vw - 8) left = vw - w - 8;
+    var top = e.clientY - h / 2;
+    if (top < 8) top = 8;
+    if (top + h > vh - 8) top = vh - h - 8;
+    tip.style.position = 'fixed';
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+  };
+  document.addEventListener('mousemove', _protocolTooltipMoveHandler);
+}
+function _detachProtocolTooltipFollow() {
+  if (!_protocolTooltipMoveHandler) return;
+  document.removeEventListener('mousemove', _protocolTooltipMoveHandler);
+  _protocolTooltipMoveHandler = null;
 }
 
 /* ── highlight tree endpoint node from text hover ──────────────────────── */
@@ -2032,13 +2088,31 @@ function highlightTreeEndpoint(slug, on) {
 
 /* ── text span interactions: hover highlights tree item, click toggles ── */
 (function() {
-  /* Look up human-readable label for a slug from RT_DATA */
+  /* Look up human-readable label for a slug. Order:
+     (1) INFO_LABELS map (authoritative, server-built from INFO_ITEMS)
+     (2) RT_DATA from the radial tree (case-scoped subset)
+     (3) Reconstructed sentence-case from the slug as a last resort. */
   function labelForSlug(slug) {
-    if (typeof RT_DATA === 'undefined') return slug.replace(/__/g, ': ').replace(/_/g, ' ');
-    for (var i = 0; i < RT_DATA.length; i++)
-      for (var j = 0; j < RT_DATA[i].items.length; j++)
-        if (RT_DATA[i].items[j].slug === slug) return RT_DATA[i].items[j].label;
-    return slug.replace(/__/g, ': ').replace(/_/g, ' ');
+    if (window.INFO_LABELS && Object.prototype.hasOwnProperty.call(window.INFO_LABELS, slug)) {
+      return window.INFO_LABELS[slug];
+    }
+    if (typeof RT_DATA !== 'undefined') {
+      for (var i = 0; i < RT_DATA.length; i++)
+        for (var j = 0; j < RT_DATA[i].items.length; j++)
+          if (RT_DATA[i].items[j].slug === slug) {
+            var cat = RT_DATA[i].label;
+            var lbl = RT_DATA[i].items[j].label;
+            return cat ? cat + ': ' + lbl : lbl;
+          }
+    }
+    /* Fallback when slug isn't in either map: reconstruct a readable label by
+       capitalising only the first letter of each segment (German sentence
+       case). Note: nouns inside the segment will not be capitalised. */
+    var parts = slug.split('__').map(function(p) { return p.replace(/_+/g, ' ').trim(); })
+                    .filter(function(p) { return p.length > 0; });
+    return parts.map(function(p) {
+      return p.length ? p.charAt(0).toUpperCase() + p.slice(1) : p;
+    }).join(': ');
   }
   function buildTitle(slug, allSlugs) {
     var slugs = allSlugs ? allSlugs.split(',') : [slug];
@@ -2051,12 +2125,15 @@ function highlightTreeEndpoint(slug, on) {
     return lines.join('\n');
   }
   document.querySelectorAll('.hl-info[data-hl-slug]').forEach(function(span) {
-    var slug = span.getAttribute('data-hl-slug');
-    var allSlugs = span.getAttribute('data-hl-slugs');
-    span.title = buildTitle(slug, allSlugs);
+    /* Title is rebuilt on hover so it reflects any slugs added at runtime
+       (e.g. when the user manually assigns an overlapping selection). */
+    span.title = buildTitle(span.getAttribute('data-hl-slug'),
+                            span.getAttribute('data-hl-slugs'));
     span.addEventListener('mouseenter', function() {
+      var slug     = span.getAttribute('data-hl-slug');
+      var allSlugs = span.getAttribute('data-hl-slugs');
+      span.title = buildTitle(slug, allSlugs);
       highlightExcerpts(slug, true);
-      /* Also highlight secondary slugs on multi-slug spans */
       if (allSlugs) {
         allSlugs.split(',').forEach(function(s) {
           if (s !== slug) highlightExcerpts(s, true);
@@ -2064,6 +2141,8 @@ function highlightTreeEndpoint(slug, on) {
       }
     });
     span.addEventListener('mouseleave', function() {
+      var slug     = span.getAttribute('data-hl-slug');
+      var allSlugs = span.getAttribute('data-hl-slugs');
       highlightExcerpts(slug, false);
       if (allSlugs) {
         allSlugs.split(',').forEach(function(s) {
@@ -2072,8 +2151,24 @@ function highlightTreeEndpoint(slug, on) {
       }
     });
     span.addEventListener('click', function() {
+      var slug = span.getAttribute('data-hl-slug');
       if (typeof window.rtToggleItem === 'function') {
         window.rtToggleItem(slug);
+        return;
+      }
+      /* Falschinformationen step: clicking the highlight toggles the
+         matching checkbox, which switches the span to red via
+         toggleFalseinfo() → .hl-info--error. Click again to revert. */
+      var cb = document.querySelector(
+        '.fi-card[data-hl-slug="' + slug + '"] input[type="checkbox"]'
+      );
+      if (cb) {
+        cb.checked = !cb.checked;
+        if (typeof window.toggleFalseinfo === 'function') {
+          window.toggleFalseinfo(slug, cb.checked);
+        } else {
+          cb.dispatchEvent(new Event('change', { bubbles: true }));
+        }
       }
     });
     span.addEventListener('contextmenu', function(e) {
@@ -2082,11 +2177,17 @@ function highlightTreeEndpoint(slug, on) {
     });
   });
 
-  /* Footnote badge interactions */
-  document.querySelectorAll('.hl-footnote[data-hl-slug]').forEach(function(fn) {
+  /* Footnote badge interactions — extracted so dynamically-created badges
+     (from manual overlap selections) can register the same handlers. */
+  function attachFootnoteEvents(fn) {
+    if (fn._fnEventsAttached) return;
+    fn._fnEventsAttached = true;
     var slug = fn.getAttribute('data-hl-slug');
     fn.style.cursor = 'pointer';
-    fn.title = 'Klick: Item umschalten · Rechtsklick: Zuordnung entfernen';
+    /* Tooltip: show the SPECIFIC label this footnote belongs to so the
+       user can tell which category each numbered badge represents. */
+    fn.title = labelForSlug(slug) +
+               '\n\nKlick: Item umschalten · Rechtsklick: Zuordnung entfernen';
     fn.addEventListener('mouseenter', function() {
       highlightExcerpts(slug, true);
       highlightTreeEndpoint(slug, true);
@@ -2160,7 +2261,9 @@ function highlightTreeEndpoint(slug, on) {
         }
       }
     });
-  });
+  }
+  document.querySelectorAll('.hl-footnote[data-hl-slug]').forEach(attachFootnoteEvents);
+  window.attachFootnoteEvents = attachFootnoteEvents;
 })();
 
 /* ── remove any highlight span (pre-rendered or manual) ────────────────── */
@@ -2242,23 +2345,29 @@ function onTextSelected(e) {
   var rect = _assignRange.getBoundingClientRect();
   popup.classList.add('hl-assign-popup--open');
 
-  /* Position to the right of the text panel so it never covers the text */
-  var panel = document.getElementById('tree-textpanel');
-  var panelRect = panel ? panel.getBoundingClientRect() : rect;
+  /* Position next to the cursor / end of selection. */
   var popupW = popup.offsetWidth || 320;
   var popupH = popup.offsetHeight || 370;
-  var gap = 8;
+  var gap = 12;
 
-  var left = panelRect.right + gap;
-  /* If no room to the right, place to the left of the panel */
-  if (left + popupW > window.innerWidth) {
-    left = panelRect.left - popupW - gap;
+  /* Anchor: where the user released the mouse, fall back to selection end. */
+  var anchorX = (e && typeof e.clientX === 'number' && e.clientX > 0)
+    ? e.clientX : rect.right;
+  var anchorY = (e && typeof e.clientY === 'number' && e.clientY > 0)
+    ? e.clientY : rect.bottom;
+
+  /* Prefer right of cursor; flip to left if no room. */
+  var left = anchorX + gap;
+  if (left + popupW > window.innerWidth - 10) {
+    left = anchorX - popupW - gap;
   }
   if (left < 10) left = 10;
 
-  /* Vertically align with the selection, clamped to viewport */
-  var top = rect.top;
-  if (top + popupH > window.innerHeight) top = window.innerHeight - popupH - 10;
+  /* Place just below the cursor; flip above if it would overflow. */
+  var top = anchorY + gap;
+  if (top + popupH > window.innerHeight - 10) {
+    top = anchorY - popupH - gap;
+  }
   if (top < 10) top = 10;
 
   popup.style.left = left + 'px';
@@ -2323,10 +2432,35 @@ function assignAnnotation(slug) {
   var selectedText = _assignRange.toString().trim();
   if (!selectedText) { closeAssignPopup(); return; }
 
+  /* Detect existing hl-info / hl-manual spans that overlap the user's
+     selection BEFORE we wrap it. Each such span gets a green footnote
+     badge for the new slug, mirroring the server-side overlap behaviour
+     for pre-rendered highlights. */
+  var overlapSpans = (function() {
+    var tc = document.querySelector('#tree-textpanel .text-content');
+    if (!tc) return [];
+    var hits = [];
+    tc.querySelectorAll('.hl-info[data-hl-slug], .hl-manual[data-hl-slug]').forEach(function(s) {
+      if (s.getAttribute('data-hl-slug') === slug) return; /* same slug already there */
+      try {
+        var r = document.createRange();
+        r.selectNodeContents(s);
+        /* Range.intersectsNode/compareBoundaryPoints — true if any overlap */
+        var overlaps = (
+          _assignRange.compareBoundaryPoints(Range.END_TO_START, r) < 0 &&
+          _assignRange.compareBoundaryPoints(Range.START_TO_END, r) > 0
+        );
+        if (overlaps) hits.push(s);
+      } catch(e) {}
+    });
+    return hits;
+  })();
+
   /* Wrap selection in a manual highlight span.
      Use surroundContents for simple cases; for cross-boundary
      selections, split text nodes and wrap each part individually. */
   var success = false;
+  var firstSpan = null;
   try {
     /* surroundContents only works if the range doesn't partially
        select a non-text node */
@@ -2335,6 +2469,7 @@ function assignAnnotation(slug) {
     span.setAttribute('data-hl-slug', slug);
     _assignRange.surroundContents(span);
     attachManualSpanEvents(span);
+    firstSpan = span;
     success = true;
   } catch(e) {
     /* Cross-boundary fallback: highlight each text node segment
@@ -2362,12 +2497,65 @@ function assignAnnotation(slug) {
         s.setAttribute('data-hl-slug', slug);
         r.surroundContents(s);
         attachManualSpanEvents(s);
+        if (!firstSpan) firstSpan = s;
       });
       success = textNodes.length > 0;
     }
   }
 
   if (!success) { closeAssignPopup(); return; }
+
+  /* For each pre-existing overlapping span, add a green footnote badge
+     for the new slug. If the span had no footnotes yet, also prepend a
+     "1" badge for its own (primary) slug so the numbering reads naturally. */
+  if (overlapSpans.length) {
+    var newLabel = (window.INFO_LABELS && window.INFO_LABELS[slug]) || slug;
+    overlapSpans.forEach(function(host) {
+      /* Find existing footnote badges immediately following this host. */
+      var fns = [];
+      var sib = host.nextSibling;
+      while (sib && sib.nodeType === 1 && sib.classList && sib.classList.contains('hl-footnote')) {
+        fns.push(sib);
+        sib = sib.nextSibling;
+      }
+      /* Skip if a footnote for this slug already exists. */
+      if (fns.some(function(f){ return f.getAttribute('data-hl-slug') === slug; })) return;
+
+      /* Bootstrap "1" footnote for the host's own slug if there are none yet. */
+      if (fns.length === 0) {
+        var ownSlug = host.getAttribute('data-hl-slug');
+        var ownLabel = (window.INFO_LABELS && window.INFO_LABELS[ownSlug]) || ownSlug;
+        var firstFn = document.createElement('sup');
+        firstFn.className = 'hl-footnote';
+        firstFn.setAttribute('data-hl-slug', ownSlug);
+        firstFn.setAttribute('title', ownLabel);
+        firstFn.textContent = '1';
+        if (state && state[ownSlug] === 'yes') firstFn.classList.add('hl-footnote--yes');
+        host.parentNode.insertBefore(firstFn, host.nextSibling);
+        if (typeof window.attachFootnoteEvents === 'function') {
+          window.attachFootnoteEvents(firstFn);
+        }
+        fns.push(firstFn);
+      }
+
+      /* Append the new green badge for the user-assigned slug. */
+      var newFn = document.createElement('sup');
+      newFn.className = 'hl-footnote hl-footnote--yes';
+      newFn.setAttribute('data-hl-slug', slug);
+      newFn.setAttribute('title', newLabel);
+      newFn.textContent = String(fns.length + 1);
+      var lastFn = fns[fns.length - 1];
+      lastFn.parentNode.insertBefore(newFn, lastFn.nextSibling);
+      if (typeof window.attachFootnoteEvents === 'function') {
+        window.attachFootnoteEvents(newFn);
+      }
+
+      /* Update host's data-hl-slugs so hover/click code treats it as multi. */
+      var slugs = (host.getAttribute('data-hl-slugs') || host.getAttribute('data-hl-slug') || '').split(',').filter(Boolean);
+      if (slugs.indexOf(slug) === -1) slugs.push(slug);
+      host.setAttribute('data-hl-slugs', slugs.join(','));
+    });
+  }
 
   /* Store the annotation */
   if (!_manualAnnotations[slug]) _manualAnnotations[slug] = [];
@@ -2390,7 +2578,9 @@ function attachManualSpanEvents(span) {
   var slug = span.getAttribute('data-hl-slug');
   /* Build tooltip with item label */
   var label = slug;
-  if (typeof RT_DATA !== 'undefined') {
+  if (window.INFO_LABELS && Object.prototype.hasOwnProperty.call(window.INFO_LABELS, slug)) {
+    label = window.INFO_LABELS[slug];
+  } else if (typeof RT_DATA !== 'undefined') {
     for (var i = 0; i < RT_DATA.length; i++)
       for (var j = 0; j < RT_DATA[i].items.length; j++)
         if (RT_DATA[i].items[j].slug === slug) { label = RT_DATA[i].items[j].label; break; }
@@ -2881,8 +3071,12 @@ updateRelProgress();
   var svg = document.getElementById('rt-svg');
   if (!svg) return;
 
-  /* Build data from Jinja template */
-  var RT_DATA = [];
+  /* Build data from Jinja template (exposed on window so other IIFEs —
+     e.g. labelForSlug() in the text-span block — can resolve slugs to the
+     original info-item label with proper German capitalisation). */
+  window.RT_DATA = window.RT_DATA || [];
+  var RT_DATA = window.RT_DATA;
+  RT_DATA.length = 0;
   {% set ns = namespace(prev_cat='') %}
   {% for item in info_items %}
     {% set parts = item.split(': ', 1) %}
@@ -2932,6 +3126,10 @@ updateRelProgress();
     spans.forEach(function(el) {
       el.classList.toggle('hl-info--yes', val === 'yes');
       el.classList.toggle('hl-manual--yes', val === 'yes');
+    });
+    /* Footnote badges follow the underlying state: green when accepted, yellow otherwise. */
+    document.querySelectorAll('.hl-footnote[data-hl-slug="' + slug + '"]').forEach(function(fn) {
+      fn.classList.toggle('hl-footnote--yes', val === 'yes');
     });
     /* Also handle multi-slug spans where this slug is secondary.
        Keep green if ANY slug in the group is still 'yes'. */
@@ -3316,6 +3514,11 @@ updateRelProgress();
     cat.items.forEach(function(item) { state[item.slug] = item.val; });
     refreshCat(cat.slug);
   });
+  /* Sync footnote badge color with the persisted state of each slug. */
+  document.querySelectorAll('.hl-footnote[data-hl-slug]').forEach(function(fn) {
+    var s = fn.getAttribute('data-hl-slug');
+    fn.classList.toggle('hl-footnote--yes', state[s] === 'yes');
+  });
   refreshProgress();
 
   layout();
@@ -3444,13 +3647,13 @@ if (noPrefBtn) {
                 <span class="rel-cat-name">Allgemeinzustand</span>
                 <span class="rel-group-badge demo-anim-badge2">0/2</span>
                 <div class="rel-cat-actions">
-                  <button type="button" class="rel-cat-btn rel-cat-btn--no demo-anim-cat-no">alle&nbsp;&#10007;</button>
-                  <button type="button" class="rel-cat-btn rel-cat-btn--yes">alle&nbsp;&#10003;</button>
+                  <button type="button" class="rel-cat-btn rel-cat-btn--no">alle&nbsp;&#10007;</button>
+                  <button type="button" class="rel-cat-btn rel-cat-btn--yes demo-anim-cat-yes2">alle&nbsp;&#10003;</button>
                 </div>
               </div>
               <div class="rel-group-body">
-                <div class="rel-item"><span class="rel-item-name">Komorbiditäten</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no demo-anim-no4">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
-                <div class="rel-item"><span class="rel-item-name">Funktioneller Zustand (e.g. ECOG, Karnofsky)</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no demo-anim-no5">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+                <div class="rel-item"><span class="rel-item-name">Komorbiditäten</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no demo-anim-no4">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes demo-anim-yes4">&#10003;&nbsp;Ja</span></div></div>
+                <div class="rel-item"><span class="rel-item-name">Funktioneller Zustand (e.g. ECOG, Karnofsky)</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no demo-anim-no5">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes demo-anim-yes5">&#10003;&nbsp;Ja</span></div></div>
               </div>
             </div>
 
@@ -3459,7 +3662,7 @@ if (noPrefBtn) {
               <div class="rel-group-hdr">
                 <svg class="rel-group-chevron" viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
                 <span class="rel-cat-name">Primärtumor</span>
-                <span class="rel-group-badge">0/8</span>
+                <span class="rel-group-badge">0/9</span>
                 <div class="rel-cat-actions">
                   <button type="button" class="rel-cat-btn rel-cat-btn--no">alle&nbsp;&#10007;</button>
                   <button type="button" class="rel-cat-btn rel-cat-btn--yes">alle&nbsp;&#10003;</button>
@@ -3471,6 +3674,7 @@ if (noPrefBtn) {
                 <div class="rel-item"><span class="rel-item-name">Lokalisation</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
                 <div class="rel-item"><span class="rel-item-name">Tumordicke</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
                 <div class="rel-item"><span class="rel-item-name">Ulzeration</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
+                <div class="rel-item"><span class="rel-item-name">Mitotische Aktivität</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
                 <div class="rel-item"><span class="rel-item-name">Stadium der Erkrankung bei Erstdiagnose</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
                 <div class="rel-item"><span class="rel-item-name">Mutationsstatus (e.g. BRAF)</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
                 <div class="rel-item"><span class="rel-item-name">PD-L1 Status</span><div class="rel-item-btns"><span class="rel-btn rel-btn--no">&#10007;&nbsp;Nein</span><span class="rel-btn rel-btn--yes">&#10003;&nbsp;Ja</span></div></div>
@@ -3598,7 +3802,11 @@ if (noPrefBtn) {
 
       {# ── 2. Radial tree (summary_integrity) ── #}
       {% elif step.key == 'summary_integrity' %}
-      <p class="demo-modal-desc">Klicken Sie auf die Informationsknoten im Diagramm. Jeder Klick wechselt den Status: <strong>enthalten</strong> (blau) → <strong>nicht enthalten</strong> (grau) → <strong>zurücksetzen</strong>.</p>
+      <p class="demo-modal-desc">
+        <strong>Zwei Wege</strong>, jede Information zu bewerten:<br>
+        <strong>(1)</strong> Klicken Sie direkt auf einen <strong>Knoten im Diagramm</strong>. Jeder Klick wechselt den Status: <em>enthalten</em> (blau) → <em>nicht enthalten</em> (grau) → <em>zurücksetzen</em>.<br>
+        <strong>(2)</strong> <strong>Markieren Sie eine Textstelle</strong> in der Zusammenfassung mit der Maus. Es öffnet sich ein Auswahlfenster — wählen Sie das passende Informationsitem aus, und es wird automatisch als <em>enthalten</em> markiert.
+      </p>
       <div class="demo-stage demo-stage--textwidget">
         <div class="demo-text-pane">
           <div class="demo-text-bar">
@@ -3606,10 +3814,12 @@ if (noPrefBtn) {
             <span class="demo-tab demo-tab--active">Version A</span>
             <span class="demo-tab">Version B</span>
           </div>
-          <div class="demo-text-body">
+          <div class="demo-text-body" style="position:relative">
             <div class="demo-pdf-line demo-pdf-line--h" style="width:50%"></div>
             <div class="demo-pdf-line" style="width:92%"></div>
-            <div class="demo-pdf-line" style="width:85%"></div>
+            <div class="demo-pdf-line demo-anim-text-select" style="width:85%;position:relative">
+              <span class="demo-text-selection"></span>
+            </div>
             <div class="demo-pdf-line" style="width:90%"></div>
             <div class="demo-pdf-line" style="width:60%"></div>
             <div class="demo-pdf-line demo-pdf-line--h" style="margin-top:.6rem;width:45%"></div>
@@ -3617,6 +3827,22 @@ if (noPrefBtn) {
             <div class="demo-pdf-line" style="width:78%"></div>
             <div class="demo-pdf-line" style="width:93%"></div>
             <div class="demo-pdf-line" style="width:65%"></div>
+
+            {# ── mini assign popup that appears next to the selected text ── #}
+            <div class="demo-assign-popup demo-anim-assign-popup">
+              <div class="demo-assign-popup-seltext">"Tumordicke 2,3 mm…"</div>
+              <div class="demo-assign-popup-search">
+                <span class="demo-assign-popup-search-icon">⌕</span>
+                <span class="demo-assign-popup-search-placeholder">Suche…</span>
+              </div>
+              <div class="demo-assign-popup-list">
+                <div class="demo-assign-popup-item">Lokalisation</div>
+                <div class="demo-assign-popup-item demo-anim-assign-pick">Tumordicke</div>
+                <div class="demo-assign-popup-item">Ulzeration</div>
+              </div>
+            </div>
+            {# ── second cursor for the manual-highlight phase ── #}
+            <div class="demo-cursor demo-cursor--select"></div>
           </div>
         </div>
         <div class="demo-widget-pane" style="pointer-events:none;align-items:center;text-align:center">
@@ -3715,9 +3941,11 @@ if (noPrefBtn) {
         <div class="demo-cursor demo-cursor--tree"></div>
       </div>
 
-      {# ── 3. Falseinfo (checkbox + traffic lights) ── #}
+      {# ── 3. Falseinfo (highlight click + checkbox + traffic lights) ── #}
       {% elif step.key == 'summary_falseinfo' %}
-      <p class="demo-modal-desc">Markieren Sie fehlerhafte Informationen per <strong>Checkbox</strong>. Bewerten Sie dann <strong>Schwere</strong> und <strong>Wahrscheinlichkeit</strong> über die Ampelsymbole.</p>
+      <p class="demo-modal-desc">
+        Verdächtige Inhalte sind im Text bereits <strong>gelb hervorgehoben</strong>. Bewegen Sie die Maus über eine Stelle, um die zugehörigen <strong>Falldaten</strong> einzublenden, und <strong>klicken</strong> Sie sie an, um sie als <strong>fehlerhaft</strong> (rot) zu markieren — die passende Karte rechts wird dabei automatisch angehakt. Bewerten Sie anschließend <strong>Schwere</strong> und <strong>Wahrscheinlichkeit</strong> über die Ampelsymbole.
+      </p>
       <div class="demo-stage demo-stage--textwidget">
         <div class="demo-text-pane">
           <div class="demo-text-bar">
@@ -3725,15 +3953,27 @@ if (noPrefBtn) {
             <span class="demo-tab demo-tab--active">Version A</span>
             <span class="demo-tab">Version B</span>
           </div>
-          <div class="demo-text-body">
+          <div class="demo-text-body" style="position:relative">
             <div class="demo-pdf-line demo-pdf-line--h" style="width:50%"></div>
             <div class="demo-pdf-line" style="width:92%"></div>
-            <div class="demo-pdf-line" style="width:85%"></div>
+            {# pre-highlighted line that animates yellow → red on click #}
+            <div class="demo-pdf-line" style="width:85%;position:relative">
+              <span class="demo-fi-highlight demo-anim-fi-highlight"></span>
+            </div>
             <div class="demo-pdf-line" style="width:90%"></div>
             <div class="demo-pdf-line" style="width:60%"></div>
             <div class="demo-pdf-line demo-pdf-line--h" style="margin-top:.6rem;width:45%"></div>
             <div class="demo-pdf-line" style="width:88%"></div>
             <div class="demo-pdf-line" style="width:78%"></div>
+
+            {# ground-truth tooltip that appears on hover, before the click #}
+            <div class="demo-fi-tooltip demo-anim-fi-tooltip">
+              <div class="demo-fi-tooltip-label">Dashboard:</div>
+              <div class="demo-fi-tooltip-excerpt">21.02.2024 · Tumordicke: 4,8 mm</div>
+            </div>
+
+            {# cursor that hovers, then clicks the highlight #}
+            <div class="demo-cursor demo-cursor--fihl"></div>
           </div>
         </div>
         <div class="demo-widget-pane" style="pointer-events:none">
@@ -3767,7 +4007,6 @@ if (noPrefBtn) {
             </div>
           </div>
         </div>
-        <div class="demo-cursor demo-cursor--falseinfo"></div>
       </div>
 
       {# ── 3b. Missinginfo (checkbox + traffic lights) ── #}
@@ -4252,7 +4491,7 @@ function initRelCursorAnim(stage) {
   var p1 = pos('.rel-group:first-child .rel-cat-btn--yes');
   var p2 = pos('#demo-grp2 .rel-item:nth-child(1) .rel-btn--no');
   var p3 = pos('#demo-grp2 .rel-item:nth-child(2) .rel-btn--no');
-  var p4 = pos('#demo-grp2 .rel-cat-btn--no');
+  var p4 = pos('#demo-grp2 .rel-cat-btn--yes');
 
   _demoCursorAnim = cursor.animate([
     kf(p1.x, p1.y, 1,   0.00, 'linear'),
@@ -4277,21 +4516,28 @@ function initRelCursorAnim(stage) {
 
 /* ── 2-6, 8-10. Text+Widget demos ── */
 function initTextWidgetCursor(stage) {
-  var cursor = stage.querySelector('.demo-cursor');
-  if (!cursor) return;
+  /* A stage may contain multiple cursors (e.g. summary_integrity has both a
+     text-side cursor that highlights and clicks the assign-popup AND a
+     tree-side cursor that clicks nodes directly). Pick each by its specific
+     modifier class so every cursor gets its own animation. */
+  var cursors = stage.querySelectorAll('.demo-cursor');
+  if (!cursors.length) return;
   var pos = _demoPos.bind(null, stage);
   var kf = _demoKf;
-  var cls = cursor.className;
 
-  if (cls.indexOf('demo-cursor--tree') !== -1)         return initTreeCursor(stage, cursor, pos, kf);
-  if (cls.indexOf('demo-cursor--falseinfo') !== -1)    return initFalseCursor(stage, cursor, pos, kf);
-  if (cls.indexOf('demo-cursor--vas') !== -1)          return initVasCursor(stage, cursor, pos, kf);
-  if (cls.indexOf('demo-cursor--likert') !== -1)       return initLikertCursor(stage, cursor, pos, kf);
-  if (cls.indexOf('demo-cursor--postedit') !== -1)     return initPeCursor(stage, cursor, pos, kf);
-  if (cls.indexOf('demo-cursor--origin') !== -1)       return initOriginCursor(stage, cursor, pos, kf);
-  if (cls.indexOf('demo-cursor--focus') !== -1)        return initFocusCursor(stage, cursor, pos, kf);
-  if (cls.indexOf('demo-cursor--traffic') !== -1)      return initTrafficCursor(stage, cursor, pos, kf);
-  if (cls.indexOf('demo-cursor--lens') !== -1)         return initLensCursor(stage, cursor, pos, kf);
+  cursors.forEach(function (cursor) {
+    var cls = cursor.className;
+    if (cls.indexOf('demo-cursor--tree') !== -1)         return initTreeCursor(stage, cursor, pos, kf);
+    if (cls.indexOf('demo-cursor--falseinfo') !== -1)    return initFalseCursor(stage, cursor, pos, kf);
+    if (cls.indexOf('demo-cursor--vas') !== -1)          return initVasCursor(stage, cursor, pos, kf);
+    if (cls.indexOf('demo-cursor--likert') !== -1)       return initLikertCursor(stage, cursor, pos, kf);
+    if (cls.indexOf('demo-cursor--postedit') !== -1)     return initPeCursor(stage, cursor, pos, kf);
+    if (cls.indexOf('demo-cursor--origin') !== -1)       return initOriginCursor(stage, cursor, pos, kf);
+    if (cls.indexOf('demo-cursor--focus') !== -1)        return initFocusCursor(stage, cursor, pos, kf);
+    if (cls.indexOf('demo-cursor--traffic') !== -1)      return initTrafficCursor(stage, cursor, pos, kf);
+    if (cls.indexOf('demo-cursor--lens') !== -1)         return initLensCursor(stage, cursor, pos, kf);
+    /* demo-cursor--select uses pure-CSS animation; nothing to do here. */
+  });
 }
 
 /* ── 2. Tree ── */

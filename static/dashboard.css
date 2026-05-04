@@ -89,9 +89,54 @@
 }
 .back-link:hover { text-decoration: underline; }
 
+.btn-back-eval {
+  margin-left: auto;
+  margin-bottom: .35rem;
+  padding: .7rem 1.4rem;
+  background: #1a4f8a;
+  color: #fff;
+  border: 1.5px solid #1a4f8a;   /* match .dash-tab-protocol border so heights align */
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.05rem;
+  line-height: 1;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  transition: background .15s;
+}
+.btn-back-eval:hover { background: #143d6b; text-decoration: none; }
+
+/* TK-Protokoll button — same look as .btn-protocol elsewhere, sized like .btn-back-eval */
+.dash-tab-protocol {
+  margin-left: auto;          /* push this + following back-button to the right */
+  margin-bottom: .35rem;
+  padding: .7rem 1.4rem;
+  background: #fff;
+  color: #1a4f8a;
+  border: 1.5px solid #1a4f8a;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 1.05rem;
+  line-height: 1;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  transition: background .15s, color .15s;
+}
+.dash-tab-protocol:hover { background: #1a4f8a; color: #fff; }
+.dash-tab-protocol img { display: block; flex-shrink: 0; }
+
+/* When the back button follows, it should no longer claim the auto margin */
+.dash-tab-protocol + .btn-back-eval { margin-left: 0; }
+
 /* ── Tabs ──────────────────────────────────────────────────────────────── */
 .dash-tabs {
   display: flex;
+  align-items: center;
   gap: .4rem;
   border-bottom: 2px solid #ddd;
   margin-bottom: 1.2rem;
@@ -768,9 +813,9 @@
 .bmap-diagnosis-info {
   margin-top: .5rem;
   padding: .45rem .5rem;
-  background: #f7f9fc;
+  background: transparent;
   border-radius: 6px;
-  border: 1px solid #e8edf2;
+  border: none;
 }
 .bmap-dx-table {
   width: 100%;
@@ -1598,3 +1643,402 @@
     min-width: 0;
   }
 }
+
+/* -------------------------------------------------------------------------- */
+/*  Relevanz rating rail (Option A prototype)                                */
+/* -------------------------------------------------------------------------- */
+:root { --rail-w: 380px; }
+
+.dash-with-rail { /* rail overlays content; no push */ }
+
+/* Floating toggle button (always visible) */
+.rail-toggle {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 950;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+  padding: .9rem .9rem;
+  width: 84px;
+  background: #1a4f8a;
+  color: #fff;
+  border: none;
+  border-radius: 10px 0 0 10px;
+  box-shadow: -2px 2px 8px rgba(0,0,0,.18);
+  font: 600 .8rem/1 system-ui, sans-serif;
+  cursor: pointer;
+  transition: right .25s ease, background .15s;
+}
+.rail-toggle:hover { background: #143d6b; }
+body.has-rail-open .rail-toggle { right: var(--rail-w); }
+.rating-rail.is-open { box-shadow: -8px 0 24px rgba(0,0,0,.18); }
+.rail-toggle-icon { font-size: 1.15rem; line-height: 1; }
+.rail-toggle-label { letter-spacing: .04em; font-size: .8rem; text-align: center; }
+.rail-toggle-badge {
+  background: rgba(255,255,255,.18);
+  padding: .18rem .6rem;
+  border-radius: 999px;
+  font-size: .78rem;
+  font-weight: 700;
+  min-width: 2.6em;
+  text-align: center;
+}
+.rail-toggle-badge.is-complete { background: #2e7d32; }
+
+/* The rail itself */
+.rating-rail {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: var(--rail-w);
+  max-width: 92vw;
+  background: #fff;
+  border-left: 1px solid #d8dee6;
+  box-shadow: -4px 0 12px rgba(0,0,0,.08);
+  display: flex;
+  flex-direction: column;
+  z-index: 940;
+  transform: translateX(100%);
+  transition: transform .25s ease;
+}
+.rating-rail.is-open { transform: translateX(0); }
+
+.rail-header {
+  padding: 1rem 1.1rem .8rem;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f8fafc;
+}
+.rail-header-row { display: flex; align-items: center; justify-content: space-between; }
+.rail-title { margin: 0; font-size: 1.05rem; color: #1a4f8a; }
+.rail-close {
+  background: none; border: none; font-size: 1.5rem; line-height: 1;
+  color: #6b7280; cursor: pointer; padding: 0 .25rem;
+}
+.rail-close:hover { color: #1a4f8a; }
+.rail-sub { margin: .35rem 0 .6rem; font-size: .78rem; color: #4b5563; }
+.rail-prog-row {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: .78rem; color: #374151; margin-bottom: .35rem;
+}
+.rail-save-status { font-size: .72rem; min-height: 1em; }
+.rail-save-status.is-ok { color: #2e7d32; }
+.rail-save-status.is-err { color: #c1352c; }
+.rail-prog-track { height: 6px; background: #e5e7eb; border-radius: 999px; overflow: hidden; }
+.rail-prog-fill { height: 100%; background: #1a4f8a; transition: width .2s ease; }
+
+.rail-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: .5rem .6rem 1rem;
+}
+
+.rail-cat {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: .55rem;
+  background: #fff;
+}
+.rail-cat[open] { box-shadow: 0 1px 2px rgba(0,0,0,.04); }
+.rail-cat-hdr {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  padding: .55rem .7rem;
+  cursor: pointer;
+  list-style: none;
+  font-size: .88rem;
+  font-weight: 600;
+  color: #1f2937;
+  user-select: none;
+}
+.rail-cat-hdr::-webkit-details-marker { display: none; }
+.rail-cat-chev { transition: transform .15s; flex-shrink: 0; color: #6b7280; }
+.rail-cat:not([open]) .rail-cat-chev { transform: rotate(-90deg); }
+.rail-cat-name { flex: 1; }
+.rail-cat-count {
+  font-size: .72rem;
+  font-weight: 700;
+  color: #6b7280;
+  background: #f3f4f6;
+  padding: .12rem .45rem;
+  border-radius: 999px;
+}
+.rail-cat-count.is-complete { background: #d1fae5; color: #065f46; }
+
+.rail-cat-bulk {
+  display: inline-flex;
+  gap: .25rem;
+  margin-left: .25rem;
+}
+.rail-cat-bulk-btn {
+  appearance: none;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #4b5563;
+  font-size: .7rem;
+  font-weight: 700;
+  padding: .18rem .45rem;
+  border-radius: 999px;
+  cursor: pointer;
+  line-height: 1;
+  transition: background .12s, color .12s, border-color .12s;
+}
+.rail-cat-bulk-btn:hover { background: #f3f4f6; }
+.rail-cat-bulk-btn--no  { background: #fde2e1; color: #c1352c; border-color: #f5b7b3; }
+.rail-cat-bulk-btn--no:hover  { background: #fbcdcb; color: #8a1d16; border-color: #e98a82; }
+.rail-cat-bulk-btn--yes { background: #d1fae5; color: #065f46; border-color: #9be3bd; }
+.rail-cat-bulk-btn--yes:hover { background: #a7f0ce; color: #064e3b; border-color: #6dcfa0; }
+
+.rail-cat-body { padding: .15rem .45rem .5rem; }
+
+.rail-row {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .35rem .35rem;
+  border-radius: 6px;
+}
+.rail-row + .rail-row { border-top: 1px dashed #f1f3f6; }
+.rail-row:hover { background: #f9fafb; }
+.rail-row-label {
+  flex: 1;
+  font-size: .82rem;
+  color: #1f2937;
+  line-height: 1.3;
+}
+.rail-row-toggle {
+  display: inline-flex;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.rail-tg {
+  appearance: none;
+  background: #fff;
+  border: none;
+  width: 28px;
+  height: 26px;
+  font-size: .82rem;
+  font-weight: 700;
+  cursor: pointer;
+  color: #6b7280;
+  transition: background .12s, color .12s;
+}
+.rail-tg + .rail-tg { border-left: 1px solid #d1d5db; }
+.rail-tg:hover { background: #f3f4f6; }
+.rail-tg--no.is-active   { background: #fde2e1; color: #c1352c; }
+.rail-tg--yes.is-active  { background: #d1fae5; color: #065f46; }
+.rail-tg--clear.is-active{ background: #e5e7eb; color: #1f2937; }
+
+.rail-footer {
+  padding: .8rem 1.1rem 1rem;
+  border-top: 1px solid #e5e7eb;
+  background: #f8fafc;
+}
+.rail-footer-btn {
+  display: block;
+  text-align: center;
+  padding: .65rem 1rem;
+  background: #1a4f8a;
+  color: #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: .92rem;
+}
+.rail-footer-btn:hover { background: #143d6b; text-decoration: none; }
+
+/* Narrow screens: shrink the rail */
+@media (max-width: 600px) {
+  :root { --rail-w: 92vw; }
+}
+
+/* ── Locked continue button + pulse warning on rail toggle ─────────────── */
+.btn-continue.is-locked {
+  background: #c9d2dc;
+  color: #f3f4f6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.btn-continue.is-locked:hover { background: #c9d2dc; }
+.dash-continue-hint {
+  margin: .55rem 0 0;
+  font-size: .85rem;
+  color: #c1352c;
+  text-align: center;
+}
+
+@keyframes railPulseWarn {
+  0%, 100% {
+    background: #1a4f8a;
+    box-shadow: -2px 2px 8px rgba(0,0,0,.18);
+    transform: translateY(-50%) scale(1);
+  }
+  20%, 60% {
+    background: #c1352c;
+    box-shadow: -2px 2px 18px rgba(193,53,44,.7), 0 0 0 6px rgba(193,53,44,.25);
+    transform: translateY(-50%) scale(1.08);
+  }
+  40%, 80% {
+    background: #c1352c;
+    box-shadow: -2px 2px 8px rgba(193,53,44,.4);
+    transform: translateY(-50%) scale(1);
+  }
+}
+.rail-toggle.pulse-warn {
+  animation: railPulseWarn 1.8s ease-in-out;
+}
+
+/* Whole-rail attention glow when user tries to continue without all ratings.
+   Glow only on the outer (top/left/bottom) edges — the right edge sits at
+   the viewport edge and the left edge faces the dashboard content. */
+@keyframes railGlowWarn {
+  0%, 100% { box-shadow: -4px 0 12px rgba(0,0,0,.08); }
+  20%, 60% { box-shadow: -8px 0 28px 8px rgba(245,158,11,.7), -3px 0 0 0 rgba(245,158,11,.55); }
+  40%, 80% { box-shadow: -6px 0 16px 2px rgba(245,158,11,.5), -2px 0 0 0 rgba(245,158,11,.4); }
+}
+.rating-rail.glow-warn {
+  animation: railGlowWarn 2.8s ease-in-out;
+  clip-path: inset(-60px 0 -60px -60px);
+}
+
+/* Mirror the amber glow on the toggle handle (outer halo only).
+   Glow only on the outer (top/left/bottom) edges — the right edge of the
+   handle abuts the rail (when open) or the viewport edge (when closed). */
+@keyframes railToggleGlowWarn {
+  0%, 100% { box-shadow: -2px 2px 8px rgba(0,0,0,.18); }
+  20%, 60% { box-shadow: -6px 0 24px 6px rgba(245,158,11,.7), -3px 0 0 0 rgba(245,158,11,.55); }
+  40%, 80% { box-shadow: -4px 0 14px 2px rgba(245,158,11,.5), -2px 0 0 0 rgba(245,158,11,.4); }
+}
+.rail-toggle.glow-warn {
+  animation: railToggleGlowWarn 2.8s ease-in-out;
+  clip-path: inset(-60px 0 -60px -60px);
+}
+
+/* ── First-visit intro modal ───────────────────────────────────────────── */
+.rel-intro-card {
+  max-width: 540px;
+  width: 92vw;
+  max-height: 88vh;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+.rel-intro-header {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  padding: 1.1rem 1.4rem;
+  background: linear-gradient(135deg, #1a4f8a 0%, #2563a8 100%);
+  color: #fff;
+}
+.rel-intro-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.18);
+  flex-shrink: 0;
+}
+.rel-intro-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: .01em;
+  color: #fff;
+}
+
+.rel-intro-body {
+  padding: 1.1rem 1.4rem .4rem;
+  overflow-y: auto;
+}
+.rel-intro-lead {
+  margin: 0 0 1rem;
+  font-size: .95rem;
+  line-height: 1.5;
+  color: #1f2937;
+}
+
+.rel-intro-steps {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .7rem;
+}
+.rel-intro-steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: .7rem;
+  margin: 0;
+  padding: .6rem .75rem;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+}
+.rel-intro-step-num {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: #1a4f8a;
+  color: #fff;
+  font-weight: 700;
+  font-size: .82rem;
+  line-height: 1;
+}
+.rel-intro-step-title {
+  font-weight: 600;
+  font-size: .92rem;
+  color: #1f2937;
+  line-height: 1.3;
+  margin-bottom: .15rem;
+}
+.rel-intro-step-text {
+  font-size: .86rem;
+  line-height: 1.45;
+  color: #4b5563;
+}
+
+.rel-intro-pill {
+  display: inline-block;
+  padding: .08rem .55rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: .82em;
+  white-space: nowrap;
+  vertical-align: baseline;
+}
+.rel-intro-pill--no  { background: #fde2e1; color: #c1352c; }
+.rel-intro-pill--yes { background: #d1fae5; color: #065f46; }
+
+.rel-intro-note {
+  margin: 0 0 1rem;
+  padding: .55rem .8rem;
+  background: #fff7ed;
+  border-left: 3px solid #f59e0b;
+  border-radius: 0 6px 6px 0;
+  font-size: .85rem;
+  line-height: 1.45;
+  color: #7c2d12;
+}
+
+.rel-intro-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: .9rem 1.4rem 1.1rem;
+  border-top: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+.rel-intro-cta { font-size: .95rem; padding: .65rem 1.3rem; }

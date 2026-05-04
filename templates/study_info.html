@@ -28,8 +28,11 @@
 
       <h3>Bewertungskriterien</h3>
       <p>
-        Für jeden Fall bewerten Sie die zugehörigen Texte anhand mehrerer Dimensionen, darunter:
+        Für jeden Fall bewerten Sie die zugehörigen Texte anhand mehrerer Dimensionen,
+        gruppiert nach Bewertungsblock:
       </p>
+
+      <p style="margin-bottom:.25rem;"><strong>Zusammenfassung</strong></p>
       <ul>
         <li><strong>Relevanz</strong> – Klinische Relevanz der enthaltenen Informationen</li>
         <li><strong>Informationsgehalt</strong> – Vollständigkeit der enthaltenen Informationskategorien</li>
@@ -37,11 +40,19 @@
         <li><strong>Korrektheit</strong> – Medizinische Richtigkeit der Inhalte</li>
         <li><strong>Vollständigkeit</strong> – Abdeckung aller klinisch relevanten Informationen</li>
         <li><strong>Prägnanz</strong> – Angemessene Kürze und Fokussierung</li>
+      </ul>
+
+      <p style="margin-bottom:.25rem;"><strong>Fragestellung</strong></p>
+      <ul>
         <li><strong>Fokus</strong> – Klarheit und Präzision der formulierten Fragestellung</li>
         <li><strong>Leitlinienkonformität</strong> – Übereinstimmung der Fragestellung mit medizinischen Leitlinienempfehlungen</li>
         <li><strong>Fallspezifität</strong> – Bezug der Fragestellung auf die individuelle Patientensituation</li>
+      </ul>
+
+      <p style="margin-bottom:.25rem;"><strong>Für beide Blöcke</strong></p>
+      <ul>
         <li><strong>Bearbeitungsaufwand</strong> – Geschätzter Aufwand zur Überarbeitung für den klinischen Einsatz</li>
-        <li><strong>Ursprung</strong> – Einschätzung, ob der Text von einem Menschen oder einer KI verfasst wurde</li>
+        <li><strong>Ursprung</strong> – Einschätzung, ob der jeweilige Text von einem Menschen oder einer KI verfasst wurde</li>
         <li><strong>Präferenz</strong> – Vergleichende Bewertung beider Versionen</li>
       </ul>
 
@@ -50,41 +61,44 @@
         Jeder Fall gliedert sich in drei Bewertungsblöcke:
       </p>
       <ol style="padding-left: 2rem;">
-        <li><strong>Zusammenfassung</strong> – Bewertung der Fallzusammenfassung (Relevanz, Informationsgehalt, Falschinformationen, Korrektheit, Vollständigkeit, Prägnanz, Bearbeitungsaufwand, Ursprung, Präferenz)</li>
-        <li><strong>Fragestellung</strong> – Bewertung der Fragestellung für die Tumorkonferenz (Fokus, Leitlinienkonformität, Fallspezifität, Bearbeitungsaufwand, Ursprung, Präferenz)</li>
+        <li><strong>Zusammenfassung</strong> – Bewertung der Fallzusammenfassung (Relevanz, Informationsgehalt, Falschinformationen, Korrektheit, Vollständigkeit, Prägnanz, Bearbeitungsaufwand, Ursprung [Mensch oder KI?], Präferenz)</li>
+        <li><strong>Fragestellung</strong> – Bewertung der Fragestellung für die Tumorkonferenz (Fokus, Leitlinienkonformität, Fallspezifität, Bearbeitungsaufwand, Ursprung [Mensch oder KI?], Präferenz)</li>
         <li><strong>Abschluss</strong> – Einschätzung der Fallkomplexität und optionaler Kommentar</li>
       </ol>
 
       <h3>Herkunft der Texte und Versionszuordnung</h3>
+      <div style="border-left:4px solid #1a4f8a; background:#f3f6fb; padding:.85rem 1rem; margin:.5rem 0 1rem; border-radius:4px;">
+        <p style="margin:0;">
+          <strong>Wichtiger Hinweis:</strong>
+          Die Zuordnung, welche Version als A oder B angezeigt wird, wird für jeden Fall und
+          jeden Block (Zusammenfassung / Fragestellung) <strong>zufällig und unabhängig</strong> festgelegt.
+          Das bedeutet, dass sich die Zuordnung zwischen Blöcken und zwischen Fällen ändern kann.
+          Während der Bewertung ist Ihnen nicht bekannt, welche Version von welchem Urheber stammt.
+        </p>
+      </div>
       <p>
         Für jeden Fall existieren zwei Versionen der Zusammenfassung und der Fragestellung:
         Eine Version wurde von einem Arzt bzw. einer Ärztin erstellt, die andere von einem
         KI-Sprachmodell (LLM) generiert. Die Versionen werden als <strong>Version&nbsp;A</strong>
         und <strong>Version&nbsp;B</strong> bezeichnet.
       </p>
+
+      <h3>Patientenakte / Dashboard</h3>
       <p>
-        Die Zuordnung, welche Version als A oder B angezeigt wird, wird für jeden Fall und
-        jeden Block (Zusammenfassung / Fragestellung) <strong>zufällig und unabhängig</strong> festgelegt.
-        Das bedeutet, dass sich die Zuordnung zwischen Blöcken und zwischen Fällen ändern kann.
-        Während der Bewertung ist Ihnen nicht bekannt, welche Version von welchem Urheber stammt.
+        Über die Schaltfläche <strong>Patientenakte</strong> im oberen Bereich der Bewertungsseite
+        steht Ihnen eine strukturierte Dashboard-Ansicht des Falls zur Verfügung. Dort sind die
+        wichtigsten Patientendaten — wie Diagnose, Tumorstadium, Verlauf, Bildgebung, Labor und
+        aktuelle Therapie — übersichtlich aufbereitet.
+        Die Patientenakte ist die <strong>maßgebliche Referenz</strong>, um die zu bewertenden Texte
+        auf Korrektheit, Vollständigkeit und Relevanz zu überprüfen.
       </p>
 
       <h3>TK-Protokoll</h3>
       <p>
-        Über die Schaltfläche <strong>TK-Protokoll</strong> im oberen Bereich der Bewertungsseite
-        können Sie jederzeit das originale Tumorkonferenz-Protokoll (PDF) zum aktuellen Fall einsehen.
-        Dieses dient als Referenzdokument, um die zu bewertenden Texte mit der Originalquelle
-        abgleichen zu können.
-      </p>
-
-      <h3>Patientenakte / Dashboard</h3>
-      <p>
-        Zusätzlich zum TK-Protokoll steht Ihnen über die Schaltfläche <strong>Patientenakte</strong>
-        eine strukturierte Dashboard-Ansicht des Falls zur Verfügung. Dort sind die wichtigsten
-        Patientendaten — wie Diagnose, Tumorstadium, Verlauf, Bildgebung, Labor und aktuelle Therapie —
-        übersichtlich aufbereitet. Sie können das Dashboard nutzen, um einzelne Angaben in den zu
-        bewertenden Texten gezielt mit den Originaldaten des Falls abzugleichen und so die
-        Korrektheit und Vollständigkeit der Texte zu überprüfen.
+        Über die Schaltfläche <strong>TK-Protokoll</strong> können Sie zusätzlich das originale
+        Tumorkonferenz-Protokoll (PDF) zum aktuellen Fall einsehen. Es zeigt die ursprüngliche
+        Tumorboardanmeldung, die Grundlage der zu bewertenden Texte ist, und kann ergänzend zur
+        Einordnung herangezogen werden. Einige Sektionen wurden allerdings nachträglich geschwärzt. 
       </p>
 
       <h3>Interaktive Demo</h3>

@@ -2,7 +2,7 @@
   "name": "Molinnus",
   "dob": "26.02.1955",
   "age": 69,
-  "sex": "",
+  "sex": "M",
   "location": "45149 Essen",
   "pat_id": "23419879",
   "comorbidities": [
@@ -18,7 +18,7 @@
   "ulceration": "Ja",
   "mitoses": "",
   "histology": "Schleimhaut",
-  "resection_status": "R1",
+  "resection_status": "",
   "safety_margin": "",
   "slne": "",
   "initial_staging": {
