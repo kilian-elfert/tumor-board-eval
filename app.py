@@ -1,5 +1,5 @@
 from flask import (Flask, render_template, request, redirect, url_for,
-                   session, send_file)
+                   session, send_file, jsonify)
 import json, csv, io, os, random, threading, traceback
 import urllib.request
 from werkzeug.security import check_password_hash
@@ -32,6 +32,7 @@ TEXTS_HUMAN_DIR = os.path.join(BASE_DIR, 'texts_human')
 TEXTS_LLM_DIR   = os.path.join(BASE_DIR, 'texts_llm')
 EXPORTS_DIR     = os.path.join(BASE_DIR, 'exports')
 HIGHLIGHT_FILE  = os.path.join(BASE_DIR, 'highlight_mappings.json')
+ANNOTATIONS_DIR = os.path.join(BASE_DIR, 'annotations')
 DASHBOARD_DIR   = os.path.join(BASE_DIR, 'dashboard_data')
 
 # External data root (originals + imaging reports). Configured via .env:
@@ -95,8 +96,6 @@ def _send_notification_email(subject, body):
 # ── constants ────────────────────────────────────────────────────────────────
 
 INFO_ITEMS = [
-    "Demographie: Alter",
-    "Demographie: Geschlecht",
     "Allgemeinzustand: Komorbiditäten",
     "Allgemeinzustand: Funktioneller Zustand (e.g. ECOG, Karnofsky)",
     "Primärtumor: Datum der Erstdiagnose",
@@ -124,7 +123,6 @@ INFO_ITEMS = [
     "Krankheitsverlauf: Datum Erstdiagnose Fernmetastasen (i.e., Stadium IV)",
     "Aktuelle Befunde: Bildgebende Verfahren (e.g. CT, MRT, PET-CT, LK-Sono)",
     "Aktuelle Befunde: Laborwerte (e.g. S100, LDH, HLA-A2)",
-    "Aktueller Status: Krankheitsstatus (unverändert, progredient, regredient)",
     "Aktueller Status: Stadium der Erkrankung",
     "Aktueller Status: Metastasierung",
     "Aktueller Status: Lokalisation der Metastasierung",
@@ -142,21 +140,12 @@ INFO_ITEMS = [
 RATING_STEPS = [
     {
         "index": 1,
-        "key":   "summary_integrity",
-        "section": "Zusammenfassung",
-        "subtitle": "Informationsgehalt",
-        "has_tabs": True,
-        "section_type": "summary",
-        "alert": "Bitte beurteilen Sie für jede der folgenden Informationskategorien, ob die Information in dieser Version der Zusammenfassung enthalten ist.",
-    },
-    {
-        "index": 1,
         "key":   "summary_falseinfo",
         "section": "Zusammenfassung",
         "subtitle": "Falschinformationen",
         "has_tabs": True,
         "section_type": "summary",
-        "alert": "Wählen Sie alle Informationen aus, die in der Zusammenfassung enthalten, aber inhaltlich falsch oder irreführend sind. Bewerten Sie dann die möglichen Folgen und ihre Eintrittswahrscheinlichkeit.",
+        "alert": "Bewerten Sie für jede vom Annotator als inhaltlich falsch oder irreführend markierte Information die möglichen Folgen und ihre Eintrittswahrscheinlichkeit.",
     },
     {
         "index": 1,
@@ -165,7 +154,7 @@ RATING_STEPS = [
         "subtitle": "Fehlende Informationen",
         "has_tabs": True,
         "section_type": "summary",
-        "alert": "Wählen Sie alle Informationen aus, die als klinisch relevant eingestuft, aber in der Zusammenfassung nicht enthalten sind. Bewerten Sie dann die möglichen Folgen und ihre Eintrittswahrscheinlichkeit.",
+        "alert": "Bewerten Sie für jede klinisch relevante, in dieser Version aber fehlende Information die möglichen Folgen und ihre Eintrittswahrscheinlichkeit.",
     },
     {
         "index": 2,
@@ -279,12 +268,11 @@ RATING_STEPS = [
         "subtitle": "Fokus",
         "has_tabs": True,
         "section_type": "problem",
-        "alert": "Bitte geben Sie den aktuellen Krankheitsstatus an und wählen Sie die in der Fragestellung vorgeschlagenen Diskussionsschwerpunkte.",
-        "status_options": ["Unverändert", "Progredient", "Remission"],
+        "alert": "Wählen Sie die in der Fragestellung vorgeschlagenen Diskussionsschwerpunkte.",
         "topic_options": [
             "Weitere Diagnostik",
             "Therapie (Beginn, Auswahl, Modifikation)",
-            "Verlaufskontrolle",
+            "Nachsorge",
             "Organisatorische Fragen",
             "Keine Spezifizierung"
         ],
@@ -293,11 +281,16 @@ RATING_STEPS = [
         "index": 9,
         "key":   "problem_correctness",
         "section": "Fragestellung",
-        "subtitle": "Leitlinienkonformität",
+        "subtitle": "Nachvollziehbarkeit",
         "has_tabs": True,
         "section_type": "problem",
-        "alert": "Vergleichen Sie die Empfehlung in der Fragestellung mit der S3-Leitlinie für die Melanomtherapie.",
-        "options": ["Konkordant", "Korrekte Alternative", "Inkorrekte Empfehlung"],
+        "alert": "Beurteilen Sie die medizinische Nachvollziehbarkeit der Empfehlung in der Fragestellung.",
+        "options": [
+            "Entspricht dem aktuellen Therapiestandard (i.e., \"best-practice\")",
+            "Entspricht nicht dem aktuellen Therapiestandard (i.e., \"not best-practice\"), ist aber medizinisch nachvollziehbar",
+            "Medizinisch nicht nachvollziehbar",
+            "Nicht spezifisch genug für eine Beurteilung",
+        ],
     },
     {
         "index": 10,
@@ -306,8 +299,8 @@ RATING_STEPS = [
         "subtitle": "Fallspezifität",
         "has_tabs": True,
         "section_type": "problem",
-        "alert": "Beurteilen Sie den Grad der Spezifität der Fragestellung für die Tumorkonferenz.",
-        "options": ["Zu generisch", "Optimal", "Zu spezifisch"],
+        "alert": "Beurteilen Sie, ob die Fragestellung alle relevanten Aspekte des Falls berücksichtigt.",
+        "options": ["Trifft zu", "Trifft teilweise zu", "Trifft nicht zu"],
     },
     {
         "index": 11,
@@ -360,7 +353,7 @@ PROBLEM_FOCUS_STATUS_OPTIONS = ["Unverändert", "Progredient", "Remission"]
 PROBLEM_FOCUS_TOPIC_OPTIONS  = [
     "Weitere Diagnostik",
     "Therapie (Beginn, Auswahl, Modifikation)",
-    "Verlaufskontrolle",
+    "Nachsorge",
     "Organisatorische Fragen",
     "Keine Spezifizierung",
 ]
@@ -386,17 +379,109 @@ def _bold_headers(text):
 
 
 def _load_highlight_mappings():
-    """Load pre-generated highlight mappings (slug → [excerpt, …])."""
+    """Load pre-generated highlight mappings (slug → [excerpt, …]).
+
+    If a researcher annotation file exists at ``annotations/<case_id>.json``,
+    its span data overrides the LLM-generated mapping for that case.
+    """
     if os.path.exists(HIGHLIGHT_FILE):
         with open(HIGHLIGHT_FILE, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    return {}
+            base = json.load(f)
+    else:
+        base = {}
+
+    # Overlay researcher annotations
+    if os.path.isdir(ANNOTATIONS_DIR):
+        for fn in os.listdir(ANNOTATIONS_DIR):
+            if not fn.endswith('.json'):
+                continue
+            case_id = fn[:-5]
+            try:
+                with open(os.path.join(ANNOTATIONS_DIR, fn), 'r', encoding='utf-8') as f:
+                    ann = json.load(f)
+            except Exception:
+                continue
+            case_block = base.setdefault(case_id, {})
+            for text_key, payload in (ann.get('texts') or {}).items():
+                target = case_block.setdefault(text_key, {})
+                for slug, item in (payload.get('items') or {}).items():
+                    spans = item.get('spans') or []
+                    if spans:
+                        target[slug] = list(spans)
+    return base
 
 
-def _annotate_highlights(raw_text, mapping):
+def _annotation_path(case_id):
+    return os.path.join(ANNOTATIONS_DIR, f'{case_id}.json')
+
+
+def _seed_annotation_from_llm(case_id):
+    """Build a fresh annotation skeleton pre-populated with the LLM's
+    highlight suggestions (status='enthalten' for every span the LLM picked).
+
+    Annotator can then accept (keep), reject (switch to falsch), remove, or add
+    further spans. ``seeded_from_llm`` prevents re-seeding on later loads.
+    """
+    # Map annotator text keys → keys used in highlight_mappings.json
+    src_for = {
+        'human_summary': 'human_summary',
+        'llm_summary':   'llm_summary',
+    }
+    skeleton = {
+        'schema_version': 1,
+        'case_id': case_id,
+        'annotator': None,
+        'updated_at': None,
+        'seeded_from_llm': True,
+        'texts': {tk: {'items': {}} for tk in src_for},
+    }
+    if not os.path.exists(HIGHLIGHT_FILE):
+        return skeleton
+    try:
+        with open(HIGHLIGHT_FILE, 'r', encoding='utf-8') as f:
+            hl = json.load(f)
+    except Exception:
+        return skeleton
+    case_hl = hl.get(case_id) or {}
+    for tk, src_key in src_for.items():
+        seeded = case_hl.get(src_key) or {}
+        items = skeleton['texts'][tk]['items']
+        for slug, spans in seeded.items():
+            spans = [s for s in (spans or []) if s]
+            if spans:
+                items[slug] = {'status': 'enthalten', 'spans': spans,
+                               'origin': 'llm_seed'}
+    return skeleton
+
+
+def _load_annotation(case_id):
+    """Load a researcher annotation, seeding from LLM highlights on first load."""
+    p = _annotation_path(case_id)
+    if os.path.exists(p):
+        try:
+            with open(p, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return _seed_annotation_from_llm(case_id)
+
+
+def _save_annotation(case_id, data, username=None):
+    os.makedirs(ANNOTATIONS_DIR, exist_ok=True)
+    data['case_id'] = case_id
+    data['schema_version'] = data.get('schema_version', 1)
+    data['updated_at'] = datetime.utcnow().isoformat()
+    if username:
+        data['annotator'] = username
+    with open(_annotation_path(case_id), 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+
+def _annotate_highlights(raw_text, mapping, extra_class=''):
     """Apply _bold_headers then wrap mapped excerpts in <span> elements.
 
     *mapping* is {slug: [excerpt, …]} where excerpts are from the raw text.
+    *extra_class* is appended to the span class list (e.g. ``hl-info--error``).
     Returns Markup.
     """
     if not raw_text or not mapping:
@@ -440,8 +525,9 @@ def _annotate_highlights(raw_text, mapping):
         if len(slugs) > 1:
             all_slugs = ','.join(slugs)
             slug_attr += f' data-hl-slugs="{all_slugs}"'
+        cls = 'hl-info' + (f' {extra_class}' if extra_class else '')
         parts.append(
-            f'<span class="hl-info" {slug_attr}>{escaped_excerpt}</span>'
+            f'<span class="{cls}" {slug_attr}>{escaped_excerpt}</span>'
         )
         # Add numbered footnote badges for every slug in an overlap
         if len(slugs) > 1:
@@ -704,6 +790,33 @@ def login_required(f):
     return decorated
 
 
+def _get_user_role(username):
+    users = load_json(USERS_FILE, {})
+    return (users.get(username) or {}).get('role') or 'evaluator'
+
+
+def annotator_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if 'username' not in session:
+            return redirect(url_for('login'))
+        if _get_user_role(session['username']) != 'annotator':
+            return redirect(url_for('evaluate_resume'))
+        return f(*args, **kwargs)
+    return decorated
+
+
+def admin_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if 'username' not in session:
+            return redirect(url_for('login'))
+        if _get_user_role(session['username']) != 'admin':
+            return ('Forbidden', 403)
+        return f(*args, **kwargs)
+    return decorated
+
+
 def _counterbalanced_assignments(case_ids):
     """Generate counterbalanced version assignments.
 
@@ -814,6 +927,8 @@ def find_resume_point(user_data):
 def index():
     if 'username' not in session:
         return redirect(url_for('login'))
+    if _get_user_role(session['username']) == 'annotator':
+        return redirect(url_for('annotate_index'))
     return redirect(url_for('evaluate_resume'))
 
 
@@ -826,6 +941,8 @@ def login():
         users = load_json(USERS_FILE, {})
         if username in users and check_password_hash(users[username]['password'], password):
             session['username'] = username
+            if (users[username].get('role') or 'evaluator') == 'annotator':
+                return redirect(url_for('annotate_index'))
             return redirect(url_for('evaluate_resume'))
         error = 'Benutzername oder Passwort ungültig.'
     return render_template('login.html', error=error)
@@ -1054,6 +1171,25 @@ def evaluate_step(case_id, step_idx, tab_idx):
                                             assign_sum, assign_prob, tab_idx)
         text_a = text_b = None
 
+    # Admin: determine origin (human/llm) of the currently shown text(s)
+    is_admin = _get_user_role(username) == 'admin'
+    text_origin = text_a_origin = text_b_origin = None
+    text_content_raw = text_a_raw = text_b_raw = None
+    if is_admin and step['section_type'] in ('summary', 'problem'):
+        assignment = assign_sum if step['section_type'] == 'summary' else assign_prob
+        if step['has_tabs']:
+            if tab_idx == 0:
+                text_origin = 'human' if assignment == 'human_first' else 'llm'
+            else:
+                text_origin = 'llm' if assignment == 'human_first' else 'human'
+            text_content_raw = text_content or ''
+        else:
+            if assignment == 'human_first':
+                text_a_origin, text_b_origin = 'human', 'llm'
+            else:
+                text_a_origin, text_b_origin = 'llm', 'human'
+            text_a_raw, text_b_raw = text_a or '', text_b or ''
+
     # Existing rating
     case_ratings = user_data.get('ratings', {}).get(case_id, {})
     key          = step['key']
@@ -1078,33 +1214,86 @@ def evaluate_step(case_id, step_idx, tab_idx):
             st = 'wait'
         step_statuses.append(st)
 
-    # Compute "enthalten" items for falseinfo step (from tab0 rating of integrity)
-    enthalten_items = []
+    # Derive item lists for consequences-only steps from researcher annotations.
+    # hl_version_key tells us which text version (human_summary / llm_summary)
+    # is currently shown in this tab; we look up the matching annotation slot.
+    enthalten_items = []  # legacy kwarg name, now holds the falsch items to rate
     hl_version_key = None
-    if key in ('summary_falseinfo', 'summary_integrity'):
-        # Determine which version (human/llm) is shown for highlight mappings
+    if key in ('summary_falseinfo', 'summary_missinginfo', 'summary_correctness', 'summary_completeness', 'summary_conciseness'):
         assign = assign_sum
         if tab_idx == 0:
             hl_version_key = 'human_summary' if assign == 'human_first' else 'llm_summary'
         else:
             hl_version_key = 'llm_summary' if assign == 'human_first' else 'human_summary'
-    if key == 'summary_falseinfo':
-        integrity_tab = case_ratings.get('summary_integrity_tab' + str(tab_idx), {})
-        for item in INFO_ITEMS:
-            slug = slugify(item)
-            if integrity_tab.get('enthalten_' + slug) == 'yes':
-                enthalten_items.append(item)
 
-    # Compute "missing" items for missinginfo step (relevant + nicht enthalten)
+    def _annotation_items_for(case_id_, text_key, target_status):
+        try:
+            ann = _load_annotation(case_id_) or {}
+        except Exception:
+            return set()
+        items = ((ann.get('texts') or {}).get(text_key) or {}).get('items') or {}
+        return {slug for slug, entry in items.items()
+                if (entry or {}).get('status') == target_status}
+
+    if key == 'summary_falseinfo' and hl_version_key:
+        try:
+            ann_for_order = _load_annotation(case_id) or {}
+        except Exception:
+            ann_for_order = {}
+        ann_items_for_order = ((ann_for_order.get('texts') or {}).get(hl_version_key) or {}).get('items') or {}
+        falsch_slugs = {slug for slug, entry in ann_items_for_order.items()
+                        if (entry or {}).get('status') == 'falsch'}
+
+        def _first_span_pos(slug):
+            entry = ann_items_for_order.get(slug) or {}
+            positions = []
+            for span in (entry.get('spans') or []):
+                if span and text_content:
+                    idx = text_content.find(span)
+                    if idx >= 0:
+                        positions.append(idx)
+            return min(positions) if positions else float('inf')
+
+        falsch_items_in_text_order = sorted(
+            (item for item in INFO_ITEMS if slugify(item) in falsch_slugs),
+            key=lambda it: (_first_span_pos(slugify(it)), INFO_ITEMS.index(it)),
+        )
+        enthalten_items.extend(falsch_items_in_text_order)
+
+    # Compute "false" items for the correctness step (display-only list).
+    false_items = []
+    if key == 'summary_correctness' and hl_version_key:
+        try:
+            ann_fc = _load_annotation(case_id) or {}
+        except Exception:
+            ann_fc = {}
+        ann_items_fc = ((ann_fc.get('texts') or {}).get(hl_version_key) or {}).get('items') or {}
+        falsch_slugs_fc = {slug for slug, entry in ann_items_fc.items()
+                           if (entry or {}).get('status') == 'falsch'}
+        for item in INFO_ITEMS:
+            if slugify(item) in falsch_slugs_fc:
+                false_items.append(item)
+
+    # Compute "missing" items: annotated as nicht_enthalten AND marked relevant
     missing_items = []
-    if key == 'summary_missinginfo':
+    if key in ('summary_missinginfo', 'summary_completeness') and hl_version_key:
         relevance = case_ratings.get('case_relevance', {})
-        integrity_tab = case_ratings.get('summary_integrity_tab' + str(tab_idx), {})
+        ne_slugs = _annotation_items_for(case_id, hl_version_key, 'nicht_enthalten')
         for item in INFO_ITEMS:
             slug = slugify(item)
-            if (relevance.get('relevant_' + slug) == 'yes'
-                    and integrity_tab.get('enthalten_' + slug) == 'no'):
+            if slug in ne_slugs and relevance.get('relevant_' + slug) == 'yes':
                 missing_items.append(item)
+
+    # Compute "irrelevant but present" items for the conciseness step
+    # (display-only list).
+    irrelevant_items = []
+    if key == 'summary_conciseness' and hl_version_key:
+        relevance = case_ratings.get('case_relevance', {})
+        enthalten_slugs = _annotation_items_for(case_id, hl_version_key, 'enthalten')
+        for item in INFO_ITEMS:
+            slug = slugify(item)
+            if slug in enthalten_slugs and relevance.get('relevant_' + slug) == 'no':
+                irrelevant_items.append(item)
 
     # Check if all prior steps are done (for final_overall gate)
     all_prior_done = all(
@@ -1166,13 +1355,24 @@ def evaluate_step(case_id, step_idx, tab_idx):
     # Apply highlight annotations for falseinfo / integrity steps
     protocol_excerpts = {}
     ground_truth_excerpts = {}
-    if key in ('summary_falseinfo', 'summary_integrity') and text_content and hl_version_key:
+    if key in ('summary_falseinfo', 'summary_correctness') and text_content and hl_version_key:
+        # Highlight the annotator-flagged falsch spans in red for both steps.
+        try:
+            ann = _load_annotation(case_id) or {}
+        except Exception:
+            ann = {}
+        ann_items = ((ann.get('texts') or {}).get(hl_version_key) or {}).get('items') or {}
+        falsch_mapping = {
+            slug: [s for s in (entry.get('spans') or []) if s]
+            for slug, entry in ann_items.items()
+            if (entry or {}).get('status') == 'falsch'
+        }
+        falsch_mapping = {k: v for k, v in falsch_mapping.items() if v}
+        rendered_text = _annotate_highlights(text_content, falsch_mapping,
+                                             extra_class='hl-info--error')
         hl_mappings = _load_highlight_mappings()
-        case_hl = hl_mappings.get(case_id, {}).get(hl_version_key, {})
-        rendered_text = _annotate_highlights(text_content, case_hl)
-        if key == 'summary_falseinfo':
-            protocol_excerpts = hl_mappings.get(case_id, {}).get('protocol', {})
-            ground_truth_excerpts = _build_ground_truth_excerpts(case_id, protocol_excerpts)
+        protocol_excerpts = hl_mappings.get(case_id, {}).get('protocol', {})
+        ground_truth_excerpts = _build_ground_truth_excerpts(case_id, protocol_excerpts)
     else:
         rendered_text = _bold_headers(text_content)
 
@@ -1195,12 +1395,21 @@ def evaluate_step(case_id, step_idx, tab_idx):
         info_items=INFO_ITEMS,
         enthalten_items=enthalten_items,
         missing_items=missing_items,
+        false_items=false_items,
+        irrelevant_items=irrelevant_items,
         protocol_excerpts=protocol_excerpts,
         ground_truth_excerpts=ground_truth_excerpts,
         slugify=slugify,
         rating_steps=RATING_STEPS,
         all_prior_done=all_prior_done,
         missing_step_names=missing_step_names,
+        is_admin=is_admin,
+        text_origin=text_origin,
+        text_a_origin=text_a_origin,
+        text_b_origin=text_b_origin,
+        text_content_raw=text_content_raw,
+        text_a_raw=text_a_raw,
+        text_b_raw=text_b_raw,
     )
 
 
@@ -1223,20 +1432,30 @@ def parse_step_form(step, tab_idx, form, enthalten_items, missing_items=None):
             rating['comment'] = form.get('comment', '').strip()
 
         elif key == 'summary_correctness':
-            val = form.get('choice')
-            if not val:
-                return None, 'Bitte wählen Sie eine Bewertung aus.'
-            rating['choice'] = val
+            vas = form.get('vas_score', '').strip()
+            if not vas:
+                return None, 'Bitte bewerten Sie die Korrektheit auf der Skala.'
+            try:
+                rating['vas_score'] = int(vas)
+            except ValueError:
+                return None, 'Ungültiger Wert für die Bewertung.'
+            if not (0 <= rating['vas_score'] <= 100):
+                return None, 'Bewertung muss zwischen 0 und 100 liegen.'
             rating['comment'] = form.get('comment', '').strip()
             for item in INFO_ITEMS:
                 slug = slugify(item)
                 rating['relevant_' + slug] = form.get('relevant_' + slug, '')
 
         elif key in ('summary_completeness', 'summary_conciseness'):
-            val = form.get('choice')
-            if not val:
-                return None, 'Bitte wählen Sie eine Bewertung aus.'
-            rating['choice'] = val
+            vas = form.get('vas_score', '').strip()
+            if not vas:
+                return None, 'Bitte bewerten Sie auf der Skala.'
+            try:
+                rating['vas_score'] = int(vas)
+            except ValueError:
+                return None, 'Ungültiger Wert für die Bewertung.'
+            if not (0 <= rating['vas_score'] <= 100):
+                return None, 'Bewertung muss zwischen 0 und 100 liegen.'
             rating['comment'] = form.get('comment', '').strip()
             for item in INFO_ITEMS:
                 slug = slugify(item)
@@ -1253,21 +1472,13 @@ def parse_step_form(step, tab_idx, form, enthalten_items, missing_items=None):
                     rating['pe_effort'] = pe_effort
             rating['comment'] = form.get('comment', '').strip()
 
-        elif key == 'summary_integrity':
-            missing = []
-            for item in INFO_ITEMS:
-                slug = slugify(item)
-                val = form.get('enthalten_' + slug, '')
-                rating['enthalten_' + slug] = val
-                if val not in ('yes', 'no'):
-                    missing.append(item)
-            if missing:
-                return None, f'Bitte bewerten Sie alle Informationen. Es fehlen noch {len(missing)} Bewertung(en).'
-            rating['manual_annotations'] = form.get('manual_annotations', '{}')
-
         elif key == 'summary_falseinfo':
-            false_items = form.getlist('false_item')
+            # Item list is fixed by the researcher annotation (passed in as
+            # `enthalten_items` for legacy kwarg compatibility). All listed
+            # items must be rated for severity + probability.
+            false_items = list(enthalten_items or [])
             rating['false_items'] = false_items
+            incomplete = []
             for item in false_items:
                 slug = slugify(item)
                 severity = form.get('severity_' + slug, '')
@@ -1275,6 +1486,10 @@ def parse_step_form(step, tab_idx, form, enthalten_items, missing_items=None):
                 rating['severity_' + slug] = severity
                 rating['prob_' + slug]     = prob
                 rating['comment_' + slug]  = form.get('comment_' + slug, '').strip()
+                if not severity or not prob:
+                    incomplete.append(item)
+            if incomplete:
+                return None, f'Bitte bewerten Sie alle Informationen. Es fehlen noch {len(incomplete)} Bewertung(en).'
             rating['comment'] = form.get('comment', '').strip()
 
         elif key == 'summary_missinginfo':
@@ -1311,18 +1526,16 @@ def parse_step_form(step, tab_idx, form, enthalten_items, missing_items=None):
             rating['comment'] = form.get('comment', '').strip()
 
         elif key == 'problem_focus':
-            behandlungsziel = form.get('behandlungsziel')
-            if not behandlungsziel:
-                return None, 'Bitte wählen Sie das Behandlungsziel aus.'
-            rating['behandlungsziel'] = behandlungsziel
-            status = form.get('status')
             topics = form.getlist('topics')
-            if not status:
-                return None, 'Bitte wählen Sie den Krankheitsstatus aus.'
-            rating['status'] = status
+            diagnostik_types = form.getlist('diagnostik_types')
+            therapie_types = form.getlist('therapie_types')
+            if 'Weitere Diagnostik' in topics and not diagnostik_types:
+                return None, 'Bitte spezifizieren Sie die Art der Diagnostik.'
+            if 'Therapie (Beginn, Auswahl, Modifikation)' in topics and not therapie_types:
+                return None, 'Bitte spezifizieren Sie die vorgeschlagene Therapie.'
             rating['topics'] = topics
-            rating['diagnostik_types'] = form.getlist('diagnostik_types')
-            rating['therapie_types'] = form.getlist('therapie_types')
+            rating['diagnostik_types'] = diagnostik_types
+            rating['therapie_types'] = therapie_types
             rating['comment'] = form.get('comment', '').strip()
 
         elif key in ('problem_correctness', 'problem_specificity'):
@@ -1442,22 +1655,6 @@ def end():
                            total_cases=total_cases)
 
 
-@app.route('/protocol-pdf')
-@login_required
-def protocol_pdf():
-    """Serve the PDF for a specific case (via ?case_id=...) or fall back to first PDF found."""
-    case_id = request.args.get('case_id', '')
-
-    if case_id:
-        pdf_name = _case_pdf_filename(case_id)
-        if pdf_name:
-            pdf_path = os.path.join(DOCUMENTS_DIR, pdf_name)
-            resp = send_file(pdf_path, mimetype='application/pdf')
-            resp.headers['Content-Disposition'] = 'inline'
-            return resp
-    return 'Kein Protokoll-PDF gefunden.', 404
-
-
 @app.route('/guideline-pdf')
 @login_required
 def guideline_pdf():
@@ -1470,6 +1667,30 @@ def guideline_pdf():
                 resp.headers['Content-Disposition'] = 'inline'
                 return resp
     return 'Keine Leitlinie gefunden.', 404
+
+
+@app.route('/admin/text/<case_id>', methods=['POST'])
+@admin_required
+def admin_save_text(case_id):
+    """Admin: overwrite a case's source text file (texts_human / texts_llm)."""
+    if not _is_case_id(case_id):
+        # Allow any case_id stem actually present in cases
+        if case_id not in _discover_cases():
+            return jsonify({'error': 'unknown case_id'}), 404
+    payload = request.get_json(silent=True) or {}
+    section = payload.get('section')
+    origin  = payload.get('origin')
+    text    = payload.get('text')
+    if section not in ('summary', 'problem') or origin not in ('human', 'llm') or text is None:
+        return jsonify({'error': 'invalid payload'}), 400
+    sub = 'zusammenfassung' if section == 'summary' else 'fragestellung'
+    base = TEXTS_HUMAN_DIR if origin == 'human' else TEXTS_LLM_DIR
+    target_dir = os.path.join(base, sub)
+    os.makedirs(target_dir, exist_ok=True)
+    target = os.path.join(target_dir, f'{case_id}.txt')
+    with open(target, 'w', encoding='utf-8', newline='\n') as f:
+        f.write(text.rstrip() + '\n')
+    return jsonify({'ok': True})
 
 
 def _resolve_version(step, section_type, assign_sum, assign_prob, case_id, tab_idx):
@@ -1985,16 +2206,27 @@ def _load_dashboard_json(case_id):
         if 'imaging' in data:
             data['imaging'] = sorted(data['imaging'], key=_date_sort_key)
         # Sort metastases chronologically, oldest first (ascending)
-        # Entries without dates go to the end
+        # Supports DD.MM.YYYY and MM/YYYY; entries without dates go to the end
         if 'metastases_detail' in data:
             def _meta_sort_key(entry):
-                k = _date_sort_key(entry)
-                return (0, k) if k != (0, 0, 0) else (1, k)
+                d = (entry.get('date') or '').strip()
+                m = _re.match(r'^(\d{1,2})\.(\d{1,2})\.(\d{4})$', d)
+                if m:
+                    return (0, int(m.group(3)), int(m.group(2)), int(m.group(1)))
+                m = _re.match(r'^(\d{1,2})/(\d{4})$', d)
+                if m:
+                    return (0, int(m.group(2)), int(m.group(1)), 0)
+                m = _re.match(r'^(\d{4})$', d)
+                if m:
+                    return (0, int(m.group(1)), 0, 0)
+                return (1, 0, 0, 0)
             data['metastases_detail'] = sorted(data['metastases_detail'], key=_meta_sort_key)
         # Sort therapies oldest-first (ascending) within each category
         if 'therapies' in data and isinstance(data['therapies'], dict):
             def _therapy_date_key(entry):
+                # Use only the start portion of ranges like "04.05.2023 - 02.06.2023"
                 d = _re.sub(r'^seit\s+', '', entry.get('date', '').strip())
+                d = _re.split(r'\s*[-–]\s*', d)[0].strip()
                 m = _re.match(r'^(\d{1,2})\.(\d{1,2})\.(\d{4})$', d)
                 if m:
                     return (int(m.group(3)), int(m.group(2)), int(m.group(1)))
@@ -2349,6 +2581,37 @@ def _read_original_document(case_id):
     return ''
 
 
+_TB_DATE_RE = _re.compile(
+    r'Interdisziplin[äa]res\s+Tumorboard\s+[\wÄÖÜäöüß\-]+\s+'
+    r'(?P<date>\d{2}\.\d{2}\.\d{4})\s+(?P<time>\d{2}:\d{2})',
+    _re.IGNORECASE,
+)
+
+def _extract_tb_conference(original_doc):
+    """Return (date, time, board_label, weekday) tuple from the protocol header,
+    or (None, None, None, None) if not found."""
+    if not original_doc:
+        return (None, None, None, None)
+    head = '\n'.join(original_doc.splitlines()[:40])
+    m = _TB_DATE_RE.search(head)
+    if not m:
+        return (None, None, None, None)
+    label_m = _re.search(
+        r'Interdisziplin[äa]res\s+Tumorboard\s+(?P<label>[\wÄÖÜäöüß\-]+)',
+        head, _re.IGNORECASE,
+    )
+    label = label_m.group('label') if label_m else ''
+    date_str = m.group('date')
+    weekday = None
+    try:
+        dt = datetime.strptime(date_str, '%d.%m.%Y')
+        weekday = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag',
+                   'Freitag', 'Samstag', 'Sonntag'][dt.weekday()]
+    except ValueError:
+        pass
+    return (date_str, m.group('time'), label, weekday)
+
+
 @app.route('/evaluate/<case_id>/dashboard', methods=['GET', 'POST'])
 @login_required
 def case_dashboard(case_id):
@@ -2357,6 +2620,31 @@ def case_dashboard(case_id):
         return redirect(url_for('evaluate_resume'))
 
     username = session['username']
+    is_annotator = _get_user_role(username) == 'annotator'
+
+    # Annotators get a read-only view (no rating rail, no continue button,
+    # no evaluator state initialisation, no POST handling).
+    if is_annotator:
+        patient = PATIENT_DATA[case_id]
+        original_doc = _read_original_document(case_id)
+        tb_date, tb_time, tb_label, tb_weekday = _extract_tb_conference(original_doc)
+        return render_template('case_dashboard.html',
+                               case_id=case_id,
+                               case_index=0,
+                               patient=patient,
+                               original_doc=original_doc,
+                               done_cases=0,
+                               total_cases=0,
+                               first_visit=False,
+                               info_items=INFO_ITEMS,
+                               slugify=slugify,
+                               tb_date=tb_date,
+                               tb_time=tb_time,
+                               tb_label=tb_label,
+                               tb_weekday=tb_weekday,
+                               relevance_existing={},
+                               annotator_mode=True)
+
     texts = load_texts()
     user_data = init_evaluator(username, texts)
     case_order = user_data.get('case_order', [])
@@ -2393,6 +2681,7 @@ def case_dashboard(case_id):
 
     patient = PATIENT_DATA[case_id]
     original_doc = _read_original_document(case_id)
+    tb_date, tb_time, tb_label, tb_weekday = _extract_tb_conference(original_doc)
 
     # First visit = the user has not yet pressed "Weiter zur Bewertung" for
     # this case. Subsequent visits (via the protocol button on an eval page)
@@ -2425,6 +2714,10 @@ def case_dashboard(case_id):
                            first_visit=first_visit,
                            info_items=INFO_ITEMS,
                            slugify=slugify,
+                           tb_date=tb_date,
+                           tb_time=tb_time,
+                           tb_label=tb_label,
+                           tb_weekday=tb_weekday,
                            relevance_existing=relevance_existing)
 
 
@@ -2521,6 +2814,190 @@ def imaging_txt(case_id):
         if img.get('img_dir', '') == img_dir and img.get('date', '') == date and img.get('type', '') == img_type:
             return {'text': img.get('finding', '')}
     return {'text': ''}
+
+
+# ── annotator (researcher) UI ────────────────────────────────────────────────
+
+ANNOTATE_TEXT_KEYS = [
+    # (text_key, label, case_dict_src_key, sidebar_letter)
+    ('human_summary', 'Human · Zusammenfassung', 'human_summary', 'H'),
+    ('llm_summary',   'LLM · Zusammenfassung',   'llm_summary',   'L'),
+]
+
+
+def _annotation_progress(ann):
+    """Return {text_key: (rated_count, total)} for a loaded annotation dict."""
+    total = len(INFO_ITEMS)
+    out = {}
+    texts = ann.get('texts') or {}
+    for tk, _label, _src_key, _letter in ANNOTATE_TEXT_KEYS:
+        items = (texts.get(tk) or {}).get('items') or {}
+        rated = sum(1 for it in items.values() if it.get('status'))
+        out[tk] = (rated, total)
+    return out
+
+
+@app.route('/annotate')
+@annotator_required
+def annotate_index():
+    texts = load_texts()
+    cases = []
+    for t in texts:
+        ann = _load_annotation(str(t['id']))
+        prog = _annotation_progress(ann)
+        cases.append({
+            'id': str(t['id']),
+            'title': t.get('title') or t.get('case_label') or str(t['id'])[:10],
+            'progress': prog,
+            'updated_at': ann.get('updated_at'),
+        })
+    return render_template('annotate_index.html',
+                           cases=cases,
+                           text_keys=ANNOTATE_TEXT_KEYS,
+                           total_items=len(INFO_ITEMS))
+
+
+@app.route('/annotate/<case_id>')
+@annotator_required
+def annotate_case(case_id):
+    texts = load_texts()
+    case = next((t for t in texts if str(t['id']) == case_id), None)
+    if case is None:
+        return redirect(url_for('annotate_index'))
+    ann = _load_annotation(case_id)
+    text_blocks = []
+    for tk, label, src_key, letter in ANNOTATE_TEXT_KEYS:
+        text_blocks.append({
+            'key': tk,
+            'label': label,
+            'letter': letter,
+            'content': case.get(src_key, '') or '',
+        })
+    # Build per-text per-slug status map for sidebar rendering
+    status_map = {}
+    for tk, _label, _src_key, _letter in ANNOTATE_TEXT_KEYS:
+        items = ((ann.get('texts') or {}).get(tk) or {}).get('items') or {}
+        status_map[tk] = {slug: it.get('status') for slug, it in items.items()}
+    return render_template('annotate.html',
+                           case_id=case_id,
+                           case_label=case.get('title') or case_id[:10],
+                           text_blocks=text_blocks,
+                           info_items=INFO_ITEMS,
+                           slugify=slugify,
+                           annotation=ann,
+                           status_map=status_map)
+
+
+@app.route('/annotate/<case_id>/save', methods=['POST'])
+@annotator_required
+def annotate_save(case_id):
+    """Replace one INFO_ITEM's annotation for one text.
+
+    Body JSON: { text_key, slug, status, spans: [text, ...] }
+    """
+    payload = request.get_json(silent=True) or {}
+    text_key = payload.get('text_key')
+    slug     = payload.get('slug')
+    status   = payload.get('status')  # 'enthalten' | 'nicht_enthalten' | 'falsch' | None
+    spans    = payload.get('spans') or []
+
+    if not text_key or not slug:
+        return {'ok': False, 'error': 'text_key and slug required'}, 400
+    if text_key not in {tk for tk, _l, _s, _t in ANNOTATE_TEXT_KEYS}:
+        return {'ok': False, 'error': 'unknown text_key'}, 400
+    if status not in (None, 'enthalten', 'nicht_enthalten', 'falsch'):
+        return {'ok': False, 'error': 'invalid status'}, 400
+
+    ann = _load_annotation(case_id)
+    block = ann['texts'].setdefault(text_key, {'items': {}})
+    items = block.setdefault('items', {})
+    if status is None and not spans:
+        items.pop(slug, None)
+    else:
+        items[slug] = {'status': status,
+                       'spans': [s for s in spans if s],
+                       'origin': 'human'}
+    _save_annotation(case_id, ann, username=session.get('username'))
+    return {'ok': True, 'progress': _annotation_progress(ann)[text_key]}
+
+
+@app.route('/annotate/<case_id>/reset', methods=['POST'])
+@annotator_required
+def annotate_reset(case_id):
+    """Delete the saved annotation so the next load re-seeds from LLM."""
+    p = _annotation_path(case_id)
+    if os.path.exists(p):
+        try:
+            os.remove(p)
+        except OSError as e:
+            return {'ok': False, 'error': str(e)}, 500
+    return {'ok': True}
+
+
+@app.route('/annotate/<case_id>/llm-review', methods=['POST'])
+@annotator_required
+def annotate_llm_review(case_id):
+    """Run an LLM fact-check of one text against the original protocol and
+    overwrite that text's items in the annotation file.
+
+    Body JSON: {"text_key": "<llm_summary|human_summary|llm_problem|human_problem>"}
+    """
+    import llm_review
+
+    payload = request.get_json(silent=True) or {}
+    text_key = payload.get('text_key')
+    mode     = payload.get('mode', 'merge')  # 'merge' or 'overwrite'
+    if mode not in ('merge', 'overwrite'):
+        return {'ok': False, 'error': 'invalid mode'}, 400
+    valid_keys = {tk for tk, _l, _s, _t in ANNOTATE_TEXT_KEYS}
+    if text_key not in valid_keys:
+        return {'ok': False, 'error': 'unknown text_key'}, 400
+
+    texts = load_texts()
+    case = next((t for t in texts if str(t['id']) == case_id), None)
+    if case is None:
+        return {'ok': False, 'error': 'case not found'}, 404
+
+    src_key = next(sk for tk, _l, sk, _t in ANNOTATE_TEXT_KEYS if tk == text_key)
+    summary = case.get(src_key, '') or ''
+    if not summary.strip():
+        return {'ok': False, 'error': 'text is empty'}, 400
+
+    protocol = _read_original_document(case_id)
+    if not protocol.strip():
+        return {'ok': False, 'error': 'original protocol not available'}, 400
+
+    try:
+        new_items = llm_review.review_text(protocol, summary, INFO_ITEMS)
+    except Exception as e:
+        return {'ok': False, 'error': f'LLM review failed: {e}'}, 500
+
+    ann = _load_annotation(case_id)
+    block = ann.setdefault('texts', {}).setdefault(text_key, {'items': {}})
+    existing = block.setdefault('items', {})
+
+    written = 0
+    skipped_human = 0
+    if mode == 'overwrite':
+        block['items'] = {
+            slug: {**payload_, 'origin': 'llm_review'}
+            for slug, payload_ in new_items.items()
+        }
+        written = len(new_items)
+    else:  # merge: leave human-touched items alone
+        for slug, payload_ in new_items.items():
+            cur = existing.get(slug)
+            if cur and cur.get('origin') == 'human':
+                skipped_human += 1
+                continue
+            existing[slug] = {**payload_, 'origin': 'llm_review'}
+            written += 1
+
+    ann.setdefault('llm_review', {})[text_key] = datetime.utcnow().isoformat()
+    _save_annotation(case_id, ann, username=session.get('username'))
+    rated, total = _annotation_progress(ann)[text_key]
+    return {'ok': True, 'rated': rated, 'total': total,
+            'written': written, 'skipped_human': skipped_human, 'mode': mode}
 
 
 if __name__ == '__main__':

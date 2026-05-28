@@ -114,6 +114,68 @@ body {
 }
 .btn-nav-link:hover { opacity: 1; }
 
+/* ── demo mode toggle ─────────────────────────────────────────────────── */
+.btn-demo-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,.4);
+  padding: .25rem .7rem;
+  border-radius: 4px;
+  font-size: .8rem;
+  font-family: inherit;
+  cursor: pointer;
+  opacity: .75;
+  transition: opacity .15s, background-color .15s, border-color .15s;
+}
+.btn-demo-toggle:hover { opacity: 1; }
+.btn-demo-toggle.active {
+  background: #f4a300;
+  border-color: #f4a300;
+  color: #1a1a1a;
+  opacity: 1;
+}
+.btn-demo-toggle .demo-toggle-icon { font-size: .95rem; line-height: 1; }
+
+/* When demo mode is active, blur all readable text content inside the
+   dashboard so the page can be shown publicly without revealing patient
+   data. UI chrome (buttons, tabs, icons, body map) stays usable; only the
+   text glyphs themselves are blurred via the transparent-color +
+   text-shadow trick. */
+body.demo-mode .dash-container,
+body.demo-mode .dash-container *,
+body.demo-mode .modal-content,
+body.demo-mode .modal-content * {
+  color: transparent !important;
+  text-shadow: 0 0 7px rgba(40, 40, 40, .85) !important;
+  -webkit-text-fill-color: transparent !important;
+}
+/* keep tab buttons + header navigation legible so the user can still
+   interact with the dashboard while demo mode is on */
+body.demo-mode .dash-tabs,
+body.demo-mode .dash-tabs *,
+body.demo-mode .dash-header .back-link,
+body.demo-mode .btn-back-eval,
+body.demo-mode .btn-protocol,
+body.demo-mode .btn-raw-text,
+body.demo-mode .modal-close,
+body.demo-mode .modal-header h3 {
+  color: inherit !important;
+  text-shadow: none !important;
+  -webkit-text-fill-color: initial !important;
+}
+
+/* On the evaluation page only the text being rated should be blurred,
+   so the rest of the form (questions, scales, buttons) stays readable. */
+body.demo-mode .evaluate-layout .text-content,
+body.demo-mode .evaluate-layout .text-content * {
+  color: transparent !important;
+  text-shadow: 0 0 7px rgba(40, 40, 40, .85) !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
 /* ── container ─────────────────────────────────────────────────────────── */
 .container {
   max-width: 2400px;
@@ -1744,24 +1806,6 @@ a.step:hover .step-title { text-decoration: underline; }
   border: none;
 }
 
-/* ── inline PDF + relevance rating layout ───────────────────────────────── */
-.eval-body.eval-body--pdf {
-  display: grid;
-  grid-template-columns: 3fr 2fr;
-  height: calc(100vh - 230px);
-  min-height: 520px;
-  border-top: 1px solid #e5e7eb;
-}
-
-.inline-pdf {
-  width: 100%;
-  height: 100%;
-  border: none;
-  border-right: 1.5px solid #e2e8f0;
-  display: block;
-  background: #f0f0f0;
-}
-
 /* ── responsive ────────────────────────────────────────────────────────── */
 @media (max-width: 900px) {
   .container       { padding: 1rem; }
@@ -2269,6 +2313,56 @@ a.demo-btn {
   color: #fff;
 }
 
+/* Admin-only origin badge next to "Version A/B" labels and tabs */
+.admin-origin {
+  display: inline-block;
+  margin-left: .35rem;
+  padding: .05rem .4rem;
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .03em;
+  border-radius: 4px;
+  vertical-align: middle;
+  text-transform: uppercase;
+}
+.admin-origin--human { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+.admin-origin--llm   { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+.tab-active .admin-origin { filter: brightness(1.05); }
+
+/* Admin: inline text edit ─────────────────────────────────────────────── */
+.admin-edit-btn {
+  display: inline-block;
+  margin: 0 0 .5rem 0;
+  padding: .25rem .6rem;
+  font-size: .78rem;
+  font-weight: 600;
+  color: #92400e;
+  background: #fef3c7;
+  border: 1px solid #fcd34d;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.admin-edit-btn:hover { background: #fde68a; }
+.admin-edit-ta {
+  width: 100%;
+  min-height: 12rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: .9rem;
+  line-height: 1.4;
+  padding: .6rem;
+  border: 1px solid #fcd34d;
+  border-radius: 6px;
+  background: #fffbeb;
+  resize: vertical;
+  box-sizing: border-box;
+}
+.admin-edit-actions {
+  margin-top: .5rem;
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+}
+
 
 /* ── eval-card header badge update ─────────────────────────────────────── */
 .badge-step {
@@ -2306,9 +2400,56 @@ a.demo-btn {
   overflow: visible; /* allow the Keine-Präferenz button to protrude */
 }
 
-/* Final overall: single wide panel */
+/* Final overall: single centered card */
 .eval-body--final {
-  grid-template-columns: 1fr;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  height: auto;
+  min-height: 0;
+  overflow: visible;
+  padding: 2.5rem 1.5rem;
+  background: #f8fafc;
+}
+
+.final-card {
+  width: 100%;
+  max-width: 720px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, .06);
+  overflow: hidden;
+}
+
+.final-card__header {
+  padding: 1.5rem 2rem 1rem;
+  border-bottom: 1px solid #edf2f7;
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+}
+
+.final-card__title {
+  margin: 0 0 .35rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a4f8a;
+  letter-spacing: .01em;
+}
+
+.final-card__subtitle {
+  margin: 0;
+  font-size: .95rem;
+  color: #475569;
+  line-height: 1.5;
+}
+
+.final-card__body {
+  padding: 2.25rem 2rem 2rem;
+}
+
+.vas-wrap--final {
+  max-width: 560px;
+  margin: 0 auto;
 }
 
 /* text-display: label + content */
@@ -2509,6 +2650,27 @@ a.demo-btn {
   margin-bottom: .75rem;
 }
 
+.completeness-missing {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+.completeness-missing-title {
+  font-size: .95rem;
+  font-weight: 600;
+  margin: 0 0 .5rem 0;
+  color: #374151;
+}
+.completeness-missing-list {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: .85rem;
+  color: #374151;
+}
+.completeness-missing-list li {
+  margin-bottom: .25rem;
+}
+
 
 /* ── chip group ─────────────────────────────────────────────────────────── */
 .chip-group {
@@ -2662,6 +2824,12 @@ a.demo-btn {
   padding: .6rem .75rem .75rem;
 }
 .mi-card--collapsed .mi-body { display: none; }
+
+/* Card highlight when its red text span is hovered (track-changes style) */
+.mi-card--hover {
+  box-shadow: 0 0 0 2px #ef4444, 0 2px 6px rgba(0,0,0,.08);
+  border-color: #ef4444;
+}
 
 
 /* ── highlight spans for falseinfo hover ─────────────────────────────── */
@@ -3110,6 +3278,13 @@ a.demo-btn {
 }
 
 /* housing: no background box, just stacks the lights */
+.tl-question {
+  margin: 0 0 .9rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #1f2937;
+  text-align: center;
+}
 .tl-housing {
   display: flex;
   flex-direction: column;
@@ -3473,6 +3648,7 @@ a.demo-btn {
 .tl-red   .tl-bulb { background: #3b0e0e; border-color: #5c1a1a; }
 .tl-amber .tl-bulb { background: #3b2800; border-color: #5c3c00; }
 .tl-green .tl-bulb { background: #052b10; border-color: #0a3d18; }
+.tl-gray  .tl-bulb { background: #1f2937; border-color: #374151; }
 
 /* lit (selected) states — glow effect */
 .tl-red:has(input:checked)   .tl-bulb {
@@ -3490,6 +3666,11 @@ a.demo-btn {
   border-color: #86efac;
   box-shadow: 0 0 8px 3px rgba(34,197,94,.6), 0 0 20px 6px rgba(34,197,94,.25);
 }
+.tl-gray:has(input:checked) .tl-bulb {
+  background: #94a3b8;
+  border-color: #cbd5e1;
+  box-shadow: 0 0 8px 3px rgba(148,163,184,.55), 0 0 20px 6px rgba(148,163,184,.22);
+}
 
 /* option label text */
 .tl-opt-label {
@@ -3502,6 +3683,7 @@ a.demo-btn {
 .tl-red:has(input:checked)   .tl-opt-label { color: #dc2626; font-weight: 600; }
 .tl-amber:has(input:checked) .tl-opt-label { color: #d97706; font-weight: 600; }
 .tl-green:has(input:checked) .tl-opt-label { color: #16a34a; font-weight: 600; }
+.tl-gray:has(input:checked)  .tl-opt-label { color: #475569; font-weight: 600; }
 
 /* ── larger traffic lights in the standalone Leitlinienkonformität step ── */
 .rating-section .tl-housing {
@@ -4678,6 +4860,47 @@ a.demo-btn {
   background: #f4f6f9;
 }
 
+/* ── Final overall: centered card variant (mirrors the live .final-card) ── */
+.demo-stage--final {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem 1rem;
+  background: #f8fafc;
+  min-height: 260px;
+}
+.demo-final-card {
+  width: 100%;
+  max-width: 480px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(15,23,42,.06);
+  overflow: hidden;
+}
+.demo-final-card__header {
+  padding: .75rem 1.1rem .55rem;
+  border-bottom: 1px solid #edf2f7;
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+}
+.demo-final-card__title {
+  font-size: .9rem;
+  font-weight: 700;
+  color: #1a4f8a;
+  letter-spacing: .01em;
+  margin-bottom: .15rem;
+}
+.demo-final-card__subtitle {
+  font-size: .68rem;
+  color: #475569;
+  line-height: 1.4;
+}
+.demo-final-card__body {
+  padding: 1.4rem 1.25rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+}
+
 /* ── text placeholder pane ── */
 .demo-text-pane {
   background: #fff;
@@ -5258,13 +5481,8 @@ a.demo-btn {
   height: 100%;
   width: 62%;
   border-radius: 2px;
-  background: #fef08a;
-  box-shadow: 0 0 0 1px #facc15;
-  animation: demoFiHighlight 9s ease infinite;
-}
-@keyframes demoFiHighlight {
-  0%,11%   { background: #fef08a; box-shadow: 0 0 0 1px #facc15; }   /* yellow default */
-  14%,100% { background: #fecaca; box-shadow: 0 0 0 1px #ef4444; }   /* red after click */
+  background: #fecaca;
+  box-shadow: 0 0 0 1px #ef4444;
 }
 
 .demo-fi-tooltip {

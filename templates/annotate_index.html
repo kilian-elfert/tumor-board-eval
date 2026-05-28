@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Annotator – Fälle{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='annotate.css') }}?v=4">
+
+<div class="ann-index">
+  <h1 class="ann-index-title">Annotator – Fallübersicht</h1>
+  <p class="ann-index-sub">Markieren Sie für jeden Fall die Textstellen, in denen die einzelnen Informationskategorien enthalten sind, und setzen Sie den Status (<em>enthalten</em>, <em>nicht enthalten</em>, <em>falsch</em>).</p>
+
+  <table class="ann-index-table">
+    <thead>
+      <tr>
+        <th>Fall</th>
+        {% for key, label, _src, _letter in text_keys %}
+        <th>{{ label }}</th>
+        {% endfor %}
+        <th>Zuletzt geändert</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in cases %}
+      <tr>
+        <td><code>{{ c.id[:10] }}…</code></td>
+        {% for key, _label, _src, _letter in text_keys %}
+        {% set rated, total = c.progress[key] %}
+        <td>
+          <div class="ann-prog">
+            <div class="ann-prog-bar"><div class="ann-prog-fill" style="width: {{ (rated / total * 100) | int if total else 0 }}%"></div></div>
+            <span class="ann-prog-label">{{ rated }} / {{ total }}</span>
+          </div>
+        </td>
+        {% endfor %}
+        <td class="ann-updated">{{ c.updated_at[:16] | replace('T', ' ') if c.updated_at else '–' }}</td>
+        <td><a class="ann-open-btn" href="{{ url_for('annotate_case', case_id=c.id) }}">Öffnen →</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -62,6 +62,15 @@ dashboard_data/            Pre-built patient dashboards: <case_id>_dashboard.jso
                            (output of preprocess.py). Rendered as the
                            "Patientenakte" before each evaluation.
 
+annotations/               Per-case researcher annotations: <case_id>.json
+                           (status of each info item per text version:
+                           enthalten / nicht_enthalten / falsch, plus the
+                           corresponding text spans). Drives the false-info
+                           highlighting and the missing/false/irrelevant
+                           item lists shown on the Korrektheit,
+                           Vollständigkeit, Prägnanz, and
+                           Falschinformationen rating steps.
+
 guideline/                 S3-Leitlinie PDF shown during the guideline-conformity step
 
 responses/                 Per-evaluator response files: responses_<username>.json
@@ -178,6 +187,13 @@ SECRET_KEY=your-secret-key uv run app.py
    metastases, therapies, lab values, imaging, comorbidities, staging,
    molecular pathology). Lab values, imaging entries, metastases and therapies
    are sorted chronologically at load time.
+4. **Annotations.** `annotations/<case_id>.json` holds the researcher
+   verdict for each information item per text version (`enthalten`,
+   `nicht_enthalten`, `falsch`) plus the matching text spans. These drive
+   the inline `falsch` highlighting on the Falschinformationen and
+   Korrektheit steps and the displayed item lists on the Korrektheit,
+   Vollständigkeit, and Prägnanz steps. Without this file those steps
+   show no highlights/lists but still function.
 4. **Imaging reports.** PDF and free-text reports are served on demand from
    `<case_id>_<modality>/` under the sources directory via `/api/imaging-pdf`
    and `/api/imaging-txt`.
@@ -234,8 +250,8 @@ Declared in `pyproject.toml` (use `uv sync`):
 
 Code lives in git; **patient data must never enter git**. Already excluded by
 `.gitignore`: `.env`, `responses/`, `dashboard_data/`, `texts_human/`,
-`texts_llm/`, `original_documents/`, `highlight_mappings.json`, `users.json`,
-`exports/`.
+`texts_llm/`, `original_documents/`, `highlight_mappings.json`,
+`annotations/`, `users.json`, `exports/`.
 
 ### What goes via git
 
@@ -249,7 +265,7 @@ Before pushing:
    needed (`git log --all -- .env` / `git filter-repo`).
 2. Confirm no patient files were ever committed:
    ```powershell
-   git log --all --full-history -- dashboard_data texts_human texts_llm responses users.json highlight_mappings.json
+   git log --all --full-history -- dashboard_data texts_human texts_llm responses users.json highlight_mappings.json annotations
    ```
 
 
@@ -268,6 +284,7 @@ are relative to the repo root):
 | `dashboard_data/`         | `./dashboard_data/`              | yes       |
 | `texts_human/`            | `./texts_human/`                 | yes       |
 | `texts_llm/`              | `./texts_llm/`                   | yes       |
+| `annotations/`            | `./annotations/`                 | optional (drives `falsch` highlights and the item lists on Korrektheit / Vollständigkeit / Prägnanz / Falschinformationen; without it those steps show no highlights or lists) |
 | `highlight_mappings.json` | `./highlight_mappings.json`      | optional (without it the Falschinformationen step falls back to bold headers) |
 
 After unpacking, the repo root should look like:
@@ -283,8 +300,9 @@ tumor_board_eval/
 │   └── zusammenfassung/            ← from file-share
 ├── texts_llm/
 │   ├── fragestellung/              ← from file-share
-│   └── zusammenfassung/            ← from file-share
-└── highlight_mappings.json         ← optional, from file-share
+│   └── zusammenfassung/            ← from file-share├── annotations/                    ← optional, from file-share
+│   ├── 1119efbd….json
+│   └── …└── highlight_mappings.json         ← optional, from file-share
 ```
 
 **Bundle B — raw source data / CSV (lives *outside* the repo)**
@@ -322,7 +340,8 @@ Copy-Item .env.example .env
 #     sources/ and sampled_cases.csv (Bundle B)
 
 # 2. Unpack Bundle A into the repo root so dashboard_data/, texts_human/,
-#    texts_llm/ (and optional highlight_mappings.json) sit next to app.py.
+#    texts_llm/, annotations/ (and optional highlight_mappings.json) sit
+#    next to app.py.
 
 # 3. Unpack Bundle B at <DATA_ROOT> so <DATA_ROOT>\sources\ and
 #    <DATA_ROOT>\sampled_cases.csv exist.
@@ -331,5 +350,5 @@ Copy-Item .env.example .env
 uv run setup_users.py
 
 # 5. Run
-uv run app.py        # http://localhost:5001
+uv run app.py  
 ```
