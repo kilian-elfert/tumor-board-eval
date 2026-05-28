@@ -133,7 +133,7 @@ Large case-source artefacts live outside the repo, under
 
 ## Setup
 
-**Requirements:** Python â‰¥ 3.14, [uv](https://docs.astral.sh/uv/)
+**Requirements:** Python ≥ 3.14, [uv](https://docs.astral.sh/uv/)
 
 ```bash
 # Install dependencies
