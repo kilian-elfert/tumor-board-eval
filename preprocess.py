@@ -7,7 +7,7 @@ loads directly into PATIENT_DATA.
 
 Deterministic fields (demographics, lab, timeline, imaging metadata) are
 parsed without an LLM.  Clinical fields (body map, staging, mutations,
-therapies, comorbidities, etc.) are extracted via an OpenAI LLM call.
+therapies, comorbidities, etc.) are extracted via an LLM call.
 
 Usage:
     uv run preprocess.py                  # all cases from CSV
@@ -42,8 +42,8 @@ CSV_FILENAME    = os.environ.get('CSV_FILENAME', 'sampled_cases.csv')
 CSV_PATH        = os.path.join(DATA_ROOT, CSV_FILENAME) if DATA_ROOT else ''
 
 LLM_API_KEY  = os.environ.get('LLM_API_KEY', '')
-LLM_BASE_URL = os.environ.get('LLM_BASE_URL', 'http://10.99.0.230:8004/v1')
-LLM_MODEL    = os.environ.get('LLM_MODEL', 'openai/gpt-oss-120b')
+LLM_BASE_URL = os.environ.get('LLM_BASE_URL', '')
+LLM_MODEL    = os.environ.get('LLM_MODEL', '')
 
 # ── valid body region IDs (for LLM prompt) ───────────────────────────────────
 
@@ -59,10 +59,10 @@ BODY_REGION_IDS = [
     "whole_body",
 ]
 
-# ── LLM helper (raw httpx – OpenAI-compatible /chat/completions) ────────────
+# ── LLM helper (raw httpx – /chat/completions) ──────────────────────────────
 
 def _llm_chat(messages, max_tokens=8192, json_mode=False):
-    """Call the configured OpenAI-compatible chat endpoint and return the content string."""
+    """Call the configured LLM chat endpoint and return the content string."""
     payload = {
         'model': LLM_MODEL,
         'max_completion_tokens': max_tokens,

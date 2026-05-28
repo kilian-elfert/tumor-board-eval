@@ -23,7 +23,7 @@ available for a case.
 
 Usage:
     # Set your API key first (or put it in .env)
-    set OPENAI_API_KEY=sk-...
+    set LLM_API_KEY=...
 
     python generate_highlights.py                 # all cases, incremental
     python generate_highlights.py --case <hash>   # only this case, force rerun
@@ -235,32 +235,23 @@ def build_user_prompt(summary_text, items):
 def call_openai(summary_text, items, model=None, system_prompt=None):
     from openai import OpenAI
 
-    # Prefer an OpenAI-compatible endpoint configured via GROQ_* (same convention
-    # as preprocess.py / generate_fragestellung.py); fall back to OPENAI_*.
-    api_key = (
-        os.environ.get("OPENAI_API_KEY")
-        or os.environ.get("GROQ_API_KEY")
-    )
-    base_url = (
-        os.environ.get("OPENAI_BASE_URL")
-        or os.environ.get("GROQ_BASE_URL")
-    )
+    # Use the same env-var convention as preprocess.py.
+    api_key = os.environ.get("LLM_API_KEY")
+    base_url = os.environ.get("LLM_BASE_URL")
     model = (
         model
-        or os.environ.get("OPENAI_MODEL")
-        or os.environ.get("GROQ_MODEL")
-        or "gpt-4o"
+        or os.environ.get("LLM_MODEL")
     )
     if not api_key:
         raise RuntimeError(
-            "No API key found. Set OPENAI_API_KEY or GROQ_API_KEY (in .env)."
+            "No API key found. Set LLM_API_KEY (in .env)."
         )
 
     client = OpenAI(api_key=api_key, base_url=base_url) if base_url \
         else OpenAI(api_key=api_key)
     user_msg = build_user_prompt(summary_text, items)
     # Allow override via env; 36 categories × ~4 excerpts can easily exceed
-    # small defaults (Groq's default is 1024).
+    # small defaults.
     max_tokens = int(os.environ.get("HIGHLIGHTS_MAX_TOKENS", "16384"))
     resp = client.chat.completions.create(
         model=model,
@@ -487,8 +478,7 @@ def main():
                         help="Process only this case_id (file stem / hash). "
                              "Forces re-run of all sources for that case.")
     parser.add_argument("--model", default=None,
-                        help="Model id. Defaults to OPENAI_MODEL/GROQ_MODEL "
-                             "from the environment, else 'gpt-4o'.")
+                        help="Model id. Defaults to LLM_MODEL from the environment.")
     parser.add_argument(
         "--dry-run", action="store_true", help="Print prompts without calling LLM"
     )
