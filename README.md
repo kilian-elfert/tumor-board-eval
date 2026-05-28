@@ -304,9 +304,11 @@ tumor_board_eval/
 │   └── zusammenfassung/            ← from file-share
 ├── texts_llm/
 │   ├── fragestellung/              ← from file-share
-│   └── zusammenfassung/            ← from file-share├── annotations/                    ← optional, from file-share
-│   ├── 1119efbd….json
-│   └── …└── highlight_mappings.json         ← optional, from file-share
+│   └── zusammenfassung/            ← from file-share
+├── annotations/                    ← optional, from file-share
+│   ├── 1119efbd….json
+│   └── …
+└── highlight_mappings.json         ← optional, from file-share
 ```
 
 **Bundle B — raw source data / CSV (lives *outside* the repo)**
