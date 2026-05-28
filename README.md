@@ -15,8 +15,7 @@ For each case the evaluator then steps through:
 
 0. **Patient dashboard** â€” interactive anatomical body map, basic data, staging,
    molecular pathology, lab values, imaging diagnostics, therapies, and a
-   clinical timeline. The original protocol PDF and per-modality imaging
-   reports are linked from here.
+   clinical timeline. Per-modality imaging reports are linked from here.
 1. **Information relevance.** Rate the clinical relevance of a fixed set of
    information items (`INFO_ITEMS` in `app.py`).
 2. **Case summary (Zusammenfassung).** Evaluate the human-written and the
@@ -117,7 +116,7 @@ Large case-source artefacts live outside the repo, under
 `case_id`, a 64-char SHA-256 stem of the source protocol:
 
 ```
-<case_id>.pdf                       Original protocol PDF
+<case_id>.pdf                       Original protocol PDF (used by preprocess.py; not served by app.py)
 <case_id>.txt                       Plain-text dump of the protocol
 <case_id>_lab.txt                   Lab values (chronological)
 <case_id>_verlaufsdoku.jsonl        Clinical course timeline (one JSON per line)
@@ -173,7 +172,7 @@ Loaded from `.env` (via `python-dotenv`) or the process environment:
 | `LLM_BASE_URL` | Base URL of the OpenAI-compatible LLM endpoint used by `preprocess.py`. Defaults to `http://10.99.0.230:8004/v1`. |
 | `LLM_MODEL` | Model id passed to the LLM endpoint (e.g. `openai/gpt-oss-120b`). |
 | `LLM_API_KEY` | Optional bearer token for the LLM endpoint. Leave empty for the local server. |
-| `DATA_ROOT`, `SOURCES_SUBDIR`, `OUTPUTS_SUBDIR`, `CSV_FILENAME` | External data paths. `preprocess.py` reads source files (`<case_id>.{txt,pdf}`, `<case_id>_lab.txt`, `<case_id>_verlaufsdoku.jsonl`, `<case_id>_<modality>/`) from `$DATA_ROOT/$SOURCES_SUBDIR/`; `app.py` serves protocol PDFs and imaging from there as well. |
+| `DATA_ROOT`, `SOURCES_SUBDIR`, `OUTPUTS_SUBDIR`, `CSV_FILENAME` | External data paths. `preprocess.py` reads source files (`<case_id>.{txt,pdf}`, `<case_id>_lab.txt`, `<case_id>_verlaufsdoku.jsonl`, `<case_id>_<modality>/`) from `$DATA_ROOT/$SOURCES_SUBDIR/`; `app.py` serves imaging reports from there as well. |
 
 ```bash
 SECRET_KEY=your-secret-key uv run app.py
@@ -204,16 +203,14 @@ SECRET_KEY=your-secret-key uv run app.py
 4. **Imaging reports.** PDF and free-text reports are served on demand from
    `<case_id>_<modality>/` under the sources directory via `/api/imaging-pdf`
    and `/api/imaging-txt`.
-5. **Protocol PDF.** `<case_id>.pdf` from the sources directory is served via
-   `/protocol-pdf?case_id=<case_id>`.
-6. **Guideline.** The S3-Leitlinie PDF in `guideline/` is served to evaluators
+5. **Guideline.** The S3-Leitlinie PDF in `guideline/` is served to evaluators
    during the guideline-conformity step.
-7. **Responses.** Per-user state is persisted to
+6. **Responses.** Per-user state is persisted to
    `responses/responses_<username>.json` after every step.
-8. **Exports.** When the final questions are submitted (and on `/export`),
+7. **Exports.** When the final questions are submitted (and on `/export`),
    four files are written to `exports/` for the calling user; `/export` also
    returns `ratings_<user>.csv` as a download.
-9. **Notifications.** If `NTFY_URL` is set, a push notification is sent the
+8. **Notifications.** If `NTFY_URL` is set, a push notification is sent the
    first time an evaluator opens a case dashboard.
 
 ---
