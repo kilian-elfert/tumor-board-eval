@@ -43,7 +43,7 @@ app.py                     Main Flask application (routes, logic, data loading)
 setup_users.py             Interactive script to create user accounts
                            (roles: evaluator / annotator / admin)
 preprocess.py              Builds dashboard JSONs from source TK protocols
-                           (uses the local OpenAI-compatible LLM endpoint)
+                           (uses the configured LLM endpoint)
 pyproject.toml             Project metadata and dependencies (source of truth)
 requirements.txt           Minimal pip fallback (prefer uv + pyproject.toml)
 users.json                 Hashed credentials for all evaluator accounts
@@ -169,9 +169,9 @@ Loaded from `.env` (via `python-dotenv`) or the process environment:
 |----------|---------|
 | `SECRET_KEY` | Flask session signing key. **Set this in production** â€” the built-in fallback is insecure. |
 | `NTFY_URL`   | Optional [ntfy.sh](https://ntfy.sh) topic URL for push notifications when an evaluator starts a case. No-op if unset. |
-| `LLM_BASE_URL` | Base URL of the OpenAI-compatible LLM endpoint used by `preprocess.py`. Defaults to `http://10.99.0.230:8004/v1`. |
-| `LLM_MODEL` | Model id passed to the LLM endpoint (e.g. `openai/gpt-oss-120b`). |
-| `LLM_API_KEY` | Optional bearer token for the LLM endpoint. Leave empty for the local server. |
+| `LLM_BASE_URL` | Base URL of the LLM endpoint (`/chat/completions`-compatible) used by `preprocess.py`. Must be set to run preprocessing. |
+| `LLM_MODEL` | Model id passed to the LLM endpoint. |
+| `LLM_API_KEY` | Optional bearer token for the LLM endpoint. Leave empty if the server does not require authentication. |
 | `DATA_ROOT`, `SOURCES_SUBDIR`, `OUTPUTS_SUBDIR`, `CSV_FILENAME` | External data paths. `preprocess.py` reads source files (`<case_id>.{txt,pdf}`, `<case_id>_lab.txt`, `<case_id>_verlaufsdoku.jsonl`, `<case_id>_<modality>/`) from `$DATA_ROOT/$SOURCES_SUBDIR/`; `app.py` serves imaging reports from there as well. |
 
 ```bash
