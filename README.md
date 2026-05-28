@@ -41,7 +41,8 @@ resumed at the exact same step.
 
 ```
 app.py                     Main Flask application (routes, logic, data loading)
-setup_users.py             Interactive script to create evaluator accounts
+setup_users.py             Interactive script to create user accounts
+                           (roles: evaluator / annotator / admin)
 preprocess.py              Builds dashboard JSONs from source TK protocols
                            (uses the local OpenAI-compatible LLM endpoint)
 pyproject.toml             Project metadata and dependencies (source of truth)
@@ -142,7 +143,13 @@ uv sync
 uv run setup_users.py
 ```
 
-`setup_users.py` prompts for username/password pairs and writes hashed credentials to `users.json`.
+`setup_users.py` prompts for a username, password, and role (`evaluator`, `annotator`, or `admin`) for each account and writes hashed credentials to `users.json`.
+
+| Role | Access |
+|------|--------|
+| `evaluator` (default) | Study rating flow |
+| `annotator` | Annotation interface for marking spans as `enthalten` / `falsch` / `nicht_enthalten` |
+| `admin` | Admin dashboard + export access |
 
 ---
 
