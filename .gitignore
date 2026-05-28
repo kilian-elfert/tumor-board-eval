@@ -37,5 +37,14 @@ annotations/
 # LLM audit / review reports (contain patient identifiers and clinical data)
 reports/
 
+# Dev / admin utility scripts (not needed to run the study)
+build_audit_pdfs.py
+export_consent_pdf.py
+export_excluded_to_docx.py
+filter_fragestellungen.py
+normalize_pdfs.py
+verify_dashboards.py
+llm_review.py
+
 # Generated login credentials 
 users.json
