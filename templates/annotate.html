@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block title %}Annotator – {{ case_label }}{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='annotate.css') }}?v=8">
+
+<div class="ann-layout">
+  <aside class="ann-sidebar">
+    <a href="{{ url_for('annotate_index') }}" class="ann-back">← Fallübersicht</a>
+    <h2 class="ann-case-title">Fall <code>{{ case_id[:10] }}…</code></h2>
+
+    <a href="{{ url_for('case_dashboard', case_id=case_id) }}"
+       target="_blank" rel="noopener"
+       class="ann-akte-btn"
+       title="Patientenakte in neuem Tab öffnen">
+      📋 Patientenakte öffnen ↗
+    </a>
+
+    <button type="button" id="ann-reset-btn" class="ann-reset-btn"
+            title="Alle Annotationen verwerfen und mit den LLM-Vorschlägen neu starten">
+      ↺ Auf LLM-Vorschlag zurücksetzen
+    </button>
+
+    <div class="ann-text-switch" role="tablist">
+      {% for tb in text_blocks %}
+      <button type="button"
+              class="ann-text-btn {% if loop.first %}active{% endif %}"
+              data-text-key="{{ tb.key }}"
+              role="tab"
+              aria-selected="{{ 'true' if loop.first else 'false' }}">{{ tb.label }}</button>
+      {% endfor %}
+    </div>
+
+    <div class="ann-legend">
+      <span class="ann-legend-chip ann-st-enthalten">enthalten</span>
+      <span class="ann-legend-chip ann-st-falsch">falsch</span>
+      <span class="ann-legend-chip ann-st-nicht_enthalten">nicht enthalten</span>
+    </div>
+
+    <input type="search" id="ann-item-search" placeholder="Kategorie suchen…" class="ann-search">
+
+    <div class="ann-items">
+      {% for item in info_items %}
+      {% set slug = slugify(item) %}
+      <div class="ann-item" data-slug="{{ slug }}" data-label="{{ item }}">
+        <div class="ann-item-label" title="{{ item }}">{{ item }}</div>
+        <div class="ann-item-statuses">
+          {% for tb in text_blocks %}
+          {% set st = status_map[tb.key].get(slug) %}
+          <button type="button"
+                  class="ann-status-pill ann-st-{{ st or 'unrated' }}"
+                  data-text-key="{{ tb.key }}"
+                  data-slug="{{ slug }}"
+                  title="{{ tb.label }}: {{ st or 'noch nicht bewertet' }}">
+            <span class="ann-status-pill-letter">{{ tb.letter }}</span>
+            <span class="ann-status-pill-dot"></span>
+          </button>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </aside>
+
+  <main class="ann-main">
+    {% for tb in text_blocks %}
+    <section class="ann-text-pane {% if loop.first %}active{% endif %}"
+             data-text-key="{{ tb.key }}"
+             {% if not loop.first %}hidden{% endif %}>
+      <header class="ann-text-header">
+        <h3>{{ tb.label }}</h3>
+        <div class="ann-text-progress">
+          <span class="ann-text-progress-label" data-text-key="{{ tb.key }}">0 / {{ info_items | length }} bewertet</span>
+          <span class="ann-llm-group">
+            <select class="ann-llm-mode" data-text-key="{{ tb.key }}" title="Wie soll das LLM-Ergebnis mit bestehenden Annotationen kombiniert werden?">
+              <option value="merge" selected>Nur ergänzen (manuelle Änderungen behalten)</option>
+              <option value="overwrite">Alles ersetzen</option>
+            </select>
+            <button type="button" class="ann-llm-review-btn"
+                    data-text-key="{{ tb.key }}"
+                    title="LLM prüft diesen Text gegen das Originalprotokoll und schlägt Status + Spans vor">
+              🤖 LLM-Review
+            </button>
+          </span>
+        </div>
+      </header>
+      <div class="ann-text-help">
+        Text mit der Maus markieren → Kategorie wählen. Markierte Stelle anklicken → Status wechseln oder entfernen.
+      </div>
+      <pre class="ann-text-content"
+           data-text-key="{{ tb.key }}"
+           data-raw="{{ tb.content }}">{{ tb.content }}</pre>
+    </section>
+    {% endfor %}
+  </main>
+</div>
+
+<!-- Popup for assigning a selected span to an INFO_ITEM -->
+<div class="ann-popup" id="ann-assign-popup" hidden>
+  <div class="ann-popup-head">
+    <span>Kategorie wählen</span>
+    <button type="button" class="ann-popup-close" onclick="closeAssignPopup()">×</button>
+  </div>
+  <div class="ann-popup-seltext" id="ann-assign-seltext"></div>
+  <div class="ann-popup-status-row">
+    <label>Status:</label>
+    <select id="ann-assign-status">
+      <option value="enthalten">enthalten</option>
+      <option value="falsch">falsch</option>
+    </select>
+  </div>
+  <input type="search" id="ann-assign-search" placeholder="Suche…" class="ann-search">
+  <div class="ann-popup-items">
+    {% for item in info_items %}
+    {% set slug = slugify(item) %}
+    <button type="button" class="ann-popup-item" data-slug="{{ slug }}" data-label="{{ item }}">{{ item }}</button>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Popup for editing an existing span (click on highlight) -->
+<div class="ann-popup ann-span-popup" id="ann-span-popup" hidden>
+  <div class="ann-popup-head">
+    <span id="ann-span-label">Markierung</span>
+    <button type="button" class="ann-popup-close" onclick="closeSpanPopup()">×</button>
+  </div>
+  <div class="ann-popup-seltext" id="ann-span-seltext"></div>
+  <div class="ann-span-actions">
+    <button type="button" class="ann-span-action ann-st-enthalten" data-status="enthalten">enthalten</button>
+    <button type="button" class="ann-span-action ann-st-falsch" data-status="falsch">falsch</button>
+    <button type="button" class="ann-span-action ann-span-remove">entfernen</button>
+  </div>
+  <div class="ann-span-actions">
+    <button type="button" class="ann-span-action ann-span-addcat" id="ann-span-addcat">+ Weitere Kategorie zuweisen</button>
+  </div>
+</div>
+
+<script>
+  window.ANN_CASE_ID = {{ case_id | tojson }};
+  window.ANN_ANNOTATION = {{ annotation | tojson }};
+  window.ANN_INFO_ITEMS = {{ info_items | tojson }};
+  window.ANN_ITEM_SLUGS = {{ (info_items | map('lower') | list) | tojson }};
+</script>
+<script src="{{ url_for('static', filename='annotate.js') }}?v=6"></script>
+{% endblock %}

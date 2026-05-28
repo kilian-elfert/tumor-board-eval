@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Evaluationsstudie: LLM-basierte Unterstützung der Tumorboardanmeldung</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=20260429f">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=20260512b">
 </head>
 <body>
   <nav class="navbar">
@@ -19,6 +19,11 @@
     </div>
     {% if session.get('username') %}
     <div class="nav-user">
+      <button type="button" id="demo-mode-toggle" class="btn-demo-toggle" aria-pressed="false"
+              title="Demo-Modus: Patientendaten unkenntlich machen" style="display:none;">
+        <span class="demo-toggle-icon" aria-hidden="true">&#128065;</span>
+        <span class="demo-toggle-label">Demo-Modus</span>
+      </button>
       <span class="nav-username">{{ session.username }}</span>
       <a href="{{ url_for('logout') }}" class="btn-nav-link" id="logout-link">Abmelden</a>
     </div>
@@ -53,6 +58,33 @@
       setTimeout(function() { window.location.href = href; }, 2500);
     });
   })();
+  </script>
+
+  {# ── demo mode toggle (blurs dashboard content for screenshots/demos) ─── #}
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var btn = document.getElementById('demo-mode-toggle');
+    if (!btn) return;
+    // activate on dashboard pages and on the evaluation page
+    if (!document.querySelector('.dash-container, .evaluate-layout')) return;
+    btn.style.display = '';
+
+    var KEY = 'tbeval-demo-mode';
+    function apply(on) {
+      document.body.classList.toggle('demo-mode', on);
+      btn.classList.toggle('active', on);
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    }
+    var initial = false;
+    try { initial = localStorage.getItem(KEY) === '1'; } catch(e) {}
+    apply(initial);
+
+    btn.addEventListener('click', function() {
+      var on = !document.body.classList.contains('demo-mode');
+      apply(on);
+      try { localStorage.setItem(KEY, on ? '1' : '0'); } catch(e) {}
+    });
+  });
   </script>
 
   <main class="container">

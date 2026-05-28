@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}?v=40">
+<link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}?v=48">
 {% set type_de = {'Diagnostik':'Diagnostik','Therapie':'Therapie','Nebenwirkung':'Nebenwirkung','Tumorkonferenz':'Tumorkonferenz','Staging':'Staging','Nachsorge':'Nachsorge','Konsil':'Konsil','Sonstiges':'Sonstiges'} %}
 
 <div class="dash-container dash-with-rail">
@@ -32,11 +32,11 @@
     <button class="dash-tab" data-target="tab-timeline">Verlauf</button>
     <button class="dash-tab" data-target="tab-lab">Laborwerte</button>
     <button class="dash-tab" data-target="tab-imaging">Bildgebung</button>
-    <button type="button" class="btn-protocol dash-tab-protocol" onclick="openProtocol()">
-      <img src="{{ url_for('static', filename='pdf-icon.png') }}" width="14" height="16"
-           style="flex-shrink:0;filter:hue-rotate(200deg) saturate(1.4)" aria-hidden="true">TK-Protokoll
-    </button>
-    {% if not first_visit %}
+    {% if annotator_mode %}
+    <a href="{{ url_for('annotate_case', case_id=case_id) }}" class="btn-back-eval">
+      &larr; Zurück zur Annotation
+    </a>
+    {% elif not first_visit %}
     <a href="{{ url_for('evaluate_resume') }}" class="btn-back-eval">
       &larr; Zurück zur Bewertung
     </a>
@@ -51,6 +51,20 @@
 
       {# ── left column: Patient info card ────────────────────────────────── #}
       <div class="info-card">
+        {% if tb_date %}
+        <div class="tb-conference-chip" title="Geplante Tumorkonferenz">
+          <div class="tb-conf-calendar" aria-hidden="true">
+            <span class="tb-conf-cal-month">{{ {'01':'JAN','02':'FEB','03':'MÄR','04':'APR','05':'MAI','06':'JUN','07':'JUL','08':'AUG','09':'SEP','10':'OKT','11':'NOV','12':'DEZ'}[tb_date[3:5]] }}</span>
+            <span class="tb-conf-cal-day">{{ tb_date[0:2] }}</span>
+          </div>
+          <div class="tb-conf-meta">
+            <span class="tb-conf-label">Geplante Tumorkonferenz</span>
+            <span class="tb-conf-main">
+              {% if tb_weekday %}{{ tb_weekday }}, {% endif %}{{ tb_date }}
+            </span>
+          </div>
+        </div>
+        {% endif %}
         <h2 class="card-title">Basisdaten</h2>
         <table class="info-table">
           <tr><th>Geburtsdatum</th><td>{% if patient.dob %}{{ patient.dob }} ({{ patient.age }} J.){% else %}Keine Angabe{% endif %}</td></tr>
@@ -199,6 +213,16 @@
   <div id="tab-lab" class="dash-tab-content">
     <div class="section-title-row">
       <h2 class="section-title" style="margin:0">Laborwerte</h2>
+      <div class="lab-view-switch" role="tablist" aria-label="Ansicht">
+        <button type="button" class="lab-view-btn active" data-view="charts" role="tab" aria-selected="true">
+          <svg class="lab-view-ico" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 17 9 11 13 15 21 7"></polyline><polyline points="14 7 21 7 21 14"></polyline></svg>
+          <span>Grafisch</span>
+        </button>
+        <button type="button" class="lab-view-btn" data-view="table" role="tab" aria-selected="false">
+          <svg class="lab-view-ico" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><line x1="3" y1="10" x2="21" y2="10"></line><line x1="9" y1="4" x2="9" y2="20"></line></svg>
+          <span>Tabelle</span>
+        </button>
+      </div>
       <label class="toggle-switch">
         <input type="checkbox" id="lab-oor-filter">
         <span class="toggle-slider"></span>
@@ -229,46 +253,50 @@
       </div>
     </div>
     <div id="lab-category-overview" class="lab-category-overview"></div>
-    <div id="lab-charts-container" class="lab-charts-grid"></div>
-    <div class="lab-grid">
-      <div class="lab-table-box">
-        <table class="lab-table">
-          <thead><tr><th>Datum</th><th>Marker</th><th>Wert</th><th>Einheit</th><th>Ref.</th><th></th></tr></thead>
-          <tbody id="lab-table-body">
-            {% for lv in patient.lab_values %}
-            {% set val_num = lv.value | replace(',', '.') | float(0) %}
-            {% set ref_str = lv.ref | trim %}
-            {% set ref_upper = none %}
-            {% set ref_lower = none %}
-            {% if ref_str.startswith('<') %}
-              {% set ref_upper = ref_str[1:] | trim | replace(',', '.') | float(0) %}
-            {% elif ref_str.startswith('>') %}
-              {% set ref_lower = ref_str[1:] | trim | replace(',', '.') | float(0) %}
-            {% elif '-' in ref_str and ref_str.split('-') | length >= 2 %}
-              {% set ref_parts = ref_str.split('-') %}
-              {% set ref_lower = ref_parts[0] | trim | replace(',', '.') | float(none) %}
-              {% set ref_upper_raw = ref_parts[1] | trim %}
-              {# strip trailing unit text from upper bound #}
-              {% set ref_upper_parts = ref_upper_raw.split(' ') %}
-              {% set ref_upper = ref_upper_parts[0] | replace(',', '.') | float(none) %}
-            {% endif %}
-            {% set out_of_range = (ref_upper is not none and val_num > ref_upper) or (ref_lower is not none and val_num < ref_lower) %}
-            <tr data-marker="{{ lv.marker }}" data-date="{{ lv.date }}"{% if out_of_range %} class="lab-row-warn"{% endif %}>
-              <td>{{ lv.date }}</td>
-              <td><strong>{{ lv.marker }}</strong></td>
-              <td>{{ lv.value }}</td>
-              <td>{{ lv.unit }}</td>
-              <td>{{ lv.ref }}</td>
-              <td class="lab-warn-cell">{% if out_of_range %}⚠{% endif %}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+    <div class="lab-view lab-view--charts" data-view="charts">
+      <div id="lab-charts-container" class="lab-charts-grid"></div>
     </div>
-    <p class="lab-ref-legend">
-      <span class="lab-ref-asterisk">*</span> Referenzbereich nicht im Befund angegeben &mdash; Standard-Erwachsenenwerte zur Orientierung.
-    </p>
+    <div class="lab-view lab-view--table" data-view="table" hidden>
+      <div class="lab-grid">
+        <div class="lab-table-box">
+          <table class="lab-table">
+            <thead><tr><th>Datum</th><th>Marker</th><th>Wert</th><th>Einheit</th><th>Ref.</th><th></th></tr></thead>
+            <tbody id="lab-table-body">
+              {% for lv in patient.lab_values %}
+              {% set val_num = lv.value | replace(',', '.') | float(0) %}
+              {% set ref_str = lv.ref | trim %}
+              {% set ref_upper = none %}
+              {% set ref_lower = none %}
+              {% if ref_str.startswith('<') %}
+                {% set ref_upper = ref_str[1:] | trim | replace(',', '.') | float(0) %}
+              {% elif ref_str.startswith('>') %}
+                {% set ref_lower = ref_str[1:] | trim | replace(',', '.') | float(0) %}
+              {% elif '-' in ref_str and ref_str.split('-') | length >= 2 %}
+                {% set ref_parts = ref_str.split('-') %}
+                {% set ref_lower = ref_parts[0] | trim | replace(',', '.') | float(none) %}
+                {% set ref_upper_raw = ref_parts[1] | trim %}
+                {# strip trailing unit text from upper bound #}
+                {% set ref_upper_parts = ref_upper_raw.split(' ') %}
+                {% set ref_upper = ref_upper_parts[0] | replace(',', '.') | float(none) %}
+              {% endif %}
+              {% set out_of_range = (ref_upper is not none and val_num > ref_upper) or (ref_lower is not none and val_num < ref_lower) %}
+              <tr data-marker="{{ lv.marker }}" data-date="{{ lv.date }}"{% if out_of_range %} class="lab-row-warn"{% endif %}>
+                <td>{{ lv.date }}</td>
+                <td><strong>{{ lv.marker }}</strong></td>
+                <td>{{ lv.value }}</td>
+                <td>{{ lv.unit }}</td>
+                <td>{{ lv.ref }}</td>
+                <td class="lab-warn-cell">{% if out_of_range %}⚠{% endif %}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <p class="lab-ref-legend">
+        <span class="lab-ref-asterisk">*</span> Referenzbereich nicht im Befund angegeben &mdash; Standard-Erwachsenenwerte zur Orientierung.
+      </p>
+    </div>
     <p class="verlauf-empty-state" id="lab-empty">Keine Laborwerte für diese Filter gefunden.</p>
   </div>
 
@@ -391,7 +419,7 @@
       <h2 class="rail-title">Relevanzbewertung</h2>
       <button type="button" class="rail-close" onclick="toggleRail(false)" aria-label="Schließen">&times;</button>
     </div>
-    <p class="rail-sub">Maßgebliche Referenz: <strong>Patientenakte</strong>. Das TK-Protokoll kann ergänzend herangezogen werden.</p>
+    <p class="rail-sub">Maßgebliche Referenz: <strong>Patientenakte</strong>.</p>
     <div class="rail-prog-row">
       <span class="rail-prog-label" id="rail-prog-label">{{ ns_rail.rated }} / {{ info_items|length }} bewertet</span>
       <span class="rail-save-status" id="rail-save-status"></span>
@@ -433,6 +461,9 @@
             </span>
           </summary>
           <div class="rail-cat-body">
+          {% if cat == 'Krankheitsverlauf' %}
+          <p class="rail-cat-hint">Nur ab <strong>Stadium III</strong> aufwärts relevant.</p>
+          {% endif %}
       {% endif %}
 
       <div class="rail-row" data-cat="{{ cat_slug }}" data-slug="{{ slug }}" data-val="{{ val }}">
@@ -722,8 +753,18 @@
             <div class="rel-intro-step-title">Wonach sollen Sie sich richten?</div>
             <div class="rel-intro-step-text">
               Maßgeblich ist die <strong>Patientenakte</strong> auf dieser
-              Übersichtsseite. Das <strong>TK-Protokoll</strong>
-              (Schaltfläche oben rechts) können Sie ergänzend einsehen.
+              Übersichtsseite.
+            </div>
+          </div>
+        </li>
+        <li>
+          <span class="rel-intro-step-num">4</span>
+          <div>
+            <div class="rel-intro-step-title">Auswirkung Ihrer Auswahl</div>
+            <div class="rel-intro-step-text">
+              Nur als <strong>relevant</strong> markierte Informationen
+              werden später bei der Prüfung auf fehlende und falsche
+              Inhalte herangezogen.
             </div>
           </div>
         </li>
@@ -1010,6 +1051,7 @@ document.addEventListener('DOMContentLoaded', function() {
   /* ── Lab charts (one per marker) ──────────────────────────────────── */
   var labValues = {{ patient.lab_values | tojson }};
   var labChartRegistry = [];
+  window.labChartRegistry = labChartRegistry;
   if (labValues.length > 0) {
     var markers = {};
     labValues.forEach(function(lv) {
@@ -1907,38 +1949,35 @@ document.querySelectorAll('.img-btn-txt').forEach(function(btn) {
       .then(function(d) { body.textContent = d.text || 'Kein Text gefunden.'; })
       .catch(function() { body.textContent = 'Fehler beim Laden.'; });
   });
+
+  /* ── Lab view switch (Grafische / Tabellarische Ansicht) ────────────── */
+  (function() {
+    var switchEl = document.querySelector('#tab-lab .lab-view-switch');
+    if (!switchEl) return;
+    var views   = document.querySelectorAll('#tab-lab .lab-view');
+    var btns    = switchEl.querySelectorAll('.lab-view-btn');
+    function setView(v) {
+      btns.forEach(function(b) {
+        var active = b.dataset.view === v;
+        b.classList.toggle('active', active);
+        b.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+      views.forEach(function(el) {
+        el.hidden = el.dataset.view !== v;
+      });
+      // Chart.js needs a resize trigger when its container becomes visible
+      if (v === 'charts' && window.labChartRegistry) {
+        window.labChartRegistry.forEach(function(e) {
+          if (e && e.chart && typeof e.chart.resize === 'function') e.chart.resize();
+        });
+      }
+    }
+    btns.forEach(function(b) {
+      b.addEventListener('click', function() { setView(b.dataset.view); });
+    });
+  })();
 });
 
-/* ── TK-Protokoll PDF modal ───────────────────────────────────── */
-/* NOTE: dashboard.css forces .modal-overlay { display: flex }, so we toggle
-   the inline style directly instead of relying on the .active class. */
-function openProtocol() {
-  var modal  = document.getElementById('protocol-modal');
-  var iframe = document.getElementById('protocol-iframe');
-  if (!iframe.src || iframe.src === window.location.href) {
-    iframe.src = "{{ url_for('protocol_pdf', case_id=case_id) }}#toolbar=0&view=FitH&pagemode=none&navpanes=0";
-  }
-  modal.style.display = 'flex';
-  document.body.style.overflow = 'hidden';
-}
-function closeProtocol(e) {
-  if (e && e.target !== document.getElementById('protocol-modal')) return;
-  document.getElementById('protocol-modal').style.display = 'none';
-  document.body.style.overflow = '';
-}
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closeProtocol();
-});
 </script>
 
-{# ── TK-Protokoll PDF modal ───────────────────────────────────────────── #}
-<div id="protocol-modal" class="modal-overlay" style="display:none" onclick="closeProtocol(event)">
-  <div class="modal-box">
-    <div class="modal-header">
-      <span class="modal-title">TK-Protokoll</span>
-      <button type="button" class="modal-close" onclick="closeProtocol()">&times;</button>
-    </div>
-    <iframe id="protocol-iframe" class="modal-pdf" src="" allowfullscreen></iframe>
-  </div>
-</div>
 {% endblock %}
