@@ -32,8 +32,15 @@ while True:
             break
         print("  Password must be at least 4 characters. Try again.")
 
-    users[username] = {"password": generate_password_hash(password)}
-    print(f"  Account '{username}' added.\n")
+    role = input(f"  Role for '{username}' [evaluator/annotator/admin] (default: evaluator): ").strip().lower()
+    if role not in ('evaluator', 'annotator', 'admin'):
+        role = 'evaluator'
+
+    entry = {"password": generate_password_hash(password)}
+    if role != 'evaluator':
+        entry["role"] = role
+    users[username] = entry
+    print(f"  Account '{username}' added (role: {role}).\n")
 
 with open("users.json", "w") as f:
     json.dump(users, f, indent=2)
