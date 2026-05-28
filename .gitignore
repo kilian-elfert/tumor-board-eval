@@ -31,5 +31,11 @@ texts_llm/
 # Highlight mappings (contains patient data excerpts)
 highlight_mappings.json
 
+# Annotations (contains patient data excerpts)
+annotations/
+
+# LLM audit / review reports (contain patient identifiers and clinical data)
+reports/
+
 # Generated login credentials 
 users.json
