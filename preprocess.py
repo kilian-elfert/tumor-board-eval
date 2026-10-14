@@ -10,10 +10,11 @@ parsed without an LLM.  Clinical fields (body map, staging, mutations,
 therapies, comorbidities, etc.) are extracted via an LLM call.
 
 Usage:
-    uv run preprocess.py                  # all cases from CSV
-    uv run preprocess.py --case HASH      # single case by hash ID
-    uv run preprocess.py --legacy         # re-process legacy Fall1..5
-    uv run preprocess.py --dry-run        # preview without writing files
+    uv run preprocess.py                     # all cases from CSV
+    uv run preprocess.py --case HASH         # single case by hash ID
+    uv run preprocess.py --hashes-file f.txt # only cases listed in f.txt (one hash per line)
+    uv run preprocess.py --legacy            # re-process legacy Fall1..5
+    uv run preprocess.py --dry-run           # preview without writing files
 """
 
 import argparse
@@ -34,13 +35,19 @@ load_dotenv(override=True)
 BASE_DIR        = os.path.dirname(os.path.abspath(__file__))
 DASHBOARD_DIR   = os.path.join(BASE_DIR, 'dashboard_data')
 DOCUMENTS_DIR   = os.path.join(BASE_DIR, 'original_documents')
+TEXTS_HUMAN_DIR = os.path.join(BASE_DIR, 'texts_human')
+TEXTS_LLM_DIR   = os.path.join(BASE_DIR, 'texts_llm')
+TEXTS_SUBDIRS   = ('fragestellung', 'zusammenfassung')
 
 DATA_ROOT       = os.path.expanduser(os.environ.get('DATA_ROOT', ''))
 SOURCES_DIR     = os.path.join(DATA_ROOT, os.environ.get('SOURCES_SUBDIR', 'sources')) if DATA_ROOT else ''
 OUTPUTS_DIR_EXT = os.path.join(DATA_ROOT, os.environ.get('OUTPUTS_SUBDIR', 'outputs')) if DATA_ROOT else ''
-CSV_FILENAME    = os.environ.get('CSV_FILENAME', 'sampled_cases.csv')
-CSV_PATH        = os.path.join(DATA_ROOT, CSV_FILENAME) if DATA_ROOT else ''
+CSV_FILENAME             = os.environ.get('CSV_FILENAME', 'sampled_cases.csv')
+CSV_REPLACEMENT_FILENAME = os.environ.get('CSV_REPLACEMENT_FILENAME', 'sampled_cases_replacement.csv')
+CSV_PATH             = os.path.join(DATA_ROOT, CSV_FILENAME) if DATA_ROOT else ''
+CSV_REPLACEMENT_PATH = os.path.join(DATA_ROOT, CSV_REPLACEMENT_FILENAME) if DATA_ROOT else ''
 
+# Local LLM endpoint only (OpenAI-compatible server, e.g. vLLM/llama.cpp/Ollama).
 LLM_API_KEY  = os.environ.get('LLM_API_KEY', '')
 LLM_BASE_URL = os.environ.get('LLM_BASE_URL', '')
 LLM_MODEL    = os.environ.get('LLM_MODEL', '')
@@ -261,7 +268,7 @@ und leere Objekte {} für fehlende Objekte.
   "tumor_thickness": "X mm",
   "ulceration": "Ja" / "Nein" / "Nicht angegeben",
   "mitoses": "Wert oder ''",
-  "histology": "Histologie-Text",
+  "histology": "Histologischer Subtyp / Wachstumsmuster — NIEMALS eine Lokalisation",
   "resection_status": "R0/R1/Rx/...",
   "safety_margin": "X cm",
   "slne": "Ergebnis-Text",
@@ -278,6 +285,15 @@ und leere Objekte {} für fehlende Objekte.
   WICHTIG zu staging: Extrahiere das 'Aktuelles Stadium' GENAU so, wie es im Text steht.
   ERFINDE KEINE Werte. Wenn im Text 'pT2 cN cM1a' steht, dann muss staging.t='pT2', staging.n='cN', staging.m='cM1a' sein.
   Leite KEINE eigenen Staging-Werte aus der Krankengeschichte ab. Nur wörtlich übernehmen.
+
+  WICHTIG zu histology: 'histology' ist AUSSCHLIESSLICH der histologische Subtyp
+  bzw. das Wachstumsmuster des Melanoms, z. B.: 'Superfiziell spreitendes Melanom (SSM)',
+  'Noduläres Melanom (NM)', 'Lentigo-maligna-Melanom (LMM)', 'Akrolentiginöses Melanom (ALM)',
+  'Desmoplastisches Melanom', 'Spindelzelliges Melanom', 'Schleimhautmelanom',
+  'Aderhautmelanom', 'Melanom unklassifizierbar', 'MUP'.
+  histology darf NIEMALS eine anatomische Lokalisation enthalten (kein 'Haut Rücken',
+  'Haut Schulter', 'Skin of trunk' o. ä.). Wenn der histologische Subtyp im Text fehlt,
+  setze histology = "".  ICD-O-Lokalisationscodes (C44.x) gehören NICHT in dieses Feld.
 
   "mutations": {"BRAF": "V600E", "NRAS": "Wildtyp", ...},
   "pdl1": "Wert oder 'Nicht bestimmt'",
@@ -355,16 +371,53 @@ def extract_clinical_data(protocol_text):
 
 # ── imaging body_region enrichment ───────────────────────────────────────────
 
-IMAGING_REGION_PROMPT = """Du erhältst eine Liste von bildgebenden Befunden als JSON.
-Ergänze für jeden Befund das Feld "body_region" mit der passenden Region-ID
-und das Feld "region" mit einer deutschen anatomischen Beschreibung.
+IMAGING_REGION_PROMPT = """Du erhältst eine Liste von bildgebenden Befunden als JSON-Array.
+Jeder Eintrag hat ein Feld "index" und einen Befundauszug.
 
-Verwende NUR diese Region-IDs: """ + json.dumps(BODY_REGION_IDS) + """
+Bestimme für JEDEN Eintrag die anatomische Region, die im Befund untersucht/beschrieben wird:
+- "body_region": EXAKT eine ID aus der erlaubten Liste (siehe unten).
+  Wenn keine spezifische Region passt, verwende "whole_body".
+- "region": kurze deutsche Beschreibung (z. B. "Kopf", "Thorax", "Abdomen links").
 
-Antworte mit einem JSON-Array, das dieselbe Struktur wie die Eingabe hat,
-erweitert um "body_region" und "region" für jeden Eintrag.
-Antworte ausschließlich mit dem JSON-Array.
+Erlaubte body_region-IDs (NUR diese verwenden): """ + json.dumps(BODY_REGION_IDS) + """
+
+Mapping-Hinweise:
+- CT/MRT Schädel/Hirn/Kopf → "head"
+- CT/MRT Hals → "neck"
+- CT Thorax / Röntgen-Thorax / PET Thorax → "thorax"
+- CT Abdomen/Becken → "abdomen" (bei Becken-Schwerpunkt: "pelvis")
+- Ganzkörper-CT / PET-CT Ganzkörper → "whole_body"
+- Sonographie Lymphknoten Axilla → "axilla_left" oder "axilla_right"
+- Sonographie Lymphknoten Leiste → "groin_left" oder "groin_right"
+- MRT Wirbelsäule → "spine"
+
+Antworte AUSSCHLIESSLICH mit folgendem JSON-Objekt:
+{"entries": [{"index": 0, "body_region": "...", "region": "..."}, ...]}
+Kein zusätzlicher Text.
 """
+
+
+def _unwrap_entries(parsed, expected_keys=('entries', 'imaging', 'results', 'items', 'data')):
+    """Extract a list of entries from various JSON wrapper shapes."""
+    if isinstance(parsed, list):
+        return parsed
+    if not isinstance(parsed, dict):
+        return []
+    for key in expected_keys:
+        if key in parsed and isinstance(parsed[key], list):
+            return parsed[key]
+    # Dict-of-dicts keyed by index: {"0": {...}, "1": {...}}
+    if parsed and all(isinstance(v, dict) for v in parsed.values()):
+        try:
+            ordered = sorted(parsed.items(), key=lambda kv: int(kv[0]))
+            return [v for _, v in ordered]
+        except (ValueError, TypeError):
+            return list(parsed.values())
+    # Fallback: first list-valued field
+    for v in parsed.values():
+        if isinstance(v, list):
+            return v
+    return []
 
 
 def enrich_imaging_regions(imaging_list):
@@ -372,35 +425,55 @@ def enrich_imaging_regions(imaging_list):
     if not imaging_list or not LLM_BASE_URL:
         return imaging_list
 
-    # Prepare a minimal payload for the LLM (just date, type, finding excerpt)
-    summaries = []
-    for img in imaging_list:
-        summaries.append({
+    # Indexed payload so partial / re-ordered responses still work.
+    payload = []
+    for i, img in enumerate(imaging_list):
+        payload.append({
+            'index': i,
             'date': img.get('date', ''),
             'type': img.get('type', ''),
             'finding_excerpt': (img.get('finding', '') or '')[:500],
         })
 
-    content = _llm_chat(
-        messages=[
-            {"role": "system", "content": IMAGING_REGION_PROMPT},
-            {"role": "user",   "content": json.dumps(summaries, ensure_ascii=False)},
-        ],
-        max_tokens=8192,
-        json_mode=True,
-    )
-    enriched = json.loads(content)
-    # The model might wrap the array in an object
-    if isinstance(enriched, dict):
-        enriched = enriched.get('imaging', enriched.get('results', list(enriched.values())[0]))
-
-    if not isinstance(enriched, list) or len(enriched) != len(imaging_list):
-        print(f"  WARNING: imaging enrichment returned {len(enriched) if isinstance(enriched, list) else 'non-list'} items, expected {len(imaging_list)}.  Skipping.")
+    try:
+        content = _llm_chat(
+            messages=[
+                {"role": "system", "content": IMAGING_REGION_PROMPT},
+                {"role": "user",   "content": json.dumps(payload, ensure_ascii=False)},
+            ],
+            max_tokens=8192,
+            json_mode=True,
+        )
+        parsed = json.loads(content)
+    except Exception as e:
+        print(f"  WARNING: imaging enrichment call failed: {e}")
         return imaging_list
 
-    for orig, enr in zip(imaging_list, enriched):
-        orig['body_region'] = enr.get('body_region', '')
-        orig['region'] = enr.get('region', '')
+    entries = _unwrap_entries(parsed)
+    if not entries:
+        print(f"  WARNING: imaging enrichment returned no entries (shape={type(parsed).__name__}, keys={list(parsed.keys()) if isinstance(parsed, dict) else 'n/a'}).")
+        return imaging_list
+
+    allowed = set(BODY_REGION_IDS)
+    matched = 0
+    for ent in entries:
+        if not isinstance(ent, dict):
+            continue
+        idx = ent.get('index')
+        if not isinstance(idx, int) or not (0 <= idx < len(imaging_list)):
+            continue
+        br = (ent.get('body_region') or '').strip()
+        if br and br not in allowed:
+            # Try a loose lower-case match before discarding.
+            br_lc = br.lower()
+            br = next((a for a in BODY_REGION_IDS if a == br_lc), '')
+        imaging_list[idx]['body_region'] = br
+        imaging_list[idx]['region'] = (ent.get('region') or '').strip()
+        if br:
+            matched += 1
+
+    if matched == 0:
+        print(f"  WARNING: imaging enrichment matched 0/{len(imaging_list)} entries to allowed body regions.")
 
     return imaging_list
 
@@ -925,18 +998,32 @@ def build_dashboard_json(case_id, sources_dir, row=None):
 # ── case discovery ───────────────────────────────────────────────────────────
 
 def discover_cases_external():
-    """Discover cases from CSV.  Returns list of (case_id, row_dict)."""
-    if not CSV_PATH or not os.path.isfile(CSV_PATH):
-        return []
-    with open(CSV_PATH, 'r', encoding='utf-8') as f:
-        reader = csv.DictReader(f)
-        rows = list(reader)
+    """Discover cases from the sampled-cases CSV plus the optional replacement
+    CSV. Later files do not override earlier ones (first row wins per d0.id).
+    Returns list of (case_id, row_dict)."""
     cases = []
-    for row in rows:
-        case_id = row.get('d0.id', '').strip()
-        if case_id:
-            cases.append((case_id, row))
+    seen = set()
+    for csv_path in (CSV_PATH, CSV_REPLACEMENT_PATH):
+        if not csv_path or not os.path.isfile(csv_path):
+            continue
+        with open(csv_path, 'r', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                case_id = row.get('d0.id', '').strip()
+                if case_id and case_id not in seen:
+                    cases.append((case_id, row))
+                    seen.add(case_id)
     return cases
+
+
+def _case_has_all_texts(case_id):
+    """Return True iff {case_id}.txt exists in both texts_human/ and texts_llm/
+    under every subdir in TEXTS_SUBDIRS (fragestellung + zusammenfassung)."""
+    for root in (TEXTS_HUMAN_DIR, TEXTS_LLM_DIR):
+        for sub in TEXTS_SUBDIRS:
+            if not os.path.isfile(os.path.join(root, sub, f'{case_id}.txt')):
+                return False
+    return True
 
 
 def discover_cases_legacy():
@@ -959,11 +1046,20 @@ def discover_cases_legacy():
 def main():
     parser = argparse.ArgumentParser(description='Pre-process case data into dashboard JSON.')
     parser.add_argument('--case', type=str, help='Process a single case ID')
+    parser.add_argument('--hashes-file', type=str, default=None,
+                        help='Path to a text file with one case-hash ID per line. Only cases whose '
+                             'ID appears in this file are processed. Blank lines and lines starting '
+                             'with "#" are ignored.')
     parser.add_argument('--legacy', action='store_true', help='Process legacy Fall1..5 cases')
     parser.add_argument('--dry-run', action='store_true', help='Preview without writing files')
     parser.add_argument('--output-dir', type=str, default=None,
                         help='Output directory (default: dashboard_data/)')
+    parser.add_argument('--no-require-texts', action='store_true',
+                        help='Do not skip cases that lack {case_id}.txt in texts_human/ and texts_llm/ '
+                             '(fragestellung + zusammenfassung). By default such cases are skipped.')
     args = parser.parse_args()
+
+    print(f'Using local LLM: {LLM_BASE_URL}  model={LLM_MODEL}')
 
     output_dir = args.output_dir or DASHBOARD_DIR
     os.makedirs(output_dir, exist_ok=True)
@@ -984,8 +1080,48 @@ def main():
     if args.case:
         all_cases = [(cid, row) for cid, row in all_cases if cid == args.case]
         if not all_cases:
-            print(f"Case {args.case} not found.")
-            sys.exit(1)
+            # Case not found in the discovery CSV. Proceed anyway with row=None
+            # (build_dashboard_json's CSV-override block is guarded by `if row:`,
+            # so this just uses the LLM-extracted clinical data as-is).
+            print(f"Case {args.case} not in CSV — proceeding without demographic overrides.")
+            all_cases = [(args.case, None)]
+
+    if args.hashes_file:
+        if not os.path.isfile(args.hashes_file):
+            sys.exit(f"--hashes-file not found: {args.hashes_file}")
+        # utf-8-sig tolerates an optional BOM (common when the file is created
+        # with Notepad or PowerShell's Set-Content); plain utf-8 would leave
+        # a \ufeff prefix on the first ID and silently drop it from lookups.
+        with open(args.hashes_file, 'r', encoding='utf-8-sig') as f:
+            wanted = []
+            seen_wanted = set()
+            for line in f:
+                cid = line.strip()
+                if not cid or cid.startswith('#'):
+                    continue
+                if cid not in seen_wanted:
+                    wanted.append(cid)
+                    seen_wanted.add(cid)
+        known = {cid: row for cid, row in all_cases}
+        missing = [cid for cid in wanted if cid not in known]
+        all_cases = [(cid, known.get(cid)) for cid in wanted]
+        print(f"--hashes-file: {len(wanted)} ID(s) requested, "
+              f"{len(wanted) - len(missing)} matched CSV, {len(missing)} not in CSV.")
+        if missing:
+            preview = ', '.join(missing[:5]) + (' …' if len(missing) > 5 else '')
+            print(f"  Not in CSV (will run without demographic overrides): {preview}")
+
+    # Restrict to cases that already have text files in texts_human/ and texts_llm/
+    # (both fragestellung and zusammenfassung). Skipped for --legacy and when the
+    # user opts out via --no-require-texts.
+    if not args.legacy and not args.no_require_texts:
+        before = len(all_cases)
+        all_cases = [(cid, row) for cid, row in all_cases if _case_has_all_texts(cid)]
+        skipped = before - len(all_cases)
+        if skipped:
+            print(f"Filtered out {skipped} case(s) missing texts in "
+                  f"texts_human/{{{','.join(TEXTS_SUBDIRS)}}} or "
+                  f"texts_llm/{{{','.join(TEXTS_SUBDIRS)}}}.")
 
     print(f"Found {len(all_cases)} case(s) to process.")
     print(f"Output directory: {output_dir}")

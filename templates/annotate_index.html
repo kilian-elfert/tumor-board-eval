@@ -1,27 +1,79 @@
 {% extends "base.html" %}
 {% block title %}Annotator – Fälle{% endblock %}
 {% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='annotate.css') }}?v=4">
+<link rel="stylesheet" href="{{ url_for('static', filename='annotate.css') }}?v=20">
 
+{% set reviewed_count = cases | selectattr('reviewed') | list | length %}
+{% set replace_count = cases | selectattr('needs_replacement') | list | length %}
+{% set total_count = cases | length %}
 <div class="ann-index">
   <h1 class="ann-index-title">Annotator – Fallübersicht</h1>
   <p class="ann-index-sub">Markieren Sie für jeden Fall die Textstellen, in denen die einzelnen Informationskategorien enthalten sind, und setzen Sie den Status (<em>enthalten</em>, <em>nicht enthalten</em>, <em>falsch</em>).</p>
 
+  <div class="ann-review-summary" aria-live="polite">
+    <span class="ann-review-summary-dot" aria-hidden="true">✓</span>
+    <span>Geprüft: <strong id="ann-reviewed-count">{{ reviewed_count }}</strong> / <span id="ann-reviewed-total">{{ total_count }}</span> Fälle</span>
+    <div class="ann-review-summary-bar">
+      <div class="ann-review-summary-fill"
+           id="ann-reviewed-fill"
+           style="width: {{ ((reviewed_count / total_count) * 100) | int if total_count else 0 }}%"></div>
+    </div>
+  </div>
+
+  <div class="ann-replace-summary" aria-live="polite">
+    <span class="ann-replace-summary-dot" aria-hidden="true">⟳</span>
+    <span>Zu ersetzen: <strong id="ann-replace-count">{{ replace_count }}</strong> / {{ total_count }} Fälle</span>
+  </div>
+
+  {% if current_user_role == 'admin' %}
+  <div class="ann-admin-bar" role="search">
+    <label class="ann-admin-bar-label" for="ann-index-search">Admin · Fall suchen</label>
+    <input type="search" id="ann-index-search"
+           class="ann-admin-bar-input"
+           placeholder="ID oder Titel eingeben …"
+           autocomplete="off">
+    <select id="ann-index-jump" class="ann-admin-bar-select">
+      <option value="">– Direkt zu Fall springen –</option>
+      {% for c in cases %}
+      <option value="{{ c.id }}">
+        {{ c.id[:10] }}…{% if not c.annotatable %} (unvollständig){% endif %}
+      </option>
+      {% endfor %}
+    </select>
+  </div>
+  {% endif %}
+
   <table class="ann-index-table">
     <thead>
       <tr>
+        <th title="Als geprüft markieren"></th>
         <th>Fall</th>
         {% for key, label, _src, _letter in text_keys %}
         <th>{{ label }}</th>
         {% endfor %}
         <th>Zuletzt geändert</th>
+        <th title="Fall muss ersetzt werden">Ersetzen</th>
         <th></th>
       </tr>
     </thead>
     <tbody>
       {% for c in cases %}
-      <tr>
-        <td><code>{{ c.id[:10] }}…</code></td>
+      <tr data-case-id="{{ c.id }}"
+          data-case-label="{{ c.title }}"
+          class="{% if c.reviewed %}ann-row-reviewed{% endif %}{% if c.needs_replacement %} ann-row-replace{% endif %}{% if not c.annotatable %} ann-row-incomplete{% endif %}">
+        <td class="ann-review-cell">
+          <button type="button"
+                  class="ann-review-toggle{% if c.reviewed %} is-reviewed{% endif %}"
+                  data-case-id="{{ c.id }}"
+                  aria-pressed="{{ 'true' if c.reviewed else 'false' }}"
+                  title="Als geprüft markieren / zurücksetzen">
+            <span class="ann-review-icon" aria-hidden="true">{% if c.reviewed %}✓{% else %}{% endif %}</span>
+          </button>
+        </td>
+        <td>
+          <code>{{ c.id[:10] }}…</code>
+          {% if not c.annotatable %}<span class="ann-incomplete-tag" title="Mindestens ein annotierbarer Text fehlt">unvollständig</span>{% endif %}
+        </td>
         {% for key, _label, _src, _letter in text_keys %}
         {% set rated, total = c.progress[key] %}
         <td>
@@ -32,10 +84,118 @@
         </td>
         {% endfor %}
         <td class="ann-updated">{{ c.updated_at[:16] | replace('T', ' ') if c.updated_at else '–' }}</td>
+        <td class="ann-replace-cell">
+          <button type="button"
+                  class="ann-replace-toggle{% if c.needs_replacement %} is-flagged{% endif %}"
+                  data-case-id="{{ c.id }}"
+                  aria-pressed="{{ 'true' if c.needs_replacement else 'false' }}"
+                  title="Fall zum Ersetzen markieren / zurücksetzen">
+            <span class="ann-replace-icon" aria-hidden="true">⟳</span>
+            <span class="ann-replace-label">{% if c.needs_replacement %}Ersetzen{% else %}Ersetzen?{% endif %}</span>
+          </button>
+        </td>
         <td><a class="ann-open-btn" href="{{ url_for('annotate_case', case_id=c.id) }}">Öffnen →</a></td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
 </div>
+
+<script>
+  document.querySelectorAll('.ann-review-toggle').forEach(function (btn) {
+    btn.addEventListener('click', async function () {
+      const caseId = btn.dataset.caseId;
+      const wasReviewed = btn.classList.contains('is-reviewed');
+      btn.disabled = true;
+      try {
+        const resp = await fetch(`/annotate/${caseId}/reviewed`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ reviewed: !wasReviewed })
+        });
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        const data = await resp.json();
+        btn.classList.toggle('is-reviewed', !!data.reviewed);
+        btn.setAttribute('aria-pressed', data.reviewed ? 'true' : 'false');
+        btn.querySelector('.ann-review-icon').textContent = data.reviewed ? '\u2713' : '';
+        btn.closest('tr').classList.toggle('ann-row-reviewed', !!data.reviewed);
+        updateReviewSummary();
+      } catch (e) {
+        alert('Konnte Status nicht speichern: ' + e.message);
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  });
+
+  function updateReviewSummary() {
+    const countEl = document.getElementById('ann-reviewed-count');
+    const totalEl = document.getElementById('ann-reviewed-total');
+    const fillEl  = document.getElementById('ann-reviewed-fill');
+    if (!countEl || !totalEl || !fillEl) return;
+    const total    = parseInt(totalEl.textContent, 10) || 0;
+    const reviewed = document.querySelectorAll('.ann-review-toggle.is-reviewed').length;
+    countEl.textContent = reviewed;
+    fillEl.style.width  = total ? Math.round((reviewed / total) * 100) + '%' : '0%';
+  }
+
+  document.querySelectorAll('.ann-replace-toggle').forEach(function (btn) {
+    btn.addEventListener('click', async function () {
+      const caseId    = btn.dataset.caseId;
+      const wasFlagged = btn.classList.contains('is-flagged');
+      btn.disabled = true;
+      try {
+        const resp = await fetch(`/annotate/${caseId}/needs_replacement`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ needs_replacement: !wasFlagged })
+        });
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        const data = await resp.json();
+        const flagged = !!data.needs_replacement;
+        btn.classList.toggle('is-flagged', flagged);
+        btn.setAttribute('aria-pressed', flagged ? 'true' : 'false');
+        const labelEl = btn.querySelector('.ann-replace-label');
+        if (labelEl) labelEl.textContent = flagged ? 'Ersetzen' : 'Ersetzen?';
+        btn.closest('tr').classList.toggle('ann-row-replace', flagged);
+        updateReplaceSummary();
+      } catch (e) {
+        alert('Konnte Status nicht speichern: ' + e.message);
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  });
+
+  function updateReplaceSummary() {
+    const countEl = document.getElementById('ann-replace-count');
+    if (!countEl) return;
+    countEl.textContent = document.querySelectorAll('.ann-replace-toggle.is-flagged').length;
+  }
+
+  // Admin: search filter + jump-to-case dropdown
+  (function () {
+    const searchInput = document.getElementById('ann-index-search');
+    const jumpSelect  = document.getElementById('ann-index-jump');
+    if (searchInput) {
+      const rows = Array.from(document.querySelectorAll('.ann-index-table tbody tr'));
+      searchInput.addEventListener('input', function () {
+        const q = searchInput.value.trim().toLowerCase();
+        rows.forEach(function (row) {
+          if (!q) { row.style.display = ''; return; }
+          const id    = (row.dataset.caseId    || '').toLowerCase();
+          const label = (row.dataset.caseLabel || '').toLowerCase();
+          row.style.display = (id.includes(q) || label.includes(q)) ? '' : 'none';
+        });
+      });
+    }
+    if (jumpSelect) {
+      jumpSelect.addEventListener('change', function () {
+        const cid = jumpSelect.value;
+        if (cid) window.location.href = '/annotate/' + encodeURIComponent(cid);
+      });
+    }
+  })();
+
+</script>
 {% endblock %}

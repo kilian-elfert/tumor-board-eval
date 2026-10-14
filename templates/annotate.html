@@ -1,12 +1,51 @@
 {% extends "base.html" %}
 {% block title %}Annotator – {{ case_label }}{% endblock %}
 {% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='annotate.css') }}?v=8">
+<link rel="stylesheet" href="{{ url_for('static', filename='annotate.css') }}?v=24">
 
 <div class="ann-layout">
   <aside class="ann-sidebar">
     <a href="{{ url_for('annotate_index') }}" class="ann-back">← Fallübersicht</a>
     <h2 class="ann-case-title">Fall <code>{{ case_id[:10] }}…</code></h2>
+
+    {% if current_user_role == 'admin' and jump_cases %}
+    <div class="ann-admin-jump" role="search">
+      <label class="ann-admin-jump-label" for="ann-jump-search">Admin · Fall wechseln</label>
+      <input type="search" id="ann-jump-search"
+             class="ann-admin-jump-input"
+             list="ann-jump-list"
+             placeholder="Suchen oder ID eingeben …"
+             autocomplete="off">
+      <datalist id="ann-jump-list">
+        {% for jc in jump_cases %}
+        <option value="{{ jc.id }}" label="{{ jc.label }}{% if not jc.annotatable %} · unvollständig{% endif %}">
+          {{ jc.label }}{% if not jc.annotatable %} (unvollständig){% endif %}
+        </option>
+        {% endfor %}
+      </datalist>
+      <select id="ann-jump-select" class="ann-admin-jump-select">
+        <option value="">– Direkt zu Fall springen –</option>
+        {% for jc in jump_cases %}
+        <option value="{{ jc.id }}" {% if jc.id == case_id %}selected{% endif %}>
+          {{ jc.id[:10] }}…{% if not jc.annotatable %} (unvollständig){% endif %}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+    <script>
+    (function () {
+      const sel   = document.getElementById('ann-jump-select');
+      const input = document.getElementById('ann-jump-search');
+      function goTo(cid) {
+        if (cid && cid !== '{{ case_id }}') {
+          window.location.href = '/annotate/' + encodeURIComponent(cid);
+        }
+      }
+      if (sel)   sel.addEventListener('change', function () { goTo(sel.value); });
+      if (input) input.addEventListener('change', function () { goTo(input.value.trim()); });
+    })();
+    </script>
+    {% endif %}
 
     <a href="{{ url_for('case_dashboard', case_id=case_id) }}"
        target="_blank" rel="noopener"
@@ -18,6 +57,11 @@
     <button type="button" id="ann-reset-btn" class="ann-reset-btn"
             title="Alle Annotationen verwerfen und mit den LLM-Vorschlägen neu starten">
       ↺ Auf LLM-Vorschlag zurücksetzen
+    </button>
+
+    <button type="button" id="ann-save-all-btn" class="ann-save-all-btn"
+            title="Speichert für alle Texte die aktuell im Editor stehenden Inhalte auf die Quelldateien (überschreibt). Unveränderte Texte werden übersprungen.">
+      💾 Alle Texte speichern
     </button>
 
     <div class="ann-text-switch" role="tablist">
@@ -70,17 +114,11 @@
         <h3>{{ tb.label }}</h3>
         <div class="ann-text-progress">
           <span class="ann-text-progress-label" data-text-key="{{ tb.key }}">0 / {{ info_items | length }} bewertet</span>
-          <span class="ann-llm-group">
-            <select class="ann-llm-mode" data-text-key="{{ tb.key }}" title="Wie soll das LLM-Ergebnis mit bestehenden Annotationen kombiniert werden?">
-              <option value="merge" selected>Nur ergänzen (manuelle Änderungen behalten)</option>
-              <option value="overwrite">Alles ersetzen</option>
-            </select>
-            <button type="button" class="ann-llm-review-btn"
-                    data-text-key="{{ tb.key }}"
-                    title="LLM prüft diesen Text gegen das Originalprotokoll und schlägt Status + Spans vor">
-              🤖 LLM-Review
-            </button>
-          </span>
+          <button type="button" class="ann-text-edit-btn"
+                  data-text-key="{{ tb.key }}"
+                  title="Originaltext bearbeiten und überschreiben">
+            ✎ Bearbeiten
+          </button>
         </div>
       </header>
       <div class="ann-text-help">
@@ -89,6 +127,16 @@
       <pre class="ann-text-content"
            data-text-key="{{ tb.key }}"
            data-raw="{{ tb.content }}">{{ tb.content }}</pre>
+      <div class="ann-text-editor" data-text-key="{{ tb.key }}" hidden>
+        <div class="ann-text-editor-warn">
+          Achtung: Beim Speichern wird die Originaldatei überschrieben. Markierungen (Spans), deren Text durch Ihre Änderung nicht mehr wörtlich vorkommt, werden automatisch entfernt. Status-Einträge bleiben erhalten.
+        </div>
+        <textarea class="ann-text-editor-area" data-text-key="{{ tb.key }}">{{ tb.content }}</textarea>
+        <div class="ann-text-editor-actions">
+          <button type="button" class="ann-text-editor-cancel" data-text-key="{{ tb.key }}">Abbrechen</button>
+          <button type="button" class="ann-text-editor-save" data-text-key="{{ tb.key }}">Speichern &amp; überschreiben</button>
+        </div>
+      </div>
     </section>
     {% endfor %}
   </main>
@@ -107,6 +155,21 @@
       <option value="enthalten">enthalten</option>
       <option value="falsch">falsch</option>
     </select>
+  </div>
+  <div class="ann-falsch-fields" id="ann-assign-falsch-fields" hidden>
+    <div class="ann-popup-status-row">
+      <label for="ann-assign-cat">Fehlerart:</label>
+      <select id="ann-assign-cat">
+        <option value="formal">Formal (Tippfehler, Format, Einheiten)</option>
+        <option value="inhaltlich" selected>Inhaltlich (falsche/halluzinierte Werte)</option>
+        <option value="logisch">Logisch/medizinisch (z. B. falsche TNM-Ableitung)</option>
+        <option value="prozess">Prozess/System (übersehene Widersprüche, Priorisierung)</option>
+      </select>
+    </div>
+    <textarea id="ann-assign-desc"
+              class="ann-desc-input"
+              placeholder="Kurze Begründung des Fehlers (1–2 Sätze) – wird beim Hover über die Markierung angezeigt"
+              rows="3"></textarea>
   </div>
   <input type="search" id="ann-assign-search" placeholder="Suche…" class="ann-search">
   <div class="ann-popup-items">
@@ -129,8 +192,49 @@
     <button type="button" class="ann-span-action ann-st-falsch" data-status="falsch">falsch</button>
     <button type="button" class="ann-span-action ann-span-remove">entfernen</button>
   </div>
+  <div class="ann-falsch-fields" id="ann-span-falsch-fields" hidden>
+    <div class="ann-popup-status-row">
+      <label for="ann-span-cat">Fehlerart:</label>
+      <select id="ann-span-cat">
+        <option value="formal">Formal (Tippfehler, Format, Einheiten)</option>
+        <option value="inhaltlich" selected>Inhaltlich (falsche/halluzinierte Werte)</option>
+        <option value="logisch">Logisch/medizinisch (z. B. falsche TNM-Ableitung)</option>
+        <option value="prozess">Prozess/System (übersehene Widersprüche, Priorisierung)</option>
+      </select>
+    </div>
+    <textarea id="ann-span-desc"
+              class="ann-desc-input"
+              placeholder="Kurze Begründung des Fehlers (1–2 Sätze)"
+              rows="3"></textarea>
+  </div>
   <div class="ann-span-actions">
     <button type="button" class="ann-span-action ann-span-addcat" id="ann-span-addcat">+ Weitere Kategorie zuweisen</button>
+  </div>
+</div>
+
+<!-- Popup for editing / overwriting the falsch-reason on a sidebar pill -->
+<div class="ann-popup ann-reason-popup" id="ann-reason-popup" hidden>
+  <div class="ann-popup-head">
+    <span id="ann-reason-title">Fehlerbegründung bearbeiten</span>
+    <button type="button" class="ann-popup-close" onclick="closeReasonPopup()">×</button>
+  </div>
+  <div class="ann-reason-slug" id="ann-reason-slug"></div>
+  <div class="ann-popup-status-row">
+    <label for="ann-reason-cat">Fehlerart:</label>
+    <select id="ann-reason-cat">
+      <option value="formal">Formal (Tippfehler, Format, Einheiten)</option>
+      <option value="inhaltlich" selected>Inhaltlich (falsche/halluzinierte Werte)</option>
+      <option value="logisch">Logisch/medizinisch (z. B. falsche TNM-Ableitung)</option>
+      <option value="prozess">Prozess/System (übersehene Widersprüche, Priorisierung)</option>
+    </select>
+  </div>
+  <textarea id="ann-reason-desc"
+            class="ann-desc-input"
+            placeholder="Kurze Begründung des Fehlers (1–2 Sätze)"
+            rows="4"></textarea>
+  <div class="ann-reason-actions">
+    <button type="button" id="ann-reason-cancel">Abbrechen</button>
+    <button type="button" id="ann-reason-save" class="ann-reason-save">Speichern</button>
   </div>
 </div>
 
@@ -140,5 +244,5 @@
   window.ANN_INFO_ITEMS = {{ info_items | tojson }};
   window.ANN_ITEM_SLUGS = {{ (info_items | map('lower') | list) | tojson }};
 </script>
-<script src="{{ url_for('static', filename='annotate.js') }}?v=6"></script>
+<script src="{{ url_for('static', filename='annotate.js') }}?v=18"></script>
 {% endblock %}

@@ -1,7 +1,39 @@
 {% extends "base.html" %}
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}?v=48">
+{% if annotator_mode or annotator_preview %}
+<link rel="stylesheet" href="{{ url_for('static', filename='annotator_edit.css') }}?v=5">
+{% endif %}
 {% set type_de = {'Diagnostik':'Diagnostik','Therapie':'Therapie','Nebenwirkung':'Nebenwirkung','Tumorkonferenz':'Tumorkonferenz','Staging':'Staging','Nachsorge':'Nachsorge','Konsil':'Konsil','Sonstiges':'Sonstiges'} %}
+
+{# ── inline-edit macros (only render when annotator_mode is True) ────────── #}
+{% macro ed_span(path, value, placeholder='Keine Angabe', block=False) -%}
+{%- if annotator_mode -%}
+<span class="dash-ed{% if block %} dash-ed-block{% endif %}" data-edit-path="{{ path }}" data-placeholder="{{ placeholder }}" contenteditable="plaintext-only">{{ value or '' }}</span>
+{%- else -%}
+{{ (value or '') | ka }}
+{%- endif -%}
+{%- endmacro %}
+
+{% macro ed_input(path, value, placeholder='', extra_class='') -%}
+{%- if annotator_mode -%}
+<input type="text" class="dash-ed {{ extra_class }}" data-edit-path="{{ path }}" value="{{ value or '' }}" placeholder="{{ placeholder }}">
+{%- else -%}
+{{ (value or '') | ka }}
+{%- endif -%}
+{%- endmacro %}
+
+{% macro ed_select_sex(path, value) -%}
+{%- if annotator_mode -%}
+<select class="dash-ed" data-edit-path="{{ path }}">
+  {% for opt in ['', 'M', 'W', 'D'] %}
+  <option value="{{ opt }}" {% if (value or '') == opt %}selected{% endif %}>{{ opt or '—' }}</option>
+  {% endfor %}
+</select>
+{%- else -%}
+{{ (value or '') | ka }}
+{%- endif -%}
+{%- endmacro %}
 
 <div class="dash-container dash-with-rail">
 
@@ -32,7 +64,11 @@
     <button class="dash-tab" data-target="tab-timeline">Verlauf</button>
     <button class="dash-tab" data-target="tab-lab">Laborwerte</button>
     <button class="dash-tab" data-target="tab-imaging">Bildgebung</button>
-    {% if annotator_mode %}
+    {% if annotator_preview %}
+    <a href="{{ url_for('case_dashboard', case_id=case_id) }}" class="btn-back-eval">
+      &larr; Zurück zum Bearbeiten
+    </a>
+    {% elif annotator_mode %}
     <a href="{{ url_for('annotate_case', case_id=case_id) }}" class="btn-back-eval">
       &larr; Zurück zur Annotation
     </a>
@@ -43,43 +79,103 @@
     {% endif %}
   </div>
 
+  {% if annotator_preview %}
+  <div class="annotator-preview-banner">
+    <strong>Vorschau · Studien-Ansicht</strong>
+    <span>So sehen Bewerter:innen den Fall. Bearbeitung ist hier deaktiviert.</span>
+    <a href="{{ url_for('case_dashboard', case_id=case_id) }}" class="btn-back-edit">Zurück zum Bearbeiten &rarr;</a>
+  </div>
+  {% endif %}
+
   {# ══════════════════════════════════════════════════════════════════════════ #}
   {# TAB 1 – OVERVIEW (Basic Info + Body Map)                                  #}
   {# ══════════════════════════════════════════════════════════════════════════ #}
-  <div id="tab-overview" class="dash-tab-content active">
+  <div id="tab-overview" class="dash-tab-content active{% if annotator_mode %} overview-editable{% endif %}">
+    {% if annotator_mode %}
+    <div class="overview-edit-toolbar"
+         data-case-id="{{ case_id }}"
+         data-endpoint="{{ url_for('annotate_dashboard_edit', case_id=case_id) }}"
+         data-preview-url="{{ url_for('case_dashboard', case_id=case_id, preview=1) }}">
+      <span class="oet-title">Übersicht bearbeiten</span>
+      <span class="oet-hint">Kurzverlauf ist schreibgeschützt. „Speichern“ überschreibt die Dashboard-JSON (mit .pre-edit-Backup beim ersten Mal).</span>
+      <span class="oet-status"></span>
+      <button type="button" class="oet-preview" title="In der Studien-Ansicht anschauen">Vorschau</button>
+      <button type="button" class="oet-save">Änderungen speichern</button>
+    </div>
+    {% endif %}
     <div class="overview-grid">
 
       {# ── left column: Patient info card ────────────────────────────────── #}
       <div class="info-card">
-        {% if tb_date %}
+        {% if annotator_mode or tb_date %}
         <div class="tb-conference-chip" title="Geplante Tumorkonferenz">
           <div class="tb-conf-calendar" aria-hidden="true">
-            <span class="tb-conf-cal-month">{{ {'01':'JAN','02':'FEB','03':'MÄR','04':'APR','05':'MAI','06':'JUN','07':'JUL','08':'AUG','09':'SEP','10':'OKT','11':'NOV','12':'DEZ'}[tb_date[3:5]] }}</span>
-            <span class="tb-conf-cal-day">{{ tb_date[0:2] }}</span>
+            <span class="tb-conf-cal-month">{% if tb_date %}{{ {'01':'JAN','02':'FEB','03':'MÄR','04':'APR','05':'MAI','06':'JUN','07':'JUL','08':'AUG','09':'SEP','10':'OKT','11':'NOV','12':'DEZ'}[tb_date[3:5]] }}{% else %}—{% endif %}</span>
+            <span class="tb-conf-cal-day">{% if tb_date %}{{ tb_date[0:2] }}{% else %}—{% endif %}</span>
           </div>
           <div class="tb-conf-meta">
             <span class="tb-conf-label">Geplante Tumorkonferenz</span>
             <span class="tb-conf-main">
-              {% if tb_weekday %}{{ tb_weekday }}, {% endif %}{{ tb_date }}
+              {% if annotator_mode %}
+                <label style="font-size:11px;color:#57606a;">Datum</label>
+                {{ ed_input('tb_conference.date', tb_date, 'TT.MM.JJJJ', 'dash-ed-date') }}
+              {% else %}
+                {% if tb_weekday %}{{ tb_weekday }}, {% endif %}{{ tb_date }}
+              {% endif %}
             </span>
           </div>
         </div>
         {% endif %}
         <h2 class="card-title">Basisdaten</h2>
         <table class="info-table">
-          <tr><th>Geburtsdatum</th><td>{% if patient.dob %}{{ patient.dob }} ({{ patient.age }} J.){% else %}Keine Angabe{% endif %}</td></tr>
-          <tr><th>Geschlecht</th><td>{{ patient.sex|ka }}</td></tr>
-          <tr><th>ECOG</th><td>{{ patient.ecog|ka }}</td></tr>
-          <tr><th>Karnofsky</th><td>{{ patient.karnofsky|ka }}</td></tr>
+          <tr><th>Geburtsdatum</th><td>
+            {% if annotator_mode %}
+              {{ ed_input('dob', patient.dob, 'TT.MM.JJJJ', 'dash-ed-date') }}
+              &nbsp;(&nbsp;{{ ed_input('age', patient.age, 'Alter', 'dash-ed-code') }} J.&nbsp;)
+            {% else %}
+              {% if patient.dob %}{{ patient.dob }} ({{ patient.age }} J.){% else %}Keine Angabe{% endif %}
+            {% endif %}
+          </td></tr>
+          <tr><th>Geschlecht</th><td>{{ ed_select_sex('sex', patient.sex) }}</td></tr>
+          <tr><th>ECOG</th><td>{{ ed_input('ecog', patient.ecog, '', 'dash-ed-code') }}</td></tr>
+          <tr><th>Karnofsky</th><td>{{ ed_input('karnofsky', patient.karnofsky, '', 'dash-ed-code') }}</td></tr>
         </table>
 
         <h3 class="card-subtitle">Therapieverlauf</h3>
 
         {# ── Macro for a single therapy category ── #}
-        {% macro therapy_category(label, items, dot_class) %}
-        {% if items %}
+        {% macro therapy_category(label, items, dot_class, cat_key) %}
+        {% if annotator_mode or items %}
         <div class="therapy-cat">
           <h4 class="therapy-cat-label"><span class="therapy-tl-dot {{ dot_class }}"></span> {{ label }}</h4>
+          {% if annotator_mode %}
+          <ol class="therapy-timeline" data-edit-list="therapies.{{ cat_key }}">
+            {% for entry in (items or []) %}
+            <li class="therapy-tl-item dash-list-row">
+              <button type="button" class="dash-row-del" title="Eintrag entfernen">&times;</button>
+              <span class="therapy-tl-dot-wrap"><span class="therapy-tl-dot {{ dot_class }}"></span></span>
+              <span class="therapy-tl-date">
+                <input type="text" class="dash-ed dash-ed-date" data-edit-path-suffix="date" value="{{ entry.date or '' }}" placeholder="TT.MM.JJJJ">
+              </span>
+              <span class="therapy-tl-content">
+                <span class="dash-ed dash-ed-block" data-edit-path-suffix="text" data-placeholder="Beschreibung" contenteditable="plaintext-only">{{ entry.text or '' }}</span>
+              </span>
+            </li>
+            {% endfor %}
+            {# hidden template row cloned on '+ Eintrag hinzufügen' #}
+            <li class="therapy-tl-item dash-row-template">
+              <button type="button" class="dash-row-del" title="Eintrag entfernen">&times;</button>
+              <span class="therapy-tl-dot-wrap"><span class="therapy-tl-dot {{ dot_class }}"></span></span>
+              <span class="therapy-tl-date">
+                <input type="text" class="dash-ed dash-ed-date" data-edit-path-suffix="date" value="" placeholder="TT.MM.JJJJ">
+              </span>
+              <span class="therapy-tl-content">
+                <span class="dash-ed dash-ed-block" data-edit-path-suffix="text" data-placeholder="Beschreibung" contenteditable="plaintext-only"></span>
+              </span>
+            </li>
+          </ol>
+          <button type="button" class="dash-list-add" data-target="therapies.{{ cat_key }}">+ Eintrag hinzufügen</button>
+          {% else %}
           <ol class="therapy-timeline">
             {% for entry in items %}
             <li class="therapy-tl-item">
@@ -89,17 +185,16 @@
             </li>
             {% endfor %}
           </ol>
+          {% endif %}
         </div>
         {% endif %}
         {% endmacro %}
 
-        {{ therapy_category('Chirurgie', patient.therapies.surgery, 'dot-surgery') }}
-        {{ therapy_category('Bestrahlung', patient.therapies.radiation, 'dot-radiation') }}
-        {% if patient.therapies.other_locoregional %}
-        {{ therapy_category('Andere lokoregion&auml;re Therapien', patient.therapies.other_locoregional, 'dot-locoregional') }}
-        {% endif %}
-        {{ therapy_category('Systemtherapie', patient.therapies.systemic, 'dot-systemic') }}
-        {{ therapy_category('Aktuell', patient.therapies.current, 'dot-current') }}
+        {{ therapy_category('Chirurgie', patient.therapies.surgery, 'dot-surgery', 'surgery') }}
+        {{ therapy_category('Bestrahlung', patient.therapies.radiation, 'dot-radiation', 'radiation') }}
+        {{ therapy_category('Andere lokoregionäre Therapien', patient.therapies.other_locoregional, 'dot-locoregional', 'other_locoregional') }}
+        {{ therapy_category('Systemtherapie', patient.therapies.systemic, 'dot-systemic', 'systemic') }}
+        {{ therapy_category('Aktuell', patient.therapies.current, 'dot-current', 'current') }}
       </div>
 
       {# ── right column: Body map ────────────────────────────────────────── #}
@@ -825,10 +920,29 @@ document.addEventListener('DOMContentLoaded', function() {
   /* ── Body map (Echelon-style) ──────────────────────────────────────── */
   var primaryRegions = {{ patient.primary_tumor_body | tojson }};
   var primaryStatus  = {{ patient.primary_tumor_status | tojson }};
+  var primaryPos     = {{ patient.primary_tumor_pos | default(none, true) | tojson }};
+  var primaryLabel   = {{ patient.primary_tumor_label | default('', true) | tojson }};
   var metaRegions    = {{ patient.metastases_body | tojson }};
   var metaDetail     = {{ patient.metastases_detail | tojson }};
   var imagingData    = {{ patient.imaging | tojson }};
   var imagedRegions  = imagingData.map(function(img){ return img.body_region; }).filter(function(v,i,a){ return a.indexOf(v)===i; });
+
+  /* Metastases with a free-position override are drawn as floating dots
+     later on; the region-based rendering below must ignore them. */
+  function hasFreePos(m) {
+    if (!m || !m.pos) return false;
+    var x = parseFloat(m.pos.x), y = parseFloat(m.pos.y);
+    return isFinite(x) && isFinite(y);
+  }
+  var primaryHasFreePos = (function() {
+    if (!primaryPos) return false;
+    var x = parseFloat(primaryPos.x), y = parseFloat(primaryPos.y);
+    return isFinite(x) && isFinite(y);
+  })();
+  var metaWithPos    = metaDetail.filter(hasFreePos);
+  var metaWithoutPos = metaDetail.filter(function(m){ return !hasFreePos(m); });
+  metaRegions = metaWithoutPos.map(function(m){ return m.region; })
+                              .filter(function(v,i,a){ return v && a.indexOf(v) === i; });
 
   var REGION_NAMES = {
     'head':'Kopf','head_mouth':'Mundbereich','head_neck':'Kopf/Hals',
@@ -860,6 +974,7 @@ document.addEventListener('DOMContentLoaded', function() {
     regionInfo[r].push(line);
   });
   metaDetail.forEach(function(m) {
+    if (hasFreePos(m)) return;  // free-positioned dots handled below
     regionInfo[m.region] = regionInfo[m.region] || [];
     var isResponding = m.status === 'responding';
     var mDot = m.status === 'active' ? tipDot('#ff9900', false) : isResponding ? tipDot('#2ecc71', false) : tipDot('#ff9900', true);
@@ -879,6 +994,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var activeMetaRegions = {};
   var respondingMetaRegions = {};
   metaDetail.forEach(function(m) {
+    if (hasFreePos(m)) return;
     if (m.status === 'active') activeMetaRegions[m.region] = true;
     if (m.status === 'responding') respondingMetaRegions[m.region] = true;
   });
@@ -888,7 +1004,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var bmapBody = document.querySelector('.bmap-body');
   document.querySelectorAll('.body-point').forEach(function(el) {
     var region = el.dataset.region;
-    var isPrimary = primaryRegions.indexOf(region) !== -1;
+    var isPrimary = primaryRegions.indexOf(region) !== -1 && !primaryHasFreePos;
     var isMeta    = metaRegions.indexOf(region) !== -1;
 
     if (isPrimary && isMeta) {
@@ -934,6 +1050,292 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
   })();
+
+  /* ── Free-positioned metastasis dots + annotator drag placement ─────── */
+  (function() {
+    if (!bmapBody) return;
+    var isAnnotator = document.querySelector('.overview-editable') !== null;
+    var metaEditRows = document.querySelectorAll('.meta-edit-row:not(.dash-row-template)');
+
+    function metaClassForStatus(status) {
+      if (status === 'responding') return 'point-meta-responding';
+      if (status === 'active')     return 'point-meta-active';
+      return 'point-meta';
+    }
+
+    function makeFloatingDot(idx, x, y, m) {
+      var pt = document.createElement('div');
+      pt.className = 'body-point body-point-floating active ' + metaClassForStatus(m ? m.status : 'active');
+      pt.style.left = x + '%';
+      pt.style.top  = y + '%';
+      pt.setAttribute('data-meta-idx', idx);
+      pt.setAttribute('draggable', 'false');
+      if (isAnnotator) pt.classList.add('body-point-draggable');
+      var dot = document.createElement('div');
+      dot.className = 'point';
+      dot.setAttribute('draggable', 'false');
+      pt.appendChild(dot);
+      // Block the native HTML5 drag that some browsers start on styled divs
+      // – it would fire dragstart / dragend and swallow our mouse events.
+      pt.addEventListener('dragstart', function(e) { e.preventDefault(); });
+      bmapBody.appendChild(pt);
+      return pt;
+    }
+
+    /* Look up the default coords for a region code (from the pre-rendered
+       .body-point elements). Returns null if the region is unknown. */
+    function lookupRegionCoords(region) {
+      if (!region) return null;
+      var el = bmapBody.querySelector('.body-point[data-region="' + region + '"]');
+      if (!el) return null;
+      return {
+        x: parseFloat(el.style.left) || 50,
+        y: parseFloat(el.style.top)  || 50,
+      };
+    }
+
+    function findRowByMetaIdx(idx) {
+      return document.querySelector(
+        '.meta-edit-row:not(.dash-row-template)[data-meta-idx="' + idx + '"]');
+    }
+
+    function updateRowPos(row, x, y) {
+      if (!row) return;
+      var xi = row.querySelector('.meta-pos-x');
+      var yi = row.querySelector('.meta-pos-y');
+      var pl = row.querySelector('.meta-pos-label');
+      var pb = row.querySelector('.meta-place-btn');
+      var ub = row.querySelector('.meta-unpin-btn');
+      if (x == null || y == null || x === '' || y === '') {
+        if (xi) xi.value = '';
+        if (yi) yi.value = '';
+        if (pl) pl.textContent = '';
+        if (pb) pb.style.display = '';
+        if (ub) ub.style.display = 'none';
+      } else {
+        if (xi) xi.value = String(x);
+        if (yi) yi.value = String(y);
+        if (pl) pl.textContent = '📍 ' + (+x).toFixed(1) + '% / ' + (+y).toFixed(1) + '%';
+        if (pb) pb.style.display = 'none';
+        if (ub) ub.style.display = '';
+      }
+    }
+
+    /* 1. Render floating dots from initial JSON. */
+    metaDetail.forEach(function(m, idx) {
+      if (!hasFreePos(m)) return;
+      var pt = makeFloatingDot(idx, parseFloat(m.pos.x), parseFloat(m.pos.y), m);
+      // Reflect the current pos back into the editor row (already in inputs
+      // but the label / button visibility need syncing).
+      updateRowPos(findRowByMetaIdx(idx), parseFloat(m.pos.x), parseFloat(m.pos.y));
+      // Attach a minimal tooltip so hover still shows label.
+      pt.title = (m.label || 'Metastase') + (m.date ? ' (' + m.date + ')' : '');
+    });
+
+    if (!isAnnotator) return;
+
+    /* When a metastasis moves to a free pos (or back), the region-based dot
+       at its region might now be redundant / needed again. Recompute. */
+    function updateRegionDot(region, currentIdx) {
+      if (!region) return;
+      var el = bmapBody.querySelector('.body-point[data-region="' + region + '"]:not(.body-point-floating)');
+      if (!el) return;
+      var stillNeeded =
+        primaryRegions.indexOf(region) !== -1 ||
+        metaDetail.some(function(mm, i) {
+          return i !== currentIdx && mm.region === region && !hasFreePos(mm);
+        }) ||
+        imagedRegions.indexOf(region) !== -1;
+      if (stillNeeded) el.classList.add('active');
+      else             el.classList.remove('active');
+    }
+
+    /* 2. Wire "Auf Karte platzieren" / "Freie Position entfernen" buttons. */
+    document.addEventListener('click', function(ev) {
+      var placeBtn = ev.target.closest('.meta-place-btn');
+      if (placeBtn) {
+        var row = placeBtn.closest('.meta-edit-row');
+        if (!row || row.classList.contains('dash-row-template')) return;
+        var idx = row.getAttribute('data-meta-idx');
+        // Seed with the region's default coords, or 50/50 if unknown.
+        var regionInput = row.querySelector('.meta-region-input');
+        var regionCode = regionInput && regionInput.value.trim();
+        var coords = lookupRegionCoords(regionCode) || { x: 50, y: 50 };
+        // Remove any existing floating dot for this idx.
+        var old = bmapBody.querySelector('.body-point-floating[data-meta-idx="' + idx + '"]');
+        if (old) old.remove();
+        var status = (row.querySelector('[data-edit-path-suffix="status"]') || {}).value || 'active';
+        // Reflect the placement in the in-memory metaDetail so overlap
+        // recalculation for other buttons stays consistent.
+        var idxN = parseInt(idx, 10);
+        if (metaDetail[idxN]) {
+          metaDetail[idxN].pos = { x: coords.x, y: coords.y };
+        }
+        makeFloatingDot(idx, coords.x, coords.y, { status: status });
+        updateRowPos(row, coords.x, coords.y);
+        updateRegionDot(regionCode, idxN);
+        return;
+      }
+      var unpinBtn = ev.target.closest('.meta-unpin-btn');
+      if (unpinBtn) {
+        var row2 = unpinBtn.closest('.meta-edit-row');
+        if (!row2 || row2.classList.contains('dash-row-template')) return;
+        var idx2 = row2.getAttribute('data-meta-idx');
+        var el = bmapBody.querySelector('.body-point-floating[data-meta-idx="' + idx2 + '"]');
+        if (el) el.remove();
+        updateRowPos(row2, '', '');
+        var regionInput2 = row2.querySelector('.meta-region-input');
+        var regionCode2 = regionInput2 && regionInput2.value.trim();
+        var idx2N = parseInt(idx2, 10);
+        if (metaDetail[idx2N]) delete metaDetail[idx2N].pos;
+        updateRegionDot(regionCode2, -1);
+      }
+    });
+
+    /* 3. Drag handling for floating dots (pointer events + document-scope
+       so nothing between .point and window can swallow it). */
+    var dragging = null;
+    document.addEventListener('pointerdown', function(ev) {
+      var pt = ev.target.closest('.body-point-floating.body-point-draggable');
+      if (!pt) return;
+      ev.preventDefault();
+      dragging = { el: pt, idx: pt.getAttribute('data-meta-idx'), pointerId: ev.pointerId };
+      pt.classList.add('body-point-dragging');
+      try { pt.setPointerCapture(ev.pointerId); } catch (_) { /* older browsers */ }
+      document.body.style.userSelect = 'none';
+    });
+
+    function moveTo(ev) {
+      if (!dragging) return;
+      var rect = bmapBody.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      var x = ((ev.clientX - rect.left) / rect.width)  * 100;
+      var y = ((ev.clientY - rect.top)  / rect.height) * 100;
+      x = Math.max(0, Math.min(100, x));
+      y = Math.max(0, Math.min(100, y));
+      dragging.el.style.left = x + '%';
+      dragging.el.style.top  = y + '%';
+      updateRowPos(findRowByMetaIdx(dragging.idx), x.toFixed(2), y.toFixed(2));
+    }
+    document.addEventListener('pointermove', moveTo);
+    function endDrag(ev) {
+      if (!dragging) return;
+      try { dragging.el.releasePointerCapture(dragging.pointerId); } catch (_) {}
+      dragging.el.classList.remove('body-point-dragging');
+      dragging = null;
+      document.body.style.userSelect = '';
+    }
+    document.addEventListener('pointerup', endDrag);
+    document.addEventListener('pointercancel', endDrag);
+  })();
+  /* ── Free-positioned primary-tumor dot + annotator drag placement ───── */
+  (function() {
+    if (!bmapBody) return;
+    var isAnnotator = document.querySelector('.overview-editable') !== null;
+    var xInput   = document.getElementById('primary-pos-x');
+    var yInput   = document.getElementById('primary-pos-y');
+    var placeBtn = document.querySelector('.primary-place-btn');
+    var unpinBtn = document.querySelector('.primary-unpin-btn');
+    var posLabel = document.querySelector('.primary-pos-label');
+
+    function primaryClass() {
+      return primaryStatus === 'active' ? 'point-primary-active' : 'point-primary';
+    }
+    function removeFloating() {
+      var old = bmapBody.querySelector('.body-point-primary-floating');
+      if (old) old.remove();
+    }
+    function makeFloatingPrimary(x, y) {
+      removeFloating();
+      var pt = document.createElement('div');
+      pt.className = 'body-point body-point-floating body-point-primary-floating active ' + primaryClass();
+      pt.style.left = x + '%';
+      pt.style.top  = y + '%';
+      pt.setAttribute('draggable', 'false');
+      if (isAnnotator) pt.classList.add('body-point-draggable');
+      var dot = document.createElement('div');
+      dot.className = 'point';
+      dot.setAttribute('draggable', 'false');
+      pt.appendChild(dot);
+      pt.addEventListener('dragstart', function(e) { e.preventDefault(); });
+      pt.title = 'Primärtumor';
+      bmapBody.appendChild(pt);
+      return pt;
+    }
+    function lookupRegionCoords(region) {
+      if (!region) return null;
+      var el = bmapBody.querySelector('.body-point[data-region="' + region + '"]:not(.body-point-floating)');
+      if (!el) return null;
+      return { x: parseFloat(el.style.left) || 50, y: parseFloat(el.style.top) || 50 };
+    }
+    function updateControls(x, y) {
+      if (x == null || y == null || x === '' || y === '') {
+        if (xInput) xInput.value = '';
+        if (yInput) yInput.value = '';
+        if (posLabel) posLabel.textContent = '';
+        if (placeBtn) placeBtn.style.display = '';
+        if (unpinBtn) unpinBtn.style.display = 'none';
+      } else {
+        if (xInput) xInput.value = String(x);
+        if (yInput) yInput.value = String(y);
+        if (posLabel) posLabel.textContent = '📍 ' + (+x).toFixed(1) + '% / ' + (+y).toFixed(1) + '%';
+        if (placeBtn) placeBtn.style.display = 'none';
+        if (unpinBtn) unpinBtn.style.display = '';
+      }
+    }
+
+    /* 1. Render floating dot from initial JSON. */
+    if (primaryHasFreePos) {
+      makeFloatingPrimary(parseFloat(primaryPos.x), parseFloat(primaryPos.y));
+      updateControls(parseFloat(primaryPos.x), parseFloat(primaryPos.y));
+    }
+
+    if (!isAnnotator) return;
+
+    /* 2. Place / unpin buttons. */
+    if (placeBtn) placeBtn.addEventListener('click', function() {
+      var coords = null;
+      if (primaryRegions && primaryRegions.length) coords = lookupRegionCoords(primaryRegions[0]);
+      coords = coords || { x: 50, y: 50 };
+      makeFloatingPrimary(coords.x, coords.y);
+      updateControls(coords.x, coords.y);
+    });
+    if (unpinBtn) unpinBtn.addEventListener('click', function() {
+      removeFloating();
+      updateControls('', '');
+    });
+
+    /* 3. Drag handling (pointer events at document scope). */
+    var dragging = null;
+    document.addEventListener('pointerdown', function(ev) {
+      var pt = ev.target.closest('.body-point-primary-floating.body-point-draggable');
+      if (!pt) return;
+      ev.preventDefault();
+      dragging = { el: pt, pointerId: ev.pointerId };
+      pt.classList.add('body-point-dragging');
+      try { pt.setPointerCapture(ev.pointerId); } catch (_) {}
+      document.body.style.userSelect = 'none';
+    });
+    document.addEventListener('pointermove', function(ev) {
+      if (!dragging) return;
+      var rect = bmapBody.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      var x = Math.max(0, Math.min(100, ((ev.clientX - rect.left) / rect.width)  * 100));
+      var y = Math.max(0, Math.min(100, ((ev.clientY - rect.top)  / rect.height) * 100));
+      dragging.el.style.left = x + '%';
+      dragging.el.style.top  = y + '%';
+      updateControls(x.toFixed(2), y.toFixed(2));
+    });
+    function endDrag() {
+      if (!dragging) return;
+      try { dragging.el.releasePointerCapture(dragging.pointerId); } catch (_) {}
+      dragging.el.classList.remove('body-point-dragging');
+      dragging = null;
+      document.body.style.userSelect = '';
+    }
+    document.addEventListener('pointerup', endDrag);
+    document.addEventListener('pointercancel', endDrag);
+  })();
   /* Whole-body silhouette outline */
   var wbActive = false;
   if (outlineEl && bmapBody) {
@@ -945,16 +1347,24 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   /* Populate side lists */
-  function addBmapItem(listId, region, cls, extra) {
+  function escHtml(s) {
+    return String(s).replace(/[&<>"']/g, function(c) {
+      return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c];
+    });
+  }
+  function addBmapItem(listId, region, cls, extra, nameOverride) {
     var ul = document.getElementById(listId);
+    if (!ul) return;  // list may be absent (e.g. annotator-edit view)
     var li = document.createElement('li');
     li.className = 'bmap-item ' + cls;
     li.dataset.region = region;
-    li.innerHTML = '<span class="bmap-item-dot"></span>' + (REGION_NAMES[region]||region) + (extra||'');
+    var name = nameOverride ? escHtml(nameOverride) : (REGION_NAMES[region]||region);
+    li.innerHTML = '<span class="bmap-item-dot"></span>' + name + (extra||'');
     ul.appendChild(li);
   }
   function addTimelineItem(listId, region, cls, date, title, subtitle, isActive) {
     var ol = document.getElementById(listId);
+    if (!ol) return;  // list may be absent (e.g. annotator-edit view)
     var li = document.createElement('li');
     li.className = 'bmap-tl-item ' + cls;
     li.dataset.region = region;
@@ -969,7 +1379,11 @@ document.addEventListener('DOMContentLoaded', function() {
     ol.appendChild(li);
   }
   var pCls = primaryStatus === 'active' ? 'item-primary-active' : 'item-primary';
-  primaryRegions.forEach(function(r) { addBmapItem('bmap-primary-list', r, pCls); });
+  if (primaryLabel) {
+    addBmapItem('bmap-primary-list', primaryRegions[0] || '', pCls, null, primaryLabel);
+  } else {
+    primaryRegions.forEach(function(r) { addBmapItem('bmap-primary-list', r, pCls); });
+  }
   metaDetail.slice().sort(function(a, b) {
     if (!a.date && !b.date) return 0;
     if (!a.date) return 1;
@@ -996,21 +1410,35 @@ document.addEventListener('DOMContentLoaded', function() {
     if (ul && ul.children.length === 0) ul.innerHTML = '<li class="bmap-item bmap-empty">\u2013</li>';
   });
 
-  /* Position the continuous timeline line through the center of the dots */
-  document.querySelectorAll('.bmap-timeline, .therapy-timeline').forEach(function(ol) {
-    var dots = ol.querySelectorAll('.bmap-tl-dot, .therapy-tl-dot');
-    if (dots.length < 2) { ol.classList.add('no-line'); return; }
-    var first = dots[0], last = dots[dots.length - 1];
-    var olRect = ol.getBoundingClientRect();
-    var fRect  = first.getBoundingClientRect();
-    var lRect  = last.getBoundingClientRect();
-    var cx = fRect.left + fRect.width / 2 - olRect.left;
-    var top = fRect.top + fRect.height / 2 - olRect.top;
-    var bottom = lRect.top + lRect.height / 2 - olRect.top;
-    ol.style.setProperty('--tl-line-left', cx + 'px');
-    ol.style.setProperty('--tl-line-top', top + 'px');
-    ol.style.setProperty('--tl-line-height', (bottom - top) + 'px');
-  });
+  /* Position the continuous timeline line through the center of the dots.
+     Recomputed on resize and after fonts load so the line stays aligned even
+     when the layout settles after first paint (e.g. in the preview view). */
+  function positionTimelines() {
+    document.querySelectorAll('.bmap-timeline, .therapy-timeline').forEach(function(ol) {
+      // Only consider dots in visible rows (skip hidden template rows).
+      var dots = Array.prototype.filter.call(
+        ol.querySelectorAll('.bmap-tl-dot, .therapy-tl-dot'),
+        function(d) { return d.offsetParent !== null; }
+      );
+      if (dots.length < 2) { ol.classList.add('no-line'); return; }
+      ol.classList.remove('no-line');
+      var first = dots[0], last = dots[dots.length - 1];
+      var olRect = ol.getBoundingClientRect();
+      var fRect  = first.getBoundingClientRect();
+      var lRect  = last.getBoundingClientRect();
+      var cx = fRect.left + fRect.width / 2 - olRect.left;
+      var top = fRect.top + fRect.height / 2 - olRect.top;
+      var bottom = lRect.top + lRect.height / 2 - olRect.top;
+      ol.style.setProperty('--tl-line-left', cx + 'px');
+      ol.style.setProperty('--tl-line-top', top + 'px');
+      ol.style.setProperty('--tl-line-height', (bottom - top) + 'px');
+    });
+  }
+  positionTimelines();
+  window.addEventListener('resize', positionTimelines);
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(positionTimelines);
+  }
 
   /* Hover interaction: list ↔ dots */
   var tooltip = document.getElementById('body-tooltip');
@@ -1979,5 +2407,9 @@ document.querySelectorAll('.img-btn-txt').forEach(function(btn) {
 });
 
 </script>
+
+{% if annotator_mode %}
+<script src="{{ url_for('static', filename='annotator_edit.js') }}?v=6"></script>
+{% endif %}
 
 {% endblock %}

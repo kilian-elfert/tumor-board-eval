@@ -841,7 +841,8 @@
   transform: translateX(-50%);
   z-index: 0;
 }
-.bmap-timeline.no-line::after { display: none; }
+.bmap-timeline.no-line::after,
+.therapy-timeline.no-line::after { display: none; }
 .bmap-tl-dot {
   width: 8px;
   height: 8px;

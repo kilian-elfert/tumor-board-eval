@@ -76,29 +76,32 @@ INFO_ITEMS = [
     "Allgemeinzustand: Funktioneller Zustand (e.g. ECOG, Karnofsky)",
     "Primärtumor: Datum der Erstdiagnose",
     "Primärtumor: Art des Tumors",
+    "Primärtumor: Histogenetischer Subtyp",
     "Primärtumor: Lokalisation",
     "Primärtumor: Tumordicke",
     "Primärtumor: Ulzeration",
     "Primärtumor: Mitotische Aktivität",
     "Primärtumor: Stadium der Erkrankung bei Erstdiagnose",
-    "Primärtumor: Mutationsstatus (e.g. BRAF)",
+    "Primärtumor: Mutationsstatus (e.g. BRAF, NRAS, cKIT)",
     "Primärtumor: PD-L1 Status",
     "Primärtherapie: Resektionsstatus",
     "Primärtherapie: Sicherheitsabstand",
     "Primärtherapie: SLNE",
     "Primärtherapie: CLND",
+    "Primärtherapie: Selektive LAD / LK-Exstirpation",
+    "Primärtherapie: Lymphknotenbiopsie (FNP/Stanzbiopsie)",
     "Primärtherapie: Anzahl LK entfernt",
     "Primärtherapie: Anzahl LK befallen",
     "Therapieverlauf: Strahlentherapie",
     "Therapieverlauf: Andere lokoregionäre Therapien (e.g. IL-2, T-VEC)",
     "Therapieverlauf: Systemtherapie",
-    "Therapieverlauf: Therapiewechsel (Start, Stopp) und Begründung",
+    "Therapieverlauf: Therapiewechsel (Start, Stopp)",
     "Therapieverlauf: Nebenwirkungen und Komplikationen",
     "Therapieverlauf: Aktuelle Therapie",
     "Krankheitsverlauf: Datum Erstdiagnose Lymphknotenmetastasierung (i.e., Stadium III)",
     "Krankheitsverlauf: Datum Erstdiagnose Fernmetastasen (i.e., Stadium IV)",
-    "Aktuelle Befunde: Bildgebende Verfahren (e.g. CT, MRT, PET-CT, LK-Sono)",
-    "Aktuelle Befunde: Laborwerte (e.g. S100, LDH, HLA-A2)",
+    "Befunde: Bildgebende Verfahren (e.g. CT, MRT, PET-CT, LK-Sono)",
+    "Befunde: Laborwerte (e.g. S100, LDH, HLA-A2)",
     "Aktueller Status: Krankheitsstatus (unverändert, progredient, regredient)",
     "Aktueller Status: Stadium der Erkrankung",
     "Aktueller Status: Metastasierung",
@@ -232,10 +235,10 @@ def build_user_prompt(summary_text, items):
     )
 
 
-def call_openai(summary_text, items, model=None, system_prompt=None):
+def call_llm(summary_text, items, model=None, system_prompt=None):
     from openai import OpenAI
 
-    # Use the same env-var convention as preprocess.py.
+    # Local LLM only (OpenAI-compatible endpoint configured via LLM_* in .env).
     api_key = os.environ.get("LLM_API_KEY")
     base_url = os.environ.get("LLM_BASE_URL")
     model = (
@@ -525,7 +528,7 @@ def main():
                 print("---")
                 continue
 
-            mapping = call_openai(text, INFO_ITEMS, model=args.model,
+            mapping = call_llm(text, INFO_ITEMS, model=args.model,
                                   system_prompt=sys_prompt)
 
             # Repair excerpts: rewrite to verbatim raw substrings via fuzzy

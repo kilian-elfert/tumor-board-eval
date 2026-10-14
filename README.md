@@ -40,7 +40,8 @@ resumed at the exact same step.
 
 ```
 app.py                     Main Flask application (routes, logic, data loading)
-setup_users.py             Interactive script to create user accounts
+setup_users.py             Create user accounts — interactive prompts or
+                           batch from a comma-separated file
                            (roles: evaluator / annotator / admin)
 preprocess.py              Builds dashboard JSONs from source TK protocols
                            (uses the configured LLM endpoint)
@@ -138,11 +139,21 @@ Large case-source artefacts live outside the repo, under
 # Install dependencies
 uv sync
 
-# Create evaluator accounts
+# Create accounts — interactive prompts
 uv run setup_users.py
+
+# ...or batch from a comma-separated file (one "username, role, password" per line)
+uv run setup_users.py accounts.txt
 ```
 
-`setup_users.py` prompts for a username, password, and role (`evaluator`, `annotator`, or `admin`) for each account and writes hashed credentials to `users.json`.
+`setup_users.py` creates user accounts and writes hashed credentials to
+`users.json`. Run it **without arguments** to be prompted for each username,
+password, and role, or pass a **comma-separated file** with one
+`username, role, password` per line (empty role → `evaluator`; blank lines and
+lines starting with `#` are ignored).
+
+> ⚠️ A batch file holds **plaintext passwords** — it is excluded via
+> `.gitignore` (`accounts.txt`); keep it out of git and delete it after use.
 
 | Role | Access |
 |------|--------|
@@ -252,10 +263,10 @@ Declared in `pyproject.toml` (use `uv sync`):
 
 ## Sharing the project with a collaborator
 
-Code lives in git; **patient data must never enter git**. Already excluded by
-`.gitignore`: `.env`, `responses/`, `dashboard_data/`, `texts_human/`,
-`texts_llm/`, `original_documents/`, `highlight_mappings.json`,
-`annotations/`, `users.json`, `exports/`.
+Code lives in git; **patient data and credentials must never enter git**.
+Already excluded by `.gitignore`: `.env`, `responses/`, `dashboard_data/`,
+`texts_human/`, `texts_llm/`, `original_documents/`, `highlight_mappings.json`,
+`annotations/`, `users.json`, `assignments.json`, `accounts.txt`, `exports/`.
 
 ### What goes via git
 
@@ -352,7 +363,8 @@ Copy-Item .env.example .env
 # 3. Unpack Bundle B at <DATA_ROOT> so <DATA_ROOT>\sources\ and
 #    <DATA_ROOT>\sampled_cases.csv exist.
 
-# 4. Create local evaluator account(s)
+# 4. Create local evaluator account(s) — interactive, or batch from a file
+#    (uv run setup_users.py accounts.txt)
 uv run setup_users.py
 
 # 5. Run

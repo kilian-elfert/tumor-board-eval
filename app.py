@@ -1,6 +1,6 @@
 from flask import (Flask, render_template, request, redirect, url_for,
-                   session, send_file, jsonify)
-import json, csv, io, os, random, threading, traceback
+                   session, send_file, jsonify, Response, stream_with_context)
+import json, csv, io, os, random, shutil, threading, traceback
 import urllib.request
 from werkzeug.security import check_password_hash
 from functools import wraps
@@ -23,17 +23,38 @@ def _keine_angabe(value):
         return 'Keine Angabe'
     return value
 
+
+@app.context_processor
+def _inject_user_role():
+    """Expose the current user's role to all templates as ``current_user_role``."""
+    username = session.get('username')
+    if not username:
+        return {'current_user_role': None}
+    return {'current_user_role': _get_user_role(username)}
+
 BASE_DIR        = os.path.dirname(os.path.abspath(__file__))
+
+# ── Test mode ────────────────────────────────────────────────────────────────
+# When TEST_MODE is enabled (TEST_MODE=1 in .env), the app serves the
+# self-contained test case(s) from test_case/ instead of the real study cohort.
+# Case data, responses and exports are all taken from / written under test_case/
+# so a familiarization run never reads or writes real study data. A visible
+# "TESTMODUS" banner is shown, and the case count on the study-info page follows
+# the test pool automatically.
+TEST_MODE  = os.environ.get('TEST_MODE', '').strip().lower() in ('1', 'true', 'yes', 'on')
+_DATA_BASE = os.path.join(BASE_DIR, 'test_case') if TEST_MODE else BASE_DIR
+
 TEXTS_FILE      = os.path.join(BASE_DIR, 'texts.json')
-RESPONSES_DIR   = os.path.join(BASE_DIR, 'responses')
+RESPONSES_DIR   = os.path.join(_DATA_BASE, 'responses')
 USERS_FILE      = os.path.join(BASE_DIR, 'users.json')
 GUIDELINE_DIR   = os.path.join(BASE_DIR, 'guideline')
-TEXTS_HUMAN_DIR = os.path.join(BASE_DIR, 'texts_human')
-TEXTS_LLM_DIR   = os.path.join(BASE_DIR, 'texts_llm')
-EXPORTS_DIR     = os.path.join(BASE_DIR, 'exports')
+TEXTS_HUMAN_DIR = os.path.join(_DATA_BASE, 'texts_human')
+TEXTS_LLM_DIR   = os.path.join(_DATA_BASE, 'texts_llm')
+EXPORTS_DIR     = os.path.join(_DATA_BASE, 'exports')
 HIGHLIGHT_FILE  = os.path.join(BASE_DIR, 'highlight_mappings.json')
-ANNOTATIONS_DIR = os.path.join(BASE_DIR, 'annotations')
-DASHBOARD_DIR   = os.path.join(BASE_DIR, 'dashboard_data')
+ANNOTATIONS_DIR = os.path.join(_DATA_BASE, 'annotations')
+DASHBOARD_DIR   = os.path.join(_DATA_BASE, 'dashboard_data')
+ASSIGNMENTS_FILE = os.path.join(_DATA_BASE, 'assignments.json')
 
 # External data root (originals + imaging reports). Configured via .env:
 #   DATA_ROOT       absolute path, e.g.  C:\Users\kilia\Desktop\Data
@@ -62,6 +83,15 @@ def _is_case_id(s: str) -> bool:
 # ── push notifications via ntfy.sh ───────────────────────────────────────────
 
 NTFY_URL = os.environ.get('NTFY_URL', '').strip()  # e.g. https://ntfy.sh/my-topic
+
+# Recipient for the evaluation "Problem melden" button (opens a pre-filled mailto:).
+SUPPORT_EMAIL = os.environ.get('SUPPORT_EMAIL', '').strip()
+
+
+@app.context_processor
+def _inject_support_email():
+    """Expose the problem-report recipient address + test-mode flag to templates."""
+    return {'support_email': SUPPORT_EMAIL, 'test_mode': TEST_MODE}
 
 
 def _send_notification_email(subject, body):
@@ -100,36 +130,41 @@ INFO_ITEMS = [
     "Allgemeinzustand: Funktioneller Zustand (e.g. ECOG, Karnofsky)",
     "Primärtumor: Datum der Erstdiagnose",
     "Primärtumor: Art des Tumors",
+    "Primärtumor: Histogenetischer Subtyp",
     "Primärtumor: Lokalisation",
     "Primärtumor: Tumordicke",
     "Primärtumor: Ulzeration",
     "Primärtumor: Mitotische Aktivität",
     "Primärtumor: Stadium der Erkrankung bei Erstdiagnose",
-    "Primärtumor: Mutationsstatus (e.g. BRAF)",
+    "Primärtumor: Mutationsstatus (e.g. BRAF, NRAS, cKIT)",
     "Primärtumor: PD-L1 Status",
     "Primärtherapie: Resektionsstatus",
     "Primärtherapie: Sicherheitsabstand",
     "Primärtherapie: SLNE",
     "Primärtherapie: CLND",
+    "Primärtherapie: Selektive LAD / LK-Exstirpation",
+    "Primärtherapie: Lymphknotenbiopsie (FNP/Stanzbiopsie)",
     "Primärtherapie: Anzahl LK entfernt",
     "Primärtherapie: Anzahl LK befallen",
     "Therapieverlauf: Strahlentherapie",
     "Therapieverlauf: Andere lokoregionäre Therapien (e.g. IL-2, T-VEC)",
     "Therapieverlauf: Systemtherapie",
-    "Therapieverlauf: Therapiewechsel (Start, Stopp) und Begründung",
+    "Therapieverlauf: Therapiewechsel (Start, Stopp)",
     "Therapieverlauf: Nebenwirkungen und Komplikationen",
     "Therapieverlauf: Aktuelle Therapie",
+    "Therapieverlauf: Studieneinschluss",
     "Krankheitsverlauf: Datum Erstdiagnose Lymphknotenmetastasierung (i.e., Stadium III)",
     "Krankheitsverlauf: Datum Erstdiagnose Fernmetastasen (i.e., Stadium IV)",
-    "Aktuelle Befunde: Bildgebende Verfahren (e.g. CT, MRT, PET-CT, LK-Sono)",
-    "Aktuelle Befunde: Laborwerte (e.g. S100, LDH, HLA-A2)",
+    "Befunde: Bildgebende Verfahren (e.g. CT, MRT, PET-CT, LK-Sono)",
+    "Befunde: Laborwerte (e.g. S100, LDH, HLA-A2)",
+    "Befunde: Histopathologie",
     "Aktueller Status: Stadium der Erkrankung",
     "Aktueller Status: Metastasierung",
     "Aktueller Status: Lokalisation der Metastasierung",
     "Aktueller Status: Symptome und Beschwerden",
     "Entscheidungsrelevante Faktoren: Patientenpräferenzen",
     "Entscheidungsrelevante Faktoren: Behandlungsziel",
-    "Entscheidungsrelevante Faktoren: Beschluss der letzten Tumorkonferenz",
+    "Entscheidungsrelevante Faktoren: Beschluss einer Tumorkonferenz",
 ]
 
 # section  = display name in stepper
@@ -663,21 +698,32 @@ def _case_pdf_filename(case_id):
 
 
 def load_texts():
-    """Build case list from local texts_human/ and texts_llm/ folders."""
+    """Build the evaluation case list from local texts_human/ and texts_llm/.
+
+    Only cases that have ALL FOUR evaluation texts (human + LLM × Zusammenfassung
+    + Fragestellung) are included — this is the study cohort. Cases that merely
+    have source files under ``DATA_ROOT/sources`` (but no evaluation texts) are
+    ignored, so the discovered pool matches the actual, evaluable case set.
+    """
     case_ids = _discover_cases()
     if not case_ids:
         return load_json(TEXTS_FILE, [])
 
     texts = []
     for case_id in case_ids:
-        pdf_name = _case_pdf_filename(case_id)
+        hs = _case_text_path(TEXTS_HUMAN_DIR, 'zusammenfassung', case_id)
+        hp = _case_text_path(TEXTS_HUMAN_DIR, 'fragestellung',   case_id)
+        ls = _case_text_path(TEXTS_LLM_DIR,   'zusammenfassung', case_id)
+        lp = _case_text_path(TEXTS_LLM_DIR,   'fragestellung',   case_id)
+        if not (hs and hp and ls and lp):
+            continue  # incomplete → not part of the evaluation cohort
         texts.append({
             'id': case_id,
-            'pdf': pdf_name,
-            'human_summary': _read_text_file(_case_text_path(TEXTS_HUMAN_DIR, 'zusammenfassung',  case_id)),
-            'human_problem': _read_text_file(_case_text_path(TEXTS_HUMAN_DIR, 'fragestellung',   case_id)),
-            'llm_summary':   _read_text_file(_case_text_path(TEXTS_LLM_DIR,   'zusammenfassung', case_id)),
-            'llm_problem':   _read_text_file(_case_text_path(TEXTS_LLM_DIR,   'fragestellung',   case_id)),
+            'pdf': _case_pdf_filename(case_id),
+            'human_summary': _read_text_file(hs),
+            'human_problem': _read_text_file(hp),
+            'llm_summary':   _read_text_file(ls),
+            'llm_problem':   _read_text_file(lp),
         })
     return texts
 
@@ -840,23 +886,63 @@ def _counterbalanced_assignments(case_ids):
     return assign_summary, assign_problem
 
 
+def _load_assignments():
+    """Load the doctor-to-case assignment file, if present.
+
+    Returns a dict ``{username: [case_id, ...]}`` (16 cases per user when
+    using the standard 80-case study design). Returns ``{}`` if the file
+    does not exist, so existing evaluator accounts created outside the
+    formal study (e.g. test users) keep seeing the full case set.
+    """
+    if not os.path.exists(ASSIGNMENTS_FILE):
+        return {}
+    try:
+        with open(ASSIGNMENTS_FILE, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+    except Exception:
+        return {}
+    out = {}
+    for user, info in (data.get('by_user') or {}).items():
+        cases = (info or {}).get('cases') or []
+        if cases:
+            out[user] = list(cases)
+    return out
+
+
 def init_evaluator(username, texts):
     """Create evaluator entry if not present, return user data dict.
 
     Resets saved data if case_order doesn't match current texts (e.g. after
-    switching from legacy to external cases).
+    switching from legacy to external cases) or if the user's assignment
+    in ``assignments.json`` has changed.
     """
     current_ids = {str(t['id']) for t in texts}
+    assignments = _load_assignments()
+    assigned = assignments.get(username)
+    if assigned is not None:
+        # Only show this user the cases they were assigned (and that still
+        # exist in the loaded texts).
+        target_ids = [cid for cid in assigned if cid in current_ids]
+    else:
+        target_ids = None  # no assignment → show everything (legacy behavior)
+
     user_data = load_responses(username)
 
-    # Reset if saved case_order references stale/unknown case IDs
+    # Reset if saved case_order references stale/unknown case IDs, or if it
+    # no longer matches the user's assigned set.
     if user_data:
         saved_ids = set(user_data.get('case_order', []))
         if saved_ids and not saved_ids.issubset(current_ids):
             user_data = {}  # force re-init
+        elif target_ids is not None and saved_ids and saved_ids != set(target_ids):
+            # Assignment changed since this user was first initialized.
+            user_data = {}
 
     if not user_data:
-        case_order = [str(t['id']) for t in texts]
+        if target_ids is not None:
+            case_order = list(target_ids)
+        else:
+            case_order = [str(t['id']) for t in texts]
         random.shuffle(case_order)
         assign_summary, assign_problem = _counterbalanced_assignments(case_order)
         user_data = {
@@ -1072,7 +1158,15 @@ def study_info():
         return redirect(url_for('evaluate_resume'))
 
     texts = load_texts()
-    return render_template('study_info.html', num_cases=len(texts))
+    # Show the number of cases THIS evaluator will actually rate (their
+    # assignment from assignments.json), not the full discovered case pool.
+    current_ids = {str(t['id']) for t in texts}
+    assigned = _load_assignments().get(username)
+    if assigned is not None:
+        num_cases = len([cid for cid in assigned if cid in current_ids])
+    else:
+        num_cases = len(user_data.get('case_order') or []) or len(texts)
+    return render_template('study_info.html', num_cases=num_cases)
 
 
 @app.route('/evaluate')
@@ -1235,6 +1329,7 @@ def evaluate_step(case_id, step_idx, tab_idx):
         return {slug for slug, entry in items.items()
                 if (entry or {}).get('status') == target_status}
 
+    falseinfo_meta = {}  # slug -> {'category': ..., 'description': ...}
     if key == 'summary_falseinfo' and hl_version_key:
         try:
             ann_for_order = _load_annotation(case_id) or {}
@@ -1260,6 +1355,13 @@ def evaluate_step(case_id, step_idx, tab_idx):
         )
         enthalten_items.extend(falsch_items_in_text_order)
 
+        for slug in falsch_slugs:
+            entry = ann_items_for_order.get(slug) or {}
+            falseinfo_meta[slug] = {
+                'category':    entry.get('error_category') or '',
+                'description': entry.get('description') or '',
+            }
+
     # Compute "false" items for the correctness step (display-only list).
     false_items = []
     if key == 'summary_correctness' and hl_version_key:
@@ -1273,6 +1375,12 @@ def evaluate_step(case_id, step_idx, tab_idx):
         for item in INFO_ITEMS:
             if slugify(item) in falsch_slugs_fc:
                 false_items.append(item)
+        for slug in falsch_slugs_fc:
+            entry = ann_items_fc.get(slug) or {}
+            falseinfo_meta[slug] = {
+                'category':    entry.get('error_category') or '',
+                'description': entry.get('description') or '',
+            }
 
     # Compute "missing" items: annotated as nicht_enthalten AND marked relevant
     missing_items = []
@@ -1394,6 +1502,7 @@ def evaluate_step(case_id, step_idx, tab_idx):
         prev_url=prev_url,
         info_items=INFO_ITEMS,
         enthalten_items=enthalten_items,
+        falseinfo_meta=falseinfo_meta,
         missing_items=missing_items,
         false_items=false_items,
         irrelevant_items=irrelevant_items,
@@ -1410,6 +1519,7 @@ def evaluate_step(case_id, step_idx, tab_idx):
         text_content_raw=text_content_raw,
         text_a_raw=text_a_raw,
         text_b_raw=text_b_raw,
+        jump_cases=_build_jump_cases(texts) if is_admin else None,
     )
 
 
@@ -1604,6 +1714,16 @@ def compute_prev_url(case_id, case_order, case_index, step_idx, tab_idx, step):
 def final_questions():
     username = session['username']
     user_data = load_responses(username)
+
+    # In test/familiarization mode the closing questions are skipped entirely:
+    # mark the run complete and jump straight to the end page.
+    if TEST_MODE:
+        if not user_data.get('completed'):
+            user_data['completed']    = True
+            user_data['completed_at'] = datetime.utcnow().isoformat()
+            save_responses(username, user_data)
+            _export_all_to_disk(username)
+        return redirect(url_for('end'))
 
     if request.method == 'POST':
         fq = {
@@ -2457,7 +2577,7 @@ def _extract_dashboard_excerpts(d):
             extras.append(f"{g}: {sv}")
         rendered = ', '.join(primary + extras)
         if rendered:
-            add(slugify('Primärtumor: Mutationsstatus (e.g. BRAF)'), rendered)
+            add(slugify('Primärtumor: Mutationsstatus (e.g. BRAF, NRAS, cKIT)'), rendered)
     add(slugify('Primärtumor: PD-L1 Status'),              d.get('pdl1'))
 
     # ── Primärtherapie ──
@@ -2502,7 +2622,7 @@ def _extract_dashboard_excerpts(d):
         add(slugify('Krankheitsverlauf: Datum Erstdiagnose Fernmetastasen (i.e., Stadium IV)'),
             far_dates[0])
 
-    # ── Aktuelle Befunde ──
+    # ── Befunde ──
     imgs = d.get('imaging') or []
     if imgs:
         rendered_imgs = []
@@ -2513,7 +2633,7 @@ def _extract_dashboard_excerpts(d):
             if line:
                 rendered_imgs.append(line)
         if rendered_imgs:
-            add(slugify('Aktuelle Befunde: Bildgebende Verfahren (e.g. CT, MRT, PET-CT, LK-Sono)'),
+            add(slugify('Befunde: Bildgebende Verfahren (e.g. CT, MRT, PET-CT, LK-Sono)'),
                 rendered_imgs[-6:])  # cap to most recent 6
 
     labs = d.get('lab_values') or []
@@ -2534,7 +2654,7 @@ def _extract_dashboard_excerpts(d):
             if line:
                 rendered_labs.append(line)
         if rendered_labs:
-            add(slugify('Aktuelle Befunde: Laborwerte (e.g. S100, LDH, HLA-A2)'),
+            add(slugify('Befunde: Laborwerte (e.g. S100, LDH, HLA-A2)'),
                 rendered_labs)
 
     # ── Therapieverlauf ──
@@ -2612,6 +2732,31 @@ def _extract_tb_conference(original_doc):
     return (date_str, m.group('time'), label, weekday)
 
 
+def _weekday_de(date_str):
+    """Return the German weekday for a DD.MM.YYYY date, or None."""
+    try:
+        dt = datetime.strptime(date_str, '%d.%m.%Y')
+    except (ValueError, TypeError):
+        return None
+    return ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag',
+            'Freitag', 'Samstag', 'Sonntag'][dt.weekday()]
+
+
+def _resolve_tb_conference(patient, original_doc):
+    """Prefer an annotator-edited ``tb_conference`` block on the dashboard
+    JSON; otherwise fall back to the regex parsed from the protocol header."""
+    tb = (patient or {}).get('tb_conference') or {}
+    date_str = (tb.get('date') or '').strip()
+    time_str = (tb.get('time') or '').strip()
+    label    = (tb.get('label') or '').strip()
+    if date_str or time_str or label:
+        return (date_str or None,
+                time_str or None,
+                label or None,
+                _weekday_de(date_str) if date_str else None)
+    return _extract_tb_conference(original_doc)
+
+
 @app.route('/evaluate/<case_id>/dashboard', methods=['GET', 'POST'])
 @login_required
 def case_dashboard(case_id):
@@ -2623,11 +2768,15 @@ def case_dashboard(case_id):
     is_annotator = _get_user_role(username) == 'annotator'
 
     # Annotators get a read-only view (no rating rail, no continue button,
-    # no evaluator state initialisation, no POST handling).
+    # no evaluator state initialisation, no POST handling). Overview fields
+    # are inline-editable via /annotate/<case>/dashboard-edit.
+    # `?preview=1` switches to the evaluator-style read-only render so the
+    # annotator can see how their edits look in the actual study view.
     if is_annotator:
         patient = PATIENT_DATA[case_id]
         original_doc = _read_original_document(case_id)
-        tb_date, tb_time, tb_label, tb_weekday = _extract_tb_conference(original_doc)
+        tb_date, tb_time, tb_label, tb_weekday = _resolve_tb_conference(patient, original_doc)
+        preview_mode = request.args.get('preview') == '1'
         return render_template('case_dashboard.html',
                                case_id=case_id,
                                case_index=0,
@@ -2643,7 +2792,8 @@ def case_dashboard(case_id):
                                tb_label=tb_label,
                                tb_weekday=tb_weekday,
                                relevance_existing={},
-                               annotator_mode=True)
+                               annotator_mode=(not preview_mode),
+                               annotator_preview=preview_mode)
 
     texts = load_texts()
     user_data = init_evaluator(username, texts)
@@ -2681,7 +2831,7 @@ def case_dashboard(case_id):
 
     patient = PATIENT_DATA[case_id]
     original_doc = _read_original_document(case_id)
-    tb_date, tb_time, tb_label, tb_weekday = _extract_tb_conference(original_doc)
+    tb_date, tb_time, tb_label, tb_weekday = _resolve_tb_conference(patient, original_doc)
 
     # First visit = the user has not yet pressed "Weiter zur Bewertung" for
     # this case. Subsequent visits (via the protocol button on an eval page)
@@ -2837,19 +2987,59 @@ def _annotation_progress(ann):
     return out
 
 
+def _is_annotatable_case(case):
+    """True if the case has non-empty content for every annotatable text.
+
+    Used to hide test-run / incomplete cases (e.g. missing human summary) from
+    the annotator Fallübersicht so the list reflects the actual study cohort
+    without hard-coding case IDs.
+    """
+    for _tk, _label, src_key, _letter in ANNOTATE_TEXT_KEYS:
+        if not (case.get(src_key) or '').strip():
+            return False
+    return True
+
+
+def _build_jump_cases(texts):
+    """Return a list of all discoverable cases for the admin jump-to widget.
+
+    Each entry: ``{'id': <case_id>, 'label': <short label>, 'annotatable': bool}``.
+    Includes incomplete cases so admins can navigate to them and inspect what
+    is missing.
+    """
+    out = []
+    for t in texts:
+        cid = str(t['id'])
+        out.append({
+            'id': cid,
+            'label': t.get('title') or t.get('case_label') or cid[:10],
+            'annotatable': _is_annotatable_case(t),
+        })
+    out.sort(key=lambda c: c['id'])
+    return out
+
+
 @app.route('/annotate')
 @annotator_required
 def annotate_index():
     texts = load_texts()
+    is_admin = _get_user_role(session['username']) == 'admin'
     cases = []
     for t in texts:
-        ann = _load_annotation(str(t['id']))
+        annotatable = _is_annotatable_case(t)
+        if not annotatable and not is_admin:
+            continue  # hide cases missing one of the annotatable texts
+        cid = str(t['id'])
+        ann = _load_annotation(cid)
         prog = _annotation_progress(ann)
         cases.append({
-            'id': str(t['id']),
-            'title': t.get('title') or t.get('case_label') or str(t['id'])[:10],
+            'id': cid,
+            'title': t.get('title') or t.get('case_label') or cid[:10],
             'progress': prog,
             'updated_at': ann.get('updated_at'),
+            'reviewed': bool(ann.get('reviewed')),
+            'needs_replacement': bool(ann.get('needs_replacement')),
+            'annotatable': annotatable,
         })
     return render_template('annotate_index.html',
                            cases=cases,
@@ -2862,7 +3052,10 @@ def annotate_index():
 def annotate_case(case_id):
     texts = load_texts()
     case = next((t for t in texts if str(t['id']) == case_id), None)
+    is_admin = _get_user_role(session['username']) == 'admin'
     if case is None:
+        return redirect(url_for('annotate_index'))
+    if not _is_annotatable_case(case) and not is_admin:
         return redirect(url_for('annotate_index'))
     ann = _load_annotation(case_id)
     text_blocks = []
@@ -2877,7 +3070,8 @@ def annotate_case(case_id):
     status_map = {}
     for tk, _label, _src_key, _letter in ANNOTATE_TEXT_KEYS:
         items = ((ann.get('texts') or {}).get(tk) or {}).get('items') or {}
-        status_map[tk] = {slug: it.get('status') for slug, it in items.items()}
+        status_map[tk]       = {slug: it.get('status') for slug, it in items.items()}
+    jump_cases = _build_jump_cases(texts) if is_admin else None
     return render_template('annotate.html',
                            case_id=case_id,
                            case_label=case.get('title') or case_id[:10],
@@ -2885,7 +3079,8 @@ def annotate_case(case_id):
                            info_items=INFO_ITEMS,
                            slugify=slugify,
                            annotation=ann,
-                           status_map=status_map)
+                           status_map=status_map,
+                           jump_cases=jump_cases)
 
 
 @app.route('/annotate/<case_id>/save', methods=['POST'])
@@ -2900,6 +3095,8 @@ def annotate_save(case_id):
     slug     = payload.get('slug')
     status   = payload.get('status')  # 'enthalten' | 'nicht_enthalten' | 'falsch' | None
     spans    = payload.get('spans') or []
+    error_category = payload.get('error_category')
+    description    = (payload.get('description') or '').strip()
 
     if not text_key or not slug:
         return {'ok': False, 'error': 'text_key and slug required'}, 400
@@ -2907,6 +3104,9 @@ def annotate_save(case_id):
         return {'ok': False, 'error': 'unknown text_key'}, 400
     if status not in (None, 'enthalten', 'nicht_enthalten', 'falsch'):
         return {'ok': False, 'error': 'invalid status'}, 400
+    valid_categories = {'formal', 'inhaltlich', 'logisch', 'prozess'}
+    if error_category is not None and error_category not in valid_categories:
+        return {'ok': False, 'error': 'invalid error_category'}, 400
 
     ann = _load_annotation(case_id)
     block = ann['texts'].setdefault(text_key, {'items': {}})
@@ -2914,11 +3114,103 @@ def annotate_save(case_id):
     if status is None and not spans:
         items.pop(slug, None)
     else:
-        items[slug] = {'status': status,
-                       'spans': [s for s in spans if s],
-                       'origin': 'human'}
+        item = {'status': status,
+                'spans': [s for s in spans if s],
+                'origin': 'human'}
+        if status == 'falsch':
+            if error_category:
+                item['error_category'] = error_category
+            if description:
+                item['description'] = description
+        items[slug] = item
     _save_annotation(case_id, ann, username=session.get('username'))
     return {'ok': True, 'progress': _annotation_progress(ann)[text_key]}
+
+
+# Top-level dashboard JSON keys that the annotator overview editor may write.
+# `timeline` is deliberately excluded (Kurzverlauf stays read-only).
+EDITABLE_DASHBOARD_KEYS = {
+    'dob', 'age', 'sex', 'ecog', 'karnofsky',
+    'disease_status', 'diagnosis_date',
+    'primary_diagnosis', 'primary_location', 'primary_tumor_pos',
+    'primary_tumor_label', 'primary_tumor_status', 'primary_inactive_reason',
+    'tumor_thickness', 'ulceration', 'mitoses',
+    'histology', 'resection_status', 'safety_margin', 'slne',
+    'initial_staging', 'staging',
+    'metastases_detail', 'metastases_ed_date', 'comorbidities',
+    'mutations', 'pdl1', 'hla_a',
+    'therapies',
+    'imaging',
+    'tb_conference',
+}
+
+
+def _clean_edit_value(v):
+    """Recursively strip strings and drop empty list/dict entries."""
+    if isinstance(v, str):
+        return v.strip()
+    if isinstance(v, list):
+        out = []
+        for item in v:
+            c = _clean_edit_value(item)
+            if isinstance(c, dict) and not any(str(x).strip() for x in c.values()):
+                continue
+            if isinstance(c, str) and not c:
+                continue
+            out.append(c)
+        return out
+    if isinstance(v, dict):
+        return {k: _clean_edit_value(x) for k, x in v.items()}
+    return v
+
+
+@app.route('/annotate/<case_id>/dashboard-edit', methods=['POST'])
+@annotator_required
+def annotate_dashboard_edit(case_id):
+    """Persist annotator edits to the overview tab of a case dashboard.
+
+    Body: partial JSON containing only whitelisted top-level keys from
+    ``EDITABLE_DASHBOARD_KEYS``. Values fully replace the existing top-level
+    key (lists and dicts included). The first save copies the current file
+    to ``<file>.pre-edit`` so the original LLM output stays recoverable.
+    """
+    if case_id not in PATIENT_DATA:
+        return {'ok': False, 'error': 'unknown case_id'}, 404
+    try:
+        payload = request.get_json(force=True, silent=False) or {}
+    except Exception as e:  # noqa: BLE001
+        return {'ok': False, 'error': f'invalid JSON: {e}'}, 400
+    if not isinstance(payload, dict):
+        return {'ok': False, 'error': 'expected object'}, 400
+    payload.pop('timeline', None)
+    unknown = sorted(k for k in payload if k not in EDITABLE_DASHBOARD_KEYS)
+    if unknown:
+        return {'ok': False, 'error': f'not editable: {unknown}'}, 400
+
+    path = os.path.join(DASHBOARD_DIR, f'{case_id}_dashboard.json')
+    if not os.path.isfile(path):
+        return {'ok': False, 'error': 'dashboard JSON missing'}, 404
+    backup = path + '.pre-edit'
+    if not os.path.exists(backup):
+        try:
+            shutil.copy2(path, backup)
+        except OSError as e:
+            return {'ok': False, 'error': f'backup failed: {e}'}, 500
+
+    with open(path, 'r', encoding='utf-8') as f:
+        current = json.load(f)
+    for k, v in payload.items():
+        current[k] = _clean_edit_value(v)
+
+    tmp = path + '.tmp'
+    with open(tmp, 'w', encoding='utf-8') as f:
+        json.dump(current, f, ensure_ascii=False, indent=2)
+    os.replace(tmp, path)
+
+    reloaded = _load_dashboard_json(case_id)
+    if reloaded is not None:
+        PATIENT_DATA[case_id] = reloaded
+    return {'ok': True}
 
 
 @app.route('/annotate/<case_id>/reset', methods=['POST'])
@@ -2934,71 +3226,101 @@ def annotate_reset(case_id):
     return {'ok': True}
 
 
-@app.route('/annotate/<case_id>/llm-review', methods=['POST'])
+@app.route('/annotate/<case_id>/reviewed', methods=['POST'])
 @annotator_required
-def annotate_llm_review(case_id):
-    """Run an LLM fact-check of one text against the original protocol and
-    overwrite that text's items in the annotation file.
+def annotate_set_reviewed(case_id):
+    """Toggle/set the annotator's 'reviewed' flag on a case."""
+    payload = request.get_json(silent=True) or {}
+    ann = _load_annotation(case_id)
+    if 'reviewed' in payload:
+        ann['reviewed'] = bool(payload['reviewed'])
+    else:
+        ann['reviewed'] = not bool(ann.get('reviewed'))
+    _save_annotation(case_id, ann, username=session.get('username'))
+    return {'ok': True, 'reviewed': ann['reviewed']}
 
-    Body JSON: {"text_key": "<llm_summary|human_summary|llm_problem|human_problem>"}
+
+@app.route('/annotate/<case_id>/needs_replacement', methods=['POST'])
+@annotator_required
+def annotate_set_needs_replacement(case_id):
+    """Toggle/set the 'needs_replacement' flag on a case (mark for future replacement)."""
+    payload = request.get_json(silent=True) or {}
+    ann = _load_annotation(case_id)
+    if 'needs_replacement' in payload:
+        ann['needs_replacement'] = bool(payload['needs_replacement'])
+    else:
+        ann['needs_replacement'] = not bool(ann.get('needs_replacement'))
+    _save_annotation(case_id, ann, username=session.get('username'))
+    return {'ok': True, 'needs_replacement': ann['needs_replacement']}
+
+
+# Map an annotator text_key to its underlying source-text directory layout.
+_ANNOTATE_TEXT_FILES = {
+    'human_summary': (TEXTS_HUMAN_DIR, 'zusammenfassung'),
+    'llm_summary':   (TEXTS_LLM_DIR,   'zusammenfassung'),
+}
+
+
+@app.route('/annotate/<case_id>/text', methods=['POST'])
+@annotator_required
+def annotate_save_text(case_id):
+    """Overwrite the underlying source-text file for one text_key of a case
+    and re-anchor any existing span annotations against the new content.
+
+    Body JSON: { text_key, content }
     """
-    import llm_review
-
     payload = request.get_json(silent=True) or {}
     text_key = payload.get('text_key')
-    mode     = payload.get('mode', 'merge')  # 'merge' or 'overwrite'
-    if mode not in ('merge', 'overwrite'):
-        return {'ok': False, 'error': 'invalid mode'}, 400
-    valid_keys = {tk for tk, _l, _s, _t in ANNOTATE_TEXT_KEYS}
-    if text_key not in valid_keys:
+    content  = payload.get('content')
+    if text_key not in _ANNOTATE_TEXT_FILES:
         return {'ok': False, 'error': 'unknown text_key'}, 400
+    if not isinstance(content, str):
+        return {'ok': False, 'error': 'content must be a string'}, 400
 
-    texts = load_texts()
-    case = next((t for t in texts if str(t['id']) == case_id), None)
-    if case is None:
-        return {'ok': False, 'error': 'case not found'}, 404
+    base, sub = _ANNOTATE_TEXT_FILES[text_key]
+    target_dir = os.path.join(base, sub)
+    os.makedirs(target_dir, exist_ok=True)
+    target = os.path.join(target_dir, f'{case_id}.txt')
 
-    src_key = next(sk for tk, _l, sk, _t in ANNOTATE_TEXT_KEYS if tk == text_key)
-    summary = case.get(src_key, '') or ''
-    if not summary.strip():
-        return {'ok': False, 'error': 'text is empty'}, 400
+    # Safety: keep a single rolling backup of the previous version.
+    if os.path.isfile(target):
+        try:
+            with open(target, 'r', encoding='utf-8') as f_in:
+                prev = f_in.read()
+            with open(target + '.bak', 'w', encoding='utf-8') as f_out:
+                f_out.write(prev)
+        except Exception:
+            pass  # best-effort backup
 
-    protocol = _read_original_document(case_id)
-    if not protocol.strip():
-        return {'ok': False, 'error': 'original protocol not available'}, 400
+    # Atomic write
+    tmp = target + '.tmp'
+    with open(tmp, 'w', encoding='utf-8', newline='') as f:
+        f.write(content)
+    os.replace(tmp, target)
 
-    try:
-        new_items = llm_review.review_text(protocol, summary, INFO_ITEMS)
-    except Exception as e:
-        return {'ok': False, 'error': f'LLM review failed: {e}'}, 500
-
+    # Re-anchor spans: drop any span whose verbatim text no longer appears in
+    # the new content. Items keep their status even if all spans get dropped.
     ann = _load_annotation(case_id)
-    block = ann.setdefault('texts', {}).setdefault(text_key, {'items': {}})
-    existing = block.setdefault('items', {})
-
-    written = 0
-    skipped_human = 0
-    if mode == 'overwrite':
-        block['items'] = {
-            slug: {**payload_, 'origin': 'llm_review'}
-            for slug, payload_ in new_items.items()
-        }
-        written = len(new_items)
-    else:  # merge: leave human-touched items alone
-        for slug, payload_ in new_items.items():
-            cur = existing.get(slug)
-            if cur and cur.get('origin') == 'human':
-                skipped_human += 1
-                continue
-            existing[slug] = {**payload_, 'origin': 'llm_review'}
-            written += 1
-
-    ann.setdefault('llm_review', {})[text_key] = datetime.utcnow().isoformat()
+    items = ((ann.get('texts') or {}).get(text_key) or {}).get('items') or {}
+    dropped_total = 0
+    items_affected = []
+    for slug, item in list(items.items()):
+        spans = item.get('spans') or []
+        kept = [s for s in spans if isinstance(s, str) and s and s in content]
+        if len(kept) != len(spans):
+            dropped_total += len(spans) - len(kept)
+            items_affected.append(slug)
+            item['spans'] = kept
+    ann.setdefault('text_edits', {})[text_key] = datetime.utcnow().isoformat()
     _save_annotation(case_id, ann, username=session.get('username'))
-    rated, total = _annotation_progress(ann)[text_key]
-    return {'ok': True, 'rated': rated, 'total': total,
-            'written': written, 'skipped_human': skipped_human, 'mode': mode}
+
+    return {
+        'ok': True,
+        'text_key': text_key,
+        'dropped_spans': dropped_total,
+        'items_affected': items_affected,
+    }
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)
+    app.run(debug=True, port=5001, threaded=True)

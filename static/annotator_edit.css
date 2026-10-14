@@ -1,0 +1,192 @@
+/* Inline overview editor for annotator mode.
+   Only active inside .overview-editable (annotator_mode=True). */
+
+.overview-edit-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  background: #f5f7fb;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  font-size: 14px;
+}
+.overview-edit-toolbar .oet-title { font-weight: 600; margin-right: auto; }
+.overview-edit-toolbar .oet-hint  { color: #57606a; font-size: 12px; }
+.overview-edit-toolbar .oet-status {
+  font-size: 12px;
+  color: #57606a;
+  min-width: 140px;
+  text-align: right;
+}
+.overview-edit-toolbar .oet-status.ok    { color: #1a7f37; }
+.overview-edit-toolbar .oet-status.err   { color: #cf222e; }
+.overview-edit-toolbar .oet-status.busy  { color: #9a6700; }
+
+.overview-edit-toolbar button.oet-save {
+  background: #1f6feb;
+  color: white;
+  border: 0;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.overview-edit-toolbar button.oet-save:hover  { background: #1a5fca; }
+.overview-edit-toolbar button.oet-save:disabled{ background: #8aa9d6; cursor: not-allowed; }
+.overview-edit-toolbar button.oet-reset {
+  background: transparent;
+  color: #57606a;
+  border: 1px solid #d0d7de;
+  padding: 7px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.overview-edit-toolbar button.oet-preview {
+  background: transparent;
+  color: #1f6feb;
+  border: 1px solid #1f6feb;
+  padding: 7px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.overview-edit-toolbar button.oet-preview:hover  { background: #eaf2ff; }
+.overview-edit-toolbar button.oet-preview:disabled { opacity: 0.55; cursor: not-allowed; }
+
+/* Preview banner (annotator viewing evaluator-style page) */
+.annotator-preview-banner {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 14px;
+  margin: 8px 0 12px;
+  background: #fff3d6;
+  border: 1px solid #d29922;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #6f4a00;
+}
+.annotator-preview-banner strong { color: #6f4a00; }
+.annotator-preview-banner span   { margin-right: auto; }
+.annotator-preview-banner .btn-back-edit {
+  background: #1f6feb;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+}
+.annotator-preview-banner .btn-back-edit:hover { background: #1a5fca; }
+
+/* Editable scalar (span with contenteditable, or <input>) */
+.overview-editable .dash-ed {
+  display: inline-block;
+  min-width: 60px;
+  padding: 1px 6px;
+  border: 1px dashed #b1bac4;
+  border-radius: 4px;
+  background: #fff;
+  outline: none;
+  line-height: 1.35;
+  cursor: text;
+}
+.overview-editable .dash-ed:focus       { border-color: #1f6feb; border-style: solid; background: #f4f8ff; }
+.overview-editable .dash-ed:empty::before {
+  content: attr(data-placeholder);
+  color: #98a2b3;
+}
+.overview-editable .dash-ed.dash-ed-block {
+  display: block;
+  width: 100%;
+  min-height: 1.6em;
+  white-space: pre-wrap;
+}
+.overview-editable input.dash-ed,
+.overview-editable select.dash-ed {
+  font: inherit;
+  padding: 2px 6px;
+  min-width: 3em;
+  max-width: 100%;
+}
+.overview-editable input.dash-ed { width: auto; }
+.overview-editable input.dash-ed.dash-ed-date { width: 100px; }
+.overview-editable input.dash-ed.dash-ed-code { width: 60px; }
+
+/* List rows (therapies, comorbidities, metastases, mutations) */
+.overview-editable .dash-list-row { position: relative; }
+.overview-editable .dash-list-row .dash-row-del {
+  background: transparent;
+  border: 0;
+  color: #cf222e;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0 4px;
+  line-height: 1;
+}
+.overview-editable .dash-list-row .dash-row-del:hover { color: #a40e26; }
+
+.overview-editable .dash-list-add {
+  display: inline-block;
+  margin-top: 6px;
+  background: transparent;
+  color: #1f6feb;
+  border: 1px dashed #1f6feb;
+  border-radius: 4px;
+  padding: 2px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.overview-editable .dash-list-add:hover { background: #eaf2ff; }
+
+/* Ensure hidden template rows never render */
+.overview-editable .dash-row-template { display: none !important; }
+
+/* Kurzverlauf explicitly locked */
+.overview-editable .verlauf-card::before {
+  content: 'Kurzverlauf ist schreibgeschützt';
+  display: block;
+  font-size: 11px;
+  color: #98a2b3;
+  margin-bottom: 4px;
+}
+
+/* Body-map: floating (free-positioned) metastasis dots */
+.body-point.body-point-floating {
+  /* Above the region-based .body-point (z-index: 10 in dashboard.css) so
+     pointer events land on the floating dot and drag works. */
+  z-index: 20;
+  transform: translate(-50%, -50%);
+}
+.body-point.body-point-floating.body-point-draggable {
+  cursor: grab;
+  touch-action: none;      /* keep pointer events out of the scroller */
+  -webkit-user-drag: none; /* block Safari/WebKit native drag */
+  user-select: none;
+}
+.body-point.body-point-floating.body-point-draggable::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1.5px dashed #1f6feb;
+  opacity: 0.55;
+  pointer-events: none;
+}
+.body-point.body-point-floating.body-point-draggable:active,
+.body-point.body-point-floating.body-point-dragging {
+  cursor: grabbing;
+}
+.body-point.body-point-floating.body-point-dragging::after {
+  opacity: 0.9;
+  border-color: #cf222e;
+}
+.overview-editable .bmap-body { user-select: none; }
+

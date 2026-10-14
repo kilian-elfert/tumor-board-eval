@@ -373,20 +373,31 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   /* ── Therapy timeline: position vertical line through dots ──────────── */
-  document.querySelectorAll('.therapy-timeline').forEach(function(ol) {
-    var dots = ol.querySelectorAll('.therapy-tl-dot');
-    if (dots.length < 2) return;
-    var first = dots[0], last = dots[dots.length - 1];
-    var olRect = ol.getBoundingClientRect();
-    var fRect  = first.getBoundingClientRect();
-    var lRect  = last.getBoundingClientRect();
-    var cx = fRect.left + fRect.width / 2 - olRect.left;
-    var top = fRect.top + fRect.height / 2 - olRect.top;
-    var bottom = lRect.top + lRect.height / 2 - olRect.top;
-    ol.style.setProperty('--tl-line-left', cx + 'px');
-    ol.style.setProperty('--tl-line-top', top + 'px');
-    ol.style.setProperty('--tl-line-height', (bottom - top) + 'px');
-  });
+  function positionTherapyTimelines() {
+    document.querySelectorAll('.therapy-timeline').forEach(function(ol) {
+      var dots = Array.prototype.filter.call(
+        ol.querySelectorAll('.therapy-tl-dot'),
+        function(d) { return d.offsetParent !== null; }
+      );
+      if (dots.length < 2) { ol.classList.add('no-line'); return; }
+      ol.classList.remove('no-line');
+      var first = dots[0], last = dots[dots.length - 1];
+      var olRect = ol.getBoundingClientRect();
+      var fRect  = first.getBoundingClientRect();
+      var lRect  = last.getBoundingClientRect();
+      var cx = fRect.left + fRect.width / 2 - olRect.left;
+      var top = fRect.top + fRect.height / 2 - olRect.top;
+      var bottom = lRect.top + lRect.height / 2 - olRect.top;
+      ol.style.setProperty('--tl-line-left', cx + 'px');
+      ol.style.setProperty('--tl-line-top', top + 'px');
+      ol.style.setProperty('--tl-line-height', (bottom - top) + 'px');
+    });
+  }
+  positionTherapyTimelines();
+  window.addEventListener('resize', positionTherapyTimelines);
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(positionTherapyTimelines);
+  }
 
 });
 

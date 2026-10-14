@@ -15,6 +15,75 @@
         <div class="progress-fill" style="width: {{ ((done_cases / total_cases) * 100) | int if total_cases else 0 }}%"></div>
       </div>
     </div>
+
+    {# ── Problem melden (öffnet das E-Mail-Programm mit vorausgefüllten Angaben) ── #}
+    <button type="button" class="report-problem-btn" id="report-problem-btn"
+            data-user="{{ session.username }}"
+            data-case="{{ case_id }}"
+            data-step="Schritt {{ step_idx }}: {{ step.section }} – {{ step.subtitle }}{% if step.has_tabs and tab_idx is not none %} (Variante {{ ['A','B'][tab_idx] }}){% endif %}"
+            data-recipient="{{ support_email }}"
+            title="Öffnet Ihr E-Mail-Programm mit vorausgefüllten Angaben (Benutzer, Fall, Arbeitsschritt). Beschreiben Sie dort nur noch das Problem im Fließtext.">
+      ⚠ Problem melden
+    </button>
+    <script>
+    (function () {
+      var btn = document.getElementById('report-problem-btn');
+      if (!btn) return;
+      btn.addEventListener('click', function () {
+        var to      = btn.dataset.recipient || '';
+        var subject = (btn.dataset.user || '') + ' | Anfrage zur Evaluationsstudie';
+        var body    = 'Benutzername: '    + (btn.dataset.user || '') + '\r\n'
+                    + 'Fall: '            + (btn.dataset.case || '') + '\r\n'
+                    + 'Arbeitsschritt: '  + (btn.dataset.step || '') + '\r\n\r\n'
+                    + 'Problembeschreibung:\r\n';
+        var href = 'mailto:' + to
+                 + '?subject=' + encodeURIComponent(subject)
+                 + '&body='    + encodeURIComponent(body);
+        window.location.href = href;
+      });
+    })();
+    </script>
+
+    {% if is_admin and jump_cases %}
+    <div class="admin-jump" role="search">
+      <label class="admin-jump-label" for="admin-jump-search">Admin · Fall wechseln</label>
+      <input type="search" id="admin-jump-search"
+             class="admin-jump-input"
+             list="admin-jump-list"
+             placeholder="Suchen oder ID eingeben …"
+             autocomplete="off">
+      <datalist id="admin-jump-list">
+        {% for jc in jump_cases %}
+        <option value="{{ jc.id }}" label="{{ jc.label }}{% if not jc.annotatable %} · unvollständig{% endif %}">
+          {{ jc.label }}{% if not jc.annotatable %} (unvollständig){% endif %}
+        </option>
+        {% endfor %}
+      </datalist>
+      <select id="admin-jump-select" class="admin-jump-select">
+        <option value="">– Direkt zu Fall springen –</option>
+        {% for jc in jump_cases %}
+        <option value="{{ jc.id }}" {% if jc.id == case_id %}selected{% endif %}>
+          {{ jc.id[:10] }}…{% if not jc.annotatable %} (unvollständig){% endif %}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+    <script>
+    (function () {
+      var sel   = document.getElementById('admin-jump-select');
+      var input = document.getElementById('admin-jump-search');
+      var current = {{ case_id | tojson }};
+      function goTo(cid) {
+        if (cid && cid !== current) {
+          window.location.href = '/evaluate/' + encodeURIComponent(cid) + '/step/0/tab/0';
+        }
+      }
+      if (sel)   sel.addEventListener('change', function () { goTo(sel.value); });
+      if (input) input.addEventListener('change', function () { goTo(input.value.trim()); });
+    })();
+    </script>
+    {% endif %}
+
     <hr class="sidebar-divider">
     <div class="steps">
       {% set ns = namespace(prev_section='') %}
@@ -392,6 +461,26 @@
               </div>
 
               <div class="mi-body">
+                {% set _meta = falseinfo_meta.get(slug) if falseinfo_meta else None %}
+                {% if _meta and _meta.description %}
+                <div class="fi-reasoning">
+                  <div class="fi-reasoning-label">
+                    Begründung des Annotators
+                    {% if _meta.category %}
+                      {% set _cat_labels = {
+                        'formal':     'Formal',
+                        'inhaltlich': 'Inhaltlich',
+                        'logisch':    'Logisch/medizinisch',
+                        'prozess':    'Prozess/System'
+                      } %}
+                      <span class="fi-reasoning-cat fi-reasoning-cat--{{ _meta.category }}">
+                        {{ _cat_labels.get(_meta.category, _meta.category) }}
+                      </span>
+                    {% endif %}
+                  </div>
+                  <div class="fi-reasoning-text">{{ _meta.description }}</div>
+                </div>
+                {% endif %}
                 <div class="fi-tl-row">
 
                   <div class="fi-tl-col">
@@ -644,9 +733,32 @@
             <p class="rating-hint">
               Vom Annotator als inhaltlich falsch oder irreführend markiert:
             </p>
+            {% set _cat_labels = {
+              'formal':     'Formal',
+              'inhaltlich': 'Inhaltlich',
+              'logisch':    'Logisch/medizinisch',
+              'prozess':    'Prozess/System'
+            } %}
             <ul class="completeness-missing-list">
               {% for item in false_items %}
-              <li>{{ item }}</li>
+              {% set _slug = slugify(item) %}
+              {% set _meta = falseinfo_meta.get(_slug) if falseinfo_meta else None %}
+              <li>
+                <span class="cm-item-name">{{ item }}</span>
+                {% if _meta and _meta.description %}
+                <div class="fi-reasoning fi-reasoning--inline">
+                  <div class="fi-reasoning-label">
+                    Begründung des Annotators
+                    {% if _meta.category %}
+                      <span class="fi-reasoning-cat fi-reasoning-cat--{{ _meta.category }}">
+                        {{ _cat_labels.get(_meta.category, _meta.category) }}
+                      </span>
+                    {% endif %}
+                  </div>
+                  <div class="fi-reasoning-text">{{ _meta.description }}</div>
+                </div>
+                {% endif %}
+              </li>
               {% endfor %}
             </ul>
             {% else %}
@@ -766,7 +878,7 @@
                   <circle cx="24" cy="26" r="1.5" fill="#1a4f8a"/>
                 </svg></span>
                 <span class="pe-sub-label">Größere Überarbeitungen</span>
-                <span class="pe-sub-desc">max. 3 min</span>
+                <span class="pe-sub-desc">1-5 min</span>
               </label>
               <label class="pe-sub-card
                 {% if existing.get('pe_effort') == 'rewrite' %}pe-sub-card--active{% endif %}">
@@ -781,7 +893,7 @@
                   <circle cx="24" cy="26" r="1.5" fill="#1a4f8a"/>
                 </svg></span>
                 <span class="pe-sub-label">Vollständig neu verfassen</span>
-                <span class="pe-sub-desc">max. 5 min</span>
+                <span class="pe-sub-desc">&gt; 5 min</span>
               </label>
             </div>
           </div>
@@ -818,7 +930,7 @@
                   <circle cx="24" cy="26" r="1.5" fill="#1a4f8a"/>
                 </svg></span>
                 <span class="pe-sub-label">Vollständig neu verfassen</span>
-                <span class="pe-sub-desc">max. 3 min</span>
+                <span class="pe-sub-desc">&gt; 1 min</span>
               </label>
             </div>
           </div>
@@ -3371,17 +3483,17 @@ if (noPrefBtn) {
               <div class="pe-sub-card demo-anim-pe-minor">
                 <span class="pe-sub-icon"><svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="26" r="19" fill="none" stroke="#1a4f8a" stroke-width="3.5"/><path d="M24 26 L24 7 A19 19 0 0 1 28.0 7.4 Z" fill="#e74c3c"/><line x1="21" y1="4" x2="27" y2="4" stroke="#1a4f8a" stroke-width="3" stroke-linecap="round"/><line x1="24" y1="4" x2="24" y2="9" stroke="#1a4f8a" stroke-width="2.5"/><circle cx="24" cy="26" r="1.5" fill="#1a4f8a"/></svg></span>
                 <span class="pe-sub-label">Kleine Korrekturen</span>
-                <span class="pe-sub-desc">max. 2 min</span>
+                <span class="pe-sub-desc">max. 1 min</span>
               </div>
               <div class="pe-sub-card">
                 <span class="pe-sub-icon"><svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="26" r="19" fill="none" stroke="#1a4f8a" stroke-width="3.5"/><path d="M24 26 L24 7 A19 19 0 0 1 33.5 9.5 Z" fill="#e74c3c"/><line x1="21" y1="4" x2="27" y2="4" stroke="#1a4f8a" stroke-width="3" stroke-linecap="round"/><line x1="24" y1="4" x2="24" y2="9" stroke="#1a4f8a" stroke-width="2.5"/><circle cx="24" cy="26" r="1.5" fill="#1a4f8a"/></svg></span>
                 <span class="pe-sub-label">Größere Überarbeitungen</span>
-                <span class="pe-sub-desc">max. 5 min</span>
+                <span class="pe-sub-desc">1-5 min</span>
               </div>
               <div class="pe-sub-card">
                 <span class="pe-sub-icon"><svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="26" r="19" fill="none" stroke="#1a4f8a" stroke-width="3.5"/><path d="M24 26 L24 7 A19 19 0 0 1 43 26 Z" fill="#e74c3c"/><line x1="21" y1="4" x2="27" y2="4" stroke="#1a4f8a" stroke-width="3" stroke-linecap="round"/><line x1="24" y1="4" x2="24" y2="9" stroke="#1a4f8a" stroke-width="2.5"/><circle cx="24" cy="26" r="1.5" fill="#1a4f8a"/></svg></span>
                 <span class="pe-sub-label">Vollständig neu verfassen</span>
-                <span class="pe-sub-desc">ca. 15 min</span>
+                <span class="pe-sub-desc">&gt; 5 min</span>
               </div>
             </div>
           </div>

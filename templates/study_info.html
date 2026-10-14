@@ -21,9 +21,15 @@
 
       <h3>Anzahl der Fälle</h3>
       <p>
+        {% if num_cases == 1 %}
+        Im Rahmen dieser Studie wird Ihnen <strong>1 klinischer Fall</strong>
+        zur Bewertung vorgelegt. Dieser Fall basiert auf einer realen dermatoonkologischen
+        Tumorboardanmeldung.
+        {% else %}
         Im Rahmen dieser Studie werden Ihnen insgesamt <strong>{{ num_cases }} klinische Fälle</strong>
         zur Bewertung vorgelegt. Jeder Fall basiert auf einer realen dermatoonkologischen
         Tumorboardanmeldung.
+        {% endif %}
       </p>
 
       <h3>Bewertungskriterien</h3>
@@ -34,12 +40,21 @@
 
       <p style="margin-bottom:.25rem;"><strong>Zusammenfassung</strong></p>
       <ul>
-        <li><strong>Falschinformationen</strong> – Identifikation inhaltlich falscher oder irreführender Angaben</li>
-        <li><strong>Fehlende Informationen</strong> – Identifikation klinisch relevanter, aber fehlender Informationen</li>
+        <li><strong>Falschinformationen</strong> – Bewertung der möglichen klinischen Folgen (Schwere und Eintrittswahrscheinlichkeit) bereits durch das Studienteam als inhaltlich falsch oder irreführend markierter Angaben</li>
+        <li><strong>Fehlende Informationen</strong> – Bewertung der möglichen klinischen Folgen (Schwere und Eintrittswahrscheinlichkeit) klinisch relevanter, in dieser Version aber fehlender Informationen</li>
         <li><strong>Korrektheit</strong> – Medizinische Richtigkeit der Inhalte</li>
         <li><strong>Vollständigkeit</strong> – Abdeckung aller klinisch relevanten Informationen</li>
         <li><strong>Prägnanz</strong> – Angemessene Kürze und Fokussierung</li>
       </ul>
+
+      <div style="border-left:4px solid #1a4f8a; background:#f3f6fb; padding:.85rem 1rem; margin:.25rem 0 1rem; border-radius:4px;">
+        <p style="margin:0;">
+          <strong>Hinweis:</strong> Falsche bzw. fehlende Informationen sind bereits
+          <strong>durch das Studienteam vorab markiert</strong>. Ihre Aufgabe ist nicht
+          die Identifikation dieser Informationen, sondern die Einschätzung ihrer möglichen
+          <strong>klinischen Folgen</strong> (Schwere und Eintrittswahrscheinlichkeit).
+        </p>
+      </div>
 
       <p style="margin-bottom:.25rem;"><strong>Fragestellung</strong></p>
       <ul>
@@ -103,14 +118,6 @@
         fließt in die nachfolgenden Bewertungsschritte ein.
       </p>
 
-      <h3>TK-Protokoll</h3>
-      <p>
-        Über die Schaltfläche <strong>TK-Protokoll</strong> können Sie zusätzlich das originale
-        Tumorkonferenz-Protokoll (PDF) zum aktuellen Fall einsehen. Es zeigt die ursprüngliche
-        Tumorboardanmeldung, die Grundlage der zu bewertenden Texte ist, und kann ergänzend zur
-        Einordnung herangezogen werden. Einige Sektionen wurden allerdings nachträglich geschwärzt. 
-      </p>
-
       <h3>Interaktive Demo</h3>
       <p>
         Bei jedem Bewertungsschritt steht Ihnen oben rechts eine <strong>▶&nbsp;Demo</strong>-Schaltfläche
@@ -133,11 +140,13 @@
         um Auffälligkeiten, Schwierigkeiten oder sonstige Anmerkungen festzuhalten.
       </p>
 
+      {% if not test_mode %}
       <h3>Abschlussfragen</h3>
       <p>
         Nachdem Sie alle Fälle bewertet haben, werden Ihnen abschließend einige kurze Fragen
         zur Studie gestellt.
       </p>
+      {% endif %}
     </div>
 
     <form method="post" class="consent-form">

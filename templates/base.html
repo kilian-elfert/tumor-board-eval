@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Evaluationsstudie: LLM-basierte Unterstützung der Tumorboardanmeldung</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=20260512b">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=20260629a">
 </head>
 <body>
   <nav class="navbar">
@@ -19,16 +19,25 @@
     </div>
     {% if session.get('username') %}
     <div class="nav-user">
+      {% if current_user_role == 'admin' %}
       <button type="button" id="demo-mode-toggle" class="btn-demo-toggle" aria-pressed="false"
               title="Demo-Modus: Patientendaten unkenntlich machen" style="display:none;">
         <span class="demo-toggle-icon" aria-hidden="true">&#128065;</span>
         <span class="demo-toggle-label">Demo-Modus</span>
       </button>
+      {% endif %}
       <span class="nav-username">{{ session.username }}</span>
       <a href="{{ url_for('logout') }}" class="btn-nav-link" id="logout-link">Abmelden</a>
     </div>
     {% endif %}
   </nav>
+
+  {% if test_mode %}
+  <div role="alert" style="background:#6b7280; color:#fff; text-align:center;
+       font-weight:600; padding:.45rem 1rem; font-size:.95rem; letter-spacing:.02em;">
+    ⚠ TESTMODUS
+  </div>
+  {% endif %}
 
   {# ── logout toast overlay ──────────────────────────────────────────────── #}
   <div id="logout-toast" style="

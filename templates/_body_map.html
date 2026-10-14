@@ -1,7 +1,9 @@
 <div class="bmap-header">
   <h2 class="card-title">&Uuml;bersicht</h2>
   <div class="bmap-header-badges">
-    {% if patient.disease_status %}
+    {% if annotator_mode %}
+    <span class="bmap-disease-status">{{ ed_input('disease_status', patient.disease_status, 'Krankheitsstatus') }}</span>
+    {% elif patient.disease_status %}
     <span class="bmap-disease-status">{{ patient.disease_status }}</span>
     {% endif %}
   </div>
@@ -12,32 +14,125 @@
   {# -- Left sidebar: Primaertumor & Metastasen -- #}
   <div class="bmap-sidebar bmap-left">
     <div class="bmap-category">
-      <h3 class="bmap-heading"><span class="bmap-dot dot-primary"></span>Prim&auml;rtumor <span class="bmap-ed-date">ED {{ patient.diagnosis_date }}</span></h3>
+      <h3 class="bmap-heading"><span class="bmap-dot dot-primary"></span>Prim&auml;rtumor <span class="bmap-ed-date">ED {{ ed_input('diagnosis_date', patient.diagnosis_date, 'TT.MM.JJJJ', 'dash-ed-date') if annotator_mode else patient.diagnosis_date }}</span></h3>
       <ul class="bmap-list" id="bmap-primary-list"></ul>
+      {% if annotator_mode %}
+      <input type="text" class="dash-ed" data-edit-path="primary_tumor_label" value="{{ patient.primary_tumor_label or '' }}" placeholder="Anzeigename (optional, überschreibt Region)" style="width:100%;margin:2px 0 6px;font-size:12px;">
+      <div class="primary-status-controls" style="margin:2px 0 6px;">
+        <div style="font-size:11px;color:#57606a;">Status</div>
+        <select class="dash-ed" data-edit-path="primary_tumor_status">
+          {% for opt in ['active', 'inactive'] %}
+          <option value="{{ opt }}" {% if (patient.primary_tumor_status or 'active') == opt %}selected{% endif %}>{{ opt }}</option>
+          {% endfor %}
+        </select>
+        <div style="font-size:11px;color:#57606a;margin-top:4px;">Grund (falls inaktiv)</div>
+        <input type="text" class="dash-ed" data-edit-path="primary_inactive_reason" value="{{ patient.primary_inactive_reason or '' }}" placeholder="z.B. R0-Resektion" style="width:100%;font-size:12px;">
+      </div>
+      <div class="primary-pos-controls" style="margin:4px 0 8px;display:flex;gap:6px;align-items:center;font-size:11px;color:#57606a;">
+        <input type="hidden" id="primary-pos-x" data-edit-path="primary_tumor_pos.x" value="{{ patient.primary_tumor_pos.x if patient.primary_tumor_pos else '' }}">
+        <input type="hidden" id="primary-pos-y" data-edit-path="primary_tumor_pos.y" value="{{ patient.primary_tumor_pos.y if patient.primary_tumor_pos else '' }}">
+        <button type="button" class="primary-place-btn" style="border:1px dashed #1f6feb;background:transparent;color:#1f6feb;border-radius:4px;padding:2px 8px;font-size:11px;cursor:pointer;">📍 Auf Karte platzieren</button>
+        <button type="button" class="primary-unpin-btn" style="border:1px solid #d0d7de;background:transparent;color:#57606a;border-radius:4px;padding:2px 8px;font-size:11px;cursor:pointer;display:none;">Freie Position entfernen</button>
+        <span class="primary-pos-label" style="margin-left:auto;"></span>
+      </div>
+      {% endif %}
       <div class="bmap-diagnosis-info">
         <table class="bmap-dx-table">
-          <tr><td class="bmap-dx-label">Diagnose</td><td>{{ patient.primary_diagnosis|ka }}</td></tr>
-          <tr><td class="bmap-dx-label">Lokalisation</td><td>{{ patient.primary_location|ka }}</td></tr>
-          <tr><td class="bmap-dx-label">Tumordicke</td><td>{{ patient.tumor_thickness|ka }}</td></tr>
-          <tr><td class="bmap-dx-label">Ulzeration</td><td>{{ patient.ulceration|ka }}</td></tr>
-          <tr><td class="bmap-dx-label">Mitosen</td><td>{{ patient.mitoses|ka }}</td></tr>
-          <tr><td class="bmap-dx-label">Histologie</td><td>{{ patient.histology|ka }}</td></tr>
-          <tr><td class="bmap-dx-label">Resektionsstatus</td><td>{{ patient.resection_status|ka }}</td></tr>
-          <tr><td class="bmap-dx-label">Sicherheitsabstand</td><td>{{ patient.safety_margin|ka }}</td></tr>
-          <tr><td class="bmap-dx-label">SLNE</td><td>{{ patient.slne|ka }}</td></tr>
-          <tr><td class="bmap-dx-label">Staging</td><td>{% if patient.initial_staging.t %}{{ patient.initial_staging.t }} {{ patient.initial_staging.n }} {{ patient.initial_staging.m }} &mdash; UICC {{ patient.initial_staging.uicc }}{% else %}Keine Angabe{% endif %}</td></tr>
+          <tr><td class="bmap-dx-label">Diagnose</td><td>{{ ed_span('primary_diagnosis', patient.primary_diagnosis) }}</td></tr>
+          <tr><td class="bmap-dx-label">Lokalisation</td><td>{{ ed_span('primary_location', patient.primary_location) }}</td></tr>
+          <tr><td class="bmap-dx-label">Tumordicke</td><td>{{ ed_span('tumor_thickness', patient.tumor_thickness) }}</td></tr>
+          <tr><td class="bmap-dx-label">Ulzeration</td><td>{{ ed_span('ulceration', patient.ulceration) }}</td></tr>
+          <tr><td class="bmap-dx-label">Mitosen</td><td>{{ ed_span('mitoses', patient.mitoses) }}</td></tr>
+          <tr><td class="bmap-dx-label">Histologie</td><td>{{ ed_span('histology', patient.histology) }}</td></tr>
+          <tr><td class="bmap-dx-label">Resektionsstatus</td><td>{{ ed_span('resection_status', patient.resection_status) }}</td></tr>
+          <tr><td class="bmap-dx-label">Sicherheitsabstand</td><td>{{ ed_span('safety_margin', patient.safety_margin) }}</td></tr>
+          <tr><td class="bmap-dx-label">SLNE</td><td>{{ ed_span('slne', patient.slne) }}</td></tr>
+          <tr><td class="bmap-dx-label">Staging</td><td>
+            {% if annotator_mode %}
+              T {{ ed_input('initial_staging.t', patient.initial_staging.t, 'T', 'dash-ed-code') }}
+              N {{ ed_input('initial_staging.n', patient.initial_staging.n, 'N', 'dash-ed-code') }}
+              M {{ ed_input('initial_staging.m', patient.initial_staging.m, 'M', 'dash-ed-code') }}
+              &mdash; UICC {{ ed_input('initial_staging.uicc', patient.initial_staging.uicc, 'UICC', 'dash-ed-code') }}
+              <div style="margin-top:4px;font-size:12px;color:#57606a;">Klassifikation: {{ ed_input('initial_staging.classification', patient.initial_staging.classification, 'z.B. AJCC 2017') }}</div>
+            {% else %}
+              {% if patient.initial_staging.t %}{{ patient.initial_staging.t }} {{ patient.initial_staging.n }} {{ patient.initial_staging.m }} &mdash; UICC {{ patient.initial_staging.uicc }}{% else %}Keine Angabe{% endif %}
+            {% endif %}
+          </td></tr>
         </table>
       </div>
     </div>
     <div class="bmap-category">
       <h3 class="bmap-heading"><span class="bmap-dot dot-meta"></span>Metastasen
-        {% set ns = namespace(ed='') %}
-        {% for m in patient.metastases_detail if m.date %}{% if not ns.ed %}{% set ns.ed = m.date %}{% endif %}{% endfor %}
-        {% if ns.ed %}
-        <span class="bmap-ed-date">ED {{ ns.ed }}</span>
+        {% if 'metastases_ed_date' in patient %}
+          {% set meta_ed = patient.metastases_ed_date or '' %}
+        {% else %}
+          {% set ns = namespace(ed='') %}
+          {% for m in patient.metastases_detail if m.date %}{% if not ns.ed %}{% set ns.ed = m.date %}{% endif %}{% endfor %}
+          {% set meta_ed = ns.ed %}
+        {% endif %}
+        {% if annotator_mode %}
+        <span class="bmap-ed-date">ED {{ ed_input('metastases_ed_date', meta_ed, 'TT.MM.JJJJ (leer = ausblenden)', 'dash-ed-date') }}</span>
+        {% elif meta_ed %}
+        <span class="bmap-ed-date">ED {{ meta_ed }}</span>
         {% endif %}
       </h3>
+      {% if annotator_mode %}
+      <ol class="bmap-timeline dash-list" data-edit-list="metastases_detail" id="bmap-meta-list-edit">
+        {% for m in (patient.metastases_detail or []) %}
+        <li class="dash-list-row meta-edit-row" data-meta-idx="{{ loop.index0 }}" style="margin-bottom:6px;padding:6px;border:1px solid #e1e4e8;border-radius:6px;background:#fff;">
+          <button type="button" class="dash-row-del" style="float:right;" title="Metastase entfernen">&times;</button>
+          <div style="font-size:11px;color:#57606a;">Datum</div>
+          <input type="text" class="dash-ed dash-ed-date" data-edit-path-suffix="date" value="{{ m.date or '' }}" placeholder="TT.MM.JJJJ">
+          <div style="font-size:11px;color:#57606a;margin-top:4px;">Region (Code)</div>
+          <input type="text" class="dash-ed meta-region-input" data-edit-path-suffix="region" value="{{ m.region or '' }}" placeholder="z.B. lung_left">
+          <div style="font-size:11px;color:#57606a;margin-top:4px;">Beschreibung</div>
+          <span class="dash-ed dash-ed-block" data-edit-path-suffix="label" data-placeholder="Beschreibung" contenteditable="plaintext-only">{{ m.label or '' }}</span>
+          <div style="font-size:11px;color:#57606a;margin-top:4px;">Status</div>
+          <select class="dash-ed" data-edit-path-suffix="status">
+            {% for opt in ['active', 'inactive', 'responding'] %}
+            <option value="{{ opt }}" {% if (m.status or 'active') == opt %}selected{% endif %}>{{ opt }}</option>
+            {% endfor %}
+          </select>
+          <div style="font-size:11px;color:#57606a;margin-top:4px;">Grund (falls inactive)</div>
+          <input type="text" class="dash-ed" data-edit-path-suffix="inactive_reason" value="{{ m.inactive_reason or '' }}" placeholder="">
+          <div class="meta-pos-controls" style="margin-top:6px;display:flex;gap:6px;align-items:center;font-size:11px;color:#57606a;">
+            <input type="hidden" class="meta-pos-x" data-edit-path-suffix="pos.x" value="{{ (m.pos.x if m.pos else '') if m.pos else '' }}">
+            <input type="hidden" class="meta-pos-y" data-edit-path-suffix="pos.y" value="{{ (m.pos.y if m.pos else '') if m.pos else '' }}">
+            <button type="button" class="meta-place-btn" style="border:1px dashed #1f6feb;background:transparent;color:#1f6feb;border-radius:4px;padding:2px 8px;font-size:11px;cursor:pointer;">📍 Auf Karte platzieren</button>
+            <button type="button" class="meta-unpin-btn" style="border:1px solid #d0d7de;background:transparent;color:#57606a;border-radius:4px;padding:2px 8px;font-size:11px;cursor:pointer;display:none;">Freie Position entfernen</button>
+            <span class="meta-pos-label" style="margin-left:auto;"></span>
+          </div>
+        </li>
+        {% endfor %}
+        <li class="dash-row-template meta-edit-row" style="margin-bottom:6px;padding:6px;border:1px solid #e1e4e8;border-radius:6px;background:#fff;">
+          <button type="button" class="dash-row-del" style="float:right;" title="Metastase entfernen">&times;</button>
+          <div style="font-size:11px;color:#57606a;">Datum</div>
+          <input type="text" class="dash-ed dash-ed-date" data-edit-path-suffix="date" value="" placeholder="TT.MM.JJJJ">
+          <div style="font-size:11px;color:#57606a;margin-top:4px;">Region (Code)</div>
+          <input type="text" class="dash-ed meta-region-input" data-edit-path-suffix="region" value="" placeholder="z.B. lung_left">
+          <div style="font-size:11px;color:#57606a;margin-top:4px;">Beschreibung</div>
+          <span class="dash-ed dash-ed-block" data-edit-path-suffix="label" data-placeholder="Beschreibung" contenteditable="plaintext-only"></span>
+          <div style="font-size:11px;color:#57606a;margin-top:4px;">Status</div>
+          <select class="dash-ed" data-edit-path-suffix="status">
+            {% for opt in ['active', 'inactive', 'responding'] %}
+            <option value="{{ opt }}" {% if opt == 'active' %}selected{% endif %}>{{ opt }}</option>
+            {% endfor %}
+          </select>
+          <div style="font-size:11px;color:#57606a;margin-top:4px;">Grund (falls inactive)</div>
+          <input type="text" class="dash-ed" data-edit-path-suffix="inactive_reason" value="" placeholder="">
+          <div class="meta-pos-controls" style="margin-top:6px;display:flex;gap:6px;align-items:center;font-size:11px;color:#57606a;">
+            <input type="hidden" class="meta-pos-x" data-edit-path-suffix="pos.x" value="">
+            <input type="hidden" class="meta-pos-y" data-edit-path-suffix="pos.y" value="">
+            <button type="button" class="meta-place-btn" style="border:1px dashed #1f6feb;background:transparent;color:#1f6feb;border-radius:4px;padding:2px 8px;font-size:11px;cursor:pointer;">📍 Auf Karte platzieren</button>
+            <button type="button" class="meta-unpin-btn" style="border:1px solid #d0d7de;background:transparent;color:#57606a;border-radius:4px;padding:2px 8px;font-size:11px;cursor:pointer;display:none;">Freie Position entfernen</button>
+            <span class="meta-pos-label" style="margin-left:auto;"></span>
+          </div>
+        </li>
+      </ol>
+      <button type="button" class="dash-list-add" data-target="metastases_detail">+ Metastase hinzufügen</button>
+      {% else %}
       <ol class="bmap-timeline" id="bmap-meta-list"></ol>
+      {% endif %}
     </div>
   </div>
 
@@ -116,18 +211,109 @@
   <div class="bmap-sidebar bmap-right">
     <div class="bmap-category">
       <h3 class="bmap-heading"><span class="bmap-dot dot-imaged"></span>Bildgebung</h3>
+      {% if annotator_mode %}
+      <ol class="bmap-timeline dash-list imaging-edit-list" data-edit-list="imaging" id="bmap-imaged-list-edit">
+        {% for img in (patient.imaging or []) %}
+        <li class="dash-list-row imaging-edit-row" style="margin-bottom:6px;padding:6px;border:1px solid #e1e4e8;border-radius:6px;background:#fff;">
+          <button type="button" class="dash-row-del" style="float:right;" title="Bildgebung entfernen">&times;</button>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 6px;">
+            <div>
+              <div style="font-size:11px;color:#57606a;">Datum</div>
+              <input type="text" class="dash-ed dash-ed-date" data-edit-path-suffix="date" value="{{ img.date or '' }}" placeholder="TT.MM.JJJJ">
+            </div>
+            <div>
+              <div style="font-size:11px;color:#57606a;">Typ</div>
+              <input type="text" class="dash-ed" data-edit-path-suffix="type" value="{{ img.type or '' }}" placeholder="CT | MRT | PET-CT | …">
+            </div>
+            <div>
+              <div style="font-size:11px;color:#57606a;">Modalität</div>
+              <input type="text" class="dash-ed" data-edit-path-suffix="modality" value="{{ img.modality or '' }}" placeholder="CT | MRT | …">
+            </div>
+            <div>
+              <div style="font-size:11px;color:#57606a;">Region (Code)</div>
+              <input type="text" class="dash-ed" data-edit-path-suffix="body_region" value="{{ img.body_region or '' }}" placeholder="z.B. thorax_abdomen">
+            </div>
+          </div>
+          <div style="font-size:11px;color:#57606a;margin-top:4px;">Beurteilung</div>
+          <span class="dash-ed dash-ed-block" data-edit-path-suffix="assessment" data-placeholder="stabil / Progress / …" contenteditable="plaintext-only">{{ img.assessment or '' }}</span>
+          <div style="font-size:11px;color:#57606a;margin-top:4px;">Zusammenfassung</div>
+          <span class="dash-ed dash-ed-block" data-edit-path-suffix="summary" data-placeholder="Kurzfassung" contenteditable="plaintext-only">{{ img.summary or '' }}</span>
+          <details style="margin-top:4px;">
+            <summary style="font-size:11px;color:#1f6feb;cursor:pointer;">Befund/Volltext bearbeiten</summary>
+            <textarea class="dash-ed" data-edit-path-suffix="finding" rows="4" style="width:100%;font-family:inherit;font-size:12px;margin-top:4px;" placeholder="Vollständiger Befund">{{ img.finding or '' }}</textarea>
+            <div style="font-size:11px;color:#57606a;margin-top:4px;">Region (Freitext)</div>
+            <input type="text" class="dash-ed" data-edit-path-suffix="region" value="{{ img.region or '' }}" placeholder="">
+          </details>
+          {# Preserve PDF-link fields so existing entries keep pointing at their file. #}
+          <input type="hidden" data-edit-path-suffix="has_pdf" value="{{ img.has_pdf | tojson if img.has_pdf is not none else '' }}">
+          <input type="hidden" data-edit-path-suffix="img_dir" value="{{ img.img_dir or '' }}">
+          <input type="hidden" data-edit-path-suffix="pdf_filename" value="{{ img.pdf_filename or '' }}">
+        </li>
+        {% endfor %}
+        <li class="dash-row-template imaging-edit-row" style="margin-bottom:6px;padding:6px;border:1px solid #e1e4e8;border-radius:6px;background:#fff;">
+          <button type="button" class="dash-row-del" style="float:right;" title="Bildgebung entfernen">&times;</button>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 6px;">
+            <div>
+              <div style="font-size:11px;color:#57606a;">Datum</div>
+              <input type="text" class="dash-ed dash-ed-date" data-edit-path-suffix="date" value="" placeholder="TT.MM.JJJJ">
+            </div>
+            <div>
+              <div style="font-size:11px;color:#57606a;">Typ</div>
+              <input type="text" class="dash-ed" data-edit-path-suffix="type" value="" placeholder="CT | MRT | PET-CT | …">
+            </div>
+            <div>
+              <div style="font-size:11px;color:#57606a;">Modalität</div>
+              <input type="text" class="dash-ed" data-edit-path-suffix="modality" value="" placeholder="CT | MRT | …">
+            </div>
+            <div>
+              <div style="font-size:11px;color:#57606a;">Region (Code)</div>
+              <input type="text" class="dash-ed" data-edit-path-suffix="body_region" value="" placeholder="z.B. thorax_abdomen">
+            </div>
+          </div>
+          <div style="font-size:11px;color:#57606a;margin-top:4px;">Beurteilung</div>
+          <span class="dash-ed dash-ed-block" data-edit-path-suffix="assessment" data-placeholder="stabil / Progress / …" contenteditable="plaintext-only"></span>
+          <div style="font-size:11px;color:#57606a;margin-top:4px;">Zusammenfassung</div>
+          <span class="dash-ed dash-ed-block" data-edit-path-suffix="summary" data-placeholder="Kurzfassung" contenteditable="plaintext-only"></span>
+          <details style="margin-top:4px;">
+            <summary style="font-size:11px;color:#1f6feb;cursor:pointer;">Befund/Volltext bearbeiten</summary>
+            <textarea class="dash-ed" data-edit-path-suffix="finding" rows="4" style="width:100%;font-family:inherit;font-size:12px;margin-top:4px;" placeholder="Vollständiger Befund"></textarea>
+            <div style="font-size:11px;color:#57606a;margin-top:4px;">Region (Freitext)</div>
+            <input type="text" class="dash-ed" data-edit-path-suffix="region" value="" placeholder="">
+          </details>
+          <input type="hidden" data-edit-path-suffix="has_pdf" value="">
+          <input type="hidden" data-edit-path-suffix="img_dir" value="">
+          <input type="hidden" data-edit-path-suffix="pdf_filename" value="">
+        </li>
+      </ol>
+      <button type="button" class="dash-list-add" data-target="imaging">+ Bildgebung hinzufügen</button>
+      {% else %}
       <ol class="bmap-timeline" id="bmap-imaged-list"></ol>
+      {% endif %}
     </div>
-    {% if patient.comorbidities %}
     <div class="bmap-category bmap-comorbidities">
       <h3 class="bmap-heading"><span class="bmap-warn">&#9888;</span> Komorbidit&auml;ten</h3>
+      {% if annotator_mode %}
+      <ul class="bmap-list dash-list" data-edit-list="comorbidities">
+        {% for c in (patient.comorbidities or []) %}
+        <li class="bmap-item bmap-comorbidity-item dash-list-row">
+          <button type="button" class="dash-row-del" title="Entfernen">&times;</button>
+          <span class="dash-ed dash-ed-block" data-edit-path-suffix="" data-placeholder="Komorbidität" contenteditable="plaintext-only">{{ c }}</span>
+        </li>
+        {% endfor %}
+        <li class="bmap-item bmap-comorbidity-item dash-row-template">
+          <button type="button" class="dash-row-del" title="Entfernen">&times;</button>
+          <span class="dash-ed dash-ed-block" data-edit-path-suffix="" data-placeholder="Komorbidität" contenteditable="plaintext-only"></span>
+        </li>
+      </ul>
+      <button type="button" class="dash-list-add" data-target="comorbidities">+ Komorbidität hinzufügen</button>
+      {% elif patient.comorbidities %}
       <ul class="bmap-list">
         {% for c in patient.comorbidities %}
         <li class="bmap-item bmap-comorbidity-item">{{ c }}</li>
         {% endfor %}
       </ul>
+      {% endif %}
     </div>
-    {% endif %}
   </div>
 
 </div>
@@ -135,11 +321,46 @@
 {# -- Full-width cards below body map -- #}
 <div class="bmap-staging-center">
   <h4 class="bmap-staging-title{% if patient.staging.date %} bmap-staging-has-date{% endif %}">Aktuelles Staging</h4>
+  {% if annotator_mode %}
+  <p class="bmap-staging-date">Stand: {{ ed_input('staging.date', patient.staging.date, 'TT.MM.JJJJ', 'dash-ed-date') }}</p>
+  <div class="bmap-staging-line">
+    <span class="bmap-dx-label">T</span> {{ ed_input('staging.t', patient.staging.t, 'T', 'dash-ed-code') }}
+    <span class="bmap-dx-label">N</span> {{ ed_input('staging.n', patient.staging.n, 'N', 'dash-ed-code') }}
+    <span class="bmap-dx-label">M</span> {{ ed_input('staging.m', patient.staging.m, 'M', 'dash-ed-code') }}
+    <span class="bmap-staging-sep">|</span>
+    <span class="bmap-dx-label">UICC</span> {{ ed_input('staging.uicc', patient.staging.uicc, 'UICC', 'dash-ed-code') }}
+    <span class="bmap-staging-class">{{ ed_input('staging.classification', patient.staging.classification, 'z.B. AJCC 2017') }}</span>
+  </div>
+  {% else %}
   {% if patient.staging.date %}<p class="bmap-staging-date">Stand: {{ patient.staging.date }}</p>{% endif %}
   {% if patient.staging.t %}<div class="bmap-staging-line"><span class="bmap-dx-label">T</span> {{ patient.staging.t }} <span class="bmap-dx-label">N</span> {{ patient.staging.n }} <span class="bmap-dx-label">M</span> {{ patient.staging.m }} <span class="bmap-staging-sep">|</span> <span class="bmap-dx-label">UICC</span> {{ patient.staging.uicc }} <span class="bmap-staging-class">{{ patient.staging.classification }}</span></div>{% else %}<div class="bmap-staging-line">Keine Angabe</div>{% endif %}
+  {% endif %}
 </div>
 <div class="bmap-staging-center">
   <h4 class="bmap-staging-title">Molekularpathologie</h4>
+  {% if annotator_mode %}
+  <div class="bmap-molpath-chips dash-list" data-edit-list="mutations" style="display:flex;flex-wrap:wrap;gap:6px;">
+    {% for gene, status in (patient.mutations or {}).items() %}
+    <span class="mutation-chip {% if status != 'Wildtyp' %}mutation-positive{% endif %} dash-list-row" style="display:inline-flex;align-items:center;gap:4px;">
+      <input type="text" class="dash-ed dash-ed-code" data-mut-gene value="{{ gene }}" placeholder="Gen" style="width:80px;">
+      :
+      <input type="text" class="dash-ed" data-mut-status value="{{ status }}" placeholder="z.B. Wildtyp">
+      <button type="button" class="dash-row-del" title="Entfernen">&times;</button>
+    </span>
+    {% endfor %}
+    <span class="mutation-chip dash-row-template" style="display:inline-flex;align-items:center;gap:4px;">
+      <input type="text" class="dash-ed dash-ed-code" data-mut-gene value="" placeholder="Gen" style="width:80px;">
+      :
+      <input type="text" class="dash-ed" data-mut-status value="Wildtyp" placeholder="z.B. Wildtyp">
+      <button type="button" class="dash-row-del" title="Entfernen">&times;</button>
+    </span>
+  </div>
+  <button type="button" class="dash-list-add" data-target="mutations">+ Gen hinzufügen</button>
+  <div style="margin-top:8px;display:flex;gap:12px;flex-wrap:wrap;">
+    <span class="mutation-chip"><strong>PD-L1:</strong> {{ ed_input('pdl1', patient.pdl1, 'z.B. 25%') }}</span>
+    <span class="mutation-chip"><strong>HLA-A:</strong> {{ ed_input('hla_a', patient.hla_a, '') }}</span>
+  </div>
+  {% else %}
   <div class="bmap-molpath-chips">
     {% if patient.mutations %}
     {% for gene, status in patient.mutations.items() %}
@@ -159,6 +380,7 @@
     <span class="mutation-chip">Keine molekularpathologischen Befunde vorhanden</span>
     {% endif %}
   </div>
+  {% endif %}
 </div>
 
 <div id="body-tooltip" class="body-tooltip" style="display:none;"></div>

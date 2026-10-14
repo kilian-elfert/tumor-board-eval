@@ -37,14 +37,23 @@ annotations/
 # LLM audit / review reports (contain patient identifiers and clinical data)
 reports/
 
-# Dev / admin utility scripts (not needed to run the study)
-build_audit_pdfs.py
-export_consent_pdf.py
-export_excluded_to_docx.py
-filter_fragestellungen.py
-normalize_pdfs.py
-verify_dashboards.py
-llm_review.py
+# Archived / non-essential material (moved out of the live study app)
+analysis/
+scripts/
+data_products/
+
+# Archived non-main case data + standalone test case (patient data; manual handoff only)
+archived_cases/
+test_case/
+
+# Office temp / lock files
+~$*
 
 # Generated login credentials 
 users.json
+
+# Account seed file for setup_users.py batch mode (plaintext passwords — never commit)
+accounts.txt
+
+# Doctor→case assignments (contains participant names; runtime config)
+assignments.json
